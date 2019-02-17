@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">android-prefetching-2018</string>
+    <string name="title_activity_news">NewsActivity</string>
+    <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_capital_list">CapitalListActivity</string>
+    <string name="title_activity_stats">StatsActivity</string>
+    <string name="title_activity_graph">GraphActivity</string>
+</resources>

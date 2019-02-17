@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_stats_activity" android:title="Stats" />
+    <item android:id="@+id/menu_graph_activity" android:title="Graph" />
+    <item android:id="@+id/menu_list_activity" android:title="Activity" />
+    <item android:id="@+id/menu_list_session" android:title="Session" />
+
+</menu>
