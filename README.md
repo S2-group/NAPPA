@@ -1,5 +1,6 @@
 # NAPPA
-Implementation of a navigation-aware technique for personalized prefetching of network requests of Android apps
+Implementation of a navigation-aware technique for personalized prefetching of network requests of Android apps.
+A description of the internals of the NAPPA approach is available in our [ICSE 2019 publication](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf).  
 
 ## How to cite NAPPA
 
@@ -13,7 +14,7 @@ Implementation of a navigation-aware technique for personalized prefetching of n
  	location = {Montreal, Canada},
  	numpages = {4},
  	publisher = {IEEE Press},
-	url = {[http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf)}
+	url = {http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf}
 }
 ```
 
