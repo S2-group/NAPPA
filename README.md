@@ -13,7 +13,7 @@ Implementation of a navigation-aware technique for personalized prefetching of n
  	location = {Montreal, Canada},
  	numpages = {4},
  	publisher = {IEEE Press},
-	url = {http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf}
+	url = {[http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf)}
 }
 ```
 
