@@ -10,7 +10,7 @@ public class UrlCandidateParts {
     @PrimaryKey(autoGenerate = true) public Long id;
     @ColumnInfo(name = "id_url_candidate") public Long idUrlCandidate;
     @ColumnInfo(name = "url_order") public Integer order;
-    @ColumnInfo(name = "type") public Integer type;
+    @ColumnInfo(name = "type") public Integer type;   // Type represents STATIC or PARAMETER
     @ColumnInfo(name = "url_piece") public String urlPiece;
 
 

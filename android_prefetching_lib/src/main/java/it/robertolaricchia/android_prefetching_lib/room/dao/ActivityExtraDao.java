@@ -15,6 +15,11 @@ public interface ActivityExtraDao {
     @Insert
     void insertActivityExtra(ActivityExtraData activityExtraData);
 
+    /**
+     * Get all the extra's key-value pairs for a given activity
+     * @param idAct
+     * @return
+     */
     @Query("SELECT * FROM pf_activity_extra WHERE id_activity = :idAct")
     LiveData<List<ActivityExtraData>> getActivityExtraLiveData(Long idAct);
 

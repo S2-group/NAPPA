@@ -5,6 +5,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+/**
+ * Represents all data corresponding to an http request
+ */
 @Entity(tableName = "pf_url")
 public class RequestData {
 
