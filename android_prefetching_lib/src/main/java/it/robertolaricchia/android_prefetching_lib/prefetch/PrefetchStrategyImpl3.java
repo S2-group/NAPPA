@@ -24,7 +24,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
-    public PrefetchStrategyImpl3(float threshold) {
+    public  PrefetchStrategyImpl3(float threshold) {
         this.threshold = threshold;
     }
 
@@ -51,24 +51,49 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
         return listUrlToPrefetch;
     }
 
+    /**
+     * Will calculate the probabilities of access for each individual successor for a {@code node}.
+     * Will then recursively calculate the probability for the successor of each successor:
+     *
+     * node->successorA->...->successorN
+     *
+     * @param node Current activity to be considered for prefetching
+     * @param initialProbability The probability calculated for a predcessor, used as a weight in order to calculate
+     *                           the probabilities of each successor
+     * @param probableNodes List containing all the probable nodes, corresponding to those nodes that
+     *                      have a probability exceeding the prescribed threshold.
+     * @return The set of probable nodes {@code List<ActivityNode>} with respect to the initial activity {@code node}
+     */
     private List<ActivityNode> getMostProbableNodes(ActivityNode node, float initialProbability, List<ActivityNode> probableNodes) {
+        // Fetch the current state of the session aggregate
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList();
 
         HashMap<Long, Integer> successorCountMap = new HashMap<>();
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
+            // Add the total number of transitions between nodes for a given source and all destinations
             total += succ.countSource2Dest;
+            // For all successors, track the number of transitions
             successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
         }
 
+        // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
+            // Individual successor divided by total accesses
             float prob = initialProbability * (successorCountMap.get(succ)/total);
+
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
+
             if (prob >= threshold) {
+                // If not yet added, add this current node to the probable nodes and calculate the
+                //     next probability using this nodes probability as an initial probability.
                 if (!probableNodes.contains(succ)) {
 
                     probableNodes.add(node1);
+                    // Compute the probable nodes using this successor as the current activity
+                    // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
+                    // they
                     getMostProbableNodes(node1, prob, probableNodes);
                 }
             }
@@ -137,6 +162,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
         List<String> candidates = new LinkedList<>();
 
+        // Get all extras for the current activity
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
 
         //for (ActivityNode successor : successors) {

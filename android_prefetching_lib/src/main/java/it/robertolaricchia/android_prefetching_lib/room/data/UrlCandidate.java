@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+/**
+ * Represents an individual URL candidate
+ */
 @Entity(tableName = "pf_url_candidate")
 public class UrlCandidate {
 

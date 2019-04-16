@@ -32,6 +32,13 @@ public interface SessionDao {
     @Query("SELECT id_session, id_activity_source, id_activity_destination, count_source_destination FROM pf_session_data")
     public LiveData<List<SessionData>> getSessionDataListLiveData();
 
+    /**
+     * Gets the count of the number of instances a (source --> destination) edge has been followed, for
+     * for a given idSource, for all of its destinations
+     *
+     * @param idSource
+     * @return
+     */
     @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest " +
             "FROM pf_session_data " +
             "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +

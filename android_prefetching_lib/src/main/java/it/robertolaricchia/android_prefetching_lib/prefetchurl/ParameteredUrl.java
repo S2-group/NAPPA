@@ -13,6 +13,10 @@ import java.util.Set;
 import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidate;
 import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidateParts;
 
+/**
+ * Represents an individual URL composed of both static components and parameter components.  The
+ * components are stored as a linked list of {@linkplain UrlParameter} objects
+ */
 public class ParameteredUrl {
 
     private List<UrlParameter> urlParameterList = new LinkedList<>();
@@ -21,12 +25,22 @@ public class ParameteredUrl {
         STATIC, PARAMETER
     }
 
+    /**
+     * Translates a {@linkplain TYPES} Enum from its numerical value back to its ENUM Value Type
+     * @param id
+     * @return
+     */
     public static TYPES getTYPESFromId(int id) {
         if (id==0)
             return TYPES.STATIC;
         return TYPES.PARAMETER;
     }
 
+    /**
+     * Translates a {@linkplain TYPES} Enum from its enum value type back to its numerical value
+     * @param types
+     * @return
+     */
     public static int getIdFromTypes(TYPES types) {
         if (types == TYPES.STATIC)
             return 0;
@@ -36,6 +50,14 @@ public class ParameteredUrl {
     public ParameteredUrl() {
     }
 
+    /**
+     * From a list of diff operations,  add parameters to  the urlParameterList
+     * @param diffs List of diff operations, where a diff represents an insertion, a deletion, or
+     *              equals (keep) operation
+     * @param inverse Whether an EQUAL or INSERT operation corresponds to a STATIC Type or a PARAMETER
+     *                type or viceversa.  Inverse = TRUE is used when Inserting Static URL aspects
+     *                identified from a full URL with parameters
+     */
     public ParameteredUrl(LinkedList<DiffMatchPatch.Diff> diffs, boolean inverse) {
         int count = 0;
 
@@ -60,6 +82,12 @@ public class ParameteredUrl {
         }
     }
 
+    /**
+     * Creates an UrlParameter object and adds it to the list
+     * @param order
+     * @param type
+     * @param urlPiece
+     */
     public void addParameter(int order, TYPES type, String urlPiece) {
         urlParameterList.add(new UrlParameter(order, type, urlPiece));
     }
@@ -95,6 +123,14 @@ public class ParameteredUrl {
         return ret;
     }
 
+    /**
+     * Defines equality of two ParameteredUrl objects as being the same object type and having
+     * the Same List of objects.  See {@link List#equals(Object)} for reference on list equality and
+     * {@linkplain UrlParameter#equals(Object)} for UrlParameter equality
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         boolean ret = false;
@@ -105,6 +141,14 @@ public class ParameteredUrl {
         return ret;
     }
 
+    /**
+     * Extract the candidate parts from a {@linkplain ParameteredUrl} object
+     * @param parameteredUrl ParameteredUrl object containing the list of {@linkplain ParameteredUrl.UrlParameter}
+     *                       objects.
+     * @param idUrlCandidate The {@linkplain UrlCandidate} to which the list of {@linkplain UrlCandidateParts} correspond
+     *                       to
+     * @return {@code List<UrlCandidateParts>}
+     */
     public static List<UrlCandidateParts> toUrlCandidateParts(ParameteredUrl parameteredUrl, Long idUrlCandidate) {
         List<UrlCandidateParts> candidateParts = new LinkedList<>();
 
@@ -119,9 +163,13 @@ public class ParameteredUrl {
         return candidateParts;
     }
 
+
+    /**
+     * Represents an URL Piece, and all the operations necessary to compare different pieces.
+     */
     public class UrlParameter implements Comparable<UrlParameter>{
         public int order;
-        public String urlPiece;
+        public String urlPiece; // Represents an extra's key not its value
 
         public TYPES type;
 
@@ -135,6 +183,13 @@ public class ParameteredUrl {
         public int compareTo(@NonNull UrlParameter parameter) {
             return parameter.order >= order ? -1 : 1;
         }
+
+        /**
+         * Overrides equality in for UrlParameter where u1 == u2 IFF types, order, and URL
+         * Piece are the same
+         * @param obj The object to which this instance will be compared against
+         * @return
+         */
         @Override
         public boolean equals(Object obj) {
             return (obj instanceof UrlParameter) &&

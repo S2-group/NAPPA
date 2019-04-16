@@ -12,6 +12,13 @@ public class SessionData {
     @NonNull @ColumnInfo(name = "id_activity_destination") public Long idActivityDestination;
     @ColumnInfo(name = "count_source_destination") public Long countSourceDestination;
 
+    /**
+     * Setter for the session data
+     * @param idSession Id of the session in which this transition is taking place
+     * @param idActivitySource Id of the source activity
+     * @param idActivityDestination Id of the destination activity
+     * @param countSourceDestination The number of instances this sourc-destination transition has occurred
+     */
     public SessionData(@NonNull Long idSession, @NonNull Long idActivitySource, @NonNull Long idActivityDestination, Long countSourceDestination) {
         this.idSession = idSession;
         this.idActivitySource = idActivitySource;
