@@ -1,0 +1,40 @@
+<idea-plugin>
+    <id>test.test1</id>
+    <idea-version since-build="131" />
+    <name>Prefetching 2018</name>
+    <vendor email="support@yourcodsampany.com" url="http://www.yoasdaurcompany.com">YourCompaadsany</vendor>
+
+    <description><![CDATA[
+    This plugin lets you easily add source code lines
+    to integrate the prefetching library
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <project-components>
+        <component>
+            <implementation-class>test.TestProjectComponent</implementation-class>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <moduleBuilder  />
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <group id="MyPlugin.SampleMenu" text="Prefetching" description="Prefetching menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action class="test.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines" />
+            <action class="test.AnotherAction" id="test2Id" text="Spot intent" description="Spots intents" />
+            <action class="test.LastAction" id="test3Id" text="Spot okHttpClient" description="Spots okHttpClients" />
+        </group>
+    </actions>
+
+    <change-notes>hello</change-notes>
+</idea-plugin>
