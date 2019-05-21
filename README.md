@@ -28,14 +28,18 @@ The plugin binaries can be found in
 Install Plugin in Android Studio:
 File -> Settings -> Plugins -> Install plugin from disk
 Restart Android Studio. 
+
 <p align=“center”>
-<img src=“docs/img/PluginInstall.png” alt=“Plugin Installation” width=“500”/>
+<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="500"/>
 </p>
+
 ### Instrumentation
 In the main bar you will found a new Menu called "Prefetching"
+
  <p align="center">
- <img src="docs/img/PluginInstall.png" alt="Nappa Android Studio Plugin" width="500"/>
+ <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="500"/>
  </p>
+ 
 Use "Spot intent" to instrument intents in order to get Intent arguments
 Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
 use "Add prefetching" to instrument Activities in order to get the navigation graph
