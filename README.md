@@ -34,7 +34,7 @@ Restart Android Studio.
 ### Instrumentation
 In the main bar you will found a new Menu called "Prefetching"
  <p align="center">
- <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="500"/>
+ <img src="docs/img/PluginInstall.png" alt="Nappa Android Studio Plugin" width="500"/>
  </p>
 Use "Spot intent" to instrument intents in order to get Intent arguments
 Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
