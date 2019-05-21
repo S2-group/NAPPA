@@ -42,6 +42,7 @@ use "Add prefetching" to instrument Activities in order to get the navigation gr
 
 After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. Prefetching is performed transparently without requiring any intervention from the end user.  As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
 ## How to cite NAPPA
+If NAPPA is helping your research, consider to cite is as follows, thankss!
 
 ```
 @inproceedings{ICSE_2019_NAPPA,
