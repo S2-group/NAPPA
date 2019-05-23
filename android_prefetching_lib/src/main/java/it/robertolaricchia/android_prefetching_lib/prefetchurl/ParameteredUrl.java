@@ -15,7 +15,8 @@ import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidateParts;
 
 /**
  * Represents an individual URL composed of both static components and parameter components.  The
- * components are stored as a linked list of {@linkplain UrlParameter} objects
+ * components are stored as a linked list of {@linkplain UrlParameter} objects.  This is the static
+ * representation of the {@link UrlCandidate} and {@link UrlCandidateParts } database entities.
  */
 public class ParameteredUrl {
 
@@ -52,8 +53,9 @@ public class ParameteredUrl {
 
     /**
      * From a list of diff operations,  add parameters to  the urlParameterList
-     * @param diffs List of diff operations, where a diff represents an insertion, a deletion, or
-     *              equals (keep) operation
+     * @param diffs List of diff operations, which where a diff represents an insertion, a deletion, or
+     *              equals (keep) operation.  This diff is performed between a URL and a {@link it.robertolaricchia.android_prefetching_lib.room.data.ActivityExtraData#value}
+     *              out of an extra key value pair to determine where an extra value is contained in an URL
      * @param inverse Whether an EQUAL or INSERT operation corresponds to a STATIC Type or a PARAMETER
      *                type or viceversa.  Inverse = TRUE is used when Inserting Static URL aspects
      *                identified from a full URL with parameters
@@ -125,7 +127,10 @@ public class ParameteredUrl {
 
     /**
      * Defines equality of two ParameteredUrl objects as being the same object type and having
-     * the Same List of objects.  See {@link List#equals(Object)} for reference on list equality and
+     * the Same List of objects. This helps in removing duplicate {@link ParameteredUrl} objects.
+     * For the case where different parent nodes extras are sending the same extra value to a single
+     * URL.  This prevents the generation of multiple duplicate parametered URLS.
+     * See {@link List#equals(Object)} for reference on list equality and
      * {@linkplain UrlParameter#equals(Object)} for UrlParameter equality
      *
      * @param obj

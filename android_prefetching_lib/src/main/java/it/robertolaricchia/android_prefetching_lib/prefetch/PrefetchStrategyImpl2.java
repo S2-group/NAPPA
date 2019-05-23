@@ -15,7 +15,6 @@ import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
 import it.robertolaricchia.android_prefetching_lib.room.AggregateUrlDao;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
-import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
 import it.robertolaricchia.android_prefetching_lib.room.data.ActivityExtraData;
 
 public class PrefetchStrategyImpl2 implements PrefetchStrategy {

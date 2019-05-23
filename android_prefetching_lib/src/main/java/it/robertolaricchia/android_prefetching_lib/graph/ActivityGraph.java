@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.LinkedList;
 import java.util.List;
 
-import it.robertolaricchia.android_prefetching_lib.PrefetchingLib;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
 import it.robertolaricchia.android_prefetching_lib.room.dao.GraphEdgeDao;
 
@@ -104,8 +103,8 @@ public class ActivityGraph {
 
     /**
      * Fetches an Activity Node by name
-     * @param activityName
-     * @return
+     * @param activityName Name of the activity to be fetched
+     * @return {@linkplain ActivityNode} Corresponding to the activity name requested
      */
     public ActivityNode getByName(String activityName) {
         ActivityNode node = new ActivityNode(activityName);

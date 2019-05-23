@@ -36,8 +36,9 @@ public interface SessionDao {
      * Gets the count of the number of instances a (source --> destination) edge has been followed, for
      * for a given idSource, for all of its destinations
      *
-     * @param idSource
-     * @return
+     * @param idSource The source {@link it.robertolaricchia.android_prefetching_lib.graph.ActivityNode} x containing a successor set Y.
+     *
+     * @return Given x, for all y of Y,  a total count of all transitions x --> y  will be returned.
      */
     @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest " +
             "FROM pf_session_data " +

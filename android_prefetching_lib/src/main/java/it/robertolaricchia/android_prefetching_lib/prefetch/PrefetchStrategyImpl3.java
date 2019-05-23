@@ -3,9 +3,6 @@ package it.robertolaricchia.android_prefetching_lib.prefetch;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +11,7 @@ import java.util.Map;
 import it.robertolaricchia.android_prefetching_lib.PrefetchingLib;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
-import it.robertolaricchia.android_prefetching_lib.room.AggregateUrlDao;
-import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
 import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
-import it.robertolaricchia.android_prefetching_lib.room.data.ActivityExtraData;
 
 public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
