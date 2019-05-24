@@ -1,8 +1,6 @@
 package it.robertolaricchia.android_prefetching_lib.graph;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -13,12 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import it.robertolaricchia.android_prefetching_lib.PrefetchingLib;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
-import it.robertolaricchia.android_prefetching_lib.room.dao.ActivityExtraDao;
 import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
 import it.robertolaricchia.android_prefetching_lib.room.dao.UrlCandidateDao;
 import it.robertolaricchia.android_prefetching_lib.room.data.ActivityExtraData;
-import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidate;
-import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidateParts;
 
 public class ActivityNode {
 
@@ -45,7 +40,7 @@ public class ActivityNode {
      */
     public ActivityNode(String activityName) {
         this.activityName = activityName;
-        // Register activity to
+        // Register activity to the prefetching LIB
         PrefetchingLib.registerActivity(activityName);
     }
 
@@ -158,7 +153,7 @@ public class ActivityNode {
     /**
      * For the current ActivityNode, store a successor activity (activityNode).  Also, for the current
      * session, add the current source-Destination relationship to the database
-     * @param activityNode
+     * @param activityNode A Successor node which is connected to the Current Activity object
      */
     public void initSuccessor(ActivityNode activityNode) {
         //TODO fix here
@@ -171,17 +166,21 @@ public class ActivityNode {
     /**
      * Updates the {@linkplain ActivityNode} transitions in the database and also determines whether prefetching
      * should take place or not. If the current node is not yet part of the activity graph, this is also added to the graph.
-     * If it already exitsis, it will increment the transition count.
-     * Overall, prefetching takes place IFF moving from the current node to as uccessor AND NOT
+     * If it already exitsis, it will increment the transition count.  All updates are reflected in the database entity
+     * {@link it.robertolaricchia.android_prefetching_lib.room.data.SessionData}.
+     * Overall, prefetching takes place IFF moving from the current node to as successor AND NOT
      * from current node to an ancestor.
      *
      * @param activityNode the current node to which the application is transitioning to
-     * @return
+     * @return TRUE if prefetching should take place, implying the application is moving from a given node -> successor
+     *         FALSE if otherwise
      */
     public boolean addSuccessor(ActivityNode activityNode) {
         // Successor cannot be itself
         if (activityNode != this) {
-            // Successor cannot be an already existing successor node, nor can it be an ancestor,
+            // CASE 1:  Activity has not been registered yet, as determined by Activity is
+            //  not being a successor to itself AND activity is not an ancestor to itself,
+            //  RETURN:  TRUE (Prefetch)
             if (!successors.containsKey(activityNode) && !ancestors.containsKey(activityNode)) {
                 successors.put(activityNode, 1);
                 activityNode.ancestors.put(this, 1);
@@ -189,7 +188,11 @@ public class ActivityNode {
                 Log.w("ACTNODE", "CREATING, NOT IN DB");
                 PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
                 return true;
-            } else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
+            }
+            // CASE 2: Activity has already been registered as a successor, thus update the number
+            //  of transitions towards this activity
+            //  RETURN: TRUE (Prefetch)
+            else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
                 successors.put(activityNode, successors.get(activityNode) + 1);
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
                 /*if ( successors.get(activityNode) > 0 ) {
@@ -202,7 +205,10 @@ public class ActivityNode {
                 Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
                 PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
                 return true;
-            } else if (/*!successors.containsKey(activityNode) &&*/ ancestors.containsKey(activityNode)) {
+            }
+            // CASE 3: Activity is moving from successor to ancestor, thus do not prefetch
+            //  RETURN: False
+            else if (/*!successors.containsKey(activityNode) &&*/ ancestors.containsKey(activityNode)) {
                 //DO NOTHING
                 //activityNode.ancestors.put(this, ancestors.get(activityNode) + 1);
                 //ancestors.put(activityNode, ancestors.get(activityNode) + 1);

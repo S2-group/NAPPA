@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "pf_activity", indices = @Index(value = {"activity_name"}, unique = true))
 public class ActivityData {
     @PrimaryKey(autoGenerate = true) public Long id;
+    // activityName is UNIQUE, thus no two rows may have the same activity name
     @ColumnInfo(name = "activity_name") public String activityName;
 
     public ActivityData(String activityName) {

@@ -21,6 +21,7 @@ public class LastAction extends AnAction {
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
+     *
      * @param e
      */
     @Override
@@ -50,19 +51,19 @@ public class LastAction extends AnAction {
                                 if (statement.getText().contains("new OkHttpClient()") ||
                                         statement.getText().contains("new OkHttpClient.Builder")) {
 
-                                    cat += statement.getClass().getCanonicalName()+"\n";
+                                    cat += statement.getClass().getCanonicalName() + "\n";
                                     cat += psiClass.getName() + "::" + psiMethod.getName() + " -> " + statement.getText() + "\n";
 
                                     // Check if this reference to the OkHttpClient is an assignment or an
                                     // Usage
                                     if (statement instanceof PsiExpressionStatement) {
-                                        cat += "PsiExpressionStatement  "+ statement.getText()+"\n";
+                                        cat += "PsiExpressionStatement  " + statement.getText() + "\n";
                                         // Print the canonical type of the okhttp statement
-                                        cat += ((PsiExpressionStatement) statement).getExpression().getType().getCanonicalText()+"\n";
+                                        cat += ((PsiExpressionStatement) statement).getExpression().getType().getCanonicalText() + "\n";
 
                                         // For all children of this statement
                                         for (PsiElement element : statement.getChildren()) {
-                                            cat += element.getText()+"\n";
+                                            cat += element.getText() + "\n";
                                             // Verify if this Expression is an assignment
                                             if (element instanceof PsiAssignmentExpression) {
                                                 cat += "\nAssignment!\n\n";
@@ -76,7 +77,7 @@ public class LastAction extends AnAction {
                                                      */
                                                     String varName = assignmentExpression.getLExpression().getText();
                                                     final PsiElement elementX = PsiElementFactory.SERVICE.getInstance(project).createStatementFromText(
-                                                            varName+" = PrefetchingLib.getOkHttp("+varName+");", psiClass);
+                                                            varName + " = PrefetchingLib.getOkHttp(" + varName + ");", psiClass);
 
                                                     // FIXME: Multiple Inserts to this method call whenever the user makes use of this action
                                                     if (!assignmentExpression.getParent().getNextSibling().textMatches(elementX)) {
@@ -87,8 +88,8 @@ public class LastAction extends AnAction {
                                                         });
                                                     }
                                                 }
-                                                cat += "Type: "+((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText()+"\n";
-                                                cat += "Variable name:  "+((PsiAssignmentExpression) element).getLExpression().getText() + "\n";
+                                                cat += "Type: " + ((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText() + "\n";
+                                                cat += "Variable name:  " + ((PsiAssignmentExpression) element).getLExpression().getText() + "\n";
                                             } else {
                                                 cat += "Not an assignment";
                                             }

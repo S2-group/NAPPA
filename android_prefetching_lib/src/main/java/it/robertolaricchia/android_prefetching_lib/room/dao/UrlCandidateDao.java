@@ -39,8 +39,10 @@ public interface UrlCandidateDao {
     /**
      * Fetch for an activity "idAct" all url canditates, composed of URLS and also url pieces.  Will
      * return the results as an object {@linkplain UrlCandidateToUrlParameter}.
-     * @param idAct
-     * @return
+     * @param idAct The activity for which all urlCandidates and their corresponidng UrlCandidateParts
+     *              will be fetchedf for
+     * @return For and Activity A,  and its urlCandidates C,  where c element of C contains candidate parts P,
+     *         then return a list of all candidate parts P for all urlCandidates C
      */
     @Query("SELECT puc.id, id_activity as idActivity, count, url_order as urlOrder, type, url_piece as urlPiece " +
             "from pf_url_candidate as puc " +
@@ -53,8 +55,8 @@ public interface UrlCandidateDao {
      * This class represents an individual URL Candidate
      */
     class UrlCandidateToUrlParameter {
-        public Long id;
-        public Long idActivity;     // Activity to which the URL Belongs to
+        public Long id;             // Id of the UrkCandudate
+        public Long idActivity;     // Id of theActivity to which the URL Belongs to
         public Integer count;
         public Integer urlOrder;
         public Integer type;

@@ -63,7 +63,7 @@ public class PrefetchingLib {
     private static String currentActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
-    public static HashMap<String, Long> activityMap = new HashMap<>();
+    public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
     private static PrefetchStrategy strategyHistory = new PrefetchStrategyImpl();
     private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
@@ -177,8 +177,11 @@ public class PrefetchingLib {
         return listLiveData;
     }
 
-    //CREATE A STATIC HASHMAP WHERE ALL ACTIVITIES HAS IT'S ID(Long) AND ARE
-    //REFERENCED BY NAME(String)
+    /**
+     * Instatntiate the Activity Map to conatin all the activities contained in the Database.
+     * The Keys in the map are the activity name (String) and the value is the Activity ID (Long)
+     * @param dataList - The list of all activities as stored in the database.
+     */
     private static void updateActivityMap(List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
             activityMap.remove(activityData.activityName);
@@ -207,9 +210,15 @@ public class PrefetchingLib {
     }
 
     /**
-     * This method instruments the OkHttpClient in order to use interceptors
+     * This method instruments the OkHttpClient in order to use interceptors<br/>
+     * <br/>
+     * <b>
+     *     NOTE: This method DOES NOT enforce the singleton pattern.  This pattern must be
+     *           Enforced inside the application
+     * </b>
+     *
      * @param okHttpClient The identified okHttpClient as identified from the original code
-     * @return
+     * @return An Instrumented OkHTTP client
      */
     public static OkHttpClient getOkHttp(OkHttpClient okHttpClient) {
         synchronized (okHttpClient) {
@@ -222,6 +231,34 @@ public class PrefetchingLib {
             Log.w("TAG", "okHttpClient initialized");
         }
         return PrefetchingLib.okHttpClient;
+    }
+
+    /**
+     * Returns an Instrumented OkHttp Client.  This method will enforce a single instance of an OkHttp
+     * Client.  If no instance has been created yet,  it will create one.  Otherwise,  it will return
+     * the same instance in all successive calls. See {@link OkHttpClient} for reference. <br/>
+     * <br/>
+     * <b>
+     *     NOTE: This method is to be used to instrument a Retrofit client to use an instrumented
+     *          OkHttp Client whenever a client is not specified
+     * </b>
+     *
+     * @return An Instrumented OkHTTP client.
+     */
+    public static OkHttpClient getOkHttp() {
+
+            synchronized (PrefetchingLib.okHttpClient) {
+
+                if (okHttpClient == null) {
+                    PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
+                            .addInterceptor(new CustomInterceptor())
+                            .cache(new Cache(cacheDir, (10 * 10 * 1024)))
+                            .build();
+                }
+
+                return PrefetchingLib.okHttpClient;
+            }
+
     }
 
     /**
@@ -400,8 +437,17 @@ public class PrefetchingLib {
     }
 
     /**
-     * Verifyies which extras are contained within a given URL
-     * @param url
+     * Precondition: An URL request is performed on the currently active activity {@code node} with
+     *               name currentActivityName
+     * <br><br>
+     * FOR ALL parents OF the current activity {@code node}, check the given {@code url} with ALL the
+     * {@link ActivityExtraData}(an extra key-value pair) owned by  a given parent node.  If the requested {@code URL} contains
+     * the value of a parent's extra,  then begin building a {@link UrlCandidate} with its corresponding
+     * {@link UrlCandidateParts}.
+     * <br>
+     * After all UrlCandidates are created,
+     *
+     * @param url The url for which all URL candidates will be verified.
      */
     private static void checkUrlWithExtras(String url) {
         poolExecutor.schedule(() -> {
@@ -421,6 +467,8 @@ public class PrefetchingLib {
                         if (url.contains(value)) {
                             Log.i("PARENTS", "value of key '" + key + "' is contained into " + url);
                             // Create a diff-map which checks what values from the URL are not part of the extras
+                            // and those parts which are of INSERT type represent static URL values, while the parts
+                            // with EQUAL type represent a PARAMETER
                             LinkedList<DiffMatchPatch.Diff> diffs = dmp.diffMain(value, url);
                             dmp.diffCleanupEfficiency(diffs);
                             ParameteredUrl parameteredUrl = new ParameteredUrl(diffs, true);
@@ -436,7 +484,9 @@ public class PrefetchingLib {
                                     Log.i("PARENTS", "PARAM: " + parameter.urlPiece);
                                 }
                             }
-                            // Checks if a given parameteredUrl is contained in the parameteredUrlList
+                            // Checks if a given parameteredUrl is contained in the parameteredUrlList.
+                            // Semantically, two extras sent from different parent nodes which also contain the
+                            // same value will also
                             if (!node.parameteredUrlList.contains(parameteredUrl)) {
                                 Log.i("PARENTS ", " NODE " + node.activityName + " DOES NOT CONTAIN THIS URL");
 
@@ -471,6 +521,7 @@ public class PrefetchingLib {
 
             // Focus on Get requests only and not posts to avoid side effects
             if (isGet) {
+                // Perform candidate generation
                 PrefetchingLib.checkUrlWithExtras(request.url().toString());
             }
 
@@ -490,7 +541,7 @@ public class PrefetchingLib {
                 }
             }
 
-            // Add a cashe control mechanism setting staleness to 300 MS
+            // Add a cache control mechanism setting staleness to 300 MS
             request = request.newBuilder()
                     .removeHeader("cache-control")
                     .removeHeader("Cache-control")
