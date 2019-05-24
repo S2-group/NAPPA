@@ -29,7 +29,7 @@ Install Plugin in Android Studio:
 File -> Settings -> Plugins -> Install plugin from disk
 Restart Android Studio. 
 
-<p align=“center”>
+<p align="center">
 <img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="500"/>
 </p>
 
