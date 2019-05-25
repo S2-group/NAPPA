@@ -11,6 +11,7 @@ import it.robertolaricchia.android_prefetching_lib.room.dao.GraphEdgeDao;
 import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
 import it.robertolaricchia.android_prefetching_lib.room.dao.UrlCandidateDao;
 import it.robertolaricchia.android_prefetching_lib.room.data.ActivityExtraData;
+import it.robertolaricchia.android_prefetching_lib.room.data.PRData;
 import it.robertolaricchia.android_prefetching_lib.room.data.Session;
 import it.robertolaricchia.android_prefetching_lib.room.data.SessionData;
 import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidate;
@@ -18,7 +19,7 @@ import it.robertolaricchia.android_prefetching_lib.room.data.UrlCandidateParts;
 
 @Database(entities = {
         RequestData.class, ActivityData.class, Session.class, SessionData.class, ActivityExtraData.class,
-        UrlCandidate.class, UrlCandidateParts.class},
+        UrlCandidate.class, UrlCandidateParts.class, PRData.class},
         version = 10)
 public abstract class PrefetchingDatabase extends RoomDatabase {
 

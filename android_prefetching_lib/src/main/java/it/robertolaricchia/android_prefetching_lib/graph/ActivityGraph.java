@@ -4,16 +4,20 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
 import it.robertolaricchia.android_prefetching_lib.room.dao.GraphEdgeDao;
+import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
+import it.robertolaricchia.android_prefetching_lib.room.data.PRData;
 
 
 public class ActivityGraph {
 
     List<ActivityNode> nodeList;
     ActivityNode current = null;
-
+    private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
     public ActivityGraph() {
         nodeList = new LinkedList<>();
     }
@@ -26,6 +30,8 @@ public class ActivityGraph {
     public void initNodes(String activityName) {
         Log.w("ACT_GRAPH", "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
+        float PageRank = PrefetchingDatabase.getInstance().activityDao().getPR(activityName);
+        Log.d("Pagerank","Pagerank of "+activityName+" initialized at "+PageRank);
 
         // Verify if the current activity node already exists in the activity graph
         if (nodeList.contains(temp)) {
@@ -33,6 +39,7 @@ public class ActivityGraph {
         } else {
             nodeList.add(temp);
         }
+        temp.pageRank = PageRank;
 
         // Get all edges (destinations) for a given activity (source)
         List<GraphEdgeDao.GraphEdge> edges = PrefetchingDatabase.getInstance().graphEdgeDao().getEdgesForActivity(activityName);
@@ -73,14 +80,41 @@ public class ActivityGraph {
      */
     public boolean updateNodes(String activityName) {
         boolean shouldPrefetch = false;
+        float dump = 0.85f;
+        float initialPageRank = 0.25f;
         ActivityNode temp = new ActivityNode(activityName);
         // verify if this activity has already been added to the graph
+        final String tempActivityName = temp.activityName;
         if (nodeList.contains(temp)) {
             temp = nodeList.get(nodeList.lastIndexOf(temp));
         } else {
             nodeList.add(temp);
+            poolExecutor.schedule(() -> {
+                PrefetchingDatabase.getInstance().activityDao().insertPR(new PRData(tempActivityName,initialPageRank));
+            }, 0, TimeUnit.SECONDS);
+            temp.pageRank=initialPageRank;
         }
         if (current!=null) {
+            float tempSum = 0;
+            float click = 1;
+            int index = nodeList.lastIndexOf(temp);
+            for (ActivityNode ancestor : temp.ancestors.keySet()) {
+                tempSum += ancestor.pageRank / ancestor.successors.size();
+                //PR * hits current session
+                //click+= ancestor.successors.get(temp);
+                //List<SessionDao.SessionAggregate> sessionAggregate = ancestor.getSessionAggregateList();
+                //PR * sum incoming edges
+                /*for (SessionDao.SessionAggregate succ : sessionAggregate) {
+                    if (succ.actName.equals(temp.activityName)){ click += succ.countSource2Dest;}
+                }*/
+            }
+            tempSum = (1 - dump) / nodeList.size() + dump * tempSum;
+            temp.pageRank = tempSum * click;
+            nodeList.set(index, temp);
+            final float tempPageRank = temp.pageRank;
+            poolExecutor.schedule(() -> {
+                PrefetchingDatabase.getInstance().activityDao().updatePR(new PRData(activityName, tempPageRank));
+            }, 0, TimeUnit.SECONDS);
             shouldPrefetch = current.addSuccessor(temp);
         }
         current = temp;
