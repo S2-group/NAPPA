@@ -1,5 +1,6 @@
 package it.robertolaricchia.android_prefetching_lib.graph;
 
+import android.app.Activity;
 import android.util.Log;
 
 import java.util.LinkedList;
@@ -9,8 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
 import it.robertolaricchia.android_prefetching_lib.room.dao.GraphEdgeDao;
-import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
-import it.robertolaricchia.android_prefetching_lib.room.data.PRData;
+import it.robertolaricchia.android_prefetching_lib.room.data.LARData;
 
 
 public class ActivityGraph {
@@ -30,16 +30,21 @@ public class ActivityGraph {
     public void initNodes(String activityName) {
         Log.w("ACT_GRAPH", "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
-        float PageRank = PrefetchingDatabase.getInstance().activityDao().getPR(activityName);
-        Log.d("Pagerank","Pagerank of "+activityName+" initialized at "+PageRank);
+        //link analysis ranking (LAR)
+        LARData LAR = PrefetchingDatabase.getInstance().activityDao().getLAR(activityName);
+        Log.d("LARData",activityName+" Pagerank: "+LAR.PR+" Authority: "+LAR.authority+" Hub: "+LAR.hub);
 
         // Verify if the current activity node already exists in the activity graph
         if (nodeList.contains(temp)) {
             temp = nodeList.get(nodeList.lastIndexOf(temp));
         } else {
+            temp.pageRank = LAR.PR;
+            temp.authority = LAR.authority;
+            temp.hub = LAR.hub;
+            Log.d("LARDataElse",activityName+" Pagerank: "+LAR.PR+" Authority: "+LAR.authority+" Hub: "+LAR.hub);
             nodeList.add(temp);
         }
-        temp.pageRank = PageRank;
+
 
         // Get all edges (destinations) for a given activity (source)
         List<GraphEdgeDao.GraphEdge> edges = PrefetchingDatabase.getInstance().graphEdgeDao().getEdgesForActivity(activityName);
@@ -82,40 +87,73 @@ public class ActivityGraph {
         boolean shouldPrefetch = false;
         float dump = 0.85f;
         float initialPageRank = 0.25f;
+        float initialAuthority = 1f;
+        float initialHub = 1f;
         ActivityNode temp = new ActivityNode(activityName);
         // verify if this activity has already been added to the graph
         final String tempActivityName = temp.activityName;
         if (nodeList.contains(temp)) {
             temp = nodeList.get(nodeList.lastIndexOf(temp));
         } else {
+            temp.pageRank=initialPageRank;
+            temp.authority=initialAuthority;
+            temp.hub=initialHub;
             nodeList.add(temp);
             poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().insertPR(new PRData(tempActivityName,initialPageRank));
+                PrefetchingDatabase.getInstance().activityDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub));
             }, 0, TimeUnit.SECONDS);
-            temp.pageRank=initialPageRank;
+            Log.d("LARDataInit",activityName+" Pagerank: "+temp.pageRank+" Authority: "+temp.authority+" Hub: "+temp.hub);
         }
         if (current!=null) {
-            float tempSum = 0;
-            float click = 1;
+            shouldPrefetch = current.addSuccessor(temp);
+            ///////PageRank Update
+            float tempPR = 0;
             int index = nodeList.lastIndexOf(temp);
             for (ActivityNode ancestor : temp.ancestors.keySet()) {
-                tempSum += ancestor.pageRank / ancestor.successors.size();
-                //PR * hits current session
-                //click+= ancestor.successors.get(temp);
-                //List<SessionDao.SessionAggregate> sessionAggregate = ancestor.getSessionAggregateList();
-                //PR * sum incoming edges
-                /*for (SessionDao.SessionAggregate succ : sessionAggregate) {
-                    if (succ.actName.equals(temp.activityName)){ click += succ.countSource2Dest;}
-                }*/
+                tempPR += ancestor.pageRank / ancestor.successors.size();
             }
-            tempSum = (1 - dump) / nodeList.size() + dump * tempSum;
-            temp.pageRank = tempSum * click;
+            tempPR = (1 - dump) / nodeList.size() + dump * tempPR;
+            temp.pageRank = tempPR;
             nodeList.set(index, temp);
-            final float tempPageRank = temp.pageRank;
-            poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().updatePR(new PRData(activityName, tempPageRank));
-            }, 0, TimeUnit.SECONDS);
-            shouldPrefetch = current.addSuccessor(temp);
+            ////////////////
+            // HITS Algorithm https://en.wikipedia.org/wiki/HITS_algorithm
+            //authority update
+            float sumAuthority = 0, sumHub = 0;
+            for (ActivityNode node: nodeList){
+                float tempAuthority = 0;
+                for (ActivityNode ancestor : node.ancestors.keySet()) {
+                    tempAuthority += ancestor.hub;
+                }
+                node.authority = tempAuthority;
+                sumAuthority += tempAuthority*tempAuthority;
+            }
+            sumAuthority = (float)Math.sqrt((double)(sumAuthority));
+            for (ActivityNode node: nodeList){
+                node.authority /= sumAuthority;
+                for (ActivityNode node1: nodeList)if (node1.successors.containsKey(node)) node1.successors.put(node, node1.successors.get(node));
+            }
+            //hub update
+            for (ActivityNode node: nodeList){
+                float tempHub = 0;
+                for (ActivityNode successor : node.successors.keySet()) {
+                    tempHub += successor.authority;
+                }
+                node.hub = tempHub;
+                sumHub += tempHub*tempHub;
+            }
+            sumHub = (float)Math.sqrt((double)(sumHub));
+            for (ActivityNode node: nodeList){
+                node.hub /= sumHub;
+                for (ActivityNode node1: nodeList)if (node1.ancestors.containsKey(node)) node1.ancestors.put(node, node1.ancestors.get(node));
+                index = nodeList.lastIndexOf(node);
+                nodeList.set(index,node);
+                poolExecutor.schedule(() -> {
+                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub));
+                }, 0, TimeUnit.SECONDS);
+                Log.d("LARDataUpdateNull",node.activityName+" Pagerank: "+node.pageRank+" Authority: "+node.authority+" Hub: "+node.hub);
+            }
+            //////////////////////////
+
         }
         current = temp;
         return shouldPrefetch;

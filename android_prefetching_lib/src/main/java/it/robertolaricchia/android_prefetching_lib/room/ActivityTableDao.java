@@ -8,7 +8,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import it.robertolaricchia.android_prefetching_lib.room.data.PRData;
+import it.robertolaricchia.android_prefetching_lib.room.data.LARData;
 
 @Dao
 public interface ActivityTableDao {
@@ -23,11 +23,11 @@ public interface ActivityTableDao {
     LiveData<List<ActivityData>> getListActivityLiveData();
 
     @Insert
-    void insertPR(PRData PR);
+    void insertLAR(LARData PR);
 
     @Update
-    void updatePR(PRData prData);
+    void updateLAR(LARData LARData);
 
-    @Query("SELECT PR FROM pf_PR WHERE activity_name=:activity_name")
-    float getPR(String activity_name);
+    @Query("SELECT * FROM pf_LAR WHERE activity_name=:activity_name")
+    LARData getLAR(String activity_name);
 }

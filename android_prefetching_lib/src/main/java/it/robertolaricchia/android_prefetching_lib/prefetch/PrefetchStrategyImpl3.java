@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.robertolaricchia.android_prefetching_lib.PrefetchingLib;
+import it.robertolaricchia.android_prefetching_lib.graph.ActivityGraph;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
 import it.robertolaricchia.android_prefetching_lib.room.dao.SessionDao;
@@ -78,6 +79,8 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
             float prob = initialProbability * (successorCountMap.get(succ)/total);
 
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
+
+            //prob *= node1.pageRank;
 
             if (prob >= threshold) {
                 // If not yet added, add this current node to the probable nodes and calculate the
