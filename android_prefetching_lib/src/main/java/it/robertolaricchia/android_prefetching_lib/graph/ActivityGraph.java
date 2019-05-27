@@ -152,7 +152,6 @@ public class ActivityGraph {
                 }, 0, TimeUnit.SECONDS);
                 Log.d("LARDataUpdateNull",node.activityName+" Pagerank: "+node.pageRank+" Authority: "+node.authority+" Hub: "+node.hub);
             }
-            //////////////////////////
 
         }
         current = temp;
