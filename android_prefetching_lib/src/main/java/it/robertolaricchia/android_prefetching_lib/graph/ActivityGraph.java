@@ -118,13 +118,16 @@ public class ActivityGraph {
             ////////////////
             // HITS Algorithm https://en.wikipedia.org/wiki/HITS_algorithm
             //authority update
-            float sumAuthority = 0, sumHub = 0;
+            /*float sumAuthority = 0, sumHub = 0;
             for (ActivityNode node: nodeList){
                 float tempAuthority = 0;
+                Log.d("LARDataAntonioTestN",node.activityName);
                 for (ActivityNode ancestor : node.ancestors.keySet()) {
                     tempAuthority += ancestor.hub;
+                    Log.d("LARDataAntonioTest",ancestor.activityName+" hub "+ancestor.hub);
                 }
                 node.authority = tempAuthority;
+                Log.d("LARDataAntonioTest","authority ->"+node.authority+"");
                 sumAuthority += tempAuthority*tempAuthority;
             }
             sumAuthority = (float)Math.sqrt((double)(sumAuthority));
@@ -135,10 +138,13 @@ public class ActivityGraph {
             //hub update
             for (ActivityNode node: nodeList){
                 float tempHub = 0;
+                Log.d("LARDataAntonioTestN2",node.activityName);
                 for (ActivityNode successor : node.successors.keySet()) {
                     tempHub += successor.authority;
+                    Log.d("LARDataAntonioTest2",successor.activityName+" authority "+successor.authority);
                 }
                 node.hub = tempHub;
+                Log.d("LARDataAntonioTest2","hub ->"+node.hub+"");
                 sumHub += tempHub*tempHub;
             }
             sumHub = (float)Math.sqrt((double)(sumHub));
@@ -151,6 +157,48 @@ public class ActivityGraph {
                     PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub));
                 }, 0, TimeUnit.SECONDS);
                 Log.d("LARDataUpdateNull",node.activityName+" Pagerank: "+node.pageRank+" Authority: "+node.authority+" Hub: "+node.hub);
+            }*/
+            ////////////////ANTONIO FIX
+            float sumAuthority = 0, sumHub = 0;
+            //hub update
+            for (ActivityNode node: nodeList){
+                float tempHub = 0;
+                Log.d("LARDataAntonioTestN2","im looking for HUB value of "+node.activityName +" which has as outcoming links: ");
+                for (ActivityNode successor : node.successors.keySet()) {
+                    tempHub += successor.authority;
+                    Log.d("LARDataAntonioTest2",successor.activityName+" with AUTHORITY value"+successor.authority);
+                }
+                node.hub = tempHub;
+                Log.d("LARDataAntonioTest2","so the not normalized HUB value is "+node.hub+"");
+                sumHub += tempHub*tempHub;
+            }
+            sumHub = (float)Math.sqrt((double)(sumHub));
+            for (ActivityNode node: nodeList){
+                node.hub /= sumHub;
+                for (ActivityNode node1: nodeList)if (node1.ancestors.containsKey(node)) node1.ancestors.put(node, node1.ancestors.get(node));
+            }
+            //authority update
+            for (ActivityNode node: nodeList){
+                float tempAuthority = 0;
+                Log.d("LARDataAntonioTestN","im looking for AUTHORITY value of "+node.activityName+" which has as incoming links: ");
+                for (ActivityNode ancestor : node.ancestors.keySet()) {
+                    tempAuthority += ancestor.hub;
+                    Log.d("LARDataAntonioTest",ancestor.activityName+" with HUB value"+ancestor.hub);
+                }
+                node.authority = tempAuthority;
+                Log.d("LARDataAntonioTest","so the not normalized AUTHORITY value is "+node.authority+"");
+                sumAuthority += tempAuthority*tempAuthority;
+            }
+            sumAuthority = (float)Math.sqrt((double)(sumAuthority));
+            for (ActivityNode node: nodeList){
+                node.authority /= sumAuthority;
+                for (ActivityNode node1: nodeList)if (node1.successors.containsKey(node)) node1.successors.put(node, node1.successors.get(node));
+                index = nodeList.lastIndexOf(node);
+                nodeList.set(index,node);
+                poolExecutor.schedule(() -> {
+                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub));
+                }, 0, TimeUnit.SECONDS);
+                Log.d("LARDataUpdateNull",node.activityName+" Pagerank: "+node.pageRank+" Normalized authority: "+node.authority+"  Normalized Hub: "+node.hub);
             }
             //////////////////////////
 
