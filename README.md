@@ -15,7 +15,7 @@ An URL may be composed of both static components (for example the domain name an
 In order to enable prefetching with NAPPA,  an instrumentation process must take place at development time. This task is performed via a plugin which can be installed in Android Studio in order to inject all critical NAPPA dependencies to an Application’s source code. 
 
 ### Requirements
-Currently, NAPPA makes use of [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors) in order to intercept HTTP requests performed by the end-user.  Intercepted requests ares erved by NAPPA whenever they are stored in the cache.  Otherwise, they are rerouted to the origin server. 
+Currently, NAPPA makes use of [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors) in order to intercept HTTP requests performed by the end-user.  Intercepted requests are served by NAPPA whenever they are stored in the cache.  Otherwise, they are rerouted to the origin server. 
 
 ### Installing the Plug-in
 In order to Install the [plug-in](https://github.com/S2-group/NAPPA/tree/master/Plugin/test1) in android studio, please take the following steps:
