@@ -69,8 +69,11 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
             // Add the total number of transitions between nodes for a given source and all destinations
             total += succ.countSource2Dest;
+            //funzione(ActivityNode node, int total, HashMap<Long, Integer> successorCountMap)
             // For all successors, track the number of transitions
+            //////////////////ANTONIO if(successorCountMap.contain-->PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)){somma i pesi}
             successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
+            ////////////////////////////ANTONIO https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
         }
 
         // For each destination calculate the probability of Access
@@ -91,8 +94,10 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
                     // Compute the probable nodes using this successor as the current activity
                     // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
                     // they
+                    /////////////////ANTONIO non piu ricorsivo
                     getMostProbableNodes(node1, prob, probableNodes);
                 }
+
             }
             Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
         }

@@ -27,7 +27,7 @@ public class ActivityNode {
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
 
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
-    public float pageRank,authority,hub;
+    public float pageRank,authority,hub,authorityS,hubS;
     /**
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
@@ -133,7 +133,7 @@ public class ActivityNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nAuthority :"+authority+"\nHub :"+hub);
+        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nHITS-Authority :"+authority+"\nHITS-Hub :"+hub+"\nSALSA-Authority :"+authorityS+"\nSALSA-Hub :"+hubS);
 
         builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
         builder.append("Successors:\n");

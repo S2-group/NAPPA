@@ -12,6 +12,9 @@ import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,10 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Observable;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityGraph;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
@@ -84,8 +89,8 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib() {}
-
+    private PrefetchingLib() {
+    }
 
 
     public static void init(Context context) {
@@ -268,10 +273,8 @@ public class PrefetchingLib {
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
         currentActivityName = activity.getClass().getCanonicalName();
-
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
-
         if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
             Log.i("PREF_LIB", "loading data for " + currentActivityName);
             activityGraph.getCurrent().setListSessionAggregateLiveData(
@@ -336,7 +339,6 @@ public class PrefetchingLib {
      * @param count
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
-
         poolExecutor.schedule(() -> {
                 SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
                 Log.i("PREFLIB", activityMap.toString());
