@@ -33,10 +33,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button newsButton = findViewById(R.id.button_news);
+
         Button weatherButton = findViewById(R.id.button_weather);
 
         newsButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, NewsActivity.class);
+            startActivity(intent);
+        });
+
+        Button interButton = findViewById(R.id.button_inter);
+
+        interButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, InterActivity.class);
             startActivity(intent);
         });
 

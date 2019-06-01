@@ -37,6 +37,7 @@ import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategy;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl2;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl3;
+import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl4;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
 import it.robertolaricchia.android_prefetching_lib.room.ActivityData;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
@@ -71,7 +72,8 @@ public class PrefetchingLib {
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
     private static PrefetchStrategy strategyHistory = new PrefetchStrategyImpl();
-    private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
+    private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl4(0.6f);
+    //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -130,6 +132,9 @@ public class PrefetchingLib {
                                     actId
                             )
                         );
+
+                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId,PrefetchStrategyImpl4.lastN));
+
                     }
 
                     // Instantiate all extras data for this activity AND set up all the observers to
@@ -282,6 +287,8 @@ public class PrefetchingLib {
                             activityMap.get(currentActivityName)
                     )
             );
+            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName),PrefetchStrategyImpl4.lastN));
+
         }
 
         if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {

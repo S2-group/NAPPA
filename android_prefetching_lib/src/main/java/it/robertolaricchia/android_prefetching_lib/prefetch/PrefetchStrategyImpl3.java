@@ -62,25 +62,21 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
     private List<ActivityNode> getMostProbableNodes(ActivityNode node, float initialProbability, List<ActivityNode> probableNodes) {
         // Fetch the current state of the session aggregate
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList();
-
         HashMap<Long, Integer> successorCountMap = new HashMap<>();
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
             // Add the total number of transitions between nodes for a given source and all destinations
             total += succ.countSource2Dest;
-            //funzione(ActivityNode node, int total, HashMap<Long, Integer> successorCountMap)
             // For all successors, track the number of transitions
-            //////////////////ANTONIO if(successorCountMap.contain-->PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)){somma i pesi}
             successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
-            ////////////////////////////ANTONIO https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
+
         }
 
         // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
             // Individual successor divided by total accesses
-            float prob = initialProbability * (successorCountMap.get(succ)/total);
-
+            float prob = initialProbability * ((float) successorCountMap.get(succ)/total);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
             //prob *= node1.pageRank;
@@ -93,8 +89,6 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
                     probableNodes.add(node1);
                     // Compute the probable nodes using this successor as the current activity
                     // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
-                    // they
-                    /////////////////ANTONIO non piu ricorsivo
                     getMostProbableNodes(node1, prob, probableNodes);
                 }
 

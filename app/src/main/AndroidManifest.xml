@@ -11,6 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".InterActivity"
+            android:label="@string/title_activity_inter"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +43,7 @@
             android:label="@string/title_activity_graph" />
         <activity android:name=".stats.ListActivityActivity" />
         <activity android:name=".stats.SessionDataActivity" />
-        <activity android:name=".CityDetailsActivity"></activity>
+        <activity android:name=".CityDetailsActivity" />
     </application>
 
 </manifest>

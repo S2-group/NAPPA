@@ -22,10 +22,10 @@ public class ActivityNode {
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
+    private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
-
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
     public float pageRank,authority,hub,authorityS,hubS;
     /**
@@ -65,6 +65,11 @@ public class ActivityNode {
         return listSessionAggregateLiveData.getValue();
     }
 
+    public List<SessionDao.SessionAggregate> getSessionAggregateList(int LastN) {
+        return listLastNSessionAggregateLiveData.getValue();
+
+    }
+
     public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
         return listActivityExtraLiveData;
     }
@@ -101,6 +106,16 @@ public class ActivityNode {
             Log.d("UPDATE SESSION", "source = "+activityName);
             for (SessionDao.SessionAggregate listElem : list) {
                 Log.d("UPDATE SESSION", "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+            }
+        });
+    }
+
+    public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
+        this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
+        this.listLastNSessionAggregateLiveData.observeForever((list) -> {
+            Log.d("UPDATED LAST N SESSION ", "source = "+activityName);
+            for (SessionDao.SessionAggregate listElem : list) {
+                Log.d("UPDATED  LAST N SESSION", "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }

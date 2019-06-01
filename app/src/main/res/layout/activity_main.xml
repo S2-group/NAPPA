@@ -27,4 +27,16 @@
         app:layout_constraintEnd_toEndOf="@+id/button_news"
         app:layout_constraintStart_toStartOf="@+id/button_news"
         app:layout_constraintTop_toBottomOf="@+id/button_news" />
+
+    <Button
+        android:id="@+id/button_inter"
+        android:layout_width="133dp"
+        android:layout_height="113dp"
+        android:layout_marginTop="108dp"
+        android:text="show something else"
+        app:layout_constraintEnd_toEndOf="@+id/button_news"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/button_news"
+        app:layout_constraintTop_toBottomOf="@+id/button_news" />
+
 </android.support.constraint.ConstraintLayout>
