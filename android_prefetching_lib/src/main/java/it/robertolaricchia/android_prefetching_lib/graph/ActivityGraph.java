@@ -32,16 +32,19 @@ public class ActivityGraph {
         ActivityNode temp = new ActivityNode(activityName);
         //link analysis ranking (LAR)
         LARData LAR = PrefetchingDatabase.getInstance().activityDao().getLAR(activityName);
-        Log.d("LARData",activityName+" Pagerank: "+LAR.PR+" Authority: "+LAR.authority+" Hub: "+LAR.hub);
+        Log.d("LARDataInitFetchDB",activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS);
 
         // Verify if the current activity node already exists in the activity graph
         if (nodeList.contains(temp)) {
             temp = nodeList.get(nodeList.lastIndexOf(temp));
+            Log.d("LARDataInit","already in nodeList");
         } else {
             temp.pageRank = LAR.PR;
             temp.authority = LAR.authority;
             temp.hub = LAR.hub;
-            Log.d("LARDataElse",activityName+" Pagerank: "+LAR.PR+" Authority: "+LAR.authority+" Hub: "+LAR.hub);
+            temp.authorityS = LAR.authorityS;
+            temp.hubS = LAR.hubS;
+            Log.d("LARDataInit","node "+ temp.activityName+" added to nodeList");
             nodeList.add(temp);
         }
 
@@ -58,12 +61,21 @@ public class ActivityGraph {
 
             if (edge != null && edge.actName != null) {
                 ActivityNode temp2 = new ActivityNode(edge.actName);
+                LAR = PrefetchingDatabase.getInstance().activityDao().getLAR(edge.actName);
+                Log.d("LARDataInitFetchDB",activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS+" loaded following an edge");
 
                 if (nodeList.contains(temp2)) {
                     Log.w("ACT_GRAPH", "contains temp2");
+                    Log.d("LARDataInit","already in nodeList from edge");
                     temp2 = nodeList.get(nodeList.lastIndexOf(temp2));
                 } else {
                     Log.w("ACT_GRAPH", "does not contain temp2");
+                    temp2.pageRank = LAR.PR;
+                    temp2.authority = LAR.authority;
+                    temp2.hub = LAR.hub;
+                    temp2.authorityS = LAR.authorityS;
+                    temp2.hubS = LAR.hubS;
+                    Log.d("LARDataInit","node "+ temp2.activityName+" added to nodeList from edge");
                     nodeList.add(temp2);
                 }
 
@@ -89,6 +101,8 @@ public class ActivityGraph {
         float initialPageRank = 0.25f;
         float initialAuthority = 1f;
         float initialHub = 1f;
+        float initialAuthorityS = 1f;
+        float initialHubS = 1f;
         ActivityNode temp = new ActivityNode(activityName);
         // verify if this activity has already been added to the graph
         final String tempActivityName = temp.activityName;
@@ -98,11 +112,14 @@ public class ActivityGraph {
             temp.pageRank=initialPageRank;
             temp.authority=initialAuthority;
             temp.hub=initialHub;
+            temp.authorityS=initialAuthorityS;
+            temp.hubS=initialHubS;
             nodeList.add(temp);
             poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub));
+                PrefetchingDatabase.getInstance().activityDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub,initialAuthorityS,initialHubS));
             }, 0, TimeUnit.SECONDS);
-            Log.d("LARDataInit",activityName+" Pagerank: "+temp.pageRank+" Authority: "+temp.authority+" Hub: "+temp.hub);
+            Log.d("LARDataUpdate","node "+temp.activityName+" added to nodelist");
+            Log.d("LARDataUpdate"," Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
         }
         if (current!=null) {
             shouldPrefetch = current.addSuccessor(temp);
@@ -115,6 +132,10 @@ public class ActivityGraph {
             tempPR = (1 - dump) / nodeList.size() + dump * tempPR;
             temp.pageRank = tempPR;
             nodeList.set(index, temp);
+            final ActivityNode temp_= temp;
+            poolExecutor.schedule(() -> {
+                PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(temp_.activityName, temp_.pageRank,temp_.authority,temp_.hub,temp_.authorityS,temp_.hubS));
+            }, 0, TimeUnit.SECONDS);
             ////////////////
             // HITS Algorithm https://en.wikipedia.org/wiki/HITS_algorithm
             //authority update
@@ -148,11 +169,83 @@ public class ActivityGraph {
                 index = nodeList.lastIndexOf(node);
                 nodeList.set(index,node);
                 poolExecutor.schedule(() -> {
-                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub));
+                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
                 }, 0, TimeUnit.SECONDS);
-                Log.d("LARDataUpdateNull",node.activityName+" Pagerank: "+node.pageRank+" Authority: "+node.authority+" Hub: "+node.hub);
+            }
+///////////////////////////////////SALSA ALGORITHM http://snap.stanford.edu/class/cs224w-readings/najork05salsa.pdf
+            float sumAuthorityS = 0, sumHubS = 0;
+            float tempAuthorityS = 0, tempHubS=0;
+            /////////AuthorityS update
+            //check the nodes with in-degree > 0
+            //with out-degree > 0
+            for (ActivityNode node: nodeList){
+
+                if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
+                if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
+            }
+            //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
+            //check it also in the successors' structure of my ancestors
+            for (ActivityNode node: nodeList){
+                if(node.ancestors.keySet().size()!=0) node.authorityS=1/sumAuthorityS;
+                else node.authorityS=0;
+                for (ActivityNode ancestor: node.ancestors.keySet()){
+                    for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
+                        if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
+                    }
+                }
+            }
+            // IF in-degree > 0 Authority=sumOf(tempAuthority of all successors of all ancestors divided by its in-degree, divided by the out-degree of its ancestor) ELSE Authority=0
+            for (ActivityNode node: nodeList){
+                tempAuthorityS = 0;
+                if(node.ancestors.size()!=0){
+                    for (ActivityNode ancestor: node.ancestors.keySet()) {
+                        for (ActivityNode successorOfAncestor : ancestor.successors.keySet()) {
+                            tempAuthorityS += successorOfAncestor.authorityS / (successorOfAncestor.ancestors.size() * ancestor.successors.size());
+                        }
+                    }
+                    node.authorityS=tempAuthorityS;
+                    //update changes in the successors' structure of my ancestors
+                    for (ActivityNode ancestor: node.ancestors.keySet()){
+                        for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
+                            if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
+                        }
+                    }
+                }
             }
 
+            ///////////////hubS update
+
+            //IF out-degree > 0 tempHub=1/norm-1-of(all node with out-degree>0) ELSE tempHub=0
+            //check it also in the ancestors' structure of my successors
+            for (ActivityNode node: nodeList){
+                if(node.successors.keySet().size()!=0) node.hubS=1/sumHubS;
+                else node.hubS=0;
+                for (ActivityNode successor: node.successors.keySet()){
+                    for (ActivityNode ancestorOfSuccessor: successor.ancestors.keySet()){
+                        if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
+                    }
+                }
+            }
+            for (ActivityNode node: nodeList){
+                tempHubS = 0;
+                if(node.successors.size()!=0){
+                    for (ActivityNode successor: node.successors.keySet()) {
+                        for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()) {
+                            tempHubS += ancestorOfSuccessor.hubS / (ancestorOfSuccessor.successors.size() * successor.ancestors.size());
+                        }
+                    }
+                    node.hubS=tempHubS;
+                    for (ActivityNode successor: node.successors.keySet()){
+                        for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()){
+                            if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
+                        }
+                    }
+                }
+                poolExecutor.schedule(() -> {
+                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
+                }, 0, TimeUnit.SECONDS);
+                Log.d("LARDataCalculatedUpdate",node.activityName+" Pagerank: "+node.pageRank+" HITS-Authority: "+node.authority+" HITS-Hub: "+node.hub+" SALSA-Authority: "+node.authorityS+" SALSA-Hub: "+node.hubS);
+            }
         }
         current = temp;
         return shouldPrefetch;

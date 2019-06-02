@@ -22,12 +22,12 @@ public class ActivityNode {
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
+    private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
-
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
-    public float pageRank,authority,hub;
+    public float pageRank,authority,hub,authorityS,hubS;
     /**
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
@@ -63,6 +63,11 @@ public class ActivityNode {
 
     public List<SessionDao.SessionAggregate> getSessionAggregateList() {
         return listSessionAggregateLiveData.getValue();
+    }
+
+    public List<SessionDao.SessionAggregate> getSessionAggregateList(int LastN) {
+        return listLastNSessionAggregateLiveData.getValue();
+
     }
 
     public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
@@ -105,6 +110,16 @@ public class ActivityNode {
         });
     }
 
+    public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
+        this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
+        this.listLastNSessionAggregateLiveData.observeForever((list) -> {
+            Log.d("UPDATED LAST N SESSION ", "source = "+activityName);
+            for (SessionDao.SessionAggregate listElem : list) {
+                Log.d("UPDATED  LAST N SESSION", "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+            }
+        });
+    }
+
     /**
      * Statically instantiates all extra data (key-value pairs) for a given activity  AND sets an observer
      * for all changes to the extras table in the database by using LiveData as a subject, in order
@@ -133,7 +148,7 @@ public class ActivityNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nAuthority :"+authority+"\nHub :"+hub);
+        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nHITS-Authority :"+authority+"\nHITS-Hub :"+hub+"\nSALSA-Authority :"+authorityS+"\nSALSA-Hub :"+hubS);
 
         builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
         builder.append("Successors:\n");

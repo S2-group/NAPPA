@@ -62,7 +62,6 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
     private List<ActivityNode> getMostProbableNodes(ActivityNode node, float initialProbability, List<ActivityNode> probableNodes) {
         // Fetch the current state of the session aggregate
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList();
-
         HashMap<Long, Integer> successorCountMap = new HashMap<>();
 
         int total = 0;
@@ -71,13 +70,13 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
             total += succ.countSource2Dest;
             // For all successors, track the number of transitions
             successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
+
         }
 
         // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
             // Individual successor divided by total accesses
-            float prob = initialProbability * (successorCountMap.get(succ)/total);
-
+            float prob = initialProbability * ((float) successorCountMap.get(succ)/total);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
             //prob *= node1.pageRank;
@@ -90,9 +89,9 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
                     probableNodes.add(node1);
                     // Compute the probable nodes using this successor as the current activity
                     // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
-                    // they
                     getMostProbableNodes(node1, prob, probableNodes);
                 }
+
             }
             Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
         }
