@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import it.robertolaricchia.android_prefetching_lib.PrefetchingLib;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
 import it.robertolaricchia.android_prefetching_lib.room.dao.GraphEdgeDao;
 import it.robertolaricchia.android_prefetching_lib.room.data.LARData;
@@ -123,129 +124,11 @@ public class ActivityGraph {
         }
         if (current!=null) {
             shouldPrefetch = current.addSuccessor(temp);
-            ///////PageRank Update
-            float tempPR = 0;
-            int index = nodeList.lastIndexOf(temp);
-            for (ActivityNode ancestor : temp.ancestors.keySet()) {
-                tempPR += ancestor.pageRank / ancestor.successors.size();
-            }
-            tempPR = (1 - dump) / nodeList.size() + dump * tempPR;
-            temp.pageRank = tempPR;
-            nodeList.set(index, temp);
-            final ActivityNode temp_= temp;
-            poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(temp_.activityName, temp_.pageRank,temp_.authority,temp_.hub,temp_.authorityS,temp_.hubS));
-            }, 0, TimeUnit.SECONDS);
-            ////////////////
-            // HITS Algorithm https://en.wikipedia.org/wiki/HITS_algorithm
-            //authority update
-            float sumAuthority = 0, sumHub = 0;
-            for (ActivityNode node: nodeList){
-                float tempAuthority = 0;
-                for (ActivityNode ancestor : node.ancestors.keySet()) {
-                    tempAuthority += ancestor.hub;
-                }
-                node.authority = tempAuthority;
-                sumAuthority += tempAuthority*tempAuthority;
-            }
-            sumAuthority = (float)Math.sqrt((double)(sumAuthority));
-            for (ActivityNode node: nodeList){
-                node.authority /= sumAuthority;
-                for (ActivityNode node1: nodeList)if (node1.successors.containsKey(node)) node1.successors.put(node, node1.successors.get(node));
-            }
-            //hub update
-            for (ActivityNode node: nodeList){
-                float tempHub = 0;
-                for (ActivityNode successor : node.successors.keySet()) {
-                    tempHub += successor.authority;
-                }
-                node.hub = tempHub;
-                sumHub += tempHub*tempHub;
-            }
-            sumHub = (float)Math.sqrt((double)(sumHub));
-            for (ActivityNode node: nodeList){
-                node.hub /= sumHub;
-                for (ActivityNode node1: nodeList)if (node1.ancestors.containsKey(node)) node1.ancestors.put(node, node1.ancestors.get(node));
-                index = nodeList.lastIndexOf(node);
-                nodeList.set(index,node);
-                poolExecutor.schedule(() -> {
-                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
-                }, 0, TimeUnit.SECONDS);
-            }
-///////////////////////////////////SALSA ALGORITHM http://snap.stanford.edu/class/cs224w-readings/najork05salsa.pdf
-            float sumAuthorityS = 0, sumHubS = 0;
-            float tempAuthorityS = 0, tempHubS=0;
-            /////////AuthorityS update
-            //check the nodes with in-degree > 0
-            //with out-degree > 0
-            for (ActivityNode node: nodeList){
-
-                if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
-                if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
-            }
-            //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
-            //check it also in the successors' structure of my ancestors
-            for (ActivityNode node: nodeList){
-                if(node.ancestors.keySet().size()!=0) node.authorityS=1/sumAuthorityS;
-                else node.authorityS=0;
-                for (ActivityNode ancestor: node.ancestors.keySet()){
-                    for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
-                        if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
-                    }
-                }
-            }
-            // IF in-degree > 0 Authority=sumOf(tempAuthority of all successors of all ancestors divided by its in-degree, divided by the out-degree of its ancestor) ELSE Authority=0
-            for (ActivityNode node: nodeList){
-                tempAuthorityS = 0;
-                if(node.ancestors.size()!=0){
-                    for (ActivityNode ancestor: node.ancestors.keySet()) {
-                        for (ActivityNode successorOfAncestor : ancestor.successors.keySet()) {
-                            tempAuthorityS += successorOfAncestor.authorityS / (successorOfAncestor.ancestors.size() * ancestor.successors.size());
-                        }
-                    }
-                    node.authorityS=tempAuthorityS;
-                    //update changes in the successors' structure of my ancestors
-                    for (ActivityNode ancestor: node.ancestors.keySet()){
-                        for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
-                            if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
-                        }
-                    }
-                }
-            }
-
-            ///////////////hubS update
-
-            //IF out-degree > 0 tempHub=1/norm-1-of(all node with out-degree>0) ELSE tempHub=0
-            //check it also in the ancestors' structure of my successors
-            for (ActivityNode node: nodeList){
-                if(node.successors.keySet().size()!=0) node.hubS=1/sumHubS;
-                else node.hubS=0;
-                for (ActivityNode successor: node.successors.keySet()){
-                    for (ActivityNode ancestorOfSuccessor: successor.ancestors.keySet()){
-                        if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
-                    }
-                }
-            }
-            for (ActivityNode node: nodeList){
-                tempHubS = 0;
-                if(node.successors.size()!=0){
-                    for (ActivityNode successor: node.successors.keySet()) {
-                        for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()) {
-                            tempHubS += ancestorOfSuccessor.hubS / (ancestorOfSuccessor.successors.size() * successor.ancestors.size());
-                        }
-                    }
-                    node.hubS=tempHubS;
-                    for (ActivityNode successor: node.successors.keySet()){
-                        for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()){
-                            if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
-                        }
-                    }
-                }
-                poolExecutor.schedule(() -> {
-                    PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
-                }, 0, TimeUnit.SECONDS);
-                Log.d("LARDataCalculatedUpdate",node.activityName+" Pagerank: "+node.pageRank+" HITS-Authority: "+node.authority+" HITS-Hub: "+node.hub+" SALSA-Authority: "+node.authorityS+" SALSA-Hub: "+node.hubS);
-            }
+            nodeList.set(nodeList.lastIndexOf(temp),temp);
+            //updates
+            updateLAR(activityName);
+            temp = nodeList.get(nodeList.lastIndexOf(temp));
+            Log.d("LARDataCalculatedUpdate",temp.activityName+" Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
         }
         current = temp;
         return shouldPrefetch;
@@ -276,5 +159,159 @@ public class ActivityGraph {
             return nodeList.get( nodeList.indexOf(node) );
         }
         throw new RuntimeException("Unable to find node: "+activityName);
+    }
+
+    public void updateLAR(String activityName){
+        switch(PrefetchingLib.prefetchStrategyNum){
+            case 3:
+                updatePR(activityName);
+                updateHITS();
+                updateSALSA();
+                break;
+            case 4:
+                updatePR(activityName);
+                updateHITS();
+                updateSALSA();
+                break;
+            default:
+                updatePR(activityName);
+                updateHITS();
+                updateSALSA();
+        }
+    }
+    public void updatePR(String activityName){
+        ///////PageRank Update
+        ActivityNode temp = new ActivityNode(activityName);
+        temp = nodeList.get(nodeList.lastIndexOf(temp));
+        float dump = 0.85f;
+        float tempPR = 0;
+        int index = nodeList.lastIndexOf(temp);
+        for (ActivityNode ancestor : temp.ancestors.keySet()) {
+            tempPR += ancestor.pageRank / ancestor.successors.size();
+        }
+        tempPR = (1 - dump) / nodeList.size() + dump * tempPR;
+        temp.pageRank = tempPR;
+        nodeList.set(index, temp);
+        final ActivityNode temp_= temp;
+        poolExecutor.schedule(() -> {
+            PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(temp_.activityName, temp_.pageRank,temp_.authority,temp_.hub,temp_.authorityS,temp_.hubS));
+        }, 0, TimeUnit.SECONDS);
+    }
+
+    public void updateHITS(){
+        ////////////////
+        // HITS Algorithm https://en.wikipedia.org/wiki/HITS_algorithm
+        //authority update
+        float sumAuthority = 0, sumHub = 0;
+        for (ActivityNode node: nodeList){
+            float tempAuthority = 0;
+            for (ActivityNode ancestor : node.ancestors.keySet()) {
+                tempAuthority += ancestor.hub;
+            }
+            node.authority = tempAuthority;
+            sumAuthority += tempAuthority*tempAuthority;
+        }
+        sumAuthority = (float)Math.sqrt((double)(sumAuthority));
+        for (ActivityNode node: nodeList){
+            node.authority /= sumAuthority;
+            for (ActivityNode node1: nodeList)if (node1.successors.containsKey(node)) node1.successors.put(node, node1.successors.get(node));
+        }
+        //hub update
+        for (ActivityNode node: nodeList){
+            float tempHub = 0;
+            for (ActivityNode successor : node.successors.keySet()) {
+                tempHub += successor.authority;
+            }
+            node.hub = tempHub;
+            sumHub += tempHub*tempHub;
+        }
+        sumHub = (float)Math.sqrt((double)(sumHub));
+        for (ActivityNode node: nodeList){
+            node.hub /= sumHub;
+            for (ActivityNode node1: nodeList)if (node1.ancestors.containsKey(node)) node1.ancestors.put(node, node1.ancestors.get(node));
+            int index = nodeList.lastIndexOf(node);
+            nodeList.set(index,node);
+            poolExecutor.schedule(() -> {
+                PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
+            }, 0, TimeUnit.SECONDS);
+        }
+    }
+
+    public void updateSALSA(){
+        ///////////////////////////////////SALSA ALGORITHM http://snap.stanford.edu/class/cs224w-readings/najork05salsa.pdf
+        float sumAuthorityS = 0, sumHubS = 0;
+        float tempAuthorityS = 0, tempHubS=0;
+        /////////AuthorityS update
+        //check the nodes with in-degree > 0
+        //with out-degree > 0
+        for (ActivityNode node: nodeList){
+
+            if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
+            if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
+        }
+        //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
+        //check it also in the successors' structure of my ancestors
+        for (ActivityNode node: nodeList){
+            if(node.ancestors.keySet().size()!=0) node.authorityS=1/sumAuthorityS;
+            else node.authorityS=0;
+            for (ActivityNode ancestor: node.ancestors.keySet()){
+                for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
+                    if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
+                }
+            }
+        }
+        // IF in-degree > 0 Authority=sumOf(tempAuthority of all successors of all ancestors divided by its in-degree, divided by the out-degree of its ancestor) ELSE Authority=0
+        for (ActivityNode node: nodeList){
+            tempAuthorityS = 0;
+            if(node.ancestors.size()!=0){
+                for (ActivityNode ancestor: node.ancestors.keySet()) {
+                    for (ActivityNode successorOfAncestor : ancestor.successors.keySet()) {
+                        tempAuthorityS += successorOfAncestor.authorityS / (successorOfAncestor.ancestors.size() * ancestor.successors.size());
+                    }
+                }
+                node.authorityS=tempAuthorityS;
+                //update changes in the successors' structure of my ancestors
+                for (ActivityNode ancestor: node.ancestors.keySet()){
+                    for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
+                        if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
+                    }
+                }
+            }
+        }
+
+        ///////////////hubS update
+
+        //IF out-degree > 0 tempHub=1/norm-1-of(all node with out-degree>0) ELSE tempHub=0
+        //check it also in the ancestors' structure of my successors
+        for (ActivityNode node: nodeList){
+            if(node.successors.keySet().size()!=0) node.hubS=1/sumHubS;
+            else node.hubS=0;
+            for (ActivityNode successor: node.successors.keySet()){
+                for (ActivityNode ancestorOfSuccessor: successor.ancestors.keySet()){
+                    if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
+                }
+            }
+        }
+        for (ActivityNode node: nodeList){
+            tempHubS = 0;
+            if(node.successors.size()!=0){
+                for (ActivityNode successor: node.successors.keySet()) {
+                    for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()) {
+                        tempHubS += ancestorOfSuccessor.hubS / (ancestorOfSuccessor.successors.size() * successor.ancestors.size());
+                    }
+                }
+                node.hubS=tempHubS;
+                for (ActivityNode successor: node.successors.keySet()){
+                    for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()){
+                        if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
+                    }
+                }
+            }
+            int index = nodeList.lastIndexOf(node);
+            nodeList.set(index,node);
+            poolExecutor.schedule(() -> {
+                PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
+            }, 0, TimeUnit.SECONDS);
+        }
     }
 }

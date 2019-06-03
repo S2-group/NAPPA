@@ -72,7 +72,7 @@ public class PrefetchingLib {
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
     private static PrefetchStrategy strategyHistory = new PrefetchStrategyImpl();
-    private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl4(0.6f);
+    private static PrefetchStrategy strategyIntent;
     //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
@@ -82,7 +82,7 @@ public class PrefetchingLib {
     //  for the given activity.
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
-
+    public static int prefetchStrategyNum;
     private static boolean prefetchEnabled = true;
     private static int candidatePrefetchableUrlThreshold = 2;
 
@@ -91,13 +91,30 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib() {
+    private PrefetchingLib(int prefetchStrategyNum) {
+        this.prefetchStrategyNum = prefetchStrategyNum;
+        switch(prefetchStrategyNum){
+            case 1:
+                strategyIntent = new PrefetchStrategyImpl();
+                break;
+            case 2:
+                strategyIntent = new PrefetchStrategyImpl2();
+                break;
+            case 3:
+                strategyIntent = new PrefetchStrategyImpl3(0.6f);
+                break;
+            case 4:
+                strategyIntent = new PrefetchStrategyImpl4(0.6f);
+                break;
+            default:
+                strategyIntent = new PrefetchStrategyImpl4(0.6f);
+        }
     }
 
 
-    public static void init(Context context) {
+    public static void init(Context context,int prefetchStrategyNum) {
         if (instance == null) {
-            instance = new PrefetchingLib();
+            instance = new PrefetchingLib(prefetchStrategyNum);
 
             final Long start = new Date().getTime();
             PrefetchingDatabase.getInstance(context);
