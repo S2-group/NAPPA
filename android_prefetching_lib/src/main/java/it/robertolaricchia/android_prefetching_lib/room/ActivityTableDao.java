@@ -4,8 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
+
+import it.robertolaricchia.android_prefetching_lib.room.data.LARData;
 
 @Dao
 public interface ActivityTableDao {
@@ -19,4 +22,12 @@ public interface ActivityTableDao {
     @Query("SELECT id, activity_name FROM pf_activity")
     LiveData<List<ActivityData>> getListActivityLiveData();
 
+    @Insert
+    void insertLAR(LARData PR);
+
+    @Update
+    void updateLAR(LARData LARData);
+
+    @Query("SELECT * FROM pf_LAR WHERE activity_name=:activity_name")
+    LARData getLAR(String activity_name);
 }

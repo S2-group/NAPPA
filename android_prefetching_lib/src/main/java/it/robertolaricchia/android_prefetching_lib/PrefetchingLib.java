@@ -12,6 +12,9 @@ import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,10 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Observable;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityGraph;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
@@ -32,6 +37,7 @@ import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategy;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl2;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl3;
+import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl4;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
 import it.robertolaricchia.android_prefetching_lib.room.ActivityData;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
@@ -66,7 +72,8 @@ public class PrefetchingLib {
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
     private static PrefetchStrategy strategyHistory = new PrefetchStrategyImpl();
-    private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
+    private static PrefetchStrategy strategyIntent;
+    //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
@@ -75,7 +82,7 @@ public class PrefetchingLib {
     //  for the given activity.
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
-
+    public static int prefetchStrategyNum;
     private static boolean prefetchEnabled = true;
     private static int candidatePrefetchableUrlThreshold = 2;
 
@@ -84,13 +91,30 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib() {}
+    private PrefetchingLib(int prefetchStrategyNum) {
+        this.prefetchStrategyNum = prefetchStrategyNum;
+        switch(prefetchStrategyNum){
+            case 1:
+                strategyIntent = new PrefetchStrategyImpl();
+                break;
+            case 2:
+                strategyIntent = new PrefetchStrategyImpl2();
+                break;
+            case 3:
+                strategyIntent = new PrefetchStrategyImpl3(0.6f);
+                break;
+            case 4:
+                strategyIntent = new PrefetchStrategyImpl4(0.6f);
+                break;
+            default:
+                strategyIntent = new PrefetchStrategyImpl4(0.6f);
+        }
+    }
 
 
-
-    public static void init(Context context) {
+    public static void init(Context context,int prefetchStrategyNum) {
         if (instance == null) {
-            instance = new PrefetchingLib();
+            instance = new PrefetchingLib(prefetchStrategyNum);
 
             final Long start = new Date().getTime();
             PrefetchingDatabase.getInstance(context);
@@ -125,6 +149,9 @@ public class PrefetchingLib {
                                     actId
                             )
                         );
+
+                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId,PrefetchStrategyImpl4.lastN));
+
                     }
 
                     // Instantiate all extras data for this activity AND set up all the observers to
@@ -268,10 +295,8 @@ public class PrefetchingLib {
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
         currentActivityName = activity.getClass().getCanonicalName();
-
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
-
         if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
             Log.i("PREF_LIB", "loading data for " + currentActivityName);
             activityGraph.getCurrent().setListSessionAggregateLiveData(
@@ -279,6 +304,8 @@ public class PrefetchingLib {
                             activityMap.get(currentActivityName)
                     )
             );
+            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName),PrefetchStrategyImpl4.lastN));
+
         }
 
         if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {
@@ -336,7 +363,6 @@ public class PrefetchingLib {
      * @param count
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
-
         poolExecutor.schedule(() -> {
                 SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
                 Log.i("PREFLIB", activityMap.toString());

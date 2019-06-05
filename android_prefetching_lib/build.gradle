@@ -43,4 +43,5 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
     implementation 'io.reactivex.rxjava2:rxjava:2.1.15'
     implementation 'org.bitbucket.cowwoc:diff-match-patch:1.1'
+    implementation files('libs')
 }

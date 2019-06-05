@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.bitbucket.cowwoc:diff-match-patch:1.1@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bitbucket.cowwoc/diff-match-patch/1.1/999fbe9d70f571a4874c50bf3752aa0392087a2f/diff-match-patch-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bitbucket.cowwoc/diff-match-patch/1.1/3002049aa9e9dc9c51b2f96406e3dd7fa60d9973/diff-match-patch-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
