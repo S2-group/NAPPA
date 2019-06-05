@@ -78,7 +78,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
         //////////////////////////// https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
 
         for (Long succ : successorCountMap.keySet()) {
-            float prob = (float)successorCountMap.get(succ)/total;
+            float prob = (float)successorCountMap.get(succ)/total; // * succ.pageRank or others
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
             if (prob >= threshold && !probableNodes.contains(succ)) {

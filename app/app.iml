@@ -173,6 +173,5 @@
     <orderEntry type="library" name="Gradle: android.arch.persistence:db-framework:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: net.sf.kxml:kxml2:2.3.0@jar" level="project" />
     <orderEntry type="module" module-name="android_prefetching_lib" />
-    <orderEntry type="module" module-name="android_prefetching_lib" />
   </component>
 </module>
