@@ -97,6 +97,7 @@ public class ActivityGraph {
      * @return True IFF the transition taking place is from (current node-> Successor node).
      */
     public boolean updateNodes(String activityName) {
+
         boolean shouldPrefetch = false;
         float dump = 0.85f;
         float initialPageRank = 0.25f;
@@ -164,19 +165,25 @@ public class ActivityGraph {
     public void updateLAR(String activityName){
         switch(PrefetchingLib.prefetchStrategyNum){
             case 3:
-                updatePR(activityName);
-                updateHITS();
-                updateSALSA();
                 break;
             case 4:
+                break;
+            case 5:
                 updatePR(activityName);
+                break;
+            case 6:
                 updateHITS();
+                break;
+            case 7:
                 updateSALSA();
                 break;
-            default:
+            case 8:
                 updatePR(activityName);
+                break;
+            case 9:
                 updateHITS();
-                updateSALSA();
+                break;
+            default:
         }
     }
     public void updatePR(String activityName){
@@ -239,20 +246,19 @@ public class ActivityGraph {
 
     public void updateSALSA(){
         ///////////////////////////////////SALSA ALGORITHM http://snap.stanford.edu/class/cs224w-readings/najork05salsa.pdf
-        float sumAuthorityS = 0, sumHubS = 0;
+        float sumAuthorityS = 1, sumHubS = 1;
         float tempAuthorityS = 0, tempHubS=0;
         /////////AuthorityS update
         //check the nodes with in-degree > 0
         //with out-degree > 0
-        for (ActivityNode node: nodeList){
-
+        /*for (ActivityNode node: nodeList){
             if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
             if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
-        }
+        }*/
         //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
         //check it also in the successors' structure of my ancestors
         for (ActivityNode node: nodeList){
-            if(node.ancestors.keySet().size()!=0) node.authorityS=1/sumAuthorityS;
+            if(node.ancestors.size()!=0) node.authorityS=1/sumAuthorityS;
             else node.authorityS=0;
             for (ActivityNode ancestor: node.ancestors.keySet()){
                 for (ActivityNode successorOfAncestor: ancestor.successors.keySet()){
@@ -263,10 +269,9 @@ public class ActivityGraph {
         // IF in-degree > 0 Authority=sumOf(tempAuthority of all successors of all ancestors divided by its in-degree, divided by the out-degree of its ancestor) ELSE Authority=0
         for (ActivityNode node: nodeList){
             tempAuthorityS = 0;
-            if(node.ancestors.size()!=0){
                 for (ActivityNode ancestor: node.ancestors.keySet()) {
                     for (ActivityNode successorOfAncestor : ancestor.successors.keySet()) {
-                        tempAuthorityS += successorOfAncestor.authorityS / (successorOfAncestor.ancestors.size() * ancestor.successors.size());
+                        if(successorOfAncestor.ancestors.size()>0)tempAuthorityS += successorOfAncestor.authorityS / (successorOfAncestor.ancestors.size() * ancestor.successors.size());
                     }
                 }
                 node.authorityS=tempAuthorityS;
@@ -276,7 +281,6 @@ public class ActivityGraph {
                         if(node.activityName.equals(successorOfAncestor.activityName))successorOfAncestor.authorityS=node.authorityS;
                     }
                 }
-            }
         }
 
         ///////////////hubS update
@@ -284,7 +288,7 @@ public class ActivityGraph {
         //IF out-degree > 0 tempHub=1/norm-1-of(all node with out-degree>0) ELSE tempHub=0
         //check it also in the ancestors' structure of my successors
         for (ActivityNode node: nodeList){
-            if(node.successors.keySet().size()!=0) node.hubS=1/sumHubS;
+            if(node.successors.size()!=0) node.hubS=1/sumHubS;
             else node.hubS=0;
             for (ActivityNode successor: node.successors.keySet()){
                 for (ActivityNode ancestorOfSuccessor: successor.ancestors.keySet()){
@@ -294,10 +298,9 @@ public class ActivityGraph {
         }
         for (ActivityNode node: nodeList){
             tempHubS = 0;
-            if(node.successors.size()!=0){
                 for (ActivityNode successor: node.successors.keySet()) {
                     for (ActivityNode ancestorOfSuccessor : successor.ancestors.keySet()) {
-                        tempHubS += ancestorOfSuccessor.hubS / (ancestorOfSuccessor.successors.size() * successor.ancestors.size());
+                        if(ancestorOfSuccessor.successors.size()>0) tempHubS += ancestorOfSuccessor.hubS / (ancestorOfSuccessor.successors.size() * successor.ancestors.size());
                     }
                 }
                 node.hubS=tempHubS;
@@ -306,12 +309,21 @@ public class ActivityGraph {
                         if(node.activityName.equals(ancestorOfSuccessor.activityName))ancestorOfSuccessor.hubS=node.hubS;
                     }
                 }
-            }
-            int index = nodeList.lastIndexOf(node);
-            nodeList.set(index,node);
+        }
+        for (ActivityNode node: nodeList){
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
+            /*for(ActivityNode node2: nodeList) {
+                for (ActivityNode ancestor : node2.ancestors.keySet()) {
+                    if(ancestor.activityName.equals(node.activityName)) {ancestor.authorityS=node.authorityS;
+                    ancestor.hubS=node.hubS;}
+                }
+                for (ActivityNode successor : node2.successors.keySet()) {
+                    if(successor.activityName.equals(node.activityName)){ successor.authorityS=node.authorityS;
+                    successor.hubS=node.hubS;}
+                }
+            }*/
         }
     }
 }

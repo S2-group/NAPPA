@@ -52,11 +52,11 @@
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/button_graph"
+                    android:id="@+id/button_news"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="112dp"
-                    android:text="Show Graph"
+                    android:text="Show News"
                     app:layout_constraintEnd_toEndOf="@+id/button_news"
                     app:layout_constraintHorizontal_bias="0.506"
                     app:layout_constraintStart_toStartOf="@+id/button_news"

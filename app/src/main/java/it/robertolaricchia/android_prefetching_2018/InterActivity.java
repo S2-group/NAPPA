@@ -37,10 +37,10 @@ public class InterActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button graphButton = findViewById(R.id.button_graph);
+        Button graphButton = findViewById(R.id.button_news);
 
         graphButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, GraphActivity.class);
+            Intent intent = new Intent(this, NewsActivity.class);
             startActivity(intent);
         });
     }
