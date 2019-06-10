@@ -35,10 +35,7 @@ import java.util.logging.Logger;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityGraph;
 import it.robertolaricchia.android_prefetching_lib.graph.ActivityNode;
 import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategy;
-import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl;
-import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl2;
-import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl3;
-import it.robertolaricchia.android_prefetching_lib.prefetch.PrefetchStrategyImpl4;
+import it.robertolaricchia.android_prefetching_lib.prefetch.*;
 import it.robertolaricchia.android_prefetching_lib.prefetchurl.ParameteredUrl;
 import it.robertolaricchia.android_prefetching_lib.room.ActivityData;
 import it.robertolaricchia.android_prefetching_lib.room.PrefetchingDatabase;
@@ -95,20 +92,29 @@ public class PrefetchingLib {
     private PrefetchingLib(int prefetchStrategyNum) {
         this.prefetchStrategyNum = prefetchStrategyNum;
         switch(prefetchStrategyNum){
-            case 1:
-                strategyIntent = new PrefetchStrategyImpl();
-                break;
-            case 2:
-                strategyIntent = new PrefetchStrategyImpl2();
-                break;
             case 3:
                 strategyIntent = new PrefetchStrategyImpl3(0.6f);
                 break;
             case 4:
                 strategyIntent = new PrefetchStrategyImpl4(0.6f);
                 break;
+            case 5:
+                strategyIntent = new PrefetchStrategyImpl5(0.6f);
+                break;
+            case 6:
+                strategyIntent = new PrefetchStrategyImpl6(0.6f);
+                break;
+            case 7:
+                strategyIntent = new PrefetchStrategyImpl7(0.6f);
+                break;
+            case 8:
+                strategyIntent = new PrefetchStrategyImpl8(0.6f);
+                break;
+            case 9:
+                strategyIntent = new PrefetchStrategyImpl9(0.6f);
+                break;
             default:
-                strategyIntent = new PrefetchStrategyImpl4(0.6f);
+                strategyIntent = new PrefetchStrategyImpl3(0.6f);
         }
     }
 
@@ -136,7 +142,6 @@ public class PrefetchingLib {
                 for (String actName: activityMap.keySet()) {
                     Log.i("PrefetchingLib", "Init nodes");
                     activityGraph.initNodes(actName);
-
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
                     Long actId = activityMap.get(actName);
@@ -332,7 +337,7 @@ public class PrefetchingLib {
 
             poolExecutor.schedule(() -> {
                 //List<String> topNUrls = strategyHistory.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 1);
-                List<String> topNUrls = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 1);
+                List<String> topNUrls = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                 for (String url : topNUrls) {
                     Log.e("TO_BE_PREF", url);
                 }
@@ -415,7 +420,7 @@ public class PrefetchingLib {
 
             // Begin Generating URL Candidates
             poolExecutor.schedule(() -> {
-                List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 10);
+                List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                 for (String url : toBePrefetched) {
                     Log.e("PREFSTRAT2", "URL: " + url);
                 }
@@ -458,7 +463,7 @@ public class PrefetchingLib {
         // Update the global extras map
         extrasMap.put(idAct, extras);
         poolExecutor.schedule(() -> {
-            List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 10);
+            List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
             for (String url : toBePrefetched) {
                 Log.e("PREFSTRAT2", "URL: " + url);
             }

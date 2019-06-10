@@ -27,7 +27,7 @@ public class ActivityNode {
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
-    public float pageRank,authority,hub,authorityS,hubS;
+    public float pageRank,authority,hub,authorityS,hubS,prob;
     /**
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
