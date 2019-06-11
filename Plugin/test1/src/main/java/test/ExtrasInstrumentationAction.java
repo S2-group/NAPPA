@@ -12,9 +12,11 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 
+import java.io.Console;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Will Instrument the startActivity(Intent) method in order to notify NAPPA of ALL extras that have been added for
@@ -40,7 +42,7 @@ public class ExtrasInstrumentationAction extends AnAction {
     Project project;
     PsiMethod signature;
     StringBuilder displayMessage = new StringBuilder();
-
+    StringBuilder logger = new StringBuilder();
 
     /**
      * Will find the location of the startActivity(...) method, and from there it will
@@ -50,6 +52,7 @@ public class ExtrasInstrumentationAction extends AnAction {
      */
     @Override
     public void actionPerformed(AnActionEvent event) {
+
         project = event.getProject();
         boolean activityTransitionFound = false;
         String[] fileNames = FilenameIndex.getAllFilenames(project);
@@ -70,6 +73,7 @@ public class ExtrasInstrumentationAction extends AnAction {
 
         // Iterate all statements inside all project files which contain an activity transition startActivity(...)
         for (PsiFile psiFile : psiFiles) {
+
             if (psiFile instanceof PsiJavaFile) {
                 PsiJavaFile javaFile = (PsiJavaFile) psiFile;
                 PsiClass[] psiClasses = javaFile.getClasses();
@@ -97,70 +101,106 @@ public class ExtrasInstrumentationAction extends AnAction {
                                                 .append("\n Original Statement:\n")
                                                 .append(statement.getText());
 
+                                        final PsiElement clientBuilderElement;
+                                        final PsiElement target;
 
                                         statement.accept(new JavaRecursiveElementVisitor() {
                                             @Override
                                             public void visitElement(PsiElement element) {
-                                                // Considering the method call expression: startActivity(intentName)
-                                                if (element instanceof PsiMethodCallExpression && element.getText().startsWith("startActivity")) {
-                                                    String intentName;
-                                                    // Represents the parameters passed to the startActivity Function, surrounded by parenthesis
-                                                    PsiElement parameterList = PsiTreeUtil.findChildOfType(element, PsiExpressionList.class);
-                                                    // Get teh Identifier of the intent
-                                                    intentName = PsiTreeUtil.findChildOfType(parameterList, PsiReferenceExpression.class)
-                                                            .getText();
 
-                                                    final PsiElement clientBuilderElement = PsiElementFactory.SERVICE.getInstance(project)
-                                                            .createStatementFromText("PrefetchingLib.notifyExtras(" + intentName + ".getExtras());\n\n"
-                                                                    , psiClass);
+                                                super.visitElement(element);
+                                                try{
+                                                    String elementText = element.getText();
+                                                    if(!elementText.contains("startActivityForResult") && !elementText.contains("PrefetchingLib.notifyExtras"))
+                                                    {
+                                                        // Considering the method call expression: startActivity(intentName)
+                                                        if (element instanceof PsiMethodCallExpression && element.getText().startsWith("startActivity")) {
+                                                            String intentName = "";
+                                                            // Represents the parameters passed to the startActivity Function, surrounded by parenthesis
+                                                            PsiElement parameterList = PsiTreeUtil.findChildOfType(element, PsiExpressionList.class);
+                                                            // Get teh Identifier of the intent
+                                                            PsiElement intentNameHandle = PsiTreeUtil.findChildOfType(parameterList, PsiReferenceExpression.class);
 
-
-                                                    // Inject the instrumented notifier of extra changes
-                                                    WriteCommandAction.runWriteCommandAction(project, () -> {
-                                                        element.getParent().addBefore(clientBuilderElement, element);
-
-
-                                                    });
-                                                }
-                                                // Considering the expression: view.context.startActivity(intentName)
-                                                else if (element instanceof PsiIdentifier && element.getText().startsWith("startActivity")) {
-                                                    String intentName = "";
-                                                    // Find the Handle to the PARENT which encapsulates the entire method call
-                                                    // "view.context.startActivity(...)"
-                                                    PsiElement fullMethod = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
-                                                    // Get a handle to the parameters list "(intentName)" of "view.getContext().startActivity(intentName)"
-                                                    PsiElement parameterList = PsiTreeUtil.getNextSiblingOfType(fullMethod.getFirstChild(), PsiExpressionList.class);
-                                                    // Get a handle to the teh Identifier of the intent
-                                                    PsiElement intentNameHandle = PsiTreeUtil.findChildOfType(parameterList, PsiReferenceExpression.class);
-
-                                                    if (intentNameHandle != null) {
-                                                        // Fetch the intent Name and create the injectable statement
-                                                        intentName = intentNameHandle.getText();
-                                                        final PsiElement clientBuilderElement = PsiElementFactory.SERVICE.getInstance(project)
-                                                                .createStatementFromText("PrefetchingLib.notifyExtras(" + intentName + ".getExtras());\n\n"
-                                                                        , psiClass);
+                                                            if (intentNameHandle != null) {
+                                                                intentName = intentNameHandle.getText();
+                                                                final PsiElement clientBuilderElement = PsiElementFactory.SERVICE.getInstance(project)
+                                                                        .createStatementFromText("PrefetchingLib.notifyExtras(" + intentName + ".getExtras());\n\n"
+                                                                                , psiClass);
 
 
-                                                        // Inject the intent probe before the startActivity Method
-                                                        WriteCommandAction.runWriteCommandAction(project, () -> {
-                                                            fullMethod.addBefore(clientBuilderElement, fullMethod);
+
+                                                                // Inject the instrumented notifier of extra changes
+                                                                WriteCommandAction.runWriteCommandAction(project, () -> {
+                                                                    element.getParent().addBefore(clientBuilderElement, element);
 
 
-                                                        });
-                                                    } else {
-                                                        displayMessage.append("\n\n\t WARNING:  Could not parse an instrumentable statement:\n\n")
-                                                                .append(statement.getText())
-                                                                .append("\n**Consider manualy writing the following line of code before the start activity method:\n")
-                                                                .append("PrefetchingLib.notifyExtras(<intentNameGoesHere>.getExtras()\n\n");
+                                                                });
+                                                            }else{
+                                                                String error = "\n\n*************Could not Parse Element: *********" +
+                                                                        "\nElement:" + element.getText() +
+                                                                        "\n**********************************************\n\n";
+
+                                                                System.out.println(error);
+
+                                                            }
+
+
+                                                        }
+                                                        // Considering the expression: view.context.startActivity(intentName)
+                                                        else if (element instanceof PsiIdentifier && element.getText().startsWith("startActivity")) {
+                                                            String intentName = "";
+                                                            // Find the Handle to the PARENT which encapsulates the entire method call
+                                                            // "view.context.startActivity(...)"
+                                                            PsiElement fullMethod = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
+                                                            // Get a handle to the parameters list "(intentName)" of "view.getContext().startActivity(intentName)"
+                                                            PsiElement parameterList = PsiTreeUtil.getNextSiblingOfType(fullMethod.getFirstChild(), PsiExpressionList.class);
+                                                            // Get a handle to the teh Identifier of the intent
+                                                            PsiElement intentNameHandle = PsiTreeUtil.findChildOfType(parameterList, PsiReferenceExpression.class);
+
+                                                            if (intentNameHandle != null) {
+                                                                // Fetch the intent Name and create the injectable statement
+                                                                intentName = intentNameHandle.getText();
+                                                                final PsiElement clientBuilderElement = PsiElementFactory.SERVICE.getInstance(project)
+                                                                        .createStatementFromText("PrefetchingLib.notifyExtras(" + intentName + ".getExtras());\n\n"
+                                                                                , psiClass);
+
+
+                                                                // Inject the intent probe before the startActivity Method
+                                                                WriteCommandAction.runWriteCommandAction(project, () -> {
+                                                                    fullMethod.addBefore(clientBuilderElement, fullMethod);
+
+
+                                                                });
+                                                            } else {
+                                                                String error = "\n\n*************Could not Parse Element: *********" +
+                                                                        "\nElement:" + element.getText() +
+                                                                        "\n**********************************************\n\n";
+
+                                                                System.out.println(error);
+
+                                                            }
+
+
+                                                        }
+
+                                                    }
+
+
+                                                }catch(NullPointerException e)
+                                                {
+                                                    e.printStackTrace();
+
+                                                    displayMessage.append("NullPointerException:\n")
+                                                                  .append("Element:\n\n");
+
+                                                    if(element!=null)
+                                                    {
+                                                        displayMessage.append(element.getText());
                                                     }
 
 
                                                 }
 
-                                                // Basecase: Only visit elements if the builder has not yet been encountered
-                                                else {
-                                                    super.visitElement(element);
-                                                }
                                             }
                                         });
 
