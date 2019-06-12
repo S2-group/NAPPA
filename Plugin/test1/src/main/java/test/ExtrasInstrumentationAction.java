@@ -108,11 +108,9 @@ public class ExtrasInstrumentationAction extends AnAction {
                                             @Override
                                             public void visitElement(PsiElement element) {
 
-                                                super.visitElement(element);
-                                                try{
+                                                try {
                                                     String elementText = element.getText();
-                                                    if(!elementText.contains("startActivityForResult") && !elementText.contains("PrefetchingLib.notifyExtras"))
-                                                    {
+                                                    if (!elementText.contains("startActivityForResult") && !elementText.contains("PrefetchingLib.notifyExtras")) {
                                                         // Considering the method call expression: startActivity(intentName)
                                                         if (element instanceof PsiMethodCallExpression && element.getText().startsWith("startActivity")) {
                                                             String intentName = "";
@@ -128,14 +126,13 @@ public class ExtrasInstrumentationAction extends AnAction {
                                                                                 , psiClass);
 
 
-
                                                                 // Inject the instrumented notifier of extra changes
                                                                 WriteCommandAction.runWriteCommandAction(project, () -> {
                                                                     element.getParent().addBefore(clientBuilderElement, element);
 
 
                                                                 });
-                                                            }else{
+                                                            } else {
                                                                 String error = "\n\n*************Could not Parse Element: *********" +
                                                                         "\nElement:" + element.getText() +
                                                                         "\n**********************************************\n\n";
@@ -181,20 +178,20 @@ public class ExtrasInstrumentationAction extends AnAction {
                                                             }
 
 
+                                                        } else {
+                                                            super.visitElement(element);
                                                         }
 
                                                     }
 
 
-                                                }catch(NullPointerException e)
-                                                {
+                                                } catch (NullPointerException e) {
                                                     e.printStackTrace();
 
                                                     displayMessage.append("NullPointerException:\n")
-                                                                  .append("Element:\n\n");
+                                                            .append("Element:\n\n");
 
-                                                    if(element!=null)
-                                                    {
+                                                    if (element != null) {
                                                         displayMessage.append(element.getText());
                                                     }
 
@@ -206,7 +203,7 @@ public class ExtrasInstrumentationAction extends AnAction {
 
                                         displayMessage.append("\n New Statement:\n")
                                                 .append(statement.getText())
-                                                .append("\n\n").toString();
+                                                .append("\n\n");
 
 
                                     }
