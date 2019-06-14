@@ -83,8 +83,8 @@ public class PrefetchingLib {
     public static int prefetchStrategyNum;
     private static boolean prefetchEnabled = true;
     private static int candidatePrefetchableUrlThreshold = 2;
-
-
+    private static int requestP = 0, requestNP = 0;
+    private static float timeSaved = 0f;
     public static LongSparseArray<Map<String, String>> getExtrasMap() {
         return extrasMap;
     }
@@ -151,9 +151,9 @@ public class PrefetchingLib {
                     if (byName.shouldSetSessionAggregateLiveData()) {
                         Log.i("PREF_LIB", "loading data for " + actName);
                         byName.setListSessionAggregateLiveData(
-                            PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                                    actId
-                            )
+                                PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
+                                        actId
+                                )
                         );
 
                         byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId,PrefetchStrategyImpl4.lastN));
@@ -165,9 +165,9 @@ public class PrefetchingLib {
                     if (byName.shouldSetActivityExtraLiveData()) {
                         Log.i("PREF_LIB", "loading extras for " + actName);
                         byName.setListActivityExtraLiveData(
-                            PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                                    actId
-                            )
+                                PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
+                                        actId
+                                )
                         );
                     }
 
@@ -236,8 +236,8 @@ public class PrefetchingLib {
         if (!activityMap.containsKey(activityName)) {
             ActivityData activityData = new ActivityData(activityName);
             poolExecutor.schedule(() -> {
-                    PrefetchingDatabase.getInstance().activityDao().insert(activityData);
-                    updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                PrefetchingDatabase.getInstance().activityDao().insert(activityData);
+                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -280,17 +280,17 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp() {
 
-            synchronized (PrefetchingLib.okHttpClient) {
+        synchronized (PrefetchingLib.okHttpClient) {
 
-                if (okHttpClient == null) {
-                    PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
-                            .addInterceptor(new CustomInterceptor())
-                            .cache(new Cache(cacheDir, (10 * 10 * 1024)))
-                            .build();
-                }
-
-                return PrefetchingLib.okHttpClient;
+            if (okHttpClient == null) {
+                PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
+                        .addInterceptor(new CustomInterceptor())
+                        .cache(new Cache(cacheDir, (10 * 10 * 1024)))
+                        .build();
             }
+
+            return PrefetchingLib.okHttpClient;
+        }
 
     }
 
@@ -346,6 +346,9 @@ public class PrefetchingLib {
                 }
             }, 0, TimeUnit.SECONDS);
         }
+        Log.e("STATS","Number of requests not prefetched: "+requestNP);
+        Log.e("STATS","Number of requests prefetched: "+requestP);
+        Log.e("STATS","Time saved until now: "+timeSaved);
     }
 
     /*private static List<ActivityNode> getAllParents(ActivityNode node, List<ActivityNode> parents) {
@@ -370,9 +373,9 @@ public class PrefetchingLib {
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-                SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-                Log.i("PREFLIB", activityMap.toString());
-                PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            Log.i("PREFLIB", activityMap.toString());
+            PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -384,8 +387,8 @@ public class PrefetchingLib {
      */
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-                SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-                PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -651,7 +654,7 @@ public class PrefetchingLib {
                 //SET TIMEOUT FOR STALE RESOURCES = 300 SECONDS
                 if ((new Date().getTime() - cachedResp.receivedDate.getTime()) < 300*1000 ) {
                     Log.i("PREFLIB", "found " + request.url().toString() + ", sending it back");
-
+                    requestP++;
                     Log.i("CONTENT", cachedResp.body);
 
                     // Return the Cached Response
@@ -672,7 +675,8 @@ public class PrefetchingLib {
             try {
                 // Execute the request
                 Response response = chain.proceed(request);
-
+                requestNP++;
+                timeSaved += (response.receivedResponseAtMillis()-response.sentRequestAtMillis())/1000f;
                 // Insert the new request
                 RequestData req = new RequestData(
                         null,
