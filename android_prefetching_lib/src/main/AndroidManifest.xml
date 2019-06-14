@@ -1,2 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.robertolaricchia.android_prefetching_lib" />
+    package="it.robertolaricchia.android_prefetching_lib">
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+</manifest>
