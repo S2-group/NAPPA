@@ -1,10 +1,14 @@
 package it.robertolaricchia.android_prefetching_lib;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -12,6 +16,9 @@ import android.util.LruCache;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -121,9 +128,34 @@ public class PrefetchingLib {
 
     public static void init(Context context,int prefetchStrategyNum) {
         if (instance == null) {
-            instance = new PrefetchingLib(prefetchStrategyNum);
+            //configuration file for
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(path, "config.txt");
+            String psn = Integer.toString(prefetchStrategyNum);
+            int size;
+            FileInputStream stream = null;
+            try {
+                stream = new FileInputStream(file);
+                try {
+                    psn ="";
+                    while ((size = stream.read()) != -1) {
+                        psn += Character.toString((char) size);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
             final Long start = new Date().getTime();
+            Log.e("PREFSTRATEGYNUM",psn);
+            instance = new PrefetchingLib(Integer.parseInt(psn));
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
@@ -151,9 +183,9 @@ public class PrefetchingLib {
                     if (byName.shouldSetSessionAggregateLiveData()) {
                         Log.i("PREF_LIB", "loading data for " + actName);
                         byName.setListSessionAggregateLiveData(
-                            PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                                    actId
-                            )
+                                PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
+                                        actId
+                                )
                         );
 
                         byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId,PrefetchStrategyImpl4.lastN));
@@ -165,9 +197,9 @@ public class PrefetchingLib {
                     if (byName.shouldSetActivityExtraLiveData()) {
                         Log.i("PREF_LIB", "loading extras for " + actName);
                         byName.setListActivityExtraLiveData(
-                            PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                                    actId
-                            )
+                                PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
+                                        actId
+                                )
                         );
                     }
 
@@ -236,8 +268,8 @@ public class PrefetchingLib {
         if (!activityMap.containsKey(activityName)) {
             ActivityData activityData = new ActivityData(activityName);
             poolExecutor.schedule(() -> {
-                    PrefetchingDatabase.getInstance().activityDao().insert(activityData);
-                    updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                PrefetchingDatabase.getInstance().activityDao().insert(activityData);
+                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -280,17 +312,17 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp() {
 
-            synchronized (PrefetchingLib.okHttpClient) {
+        synchronized (PrefetchingLib.okHttpClient) {
 
-                if (okHttpClient == null) {
-                    PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
-                            .addInterceptor(new CustomInterceptor())
-                            .cache(new Cache(cacheDir, (10 * 10 * 1024)))
-                            .build();
-                }
-
-                return PrefetchingLib.okHttpClient;
+            if (okHttpClient == null) {
+                PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
+                        .addInterceptor(new CustomInterceptor())
+                        .cache(new Cache(cacheDir, (10 * 10 * 1024)))
+                        .build();
             }
+
+            return PrefetchingLib.okHttpClient;
+        }
 
     }
 
@@ -373,9 +405,9 @@ public class PrefetchingLib {
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-                SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-                Log.i("PREFLIB", activityMap.toString());
-                PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            Log.i("PREFLIB", activityMap.toString());
+            PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -387,8 +419,8 @@ public class PrefetchingLib {
      */
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-                SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-                PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
