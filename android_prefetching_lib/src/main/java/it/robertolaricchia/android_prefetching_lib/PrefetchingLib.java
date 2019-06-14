@@ -1,10 +1,14 @@
 package it.robertolaricchia.android_prefetching_lib;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -12,6 +16,9 @@ import android.util.LruCache;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -121,9 +128,32 @@ public class PrefetchingLib {
 
     public static void init(Context context,int prefetchStrategyNum) {
         if (instance == null) {
-            instance = new PrefetchingLib(prefetchStrategyNum);
-
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(path, "config.txt");
+            String neuText = "";
+            int size;
+            FileInputStream stream = null;
+            try {
+                stream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                while ((size = stream.read()) != -1) {
+                    // add & append content
+                    neuText += Character.toString((char) size);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             final Long start = new Date().getTime();
+            Log.e("PREFSTRATEGYNUM",neuText);
+            instance = new PrefetchingLib(Integer.parseInt(neuText));
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
