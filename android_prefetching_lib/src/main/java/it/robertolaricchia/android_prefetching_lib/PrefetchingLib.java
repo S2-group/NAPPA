@@ -83,8 +83,8 @@ public class PrefetchingLib {
     public static int prefetchStrategyNum;
     private static boolean prefetchEnabled = true;
     private static int candidatePrefetchableUrlThreshold = 2;
-
-
+    private static int requestP = 0, requestNP = 0;
+    private static float timeSaved = 0f;
     public static LongSparseArray<Map<String, String>> getExtrasMap() {
         return extrasMap;
     }
@@ -346,6 +346,9 @@ public class PrefetchingLib {
                 }
             }, 0, TimeUnit.SECONDS);
         }
+        Log.e("STATS","Number of requests not prefetched: "+requestNP);
+        Log.e("STATS","Number of requests prefetched: "+requestP);
+        Log.e("STATS","Time saved until now: "+timeSaved);
     }
 
     /*private static List<ActivityNode> getAllParents(ActivityNode node, List<ActivityNode> parents) {
@@ -651,7 +654,7 @@ public class PrefetchingLib {
                 //SET TIMEOUT FOR STALE RESOURCES = 300 SECONDS
                 if ((new Date().getTime() - cachedResp.receivedDate.getTime()) < 300*1000 ) {
                     Log.i("PREFLIB", "found " + request.url().toString() + ", sending it back");
-
+                    requestP++;
                     Log.i("CONTENT", cachedResp.body);
 
                     // Return the Cached Response
@@ -672,7 +675,8 @@ public class PrefetchingLib {
             try {
                 // Execute the request
                 Response response = chain.proceed(request);
-
+                requestNP++;
+                timeSaved += (response.receivedResponseAtMillis()-response.sentRequestAtMillis())/1000f;
                 // Insert the new request
                 RequestData req = new RequestData(
                         null,
