@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "it.robertolaricchia.android_prefetching_2018"
+        applicationId "nl.cs.vu.android_prefetching_2018"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1

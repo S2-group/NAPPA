@@ -7,7 +7,7 @@
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stats.SessionDataActivity">
+    tools:context="nl.vu.cs.s2group.android_prefetching_2018.stats.SessionDataActivity">
 
     <TextView
         android:id="@+id/text_session_data"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stats.StatsActivity">
+    tools:context="nl.vu.cs.s2group.android_prefetching_2018.stats.StatsActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

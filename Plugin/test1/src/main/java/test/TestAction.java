@@ -244,7 +244,7 @@ public class TestAction extends AnAction {
                      *      the prefetching lib's package
                      * */
                     final PsiElement importToAdd = PsiElementFactory.SERVICE.getInstance(project).createImportStatementOnDemand(
-                            "it.robertolaricchia.android_prefetching_lib");
+                            "it.vu.android_prefetching_lib");
 
                     // Fetch all the import statements for this java file
                     PsiImportList importList = javaFile.getImportList();
@@ -255,7 +255,7 @@ public class TestAction extends AnAction {
                     // Check to see that the prefetch lib import has already taken place, to
                     //      avoid duplicates
                     for (PsiImportStatement importStatement : importStatements) {
-                        if (importStatement.getText().compareTo("import it.robertolaricchia.android_prefetching_lib.*;") == 0) {
+                        if (importStatement.getText().compareTo("import it.vu.android_prefetching_lib.*;") == 0) {
                             imported = true;
                             break;
                         }
