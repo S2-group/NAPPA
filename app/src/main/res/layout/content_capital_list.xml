@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CapitalListActivity"
+    tools:context="nl.vu.cs.s2group.android_prefetching_2018.CapitalListActivity"
     tools:showIn="@layout/activity_capital_list">
     <android.support.design.widget.TextInputLayout
         android:visibility="gone"

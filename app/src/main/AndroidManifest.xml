@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.robertolaricchia.android_prefetching_2018">
+    package="nl.vu.cs.s2group.android_prefetching_2018">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".InterActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.InterActivity"
             android:label="@string/title_activity_inter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,27 +23,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewsActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.NewsActivity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".WeatherActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.WeatherActivity"
             android:label="@string/title_activity_weather"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CapitalListActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.CapitalListActivity"
             android:label="@string/title_activity_capital_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".stats.StatsActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.StatsActivity"
             android:label="@string/title_activity_stats"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GraphActivity"
+            android:name="nl.vu.cs.s2group.android_prefetching_2018.GraphActivity"
             android:label="@string/title_activity_graph" />
-        <activity android:name=".stats.ListActivityActivity" />
-        <activity android:name=".stats.SessionDataActivity" />
-        <activity android:name=".CityDetailsActivity" />
+        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.ListActivityActivity" />
+        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.SessionDataActivity" />
+        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.CityDetailsActivity" />
     </application>
 
 </manifest>
