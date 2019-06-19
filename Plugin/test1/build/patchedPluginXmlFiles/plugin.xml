@@ -20,8 +20,9 @@
     <group id="MyPlugin.SampleMenu" text="Prefetching" description="Prefetching menu">
       <add-to-group group-id="MainMenu" anchor="last"/>
       <action class="test.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines"/>
-      <action class="test.AnotherAction" id="test2Id" text="Spot intent" description="Spots intents"/>
-      <action class="test.LastAction" id="test3Id" text="Spot okHttpClient" description="Spots okHttpClients"/>
+      <action class="test.ExtrasInstrumentationAction" id="test2Id" text="Instrument Intent Extras" description="Spots intents"/>
+      <action class="test.LastAction" id="test3Id" text="Instrument okHttpClients with Interceptor" description="Spots okHttpClients"/>
+      <action class="test.RetrofitInstrumentationAction" id="InstrumetnRetrofit" text="Instrument Retrofit" description="Instrument Retrofit Client with Interceptor"/>
     </group>
   </actions>
   <change-notes>
