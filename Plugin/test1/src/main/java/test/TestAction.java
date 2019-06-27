@@ -56,7 +56,8 @@ public class TestAction extends AnAction {
 
                 // Navigate tags until you reach the Activity Tags according to the following hierarchy
                 //  (Manifest ) -> (application) -> activity
-                String package_ = xmlFile.getRootTag().getAttribute("package").getValue();
+                String package_name = xmlFile.getRootTag().getAttribute("package").getValue();
+
                 XmlTag applicationTag = xmlFile.getRootTag().findFirstSubTag("application");
 
                 XmlTag[] activityTags = applicationTag.findSubTags("activity");
@@ -244,7 +245,7 @@ public class TestAction extends AnAction {
                      *      the prefetching lib's package
                      * */
                     final PsiElement importToAdd = PsiElementFactory.SERVICE.getInstance(project).createImportStatementOnDemand(
-                            "nl.vu.cs.s2group.*");
+                            "nl.vu.cs.s2group");
 
                     // Fetch all the import statements for this java file
                     PsiImportList importList = javaFile.getImportList();
