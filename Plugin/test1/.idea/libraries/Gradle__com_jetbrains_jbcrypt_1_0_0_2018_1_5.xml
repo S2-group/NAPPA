@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: com.jetbrains:jbcrypt-1.0.0:2018.1.5">
+    <ANNOTATIONS>
+      <root url="jar://$MAVEN_REPOSITORY$/com/jetbrains/intellij/idea/ideaIU/2018.3.6/ideaIU-2018.3.6-annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2018.1.5/e1e20861201ac09734f77b9174e7c2465a611172/ideaIC-2018.1.5/lib/jbcrypt-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2018.1.5/cfc53a4181dd404a59aadb0c2f6ea7d2eda6b726/ideaIC-2018.1.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
