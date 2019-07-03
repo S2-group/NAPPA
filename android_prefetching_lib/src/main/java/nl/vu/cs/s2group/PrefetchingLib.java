@@ -1,11 +1,11 @@
 package nl.vu.cs.s2group;
 
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;

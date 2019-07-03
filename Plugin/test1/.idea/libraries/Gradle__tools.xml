@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: tools">
+    <CLASSES>
+      <root url="jar://C:/Program Files/Java/jdk1.8.0_151/lib/tools.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

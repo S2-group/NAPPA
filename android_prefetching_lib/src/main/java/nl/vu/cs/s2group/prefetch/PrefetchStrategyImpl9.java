@@ -20,7 +20,7 @@
 
 package nl.vu.cs.s2group.prefetch;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import java.util.HashMap;

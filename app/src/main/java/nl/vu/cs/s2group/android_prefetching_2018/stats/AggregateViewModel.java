@@ -1,7 +1,7 @@
 package nl.vu.cs.s2group.android_prefetching_2018.stats;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
