@@ -1,8 +1,8 @@
 package nl.vu.cs.s2group.room.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 
 @Entity(tableName = "pf_session_data", primaryKeys = {"id_session", "id_activity_source", "id_activity_destination"})
 public class SessionData {

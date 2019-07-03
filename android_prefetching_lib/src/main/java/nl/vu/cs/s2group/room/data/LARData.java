@@ -1,9 +1,9 @@
 package nl.vu.cs.s2group.room.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.annotation.NonNull;
 
 @Entity(tableName = "pf_LAR", primaryKeys = {"activity_name"}, indices = @Index(value = {"activity_name"}, unique = true))
 public class LARData {

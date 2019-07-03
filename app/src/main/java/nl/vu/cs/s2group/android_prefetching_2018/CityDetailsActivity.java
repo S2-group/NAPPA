@@ -1,11 +1,10 @@
 package nl.vu.cs.s2group.android_prefetching_2018;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
-import nl.vu.cs.s2group.android_prefetching_2018.R;
 import nl.vu.cs.s2group.PrefetchingLib;
 
 public class CityDetailsActivity extends AppCompatActivity {
