@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.graph;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.util.Log;
 
 import java.util.HashMap;

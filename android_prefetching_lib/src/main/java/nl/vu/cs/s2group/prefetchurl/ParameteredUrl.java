@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.prefetchurl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 

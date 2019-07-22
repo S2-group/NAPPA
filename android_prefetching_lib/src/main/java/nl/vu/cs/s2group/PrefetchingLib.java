@@ -1,11 +1,11 @@
 package nl.vu.cs.s2group;
 
 import android.app.Activity;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -709,8 +709,16 @@ public class PrefetchingLib {
                 Response response = chain.proceed(request);
                 if(!libGet) requestNP++;
                 // Insert the new request
-                if(response.body().contentType()!=null) {
-                    RequestData req = new RequestData(
+
+
+                RequestData req;
+                // Verify if this response has an associated mime type with it.
+                if (response.body() != null &&
+                        response.body().contentType() != null &&
+                        response.body().contentType().type() != null)
+                {
+                    req = new RequestData(
+
                             null,
                             //1L,
                             activityMap.get(currentActivityName),
@@ -719,8 +727,24 @@ public class PrefetchingLib {
                             response.body().contentLength(),
                             Calendar.getInstance().getTimeInMillis());
 
-                    PrefetchingDatabase.getInstance().urlDao().insert(req);
                 }
+                // If the response does not contain a defined mime-type, provide an empty string, as per
+                //      RFC-7231
+                else{
+                    req = new RequestData(
+                            null,
+                            //1L,
+                            activityMap.get(currentActivityName),
+                            request.url().url().toString(),
+                            "",
+                            response.body().contentLength(),
+                            Calendar.getInstance().getTimeInMillis());
+                }
+
+
+                PrefetchingDatabase.getInstance().urlDao().insert(req);
+
+
                 /*SimpleDateFormat format = new SimpleDateFormat(
                         "EEE, dd MMM yyyy HH:mm:ss"
                 );

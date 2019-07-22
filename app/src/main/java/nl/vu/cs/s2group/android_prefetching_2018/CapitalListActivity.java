@@ -1,13 +1,13 @@
 package nl.vu.cs.s2group.android_prefetching_2018;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import nl.vu.cs.s2group.android_prefetching_2018.R;
 import nl.vu.cs.s2group.android_prefetching_2018.cardview.CapitalCardViewAdapter;
 import nl.vu.cs.s2group.android_prefetching_2018.cardview.CapitalCardViewAdapterObservable;
 import nl.vu.cs.s2group.android_prefetching_2018.data.Capital;
