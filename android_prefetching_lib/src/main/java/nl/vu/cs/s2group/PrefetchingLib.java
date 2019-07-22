@@ -717,14 +717,36 @@ public class PrefetchingLib {
                 requestNP++;
                 timeSaved += (response.receivedResponseAtMillis() - response.sentRequestAtMillis()) / 1000f;
                 // Insert the new request
-                RequestData req = new RequestData(
-                        null,
-                        //1L,
-                        activityMap.get(currentActivityName),
-                        request.url().url().toString(),
-                        response.body().contentType().type(),
-                        response.body().contentLength(),
-                        Calendar.getInstance().getTimeInMillis());
+
+                RequestData req;
+                // Verify if this response has an associated mime type with it.
+                if (response.body() != null &&
+                        response.body().contentType() != null &&
+                        response.body().contentType().type() != null)
+                {
+
+                    req = new RequestData(
+                            null,
+                            //1L,
+                            activityMap.get(currentActivityName),
+                            request.url().url().toString(),
+                            response.body().contentType().type(),
+                            response.body().contentLength(),
+                            Calendar.getInstance().getTimeInMillis());
+                }
+                // If the response does not contain a defined mime-type, provide an empty string, as per
+                //      RFC-7231
+                else{
+                    req = new RequestData(
+                            null,
+                            //1L,
+                            activityMap.get(currentActivityName),
+                            request.url().url().toString(),
+                            "",
+                            response.body().contentLength(),
+                            Calendar.getInstance().getTimeInMillis());
+                }
+
 
                 PrefetchingDatabase.getInstance().urlDao().insert(req);
 
