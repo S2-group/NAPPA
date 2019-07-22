@@ -427,53 +427,61 @@ public class PrefetchingLib {
     /**
      * Method instrumenting the set of all extras stored in a given intent. This method instruments
      * all extras in a single batch call rather than one by one.
+     * <p>
+     * NOTE:  This method should take place befpre {@link PrefetchingLib::setCurrentActivity}
      *
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
      */
-    public static void notifyExtras(Bundle allExtras){
-        //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
-        final Long idAct = activityMap.get(currentActivityName);
-        // Duplicate map containing key value pairs corresponding to android intent extras
-        Map<String, String> extras = extrasMap.get(idAct, new HashMap<>());
+    public static void notifyExtras(Bundle allExtras) {
+        // Note:  if the currentActivityName has not been set (Activity Transition before
+        // setCurrentActivity() is called), then notification is ignored
+        if (currentActivityName != null) {
+            //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
+            final Long idAct = activityMap.get(currentActivityName);
+            // Duplicate map containing key value pairs corresponding to android intent extras
+            Map<String, String> extras = extrasMap.get(idAct, new HashMap<>());
 
-        // Ensure that the set of extras is not empty
-        if(allExtras != null){
-            for (String key : allExtras.keySet()){
-                // Put on this extras tracker for this activity the new key-value pair. If
-                //    No value has been associated with this extra, NULL will be stored
-                extras.put(key, allExtras.getString(key));
+            // Ensure that the set of extras is not empty
+            if (allExtras != null) {
+                for (String key : allExtras.keySet()) {
+                    // Put on this extras tracker for this activity the new key-value pair. If
+                    //    No value has been associated with this extra, NULL will be stored
+                    extras.put(key, allExtras.getString(key));
+                }
+
+                // Update the global extras map after all extras have been stored
+                extrasMap.put(idAct, extras);
+
+                // Begin Generating URL Candidates
+                poolExecutor.schedule(() -> {
+                    List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
+                    for (String url : toBePrefetched) {
+                        Log.e("PREFSTRAT2", "URL: " + url);
+                    }
+                    // Trigger Prefetching
+                    if (prefetchEnabled) {
+                        prefetchUrls(toBePrefetched);
+                    }
+
+                }, 0, TimeUnit.SECONDS);
+
+                // Store the extras identified for a given activity in the database
+                poolExecutor.schedule(() -> {
+                    // Iterate through All Extras
+                    for (String key : allExtras.keySet()) {
+                        // Create an Database Object and store it
+                        ActivityExtraData activityExtraData =
+                                new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
+                        Log.i("PREFSTRAT2", "ADDING NEW ACTEXTRADATA");
+                        PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
+                    }
+                }, 0, TimeUnit.SECONDS);
+
             }
 
-            // Update the global extras map after all extras have been stored
-            extrasMap.put(idAct, extras);
-
-            // Begin Generating URL Candidates
-            poolExecutor.schedule(() -> {
-                List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
-                for (String url : toBePrefetched) {
-                    Log.e("PREFSTRAT2", "URL: " + url);
-                }
-                // Trigger Prefetching
-                if (prefetchEnabled) {
-                    prefetchUrls(toBePrefetched);
-                }
-
-            }, 0, TimeUnit.SECONDS);
-
-            // Store the extras identified for a given activity in the database
-            poolExecutor.schedule(() -> {
-                // Iterate through All Extras
-                for (String key : allExtras.keySet()){
-                    // Create an Database Object and store it
-                    ActivityExtraData activityExtraData =
-                            new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
-                    Log.i("PREFSTRAT2", "ADDING NEW ACTEXTRADATA");
-                    PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
-                }
-            }, 0, TimeUnit.SECONDS);
-
         }
+
     }
 
 
