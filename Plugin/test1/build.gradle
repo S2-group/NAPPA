@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'org.jetbrains.intellij' version '0.3.4'
+    id 'org.jetbrains.intellij' version '0.4.21'
 }
 
 group 'test'
@@ -17,7 +17,7 @@ dependencies {
 }
 
 intellij {
-    version '2018.1.5'
+    version '2020.1.1'
 
     plugins 'android'
     updateSinceUntilBuild false
