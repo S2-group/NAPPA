@@ -18,7 +18,6 @@ dependencies {
 
 intellij {
     version '2020.1.1'
-    type 'IU'
 
     plugins 'android'
     updateSinceUntilBuild false
