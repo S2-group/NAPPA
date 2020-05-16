@@ -1,18 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-
-
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -30,17 +27,20 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-        testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation 'androidx.room:room-runtime:2.1.0'
-    annotationProcessor 'androidx.room:room-compiler:2.1.0'
-    androidTestImplementation 'androidx.room:room-testing:2.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.15'
-    implementation 'org.bitbucket.cowwoc:diff-match-patch:1.1'
+    implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
+
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "androidx.room:room-runtime:$roomRuntimeVersion"
+    annotationProcessor "androidx.room:room-compiler:$roomRuntimeVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+
     implementation files('libs')
+
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test:runner:$runnerVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    androidTestImplementation "androidx.room:room-testing:$roomRuntimeVersion"
 }
