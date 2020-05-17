@@ -6,11 +6,8 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
+import util.InstrumentationUtil;
 
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OkHttpInstrumentationAction extends AnAction {
@@ -29,79 +26,72 @@ public class OkHttpInstrumentationAction extends AnAction {
         project = e.getProject();
         cat = "";
 
-        String[] fileNames = FilenameIndex.getAllFilenames(project);
-        List<PsiFile> psiFiles = new LinkedList<>();
-
-        for (String fileName : fileNames) {
-            psiFiles.addAll(Arrays.asList(FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project))));
-        }
+        List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
 
         for (PsiFile psiFile : psiFiles) {
-            if (psiFile instanceof PsiJavaFile) {
-                PsiJavaFile javaFile = (PsiJavaFile) psiFile;
-                PsiClass[] psiClasses = javaFile.getClasses();
+            PsiJavaFile javaFile = (PsiJavaFile) psiFile;
+            PsiClass[] psiClasses = javaFile.getClasses();
 
-                for (PsiClass psiClass : psiClasses) {
-                    PsiMethod[] psiMethods = psiClass.getMethods();
-                    for (PsiMethod psiMethod : psiMethods) {
-                        try {
-                            PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
-                            for (PsiStatement statement : psiStatements) {
-                                // Check for the construction of OkHttp objects
-                                if (statement.getText().contains("new OkHttpClient()") ||
-                                        statement.getText().contains("new OkHttpClient.Builder")) {
+            for (PsiClass psiClass : psiClasses) {
+                PsiMethod[] psiMethods = psiClass.getMethods();
+                for (PsiMethod psiMethod : psiMethods) {
+                    try {
+                        PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
+                        for (PsiStatement statement : psiStatements) {
+                            // Check for the construction of OkHttp objects
+                            if (statement.getText().contains("new OkHttpClient()") ||
+                                    statement.getText().contains("new OkHttpClient.Builder")) {
 
-                                    cat += statement.getClass().getCanonicalName() + "\n";
-                                    cat += psiClass.getName() + "::" + psiMethod.getName() + " -> " + statement.getText() + "\n";
+                                cat += statement.getClass().getCanonicalName() + "\n";
+                                cat += psiClass.getName() + "::" + psiMethod.getName() + " -> " + statement.getText() + "\n";
 
-                                    // Check if this reference to the OkHttpClient is an assignment or an
-                                    // Usage
-                                    if (statement instanceof PsiExpressionStatement) {
-                                        cat += "PsiExpressionStatement  " + statement.getText() + "\n";
-                                        // Print the canonical type of the okhttp statement
-                                        cat += ((PsiExpressionStatement) statement).getExpression().getType().getCanonicalText() + "\n";
+                                // Check if this reference to the OkHttpClient is an assignment or an
+                                // Usage
+                                if (statement instanceof PsiExpressionStatement) {
+                                    cat += "PsiExpressionStatement  " + statement.getText() + "\n";
+                                    // Print the canonical type of the okhttp statement
+                                    cat += ((PsiExpressionStatement) statement).getExpression().getType().getCanonicalText() + "\n";
 
-                                        // For all children of this statement
-                                        for (PsiElement element : statement.getChildren()) {
-                                            cat += element.getText() + "\n";
-                                            // Verify if this Expression is an assignment
-                                            if (element instanceof PsiAssignmentExpression) {
-                                                cat += "\nAssignment!\n\n";
-                                                PsiAssignmentExpression assignmentExpression = ((PsiAssignmentExpression) element);
-                                                // Check if the left expression has a type of OkHttpClient
-                                                if (((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
+                                    // For all children of this statement
+                                    for (PsiElement element : statement.getChildren()) {
+                                        cat += element.getText() + "\n";
+                                        // Verify if this Expression is an assignment
+                                        if (element instanceof PsiAssignmentExpression) {
+                                            cat += "\nAssignment!\n\n";
+                                            PsiAssignmentExpression assignmentExpression = ((PsiAssignmentExpression) element);
+                                            // Check if the left expression has a type of OkHttpClient
+                                            if (((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
 
-                                                    /**
-                                                     * IMPORTANT:  This statement instruments the application to fetch the okHttpClient within the
-                                                     * Prefetching lib
-                                                     */
-                                                    String varName = assignmentExpression.getLExpression().getText();
-                                                    final PsiElement elementX = PsiElementFactory.getInstance(project).createStatementFromText(
-                                                            varName + " = PrefetchingLib.getOkHttp(" + varName + ");", psiClass);
+                                                /**
+                                                 * IMPORTANT:  This statement instruments the application to fetch the okHttpClient within the
+                                                 * Prefetching lib
+                                                 */
+                                                String varName = assignmentExpression.getLExpression().getText();
+                                                final PsiElement elementX = PsiElementFactory.getInstance(project).createStatementFromText(
+                                                        varName + " = PrefetchingLib.getOkHttp(" + varName + ");", psiClass);
 
-                                                    // FIXME: Multiple Inserts to this method call whenever the user makes use of this action
-                                                    if (!assignmentExpression.getParent().getNextSibling().textMatches(elementX)) {
-                                                        WriteCommandAction.runWriteCommandAction(project, () -> {
-                                                            psiMethod.getBody().addAfter(
-                                                                    elementX, statement
-                                                            );
-                                                        });
-                                                    }
+                                                // FIXME: Multiple Inserts to this method call whenever the user makes use of this action
+                                                if (!assignmentExpression.getParent().getNextSibling().textMatches(elementX)) {
+                                                    WriteCommandAction.runWriteCommandAction(project, () -> {
+                                                        psiMethod.getBody().addAfter(
+                                                                elementX, statement
+                                                        );
+                                                    });
                                                 }
-                                                cat += "Type: " + ((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText() + "\n";
-                                                cat += "Variable name:  " + ((PsiAssignmentExpression) element).getLExpression().getText() + "\n";
-                                            } else {
-                                                cat += "Not an assignment";
                                             }
+                                            cat += "Type: " + ((PsiAssignmentExpression) element).getLExpression().getType().getCanonicalText() + "\n";
+                                            cat += "Variable name:  " + ((PsiAssignmentExpression) element).getLExpression().getText() + "\n";
+                                        } else {
+                                            cat += "Not an assignment";
                                         }
                                     }
-
-
                                 }
+
+
                             }
-                        } catch (NullPointerException e1) {
-                            e1.printStackTrace();
                         }
+                    } catch (NullPointerException e1) {
+                        e1.printStackTrace();
                     }
                 }
             }
