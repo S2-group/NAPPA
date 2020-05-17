@@ -76,7 +76,7 @@ public class LastAction extends AnAction {
                                                      * Prefetching lib
                                                      */
                                                     String varName = assignmentExpression.getLExpression().getText();
-                                                    final PsiElement elementX = PsiElementFactory.SERVICE.getInstance(project).createStatementFromText(
+                                                    final PsiElement elementX = PsiElementFactory.getInstance(project).createStatementFromText(
                                                             varName + " = PrefetchingLib.getOkHttp(" + varName + ");", psiClass);
 
                                                     // FIXME: Multiple Inserts to this method call whenever the user makes use of this action
