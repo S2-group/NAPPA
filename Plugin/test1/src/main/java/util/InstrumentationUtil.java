@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * An class containing common utility methods to simplify the instrumentation actions
