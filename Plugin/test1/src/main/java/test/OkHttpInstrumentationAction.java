@@ -41,14 +41,18 @@ public class OkHttpInstrumentationAction extends AnAction {
 
         resultMessage.incrementPossibleInstrumentationCount();
 
-        for (PsiElement element : psiStatement.getChildren()) {
-            if (element instanceof PsiAssignmentExpression) {
-                processOkHttpStatement(psiStatement, (PsiAssignmentExpression) element);
-            } else if (element instanceof PsiVariable) {
-                processOkHttpStatement(psiStatement, (PsiVariable) element);
+        psiStatement.accept(new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (!element.getText().contains("new OkHttpClient")) return;
+                String txt = element.getText();
+                if (element instanceof PsiAssignmentExpression) {
+                    processOkHttpStatement(psiStatement, (PsiAssignmentExpression) element);
+                } else if (element instanceof PsiVariable) {
+                    processOkHttpStatement(psiStatement, (PsiVariable) element);
+                } else super.visitElement(element);
             }
-        }
-
+        });
     }
 
     /**
