@@ -19,7 +19,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
      *
-     * @param e
+     * @param e {@inheritDoc}
      */
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -36,6 +36,13 @@ public class OkHttpInstrumentationAction extends AnAction {
         Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
     }
 
+    /**
+     * Scan a statement to search for a instance of OkHttpClient to instrument.
+     * This method is used as {@link java.util.function.Consumer} callback for the method
+     * {@link util.InstrumentationUtil#scanPsiFileStatement}
+     *
+     * @param psiStatement A potential Java statement to instrument
+     */
     private void processPsiStatement(@NotNull PsiStatement psiStatement) {
         if (!psiStatement.getText().contains("new OkHttpClient")) return;
 
@@ -45,7 +52,6 @@ public class OkHttpInstrumentationAction extends AnAction {
             @Override
             public void visitElement(PsiElement element) {
                 if (!element.getText().contains("new OkHttpClient")) return;
-                String txt = element.getText();
                 if (element instanceof PsiAssignmentExpression) {
                     processOkHttpStatement(psiStatement, (PsiAssignmentExpression) element);
                 } else if (element instanceof PsiVariable) {
@@ -60,7 +66,7 @@ public class OkHttpInstrumentationAction extends AnAction {
      * new instance of an OkHttp object. (e.g., {@code client = new OkHttpClient();})
      *
      * @param psiStatement         A statement containing a OkHttp assigment
-     * @param assignmentExpression The assignment expression
+     * @param assignmentExpression A PsiElement containing a variable assignment
      */
     private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiAssignmentExpression assignmentExpression) {
         if (assignmentExpression.getLExpression().getType() == null) {
@@ -89,11 +95,17 @@ public class OkHttpInstrumentationAction extends AnAction {
 
             resultMessage.incrementInstrumentationCount()
                     .appendPsiClass(psiClass)
-                    .appendPsiStatement(psiStatement)
                     .appendNewBlock();
         }
     }
 
+    /**
+     * Process the OkHttp instrumentation for cases where a OkHttp variable is declared and assigned a new instance of
+     * an OkHttp object. (e.g., {@code OkHttpClient client = new OkHttpClient();})
+     *
+     * @param psiStatement       A statement containing a OkHttp assigment
+     * @param variableExpression A PsiElement containing a variable declaration
+     */
     private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiVariable variableExpression) {
         if (variableExpression.getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
@@ -117,7 +129,6 @@ public class OkHttpInstrumentationAction extends AnAction {
 
             resultMessage.incrementInstrumentationCount()
                     .appendPsiClass(psiClass)
-                    .appendPsiStatement(psiStatement)
                     .appendNewBlock();
         }
     }
