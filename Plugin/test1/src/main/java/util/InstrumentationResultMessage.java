@@ -1,6 +1,7 @@
 package util;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,6 +97,17 @@ public class InstrumentationResultMessage {
      */
     public InstrumentationResultMessage appendPsiClass(@NotNull PsiClass psiClass) {
         builder.append("Class: ").append(psiClass.getQualifiedName()).append("\n");
+        return this;
+    }
+
+    /**
+     * Append the class or interface qualified name to the result message
+     *
+     * @param psiMethod A Java method or constructor.
+     * @return A instance of this object
+     */
+    public InstrumentationResultMessage appendPsiMethod(@NotNull PsiMethod psiMethod) {
+        builder.append("Method: ").append(psiMethod.getName()).append("\n");
         return this;
     }
 
