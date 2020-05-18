@@ -65,7 +65,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
         if (assignmentExpression.getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-            PsiClass psiClass = (PsiClass) psiStatement.getParent().getParent();
+            PsiClass psiClass = (PsiClass) psiBody.getParent().getParent();
             String varName = assignmentExpression.getLExpression().getText();
 
             PsiElement elementInstrumented = PsiElementFactory
@@ -93,7 +93,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiVariable variableExpression) {
         if (variableExpression.getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-            PsiClass psiClass = (PsiClass) psiStatement.getParent().getParent();
+            PsiClass psiClass = (PsiClass) psiBody.getParent().getParent();
             String varName = variableExpression.getName();
 
             PsiElement elementInstrumented = PsiElementFactory
