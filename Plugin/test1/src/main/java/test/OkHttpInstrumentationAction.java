@@ -6,12 +6,13 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import util.InstrumentationUtil;
 
 import java.util.List;
 
 public class OkHttpInstrumentationAction extends AnAction {
-
     Project project;
     PsiMethod signature;
     String cat = "Buongiorno\n";
@@ -25,8 +26,12 @@ public class OkHttpInstrumentationAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         project = e.getProject();
         cat = "";
-
+        String[] fileFilter = new String[]{
+                "import okhttp3"
+        };
         List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
+
+        InstrumentationUtil.scanPsiFileStatement(psiFiles, fileFilter, OkHttpInstrumentationAction::processPsiStatement);
 
         for (PsiFile psiFile : psiFiles) {
             PsiJavaFile javaFile = (PsiJavaFile) psiFile;
@@ -98,5 +103,10 @@ public class OkHttpInstrumentationAction extends AnAction {
         }
 
         Messages.showMessageDialog(cat, "Hello", Messages.getInformationIcon());
+    }
+
+    @Contract(pure = true)
+    private static @NotNull Boolean processPsiStatement(PsiStatement statement) {
+        return false;
     }
 }
