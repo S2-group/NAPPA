@@ -8,14 +8,13 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import util.InstrumentationUtil;
-import util.StringBuilderUtil;
+import util.InstrumentationResultMessage;
 
 import java.util.List;
 
 public class OkHttpInstrumentationAction extends AnAction {
     private Project project;
-    private StringBuilder displayMessage;
-    private int instrumentCount;
+    private InstrumentationResultMessage resultMessage;
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
@@ -25,8 +24,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         project = e.getProject();
-        displayMessage = new StringBuilder();
-        instrumentCount = 0;
+        resultMessage = new InstrumentationResultMessage();
         String[] fileFilter = new String[]{
                 "import okhttp3"
         };
@@ -35,48 +33,88 @@ public class OkHttpInstrumentationAction extends AnAction {
 
         InstrumentationUtil.scanPsiFileStatement(psiFiles, fileFilter, this::processPsiStatement);
 
-        displayMessage = StringBuilderUtil.addInstrumentCount(displayMessage, instrumentCount);
-
-        Messages.showMessageDialog(displayMessage.toString(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
+        Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
     }
 
     private void processPsiStatement(@NotNull PsiStatement psiStatement) {
-        if (!psiStatement.getText().contains("new OkHttpClient")) {
+        if (!psiStatement.getText().contains("new OkHttpClient")) return;
+
+        resultMessage.incrementPossibleInstrumentationCount();
+
+        for (PsiElement element : psiStatement.getChildren()) {
+            if (element instanceof PsiAssignmentExpression) {
+                processOkHttpStatement(psiStatement, (PsiAssignmentExpression) element);
+            } else if (element instanceof PsiVariable) {
+                processOkHttpStatement(psiStatement, (PsiVariable) element);
+            }
+        }
+
+    }
+
+    /**
+     * Process the OkHttp instrumentation for cases where an existent OkHttp variable already exists and is assigned a
+     * new instance of an OkHttp object. (e.g., {@code client = new OkHttpClient();})
+     *
+     * @param psiStatement         A statement containing a OkHttp assigment
+     * @param assignmentExpression The assignment expression
+     */
+    private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiAssignmentExpression assignmentExpression) {
+        if (assignmentExpression.getLExpression().getType() == null) {
             return;
         }
 
-        if (psiStatement instanceof PsiExpressionStatement) {
-            for (PsiElement element : psiStatement.getChildren()) {
-                if (element instanceof PsiAssignmentExpression) {
-                    PsiAssignmentExpression assignmentExpression = ((PsiAssignmentExpression) element);
-                    if (assignmentExpression.getLExpression().getType() == null) {
-                        return;
-                    }
-                    if (assignmentExpression.getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
-                        PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-                        PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
-                        PsiClass psiClass = (PsiClass) psiMethod.getParent();
-                        String varName = assignmentExpression.getLExpression().getText();
+        if (assignmentExpression.getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
+            PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
+            PsiClass psiClass = (PsiClass) psiStatement.getParent().getParent();
+            String varName = assignmentExpression.getLExpression().getText();
 
-                        final PsiElement elementInstrumented = PsiElementFactory
-                                .getInstance(project)
-                                .createStatementFromText(
-                                        varName + " = PrefetchingLib.getOkHttp(" + varName + ");",
-                                        psiClass);
+            PsiElement elementInstrumented = PsiElementFactory
+                    .getInstance(project)
+                    .createStatementFromText(
+                            varName + " = PrefetchingLib.getOkHttp(" + varName + ");",
+                            psiClass);
 
-                        if (psiBody.getText().contains(elementInstrumented.getText())) {
-                            return;
-                        }
-
-                        WriteCommandAction.runWriteCommandAction(project, () -> {
-                            psiBody.addAfter(elementInstrumented, psiStatement);
-                        });
-                        instrumentCount++;
-                        displayMessage = StringBuilderUtil.appendPsiClass(displayMessage, psiClass);
-                        displayMessage = StringBuilderUtil.appendPsiStatement(displayMessage, psiStatement);
-                    }
-                }
+            if (psiBody.getText().contains(elementInstrumented.getText())) {
+                resultMessage.incrementAlreadyInstrumentedCount();
+                return;
             }
+
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                psiBody.addAfter(elementInstrumented, psiStatement);
+            });
+
+            resultMessage.incrementInstrumentationCount()
+                    .appendPsiClass(psiClass)
+                    .appendPsiStatement(psiStatement)
+                    .appendNewBlock();
+        }
+    }
+
+    private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiVariable variableExpression) {
+        if (variableExpression.getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
+            PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
+            PsiClass psiClass = (PsiClass) psiStatement.getParent().getParent();
+            String varName = variableExpression.getName();
+
+            PsiElement elementInstrumented = PsiElementFactory
+                    .getInstance(project)
+                    .createStatementFromText(
+                            "OkHttpClient " + varName + " = PrefetchingLib.getOkHttp();",
+                            psiClass);
+
+            if (psiBody.getText().contains(elementInstrumented.getText())) {
+                resultMessage.incrementAlreadyInstrumentedCount();
+                return;
+            }
+
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                variableExpression.replace(elementInstrumented);
+            });
+
+            resultMessage.incrementInstrumentationCount()
+                    .appendPsiClass(psiClass)
+                    .appendPsiStatement(psiStatement)
+                    .appendNewBlock();
         }
     }
 }
