@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -46,7 +47,7 @@ public final class InstrumentationUtil {
      *                   A file is only analyzed if it contains any of the expressions defined in this array.
      * @param callback   A callback function invoked for each statement found in all files
      */
-    public static void scanPsiFileStatement(@NotNull List<PsiFile> psiFiles, String[] fileFilter, Function<PsiStatement, Boolean> callback) {
+    public static void scanPsiFileStatement(@NotNull List<PsiFile> psiFiles, String[] fileFilter, Consumer<PsiStatement> callback) {
         for (PsiFile psiFile : psiFiles) {
             if (Arrays.stream(fileFilter).anyMatch(psiFile.getText()::contains)) {
                 PsiClass[] psiClasses = ((PsiJavaFile) psiFile).getClasses();
@@ -56,7 +57,7 @@ public final class InstrumentationUtil {
                         if (psiMethod.getBody() != null) {
                             PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
                             for (PsiStatement statement : psiStatements) {
-                                callback.apply(statement);
+                                callback.accept(statement);
                             }
                         }
                     }

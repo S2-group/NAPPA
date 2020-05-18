@@ -35,9 +35,9 @@ public class OkHttpInstrumentationAction extends AnAction {
         Messages.showMessageDialog(cat, "Hello", Messages.getInformationIcon());
     }
 
-    private @NotNull Boolean processPsiStatement(@NotNull PsiStatement statement) {
+    private void processPsiStatement(@NotNull PsiStatement statement) {
         if (!statement.getText().contains("new OkHttpClient")) {
-            return false;
+            return;
         }
 
         if (statement instanceof PsiExpressionStatement) {
@@ -45,7 +45,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                 if (element instanceof PsiAssignmentExpression) {
                     PsiAssignmentExpression assignmentExpression = ((PsiAssignmentExpression) element);
                     if (assignmentExpression.getLExpression().getType() == null) {
-                        return false;
+                        return;
                     }
                     if (assignmentExpression.getLExpression().getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
                         PsiCodeBlock psiBody = (PsiCodeBlock) statement.getParent();
@@ -60,7 +60,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                                         psiClass);
 
                         if (psiBody.getText().contains(elementInstrumented.getText())) {
-                            return false;
+                            return;
                         }
 
                         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -70,7 +70,5 @@ public class OkHttpInstrumentationAction extends AnAction {
                 }
             }
         }
-
-        return false;
     }
 }
