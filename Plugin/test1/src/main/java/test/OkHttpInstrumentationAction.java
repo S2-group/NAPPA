@@ -70,7 +70,8 @@ public class OkHttpInstrumentationAction extends AnAction {
             public void visitElement(PsiElement element) {
                 String test = element.getText();
                 if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
-                    resultMessage.incrementAlreadyInstrumentedCount();
+                    resultMessage.incrementPossibleInstrumentationCount()
+                            .incrementAlreadyInstrumentedCount();
                     return;
                 }
 
