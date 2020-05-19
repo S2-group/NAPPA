@@ -62,7 +62,7 @@ public class OkHttpInstrumentationAction extends AnAction {
             @Override
             public void visitElement(PsiElement element) {
                 if (Arrays.stream(psiStatementFilter).noneMatch(psiStatement.getText()::contains)) return;
-                if (element.getText().contains("PrefetchingLib")) return;
+                if (element.getText().contains("PrefetchingLib.getOkHttp(")) return; // add count as already instrumented here
 
                 int statementType = -1;
 
@@ -108,28 +108,33 @@ public class OkHttpInstrumentationAction extends AnAction {
     }
 
     private boolean hasTypeOkHttp(int statementType, PsiElement element) {
-        switch (statementType) {
-            case STATEMENT_TYPE_ASSIGNMENT:
-                PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
-                return assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient");
-            case STATEMENT_TYPE_DECLARATION:
-                return ((PsiVariable) element).getType().getCanonicalText().equals("okhttp3.OkHttpClient");
-            default:
-                return false;
+        try {
+            switch (statementType) {
+                case STATEMENT_TYPE_ASSIGNMENT:
+                    PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
+                    return assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient");
+                case STATEMENT_TYPE_DECLARATION:
+                    return ((PsiVariable) element).getType().getCanonicalText().equals("okhttp3.OkHttpClient");
+                default:
+                    return false;
+            }
+        } catch (PsiInvalidElementAccessException e) {
+            return false;
         }
     }
 
     private @NotNull String makeInstrumentationLine(int statementType, PsiElement element, boolean isBuilder) {
         String parameter;
+        String leftExpression;
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
                 PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
-                String okHttpVariableName = assignmentExpression.getLExpression().getText();
-                parameter = isBuilder ? assignmentExpression.getRExpression().getText() : okHttpVariableName;
-                return okHttpVariableName + " = PrefetchingLib.getOkHttp(" + parameter + ");";
+                leftExpression = assignmentExpression.getLExpression().getText();
+                parameter = isBuilder ? assignmentExpression.getRExpression().getText() : "new OkHttpClient()";
+                return leftExpression + " = PrefetchingLib.getOkHttp(" + parameter + ");";
             case STATEMENT_TYPE_DECLARATION:
                 PsiVariable variableExpression = (PsiVariable) element;
-                String leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
+                leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
                 parameter = isBuilder ? "BUILDER" : "";
                 return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
             default:
@@ -138,15 +143,12 @@ public class OkHttpInstrumentationAction extends AnAction {
     }
 
     @Contract(pure = true)
-    private @NotNull Runnable makeWriteCommand(int statementType, PsiCodeBlock psiMethodBody, PsiElement instrumentedElement, PsiStatement statement) {
+    private @NotNull Runnable makeWriteCommand(int statementType, PsiCodeBlock psiMethodBody, PsiElement instrumentedElement, PsiElement originalElement) {
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
-                return () -> {
-                    psiMethodBody.addAfter(instrumentedElement, statement);
-                };
             case STATEMENT_TYPE_DECLARATION:
                 return () -> {
-                    psiMethodBody.replace(instrumentedElement);
+                    originalElement.replace(instrumentedElement);
                 };
             default:
                 return () -> {
