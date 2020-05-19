@@ -9,15 +9,15 @@ import com.intellij.psi.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.InstrumentationUtil;
 import util.InstrumentationResultMessage;
+import util.InstrumentationUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class OkHttpInstrumentationAction extends AnAction {
     private static final int STATEMENT_TYPE_DECLARATION = 0;
     private static final int STATEMENT_TYPE_ASSIGNMENT = 1;
+    private static final int STATEMENT_TYPE_RETURN = 2;
 
     private Project project;
     private InstrumentationResultMessage resultMessage;
@@ -78,6 +78,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 if (element instanceof PsiAssignmentExpression) statementType = STATEMENT_TYPE_ASSIGNMENT;
                 else if (element instanceof PsiVariable) statementType = STATEMENT_TYPE_DECLARATION;
+                else if (element instanceof PsiReturnStatement) statementType = STATEMENT_TYPE_RETURN;
                 else super.visitElement(element);
 
                 if (statementType == -1) return;
@@ -120,14 +121,22 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @return {@code True} if the {@code element} has th type {@code OkHttpClient}, {@code False} otherwise
      */
     private boolean hasTypeOkHttp(int statementType, PsiElement element) {
+        String okHttpClientType = "okhttp3.OkHttpClient";
         try {
             switch (statementType) {
                 case STATEMENT_TYPE_ASSIGNMENT:
                     PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
-                    return assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient");
+                    return assignmentExpression.getType() != null &&
+                            assignmentExpression.getType().getCanonicalText().equals(okHttpClientType);
 
                 case STATEMENT_TYPE_DECLARATION:
-                    return ((PsiVariable) element).getType().getCanonicalText().equals("okhttp3.OkHttpClient");
+                    return ((PsiVariable) element).getType().getCanonicalText().equals(okHttpClientType);
+
+                case STATEMENT_TYPE_RETURN:
+                    PsiReturnStatement returnStatement = (PsiReturnStatement) element;
+                    return returnStatement.getReturnValue() != null &&
+                            returnStatement.getReturnValue().getType() != null &&
+                            returnStatement.getReturnValue().getType().getCanonicalText().equals(okHttpClientType);
 
                 default:
                     return false;
@@ -151,7 +160,17 @@ public class OkHttpInstrumentationAction extends AnAction {
 
         if (!isBuilder && !isDefaultOkHttpConstructor) return null;
 
-        String[] expression = element.getText().split("=");
+        String[] expression;
+        if (statementType == STATEMENT_TYPE_RETURN) {
+            //noinspection ConstantConditions
+            expression = new String[]{
+                    "return",
+                    ((PsiReturnStatement) element).getReturnValue().getText()
+            };
+        } else {
+            expression = element.getText().split("=");
+        }
+
         if (expression.length != 2) return null;
 
         String instrumentedLine = expression[0] + " = PrefetchingLib.getOkHttp(" + expression[1].replace(";", "") + ")";
