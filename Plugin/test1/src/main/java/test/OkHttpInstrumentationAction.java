@@ -93,7 +93,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
 
-                Runnable writeCommand = makeWriteCommand(statementType, psiBody, instrumentedElement, element);
+                Runnable writeCommand = makeWriteCommand(statementType, instrumentedElement, element, psiBody);
                 WriteCommandAction.runWriteCommandAction(project, writeCommand);
 
                 resultMessage.incrementInstrumentationCount()
@@ -104,6 +104,13 @@ public class OkHttpInstrumentationAction extends AnAction {
         });
     }
 
+    /**
+     * Verifies if the {@code element} contains an assignment or declaration of a {@code OkHttpClient}
+     *
+     * @param statementType An ID identifying the processed PsiElement class type
+     * @param element A Psi element potentially contain the code to be instrumented
+     * @return {@code True} if the {@code element} has th type {@code OkHttpClient}, {@code False} otherwise
+     */
     private boolean hasTypeOkHttp(int statementType, PsiElement element) {
         try {
             switch (statementType) {
@@ -120,6 +127,14 @@ public class OkHttpInstrumentationAction extends AnAction {
         }
     }
 
+    /**
+     * Generates a instrumented source-code line using the prefetch library
+     *
+     * @param statementType An ID identifying the processed PsiElement class type
+     * @param element A Psi element containing the code to be instrumented
+     * @param isBuilder Flag identifying the usage of {@code OkHttpClient.Builder}
+     * @return The new source-code line
+     */
     private @NotNull String makeInstrumentationLine(int statementType, PsiElement element, boolean isBuilder) {
         String parameter;
         switch (statementType) {
@@ -139,8 +154,18 @@ public class OkHttpInstrumentationAction extends AnAction {
         }
     }
 
+    /**
+     * Generate a {@link Runnable} instance to write in the original source code.
+     * This should be passed as parameter to the method {@link WriteCommandAction#runWriteCommandAction} .
+     *
+     * @param statementType An ID identifying the processed PsiElement class type
+     * @param instrumentedElement A Psi element containing the instrumented code
+     * @param originalElement A Psi element containing the code to be instrumented
+     * @param psiMethodBody A method body used as reference to locate the original element in the Psi tree.
+     * @return A {@link Runnable} instance for instrumentation
+     */
     @Contract(pure = true)
-    private @NotNull Runnable makeWriteCommand(int statementType, PsiCodeBlock psiMethodBody, PsiElement instrumentedElement, PsiElement originalElement) {
+    private @NotNull Runnable makeWriteCommand(int statementType, PsiElement instrumentedElement, PsiElement originalElement, PsiCodeBlock psiMethodBody) {
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
             case STATEMENT_TYPE_DECLARATION:
