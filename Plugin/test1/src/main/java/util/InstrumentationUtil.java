@@ -57,16 +57,33 @@ public final class InstrumentationUtil {
             if (Arrays.stream(fileFilter).noneMatch(psiFile.getText()::contains)) continue;
             PsiClass[] psiClasses = ((PsiJavaFile) psiFile).getClasses();
             for (PsiClass psiClass : psiClasses) {
-                if (Arrays.stream(classFilter).noneMatch(psiClass.getText()::contains)) continue;
-                PsiMethod[] psiMethods = psiClass.getMethods();
-                for (PsiMethod psiMethod : psiMethods) {
-                    if (psiMethod.getBody() == null) continue;
-                    PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
-                    for (PsiStatement statement : psiStatements) {
-                        callback.accept(statement);
-                    }
-                }
+                scanPsiClass(psiClass, classFilter, callback);
             }
+        }
+    }
+
+    /**
+     * Auxiliary method for {@link InstrumentationUtil#scanPsiFileStatement} to be able to scan inner classes
+     *
+     * @param psiClass    A Java class
+     * @param classFilter Skip all classes that does not contain any of the strings in the provided array
+     * @param callback    A callback function invoked for each statement found in all files
+     */
+    private static void scanPsiClass(PsiClass psiClass, String[] classFilter, Consumer<PsiStatement> callback) {
+        if (Arrays.stream(classFilter).noneMatch(psiClass.getText()::contains)) return;
+
+        PsiMethod[] psiMethods = psiClass.getMethods();
+        for (PsiMethod psiMethod : psiMethods) {
+            if (psiMethod.getBody() == null) continue;
+            PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
+            for (PsiStatement statement : psiStatements) {
+                callback.accept(statement);
+            }
+        }
+
+        PsiClass[] psiClasses = psiClass.getInnerClasses();
+        for (PsiClass innerPsiClass : psiClasses) {
+            scanPsiClass(innerPsiClass, classFilter, callback);
         }
     }
 }
