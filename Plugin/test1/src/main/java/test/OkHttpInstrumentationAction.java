@@ -62,7 +62,10 @@ public class OkHttpInstrumentationAction extends AnAction {
             @Override
             public void visitElement(PsiElement element) {
                 if (Arrays.stream(psiStatementFilter).noneMatch(psiStatement.getText()::contains)) return;
-                if (element.getText().contains("PrefetchingLib.getOkHttp(")) return; // add count as already instrumented here
+                if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
+                    resultMessage.incrementAlreadyInstrumentedCount();
+                    return;
+                }
 
                 int statementType = -1;
 
@@ -125,17 +128,17 @@ public class OkHttpInstrumentationAction extends AnAction {
 
     private @NotNull String makeInstrumentationLine(int statementType, PsiElement element, boolean isBuilder) {
         String parameter;
-        String leftExpression;
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
                 PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
-                leftExpression = assignmentExpression.getLExpression().getText();
+                String variableName = assignmentExpression.getLExpression().getText();
                 parameter = isBuilder ? assignmentExpression.getRExpression().getText() : "new OkHttpClient()";
-                return leftExpression + " = PrefetchingLib.getOkHttp(" + parameter + ");";
+                return variableName + " = PrefetchingLib.getOkHttp(" + parameter + ");";
             case STATEMENT_TYPE_DECLARATION:
                 PsiVariable variableExpression = (PsiVariable) element;
-                leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
-                parameter = isBuilder ? "BUILDER" : "new OkHttpClient()";
+                String leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
+                String text = element.getText();
+                parameter = isBuilder ? text.substring(text.indexOf("=") + 1, text.indexOf(";")) : "new OkHttpClient()";
                 return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
             default:
                 return "";
