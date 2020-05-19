@@ -46,16 +46,24 @@ public final class InstrumentationUtil {
     }
 
     /**
-     * @param project     An object representing an IntelliJ project.
-     * @param psiJavaFile A list of all Java files within a project
+     * @param project             An object representing an IntelliJ project.
+     * @param psiElementReference The reference element to add the library import to
      */
-    public static void addLibraryImport(Project project, @NotNull PsiJavaFile psiJavaFile) {
-        String importStatement = "import nl.vu.cs.s2group";
-        PsiImportList importList = psiJavaFile.getImportList();
+    public static void addLibraryImport(Project project, @NotNull PsiElement psiElementReference) {
+        String packageName = "nl.vu.cs.s2group";
+        PsiElement psiElement = psiElementReference;
 
-        if (importList == null || importList.findOnDemandImportStatement(importStatement) != null) return;
+        while (true) {
+            if (psiElement == null) return;
+            if (psiElement instanceof PsiJavaFile) break;
+            psiElement = psiElement.getParent();
+        }
+
+        PsiImportList importList = ((PsiJavaFile) psiElement).getImportList();
+
+        if (importList == null || importList.findOnDemandImportStatement(packageName) != null) return;
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(importStatement));
+            importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(packageName));
         });
     }
 

@@ -106,7 +106,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                     element.replace(instrumentedElement);
                 });
 
-                InstrumentationUtil.addLibraryImport(project, (PsiJavaFile) psiClass.getParent());
+                InstrumentationUtil.addLibraryImport(project, psiClass);
 
                 resultMessage.incrementInstrumentationCount()
                         .appendPsiClass(psiClass)
