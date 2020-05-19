@@ -143,29 +143,17 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @return The new source-code line if instrumentation is possible, {@code null} otherwise
      */
     private @Nullable String makeInstrumentationLine(int statementType, @NotNull PsiElement element) {
-        String parameter;
         boolean isBuilder = element.getText().contains(".build()");
         boolean isDefaultOkHttpConstructor = element.getText().contains("new OkHttpClient()");
 
         if (!isBuilder && !isDefaultOkHttpConstructor) return null;
 
-        switch (statementType) {
-            case STATEMENT_TYPE_ASSIGNMENT:
-                PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
-                String variableName = assignmentExpression.getLExpression().getText();
-                parameter = isBuilder ? assignmentExpression.getRExpression().getText() : "new OkHttpClient()";
-                return variableName + " = PrefetchingLib.getOkHttp(" + parameter + ");";
+        String[] expression = element.getText().split("=");
+        if (expression.length != 2) return null;
 
-            case STATEMENT_TYPE_DECLARATION:
-                PsiVariable variableExpression = (PsiVariable) element;
-                String leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
-                String text = element.getText();
-                parameter = isBuilder ? text.substring(text.indexOf("=") + 1, text.indexOf(";")) : "new OkHttpClient()";
-                return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
-
-            default:
-                return null;
-        }
+        String instrumentedLine = expression[0] + " = PrefetchingLib.getOkHttp(" + expression[1].replace(";", "") + ")";
+        instrumentedLine = instrumentedLine + (element.getText().contains(";") ? "" : ";");
+        return instrumentedLine;
     }
 
     /**
