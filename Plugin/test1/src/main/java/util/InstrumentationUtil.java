@@ -47,24 +47,23 @@ public final class InstrumentationUtil {
      * Iterate the Java files structure until reaching the statement level (e.g. {@code String a = "text"}).
      * Upon reaching a statement, invokes the {@code callback} function passing the statement as parameter
      *
-     * @param psiFiles   A list of all Java files within a project
-     * @param fileFilter A array containing java source code expressions.
-     *                   A file is only analyzed if it contains any of the expressions defined in this array.
-     * @param callback   A callback function invoked for each statement found in all files
+     * @param psiFiles    A list of all Java files within a project
+     * @param fileFilter  Skip all files that does not contain any of the strings in the provided array
+     * @param classFilter Skip all classes that does not contain any of the strings in the provided array
+     * @param callback    A callback function invoked for each statement found in all files
      */
-    public static void scanPsiFileStatement(@NotNull List<PsiFile> psiFiles, String[] fileFilter, Consumer<PsiStatement> callback) {
+    public static void scanPsiFileStatement(@NotNull List<PsiFile> psiFiles, String[] fileFilter, String[] classFilter, Consumer<PsiStatement> callback) {
         for (PsiFile psiFile : psiFiles) {
-            if (Arrays.stream(fileFilter).anyMatch(psiFile.getText()::contains)) {
-                PsiClass[] psiClasses = ((PsiJavaFile) psiFile).getClasses();
-                for (PsiClass psiClass : psiClasses) {
-                    PsiMethod[] psiMethods = psiClass.getMethods();
-                    for (PsiMethod psiMethod : psiMethods) {
-                        if (psiMethod.getBody() != null) {
-                            PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
-                            for (PsiStatement statement : psiStatements) {
-                                callback.accept(statement);
-                            }
-                        }
+            if (Arrays.stream(fileFilter).noneMatch(psiFile.getText()::contains)) continue;
+            PsiClass[] psiClasses = ((PsiJavaFile) psiFile).getClasses();
+            for (PsiClass psiClass : psiClasses) {
+                if (Arrays.stream(classFilter).noneMatch(psiClass.getText()::contains)) continue;
+                PsiMethod[] psiMethods = psiClass.getMethods();
+                for (PsiMethod psiMethod : psiMethods) {
+                    if (psiMethod.getBody() == null) continue;
+                    PsiStatement[] psiStatements = psiMethod.getBody().getStatements();
+                    for (PsiStatement statement : psiStatements) {
+                        callback.accept(statement);
                     }
                 }
             }

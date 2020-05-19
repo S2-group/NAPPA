@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import util.InstrumentationUtil;
 import util.InstrumentationResultMessage;
 
@@ -31,10 +32,11 @@ public class OkHttpInstrumentationAction extends AnAction {
         project = e.getProject();
         resultMessage = new InstrumentationResultMessage();
         String[] fileFilter = new String[]{"import okhttp3"};
+        String[] classFilter = new String[]{"OkHttpClient"};
 
         List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
 
-        InstrumentationUtil.scanPsiFileStatement(psiFiles, fileFilter, this::processPsiStatement);
+        InstrumentationUtil.scanPsiFileStatement(psiFiles, fileFilter, classFilter, this::processPsiStatement);
 
         Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
     }
@@ -43,6 +45,18 @@ public class OkHttpInstrumentationAction extends AnAction {
      * Scan a statement to search for a instance of OkHttpClient to instrument.
      * This method is used as {@link java.util.function.Consumer} callback for the method
      * {@link util.InstrumentationUtil#scanPsiFileStatement}
+     * <br/><br/>
+     *
+     * <p>The following occurrences should be instrumented </p>
+     *
+     * <pre>
+     * {@code
+     * OkHttpClient client = new OkHttpClient()
+     * OkHttpClient client = okHttpClientBuilder.build()
+     * client = new OkHttpClient()
+     * client = okHttpClientBuilder.build()
+     * }
+     * </pre>
      *
      * @param psiStatement A potential Java statement to instrument
      */
@@ -50,8 +64,6 @@ public class OkHttpInstrumentationAction extends AnAction {
         PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
         PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
         PsiClass psiClass = (PsiClass) psiMethod.getParent();
-
-        if (!psiClass.getText().contains("OkHttpClient")) return;
 
         resultMessage.incrementPossibleInstrumentationCount();
 
@@ -66,17 +78,16 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 int statementType = -1;
 
-                if (element instanceof PsiAssignmentExpression) {
-                    statementType = STATEMENT_TYPE_ASSIGNMENT;
-                } else if (element instanceof PsiVariable) {
-                    statementType = STATEMENT_TYPE_DECLARATION;
-                } else super.visitElement(element);
+                if (element instanceof PsiAssignmentExpression) statementType = STATEMENT_TYPE_ASSIGNMENT;
+                else if (element instanceof PsiVariable) statementType = STATEMENT_TYPE_DECLARATION;
+                else super.visitElement(element);
 
                 if (statementType == -1) return;
                 if (!hasTypeOkHttp(statementType, element)) return;
 
-
                 String instrumentedLine = makeInstrumentationLine(statementType, element);
+
+                if (instrumentedLine == null) return;
 
                 if (psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();
@@ -124,15 +135,19 @@ public class OkHttpInstrumentationAction extends AnAction {
     }
 
     /**
-     * Generates a instrumented source-code line using the prefetch library
+     * Verifies if the element can be instrumented.
+     * If so, generates a instrumented source-code line using the prefetch library
      *
      * @param statementType An ID identifying the processed PsiElement class type
      * @param element       A Psi element containing the code to be instrumented
-     * @return The new source-code line
+     * @return The new source-code line if instrumentation is possible, {@code null} otherwise
      */
-    private @NotNull String makeInstrumentationLine(int statementType, @NotNull PsiElement element) {
+    private @Nullable String makeInstrumentationLine(int statementType, @NotNull PsiElement element) {
         String parameter;
         boolean isBuilder = element.getText().contains(".build()");
+        boolean isDefaultOkHttpConstructor = element.getText().contains("new OkHttpClient()");
+
+        if (!isBuilder && !isDefaultOkHttpConstructor) return null;
 
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
@@ -149,7 +164,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                 return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
 
             default:
-                return "";
+                return null;
         }
     }
 
