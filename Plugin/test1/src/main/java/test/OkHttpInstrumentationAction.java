@@ -6,7 +6,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.InstrumentationResultMessage;
@@ -62,8 +61,8 @@ public class OkHttpInstrumentationAction extends AnAction {
      */
     private void processPsiStatement(@NotNull PsiStatement psiStatement) {
         PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-        PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
-        PsiClass psiClass = (PsiClass) psiMethod.getParent();
+//        PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
+
 
         psiStatement.accept(new JavaRecursiveElementVisitor() {
             @Override
@@ -99,6 +98,8 @@ public class OkHttpInstrumentationAction extends AnAction {
                     return;
                 }
 
+                PsiClass psiClass = (PsiClass) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiClass.class);
+
                 PsiElement instrumentedElement = PsiElementFactory
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
@@ -111,7 +112,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 resultMessage.incrementInstrumentationCount()
                         .appendPsiClass(psiClass)
-                        .appendPsiMethod(psiMethod)
+//                        .appendPsiMethod(psiMethod)
                         .appendNewBlock();
             }
         });

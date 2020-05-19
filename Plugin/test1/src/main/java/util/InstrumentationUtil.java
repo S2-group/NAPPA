@@ -6,7 +6,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -46,20 +48,13 @@ public final class InstrumentationUtil {
     }
 
     /**
-     * @param project             An object representing an IntelliJ project.
-     * @param psiElementReference The reference element to add the library import to
+     * @param project    An object representing an IntelliJ project.
+     * @param psiElement The reference element to add the library import to
      */
-    public static void addLibraryImport(Project project, @NotNull PsiElement psiElementReference) {
+    public static void addLibraryImport(Project project, @NotNull PsiElement psiElement) {
         String packageName = "nl.vu.cs.s2group";
-        PsiElement psiElement = psiElementReference;
-
-        while (true) {
-            if (psiElement instanceof PsiDirectory) return;
-            if (psiElement instanceof PsiJavaFile) break;
-            psiElement = psiElement.getParent();
-        }
-
-        PsiImportList importList = ((PsiJavaFile) psiElement).getImportList();
+        PsiJavaFile psiJavaFile = (PsiJavaFile) getAncestorPsiElementFromElement(psiElement, PsiJavaFile.class);
+        PsiImportList importList = psiJavaFile.getImportList();
 
         if (importList == null || importList.findOnDemandImportStatement(packageName) != null) return;
         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -115,6 +110,22 @@ public final class InstrumentationUtil {
         PsiClass[] psiClasses = psiClass.getInnerClasses();
         for (PsiClass innerPsiClass : psiClasses) {
             scanPsiClass(innerPsiClass, classFilter, callback);
+        }
+    }
+
+    /**
+     * Traverse the Psi tree from the {@code element} in direction to the root until finding a Psi element representing
+     * the Psi element class provided in {@code classType}
+     *
+     * @param element   The reference element to find a parent Psi element from
+     * @param classType The class of the desired Psi element
+     * @return The Psi representation of the first {@code element} of the type {@code classType}. {@code null} if no Java class is found.
+     */
+    public static @Nullable PsiElement getAncestorPsiElementFromElement(PsiElement element, Class classType) {
+        while (true) {
+            if (element instanceof PsiDirectory) return null;
+            if (classType.isInstance(element)) return element;
+            element = element.getParent();
         }
     }
 }
