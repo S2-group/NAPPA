@@ -69,7 +69,7 @@ public final class InstrumentationUtil {
      * @param classFilter Skip all classes that does not contain any of the strings in the provided array
      * @param callback    A callback function invoked for each statement found in all files
      */
-    private static void scanPsiClass(PsiClass psiClass, String[] classFilter, Consumer<PsiStatement> callback) {
+    private static void scanPsiClass(@NotNull PsiClass psiClass, String[] classFilter, Consumer<PsiStatement> callback) {
         if (Arrays.stream(classFilter).noneMatch(psiClass.getText()::contains)) return;
 
         PsiMethod[] psiMethods = psiClass.getMethods();
