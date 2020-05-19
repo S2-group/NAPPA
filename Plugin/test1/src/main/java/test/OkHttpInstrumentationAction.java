@@ -90,7 +90,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
 
-                Runnable writeCommand = makeWriteCommand(statementType, psiBody, instrumentedElement, element);
+                Runnable writeCommand = makeWriteCommand(statementType, psiBody, instrumentedElement, psiStatement);
                 WriteCommandAction.runWriteCommandAction(project, writeCommand);
 
                 resultMessage.incrementInstrumentationCount()
@@ -138,11 +138,11 @@ public class OkHttpInstrumentationAction extends AnAction {
     }
 
     @Contract(pure = true)
-    private @NotNull Runnable makeWriteCommand(int statementType, PsiCodeBlock psiMethodBody, PsiElement instrumentedElement, PsiElement originalStatement) {
+    private @NotNull Runnable makeWriteCommand(int statementType, PsiCodeBlock psiMethodBody, PsiElement instrumentedElement, PsiStatement statement) {
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
                 return () -> {
-                    psiMethodBody.addAfter(instrumentedElement, originalStatement);
+                    psiMethodBody.addAfter(instrumentedElement, statement);
                 };
             case STATEMENT_TYPE_DECLARATION:
                 return () -> {
