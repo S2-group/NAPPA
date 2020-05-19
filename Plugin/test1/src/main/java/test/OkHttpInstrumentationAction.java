@@ -152,7 +152,7 @@ public class OkHttpInstrumentationAction extends AnAction {
         if (expression.length != 2) return null;
 
         String instrumentedLine = expression[0] + " = PrefetchingLib.getOkHttp(" + expression[1].replace(";", "") + ")";
-        instrumentedLine = instrumentedLine + (element.getText().contains(";") ? "" : ";");
+        instrumentedLine = instrumentedLine + (element.getText().contains(";") ? ";" : "");
         return instrumentedLine;
     }
 
