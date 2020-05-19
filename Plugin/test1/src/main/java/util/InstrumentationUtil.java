@@ -3,10 +3,10 @@ package util;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -54,7 +54,7 @@ public final class InstrumentationUtil {
         PsiElement psiElement = psiElementReference;
 
         while (true) {
-            if (psiElement == null) return;
+            if (psiElement instanceof PsiDirectory) return;
             if (psiElement instanceof PsiJavaFile) break;
             psiElement = psiElement.getParent();
         }
