@@ -62,6 +62,7 @@ public class OkHttpInstrumentationAction extends AnAction {
             @Override
             public void visitElement(PsiElement element) {
                 if (Arrays.stream(psiStatementFilter).noneMatch(psiStatement.getText()::contains)) return;
+                if (element.getText().contains("PrefetchingLib")) return;
 
                 int statementType = -1;
 
