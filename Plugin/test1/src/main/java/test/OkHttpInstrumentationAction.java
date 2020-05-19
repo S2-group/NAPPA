@@ -102,8 +102,9 @@ public class OkHttpInstrumentationAction extends AnAction {
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
 
-                Runnable writeCommand = makeWriteCommand(statementType, instrumentedElement, element, psiBody);
-                WriteCommandAction.runWriteCommandAction(project, writeCommand);
+                WriteCommandAction.runWriteCommandAction(project, () -> {
+                    element.replace(instrumentedElement);
+                });
 
                 resultMessage.incrementInstrumentationCount()
                         .appendPsiClass(psiClass)
@@ -181,29 +182,5 @@ public class OkHttpInstrumentationAction extends AnAction {
         expression[1] = expression[1] + (element.getText().contains(";") ? ";" : "");
 
         return String.join(delimiter, expression);
-    }
-
-    /**
-     * Generate a {@link Runnable} instance to write in the original source code.
-     * This should be passed as parameter to the method {@link WriteCommandAction#runWriteCommandAction} .
-     *
-     * @param statementType       An ID identifying the processed PsiElement class type
-     * @param instrumentedElement A Psi element containing the instrumented code
-     * @param originalElement     A Psi element containing the code to be instrumented
-     * @param psiMethodBody       A method body used as reference to locate the original element in the Psi tree.
-     * @return A {@link Runnable} instance for instrumentation
-     */
-    @Contract(pure = true)
-    private @NotNull Runnable makeWriteCommand(int statementType, PsiElement instrumentedElement, PsiElement originalElement, PsiCodeBlock psiMethodBody) {
-        switch (statementType) {
-            case STATEMENT_TYPE_ASSIGNMENT:
-            case STATEMENT_TYPE_DECLARATION:
-                return () -> {
-                    originalElement.replace(instrumentedElement);
-                };
-            default:
-                return () -> {
-                };
-        }
     }
 }
