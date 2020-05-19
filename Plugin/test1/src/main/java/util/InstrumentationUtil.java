@@ -1,10 +1,12 @@
 package util;
 
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -41,6 +43,20 @@ public final class InstrumentationUtil {
         }
 
         return psiFiles;
+    }
+
+    /**
+     * @param project     An object representing an IntelliJ project.
+     * @param psiJavaFile A list of all Java files within a project
+     */
+    public static void addLibraryImport(Project project, @NotNull PsiJavaFile psiJavaFile) {
+        String importStatement = "import nl.vu.cs.s2group";
+        PsiImportList importList = psiJavaFile.getImportList();
+
+        if (importList == null || importList.findOnDemandImportStatement(importStatement) == null) return;
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(importStatement));
+        });
     }
 
     /**
