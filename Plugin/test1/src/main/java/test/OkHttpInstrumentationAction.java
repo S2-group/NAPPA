@@ -100,12 +100,6 @@ public class OkHttpInstrumentationAction extends AnAction {
                         .appendPsiClass(psiClass)
                         .appendPsiMethod(psiMethod)
                         .appendNewBlock();
-
-//                if (element instanceof PsiAssignmentExpression) {
-//                    processOkHttpStatement(psiStatement, (PsiAssignmentExpression) element);
-//                } else if (element instanceof PsiVariable) {
-//                    processOkHttpStatement(psiStatement, (PsiVariable) element);
-//                } else super.visitElement(element);
             }
         });
     }
@@ -156,78 +150,6 @@ public class OkHttpInstrumentationAction extends AnAction {
             default:
                 return () -> {
                 };
-        }
-    }
-
-    /**
-     * Process the OkHttp instrumentation for cases where an existent OkHttp variable already exists and is assigned a
-     * new instance of an OkHttp object. (e.g., {@code client = new OkHttpClient();})
-     *
-     * @param psiStatement         A statement containing a OkHttp assigment
-     * @param assignmentExpression A PsiElement containing a variable assignment
-     */
-    private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiAssignmentExpression assignmentExpression) {
-        if (assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient")) {
-            PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-            PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
-            PsiClass psiClass = (PsiClass) psiMethod.getParent();
-            String varName = assignmentExpression.getLExpression().getText();
-            String instrumentedLine = varName + " = PrefetchingLib.getOkHttp(";
-
-            PsiElement elementInstrumented = PsiElementFactory
-                    .getInstance(project)
-                    .createStatementFromText(
-                            varName + " = PrefetchingLib.getOkHttp(" + varName + ");",
-                            psiClass);
-
-            if (psiBody.getText().contains(elementInstrumented.getText())) {
-                resultMessage.incrementAlreadyInstrumentedCount();
-                return;
-            }
-
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                psiBody.addAfter(elementInstrumented, psiStatement);
-            });
-
-            resultMessage.incrementInstrumentationCount()
-                    .appendPsiClass(psiClass)
-                    .appendPsiMethod(psiMethod)
-                    .appendNewBlock();
-        }
-    }
-
-    /**
-     * Process the OkHttp instrumentation for cases where a OkHttp variable is declared and assigned a new instance of
-     * an OkHttp object. (e.g., {@code OkHttpClient client = new OkHttpClient();})
-     *
-     * @param psiStatement       A statement containing a OkHttp assigment
-     * @param variableExpression A PsiElement containing a variable declaration
-     */
-    private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiVariable variableExpression) {
-        if (variableExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient")) {
-            PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-            PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
-            PsiClass psiClass = (PsiClass) psiMethod.getParent();
-            String instrumentedLine = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1)
-                    + " PrefetchingLib.getOkHttp();";
-
-            PsiElement elementInstrumented = PsiElementFactory
-                    .getInstance(project)
-                    .createStatementFromText(instrumentedLine, psiClass);
-
-            if (psiBody.getText().contains(elementInstrumented.getText())) {
-                resultMessage.incrementAlreadyInstrumentedCount();
-                return;
-            }
-
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                variableExpression.replace(elementInstrumented);
-            });
-
-            resultMessage.incrementInstrumentationCount()
-                    .appendPsiClass(psiClass)
-                    .appendPsiMethod(psiMethod)
-                    .appendNewBlock();
         }
     }
 }
