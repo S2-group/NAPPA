@@ -90,7 +90,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
 
-                Runnable writeCommand = makeWriteCommand(statementType, psiBody, instrumentedElement, psiStatement);
+                Runnable writeCommand = makeWriteCommand(statementType, psiBody, instrumentedElement, element);
                 WriteCommandAction.runWriteCommandAction(project, writeCommand);
 
                 resultMessage.incrementInstrumentationCount()
@@ -135,7 +135,7 @@ public class OkHttpInstrumentationAction extends AnAction {
             case STATEMENT_TYPE_DECLARATION:
                 PsiVariable variableExpression = (PsiVariable) element;
                 leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
-                parameter = isBuilder ? "BUILDER" : "";
+                parameter = isBuilder ? "BUILDER" : "new OkHttpClient()";
                 return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
             default:
                 return "";
