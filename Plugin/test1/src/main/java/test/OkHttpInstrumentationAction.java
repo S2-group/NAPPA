@@ -61,7 +61,7 @@ public class OkHttpInstrumentationAction extends AnAction {
         psiStatement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                if (Arrays.stream(psiStatementFilter).noneMatch(psiStatement.getText()::contains)) return;
+                if (Arrays.stream(psiStatementFilter).noneMatch(element.getText()::contains)) return;
                 if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
