@@ -20,7 +20,6 @@ public class OkHttpInstrumentationAction extends AnAction {
 
     private Project project;
     private InstrumentationResultMessage resultMessage;
-    private String[] psiStatementFilter;
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
@@ -32,10 +31,6 @@ public class OkHttpInstrumentationAction extends AnAction {
         project = e.getProject();
         resultMessage = new InstrumentationResultMessage();
         String[] fileFilter = new String[]{"import okhttp3"};
-        psiStatementFilter = new String[]{
-                "new OkHttpClient",
-                ".build()"
-        };
 
         List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
 
@@ -52,6 +47,11 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @param psiStatement A potential Java statement to instrument
      */
     private void processPsiStatement(@NotNull PsiStatement psiStatement) {
+        String[] psiStatementFilter = new String[]{
+                "new OkHttpClient",
+                ".build()"
+        };
+
         if (Arrays.stream(psiStatementFilter).noneMatch(psiStatement.getText()::contains)) return;
 
         if (psiStatement.getText().contains("new OkHttpClient")) {
@@ -82,7 +82,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                 PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
                 PsiClass psiClass = (PsiClass) psiMethod.getParent();
 
-                String instrumentedLine = makeInstrumentationLine(statementType, element, element.getText().contains(".build()"));
+                String instrumentedLine = makeInstrumentationLine(statementType, element);
 
                 if (psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();
@@ -108,7 +108,7 @@ public class OkHttpInstrumentationAction extends AnAction {
      * Verifies if the {@code element} contains an assignment or declaration of a {@code OkHttpClient}
      *
      * @param statementType An ID identifying the processed PsiElement class type
-     * @param element A Psi element potentially contain the code to be instrumented
+     * @param element       A Psi element potentially contain the code to be instrumented
      * @return {@code True} if the {@code element} has th type {@code OkHttpClient}, {@code False} otherwise
      */
     private boolean hasTypeOkHttp(int statementType, PsiElement element) {
@@ -131,23 +131,39 @@ public class OkHttpInstrumentationAction extends AnAction {
      * Generates a instrumented source-code line using the prefetch library
      *
      * @param statementType An ID identifying the processed PsiElement class type
-     * @param element A Psi element containing the code to be instrumented
-     * @param isBuilder Flag identifying the usage of {@code OkHttpClient.Builder}
+     * @param element       A Psi element containing the code to be instrumented
      * @return The new source-code line
      */
-    private @NotNull String makeInstrumentationLine(int statementType, PsiElement element, boolean isBuilder) {
+    private @NotNull String makeInstrumentationLine(int statementType, @NotNull PsiElement element) {
         String parameter;
+        boolean isBuilder = element.getText().contains(".build()");
+        // For cases when there is a custom OkHttpClient in the source code (e.g., MyClient.getOkHttpClient())
+        boolean isDefaultOkHttpClient = element.getText().contains("new OkHttpClient()");
+
         switch (statementType) {
             case STATEMENT_TYPE_ASSIGNMENT:
                 PsiAssignmentExpression assignmentExpression = (PsiAssignmentExpression) element;
                 String variableName = assignmentExpression.getLExpression().getText();
-                parameter = isBuilder ? assignmentExpression.getRExpression().getText() : "new OkHttpClient()";
+
+                if (isBuilder || !isDefaultOkHttpClient) {
+                    parameter = assignmentExpression.getRExpression().getText();
+                } else {
+                    parameter = "new OkHttpClient()";
+                }
+
                 return variableName + " = PrefetchingLib.getOkHttp(" + parameter + ");";
+
             case STATEMENT_TYPE_DECLARATION:
                 PsiVariable variableExpression = (PsiVariable) element;
                 String leftExpression = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1);
                 String text = element.getText();
-                parameter = isBuilder ? text.substring(text.indexOf("=") + 1, text.indexOf(";")) : "new OkHttpClient()";
+
+                if (isBuilder || !isDefaultOkHttpClient) {
+                    parameter = text.substring(text.indexOf("=") + 1, text.indexOf(";"));
+                } else {
+                    parameter = "new OkHttpClient()";
+                }
+
                 return leftExpression + " PrefetchingLib.getOkHttp(" + parameter + ");";
             default:
                 return "";
@@ -158,10 +174,10 @@ public class OkHttpInstrumentationAction extends AnAction {
      * Generate a {@link Runnable} instance to write in the original source code.
      * This should be passed as parameter to the method {@link WriteCommandAction#runWriteCommandAction} .
      *
-     * @param statementType An ID identifying the processed PsiElement class type
+     * @param statementType       An ID identifying the processed PsiElement class type
      * @param instrumentedElement A Psi element containing the instrumented code
-     * @param originalElement A Psi element containing the code to be instrumented
-     * @param psiMethodBody A method body used as reference to locate the original element in the Psi tree.
+     * @param originalElement     A Psi element containing the code to be instrumented
+     * @param psiMethodBody       A method body used as reference to locate the original element in the Psi tree.
      * @return A {@link Runnable} instance for instrumentation
      */
     @Contract(pure = true)
