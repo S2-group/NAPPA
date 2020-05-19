@@ -105,6 +105,13 @@ public final class InstrumentationUtil {
             }
         }
 
+        PsiClassInitializer[] psiClassInitializers = psiClass.getInitializers();
+        for (PsiClassInitializer psiClassInitializer : psiClassInitializers) {
+            for (PsiStatement statement : psiClassInitializer.getBody().getStatements()) {
+                callback.accept(statement);
+            }
+        }
+
         PsiClass[] psiClasses = psiClass.getInnerClasses();
         for (PsiClass innerPsiClass : psiClasses) {
             scanPsiClass(innerPsiClass, classFilter, callback);
