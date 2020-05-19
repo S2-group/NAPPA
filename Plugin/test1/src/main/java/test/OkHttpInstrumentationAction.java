@@ -69,7 +69,7 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @param assignmentExpression A PsiElement containing a variable assignment
      */
     private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiAssignmentExpression assignmentExpression) {
-        if (assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
+        if (assignmentExpression.getType() != null && assignmentExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient")) {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
             PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
             PsiClass psiClass = (PsiClass) psiMethod.getParent();
@@ -105,7 +105,7 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @param variableExpression A PsiElement containing a variable declaration
      */
     private void processOkHttpStatement(PsiStatement psiStatement, @NotNull PsiVariable variableExpression) {
-        if (variableExpression.getType().getCanonicalText().compareTo("okhttp3.OkHttpClient") == 0) {
+        if (variableExpression.getType().getCanonicalText().equals("okhttp3.OkHttpClient")) {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
             PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
             PsiClass psiClass = (PsiClass) psiMethod.getParent();
