@@ -113,13 +113,12 @@ public class OkHttpInstrumentationAction extends AnAction {
             PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
             PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
             PsiClass psiClass = (PsiClass) psiMethod.getParent();
-            String varName = variableExpression.getName();
+            String instrumentedLine = variableExpression.getText().substring(0, variableExpression.getText().indexOf("=") + 1)
+                    + " PrefetchingLib.getOkHttp();";
 
             PsiElement elementInstrumented = PsiElementFactory
                     .getInstance(project)
-                    .createStatementFromText(
-                            "OkHttpClient " + varName + " = PrefetchingLib.getOkHttp();",
-                            psiClass);
+                    .createStatementFromText(instrumentedLine, psiClass);
 
             if (psiBody.getText().contains(elementInstrumented.getText())) {
                 resultMessage.incrementAlreadyInstrumentedCount();
