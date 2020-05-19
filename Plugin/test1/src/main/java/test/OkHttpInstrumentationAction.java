@@ -87,7 +87,10 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 String instrumentedLine = makeInstrumentationLine(statementType, element);
 
-                if (instrumentedLine == null) return;
+                if (instrumentedLine == null) {
+                    resultMessage.incrementUnneededInstrumentationCount();
+                    return;
+                }
 
                 if (psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();

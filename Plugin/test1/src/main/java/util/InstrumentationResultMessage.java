@@ -23,11 +23,17 @@ public class InstrumentationResultMessage {
      */
     private int alreadyInstrumentedCount;
 
+    /**
+     * Count of statements that do not need to be instrumented.
+     */
+    private int unneededInstrumentationCount;
+
     public InstrumentationResultMessage() {
         builder = new StringBuilder();
         instrumentationCount = 0;
         possibleInstrumentationCount = 0;
         alreadyInstrumentedCount = 0;
+        unneededInstrumentationCount = 0;
     }
 
     /**
@@ -55,8 +61,20 @@ public class InstrumentationResultMessage {
      *
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage incrementPossibleInstrumentationCount() {
         possibleInstrumentationCount++;
+        return this;
+    }
+
+    /**
+     * Increment by 1 the count of statement that do not need to be instrumented
+     *
+     * @return A instance of this object
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public InstrumentationResultMessage incrementUnneededInstrumentationCount() {
+        unneededInstrumentationCount++;
         return this;
     }
 
@@ -65,6 +83,7 @@ public class InstrumentationResultMessage {
      *
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage incrementAlreadyInstrumentedCount() {
         alreadyInstrumentedCount++;
         return this;
@@ -84,6 +103,9 @@ public class InstrumentationResultMessage {
                 .append("\n")
                 .append(alreadyInstrumentedCount)
                 .append(" statements were already instrumented.")
+                .append("\n")
+                .append(unneededInstrumentationCount)
+                .append(" statements that do not need to be instrumented.")
                 .append("\n\n");
 
         builder.insert(0, message);
@@ -127,6 +149,7 @@ public class InstrumentationResultMessage {
      *
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage appendNewBlock() {
         builder.append("\n");
         return this;
