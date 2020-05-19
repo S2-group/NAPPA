@@ -105,7 +105,7 @@ public class InstrumentationResultMessage {
                 .append(" statements were already instrumented.")
                 .append("\n")
                 .append(unneededInstrumentationCount)
-                .append(" statements that do not need to be instrumented.")
+                .append(" statements do not need to be instrumented.")
                 .append("\n\n");
 
         builder.insert(0, message);
