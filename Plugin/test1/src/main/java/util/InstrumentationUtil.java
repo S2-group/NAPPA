@@ -31,7 +31,13 @@ public final class InstrumentationUtil {
                 .toArray(String[]::new);
 
         for (String fileName : fileNames) {
-            psiFiles.addAll(Arrays.asList(FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project))));
+            PsiFile[] psiJavaFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
+            // Remove the files from the NAPPA library from the list to process
+            psiJavaFiles = Arrays.stream(psiJavaFiles)
+                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains("nl.vu.cs.s2group"))
+                    .toArray(PsiFile[]::new);
+
+            psiFiles.addAll(Arrays.asList(psiJavaFiles));
         }
 
         return psiFiles;
