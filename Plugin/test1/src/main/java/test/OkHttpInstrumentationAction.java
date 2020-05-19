@@ -161,21 +161,26 @@ public class OkHttpInstrumentationAction extends AnAction {
         if (!isBuilder && !isDefaultOkHttpConstructor) return null;
 
         String[] expression;
+        String delimiter;
         if (statementType == STATEMENT_TYPE_RETURN) {
+            delimiter = " ";
             //noinspection ConstantConditions
             expression = new String[]{
                     "return",
                     ((PsiReturnStatement) element).getReturnValue().getText()
             };
         } else {
+            delimiter = " = ";
             expression = element.getText().split("=");
         }
 
         if (expression.length != 2) return null;
 
-        String instrumentedLine = expression[0] + " = PrefetchingLib.getOkHttp(" + expression[1].replace(";", "") + ")";
-        instrumentedLine = instrumentedLine + (element.getText().contains(";") ? ";" : "");
-        return instrumentedLine;
+        expression[1] = " PrefetchingLib.getOkHttp(" + expression[1] + ")";
+        expression[1] = expression[1].replace(";)", ")");
+        expression[1] = expression[1] + (element.getText().contains(";") ? ";" : "");
+
+        return String.join(delimiter, expression);
     }
 
     /**
