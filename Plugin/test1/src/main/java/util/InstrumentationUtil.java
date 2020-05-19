@@ -53,7 +53,7 @@ public final class InstrumentationUtil {
         String importStatement = "import nl.vu.cs.s2group";
         PsiImportList importList = psiJavaFile.getImportList();
 
-        if (importList == null || importList.findOnDemandImportStatement(importStatement) == null) return;
+        if (importList == null || importList.findOnDemandImportStatement(importStatement) != null) return;
         WriteCommandAction.runWriteCommandAction(project, () -> {
             importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(importStatement));
         });
