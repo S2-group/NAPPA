@@ -65,8 +65,6 @@ public class OkHttpInstrumentationAction extends AnAction {
         PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
         PsiClass psiClass = (PsiClass) psiMethod.getParent();
 
-        resultMessage.incrementPossibleInstrumentationCount();
-
         psiStatement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -84,6 +82,8 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 if (statementType == -1) return;
                 if (!hasTypeOkHttp(statementType, element)) return;
+
+                resultMessage.incrementPossibleInstrumentationCount();
 
                 String instrumentedLine = makeInstrumentationLine(statementType, element);
 
