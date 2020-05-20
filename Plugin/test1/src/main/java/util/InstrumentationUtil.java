@@ -127,7 +127,7 @@ public final class InstrumentationUtil {
     public static @Nullable PsiElement getAncestorPsiElementFromElement(PsiElement element, Class classType) {
         PsiElement el = element;
         while (true) {
-            if (el instanceof PsiDirectory) return null;
+            if (el == null || el instanceof PsiDirectory) return null;
             if (classType.isInstance(el)) return el;
             el = el.getParent();
         }

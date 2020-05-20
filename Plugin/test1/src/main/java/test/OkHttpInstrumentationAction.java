@@ -97,6 +97,8 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 PsiClass psiClass = (PsiClass) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
 
+                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
+
                 PsiElement instrumentedElement = PsiElementFactory
                         .getInstance(project)
                         .createStatementFromText(instrumentedLine, psiClass);
@@ -108,8 +110,6 @@ public class OkHttpInstrumentationAction extends AnAction {
                 InstrumentationUtil.addLibraryImport(project, psiClass);
 
                 resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
-
-                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
 
                 if (psiMethod != null) resultMessage.appendPsiMethod(psiMethod);
                 else resultMessage.appendClassInitializer();
