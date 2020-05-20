@@ -13,6 +13,10 @@ import util.InstrumentationUtil;
 
 import java.util.List;
 
+/**
+ * Implements the action responsible to identify {@code OkHttpClient} instances and, when applicable,
+ * instrument them to inject the NAPPA library HTTP interceptor
+ */
 public class OkHttpInstrumentationAction extends AnAction {
     private static final int STATEMENT_TYPE_DECLARATION = 0;
     private static final int STATEMENT_TYPE_ASSIGNMENT = 1;

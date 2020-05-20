@@ -6,6 +6,9 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Provides a self-contained {@link StringBuilder} to construct the result message for when finishing instrumenting.
+ */
 public class InstrumentationResultMessage {
     private final StringBuilder builder;
 
