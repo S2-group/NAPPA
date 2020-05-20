@@ -68,7 +68,7 @@ In this case, the (BRANCH.BUILD.FIX) version of the IntelliJ Platform is `191.80
 Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html) for more details.
 
  <p align="center">
- <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" alt="Nappa Android Studio Plugin" width="500"/>
+ <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" alt="Android Studio aboud dialog screen" width="500"/>
  </p>
 
 Import the directory [Plugin/test1/](Plugin/test1/) in InteliJ IDEA
