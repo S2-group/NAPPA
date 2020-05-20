@@ -57,10 +57,10 @@ public class OkHttpInstrumentationAction extends AnAction {
      * }
      * </pre>
      *
-     * @param psiStatement A potential Java statement to instrument
+     * @param rootPsiElement A potential Java statement to instrument
      */
-    private void processPsiStatement(@NotNull PsiStatement psiStatement) {
-        psiStatement.accept(new JavaRecursiveElementVisitor() {
+    private void processPsiStatement(@NotNull PsiElement rootPsiElement) {
+        rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
                 String test = element.getText();
@@ -88,14 +88,14 @@ public class OkHttpInstrumentationAction extends AnAction {
                     return;
                 }
 
-                PsiCodeBlock psiBody = (PsiCodeBlock) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiCodeBlock.class);
+                PsiCodeBlock psiBody = (PsiCodeBlock) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiCodeBlock.class);
 
                 if (psiBody != null && psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
 
-                PsiClass psiClass = (PsiClass) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiClass.class);
+                PsiClass psiClass = (PsiClass) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
 
                 PsiElement instrumentedElement = PsiElementFactory
                         .getInstance(project)
@@ -109,7 +109,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
 
-                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiMethod.class);
+                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
 
                 if (psiMethod != null) resultMessage.appendPsiMethod(psiMethod);
                 else resultMessage.appendClassInitializer();
