@@ -35,9 +35,9 @@ intellij {
     updateSinceUntilBuild false
 }
 
-// TODO: Verify possibility of defining runIde as a local configuration only
 runIde {
-    ideDirectory '/opt/android-studio/'
+    // Needs to be defined in the Gradle installation directory
+    ideDirectory nappaAndroidStudioHome
 }
 
 patchPluginXml {
