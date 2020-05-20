@@ -52,6 +52,8 @@ public final class InstrumentationUtil {
     public static void addLibraryImport(Project project, @NotNull PsiElement psiElement) {
         String packageName = "nl.vu.cs.s2group";
         PsiJavaFile psiJavaFile = (PsiJavaFile) getAncestorPsiElementFromElement(psiElement, PsiJavaFile.class);
+
+        if (psiJavaFile == null) return;
         PsiImportList importList = psiJavaFile.getImportList();
 
         if (importList == null || importList.findOnDemandImportStatement(packageName) != null) return;
