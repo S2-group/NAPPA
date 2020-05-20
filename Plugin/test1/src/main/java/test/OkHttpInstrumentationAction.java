@@ -71,6 +71,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 int statementType = -1;
 
+
                 if (element instanceof PsiAssignmentExpression) statementType = STATEMENT_TYPE_ASSIGNMENT;
                 else if (element instanceof PsiVariable) statementType = STATEMENT_TYPE_DECLARATION;
                 else if (element instanceof PsiReturnStatement) statementType = STATEMENT_TYPE_RETURN;
@@ -112,7 +113,8 @@ public class OkHttpInstrumentationAction extends AnAction {
                 resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
 
                 if (psiMethod != null) resultMessage.appendPsiMethod(psiMethod);
-                else resultMessage.appendClassInitializer();
+                else if (element instanceof PsiField) resultMessage.appendPsiField((PsiField) element);
+                else resultMessage.appendPsiClassInitializer();
 
                 resultMessage.appendNewBlock();
             }

@@ -1,6 +1,7 @@
 package util;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
 import org.jetbrains.annotations.NotNull;
@@ -138,8 +139,19 @@ public class InstrumentationResultMessage {
      *
      * @return A instance of this object
      */
-    public InstrumentationResultMessage appendClassInitializer() {
+    public InstrumentationResultMessage appendPsiClassInitializer() {
         builder.append("Initializer block: ").append("\n");
+        return this;
+    }
+
+    /**
+     * Append the field name to the result message
+     *
+     * @param psiField A Java field or enum constant.
+     * @return A instance of this object
+     */
+    public InstrumentationResultMessage appendPsiField(PsiField psiField) {
+        builder.append("Field: ").append(psiField.getName()).append("\n");
         return this;
     }
 
