@@ -134,6 +134,16 @@ public class InstrumentationResultMessage {
     }
 
     /**
+     * Append a string to inform the class initializer was instrumented to the result message
+     *
+     * @return A instance of this object
+     */
+    public InstrumentationResultMessage appendClassInitializer() {
+        builder.append("Initializer block: ").append("\n");
+        return this;
+    }
+
+    /**
      * Append the statement text to the result message
      *
      * @param psiStatement A Java statement.

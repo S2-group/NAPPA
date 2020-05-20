@@ -60,17 +60,12 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @param psiStatement A potential Java statement to instrument
      */
     private void processPsiStatement(@NotNull PsiStatement psiStatement) {
-        PsiCodeBlock psiBody = (PsiCodeBlock) psiStatement.getParent();
-//        PsiMethod psiMethod = (PsiMethod) psiBody.getParent();
-
-
         psiStatement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
                 String test = element.getText();
                 if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
-                    resultMessage.incrementPossibleInstrumentationCount()
-                            .incrementAlreadyInstrumentedCount();
+                    resultMessage.incrementPossibleInstrumentationCount().incrementAlreadyInstrumentedCount();
                     return;
                 }
 
@@ -93,7 +88,9 @@ public class OkHttpInstrumentationAction extends AnAction {
                     return;
                 }
 
-                if (psiBody.getText().contains(instrumentedLine)) {
+                PsiCodeBlock psiBody = (PsiCodeBlock) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiCodeBlock.class);
+
+                if (psiBody != null && psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
@@ -110,10 +107,14 @@ public class OkHttpInstrumentationAction extends AnAction {
 
                 InstrumentationUtil.addLibraryImport(project, psiClass);
 
-                resultMessage.incrementInstrumentationCount()
-                        .appendPsiClass(psiClass)
-//                        .appendPsiMethod(psiMethod)
-                        .appendNewBlock();
+                resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
+
+                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(psiStatement, PsiMethod.class);
+
+                if (psiMethod != null) resultMessage.appendPsiMethod(psiMethod);
+                else resultMessage.appendClassInitializer();
+
+                resultMessage.appendNewBlock();
             }
         });
     }
