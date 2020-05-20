@@ -118,6 +118,7 @@ public class InstrumentationResultMessage {
      * @param psiClass A Java class or interface.
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage appendPsiClass(@NotNull PsiClass psiClass) {
         builder.append("Class: ").append(psiClass.getQualifiedName()).append("\n");
         return this;
@@ -129,6 +130,7 @@ public class InstrumentationResultMessage {
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage appendPsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Method: ").append(psiMethod.getName()).append("\n");
         return this;
@@ -139,6 +141,7 @@ public class InstrumentationResultMessage {
      *
      * @return A instance of this object
      */
+    @SuppressWarnings("UnusedReturnValue")
     public InstrumentationResultMessage appendPsiClassInitializer() {
         builder.append("Initializer block: ").append("\n");
         return this;
