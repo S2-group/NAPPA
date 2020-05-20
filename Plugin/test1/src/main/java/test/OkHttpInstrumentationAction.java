@@ -11,6 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import util.InstrumentationResultMessage;
 import util.InstrumentationUtil;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -37,11 +39,17 @@ public class OkHttpInstrumentationAction extends AnAction {
         String[] fileFilter = new String[]{"import okhttp3"};
         String[] classFilter = new String[]{"OkHttpClient"};
 
-        List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
+        try {
+            List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
+            InstrumentationUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
+            Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result", Messages.getInformationIcon());
 
-        InstrumentationUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
-
-        Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
+        } catch (Exception exception) {
+            StringWriter errors = new StringWriter();
+            exception.printStackTrace(new PrintWriter(errors));
+            String message = "An error occurred while instrumenting the OkHttpClient instances.\n\n" + errors.toString();
+            Messages.showMessageDialog(message, "Failed to Instrument OkHttpClient", Messages.getErrorIcon());
+        }
     }
 
     /**
