@@ -35,7 +35,7 @@ public class OkHttpInstrumentationAction extends AnAction {
 
         List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
 
-        InstrumentationUtil.scanPsiFileStatement(psiFiles, fileFilter, classFilter, this::processPsiStatement);
+        InstrumentationUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
 
         Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result ", Messages.getInformationIcon());
     }
@@ -43,7 +43,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     /**
      * Scan a statement to search for a instance of OkHttpClient to instrument.
      * This method is used as {@link java.util.function.Consumer} callback for the method
-     * {@link util.InstrumentationUtil#scanPsiFileStatement}
+     * {@link util.InstrumentationUtil#runScanOnJavaFile}
      * <br/><br/>
      *
      * <p>The following occurrences should be instrumented </p>
