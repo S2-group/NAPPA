@@ -150,7 +150,8 @@ public class InstrumentationResultMessage {
      * @param psiField A Java field or enum constant.
      * @return A instance of this object
      */
-    public InstrumentationResultMessage appendPsiField(PsiField psiField) {
+    @SuppressWarnings("UnusedReturnValue")
+    public InstrumentationResultMessage appendPsiField(@NotNull PsiField psiField) {
         builder.append("Field: ").append(psiField.getName()).append("\n");
         return this;
     }
