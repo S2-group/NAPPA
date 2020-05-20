@@ -19,7 +19,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     private static final int STATEMENT_TYPE_RETURN = 2;
 
     private Project project;
-    private InstrumentationResultMessage resultMessage;
+    private final InstrumentationResultMessage resultMessage = new InstrumentationResultMessage();
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
@@ -27,9 +27,8 @@ public class OkHttpInstrumentationAction extends AnAction {
      * @param e {@inheritDoc}
      */
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         project = e.getProject();
-        resultMessage = new InstrumentationResultMessage();
         String[] fileFilter = new String[]{"import okhttp3"};
         String[] classFilter = new String[]{"OkHttpClient"};
 
@@ -63,14 +62,12 @@ public class OkHttpInstrumentationAction extends AnAction {
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                String test = element.getText();
                 if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
                     resultMessage.incrementPossibleInstrumentationCount().incrementAlreadyInstrumentedCount();
                     return;
                 }
 
                 int statementType = -1;
-
 
                 if (element instanceof PsiAssignmentExpression) statementType = STATEMENT_TYPE_ASSIGNMENT;
                 else if (element instanceof PsiVariable) statementType = STATEMENT_TYPE_DECLARATION;
@@ -108,6 +105,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                     element.replace(instrumentedElement);
                 });
 
+                //noinspection ConstantConditions -- Since we loop through classes, it is certain that there is a parent Java class
                 InstrumentationUtil.addLibraryImport(project, psiClass);
 
                 resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
