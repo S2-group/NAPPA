@@ -19,7 +19,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     private static final int STATEMENT_TYPE_RETURN = 2;
 
     private Project project;
-    private final InstrumentationResultMessage resultMessage = new InstrumentationResultMessage();
+    private InstrumentationResultMessage resultMessage;
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
@@ -29,6 +29,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         project = e.getProject();
+        resultMessage = new InstrumentationResultMessage();
         String[] fileFilter = new String[]{"import okhttp3"};
         String[] classFilter = new String[]{"OkHttpClient"};
 
