@@ -1,13 +1,19 @@
 package util;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiStatement;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Provides a self-contained {@link StringBuilder} to construct the result message for when finishing instrumenting.
+ * Provides abstraction to present a result dialog
  */
 public class InstrumentationResultMessage {
     private final StringBuilder builder;
@@ -182,5 +188,28 @@ public class InstrumentationResultMessage {
     public InstrumentationResultMessage appendNewBlock() {
         builder.append("\n");
         return this;
+    }
+
+    /**
+     * Takes the constructed message in {@code builder} and make a dialog with the result
+     *
+     * @param project An object representing an IntelliJ project.
+     * @param title   The title of the dialog
+     */
+    public void showResultDialog(Project project, String title) {
+        Messages.showMessageDialog(project, getMessage(), title, Messages.getInformationIcon());
+    }
+
+    /**
+     * Make a error dialog with the {@code exception} content
+     *
+     * @param project   An object representing an IntelliJ project.
+     * @param exception The caught exception
+     * @param title     The title of the dialog
+     */
+    public void showErrorDialog(Project project, @NotNull Exception exception, String title) {
+        StringWriter errors = new StringWriter();
+        exception.printStackTrace(new PrintWriter(errors));
+        Messages.showErrorDialog(project, errors.toString(), title);
     }
 }

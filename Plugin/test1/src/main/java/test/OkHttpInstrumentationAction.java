@@ -4,15 +4,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.InstrumentationResultMessage;
 import util.InstrumentationUtil;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -42,13 +39,9 @@ public class OkHttpInstrumentationAction extends AnAction {
         try {
             List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
             InstrumentationUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
-            Messages.showMessageDialog(resultMessage.getMessage(), "OkHttp Instrumentation Result", Messages.getInformationIcon());
-
+            resultMessage.showResultDialog(project, "OkHttp Instrumentation Result");
         } catch (Exception exception) {
-            StringWriter errors = new StringWriter();
-            exception.printStackTrace(new PrintWriter(errors));
-            String message = "An error occurred while instrumenting the OkHttpClient instances.\n\n" + errors.toString();
-            Messages.showMessageDialog(message, "Failed to Instrument OkHttpClient", Messages.getErrorIcon());
+            resultMessage.showErrorDialog(project, exception, "Failed to Instrument OkHttpClient");
         }
     }
 
