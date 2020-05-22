@@ -118,7 +118,7 @@ Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/
 	alt="Android Studio about dialog screen" width="910"/>
 </p>
 
-Import the directory [Android-Studio-Plugin/](Android-Studio-Plugin/) in InteliJ IDEA
+Import this project in InteliJ IDEA.
 
 ### Running the plugin
 
