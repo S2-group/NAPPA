@@ -1,88 +1,52 @@
 # NAPPA
-Implementation of a navigation-aware technique for personalized prefetching of network requests of Android apps.
+
+Implementation of a Navigation-Aware technique for Personalized Prefetching of network requests of Android apps.
 A description of the internals of the NAPPA approach is available in our [ICSE 2019 publication](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf).  
 
 ## Introduction
-In order to perform a Navigation-Aware prefetching, NAPPA introduces the notion of an Extended Navigation Graph.  This graph is built by letting nodes represent activities,  and all edges represent activity transitions within the application. The ENG plays a central role in the prefetching process by exposing prefetch enabled URLs  ( **What** ) and by keeping track of which prefetch enabled URL Candidates are most likely to be accessed in subsequent activity transitions ( **When**).
 
- <p align="center">
- <img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="500"/>
- </p>
-
-An URL may be composed of both static components (for example the domain name and path) and also  dynamic components (such as URL parameters).  The ENG addresses the challenge of identifying dynamic URL components by capturing [intent extras](https://developer.android.com/reference/android/content/Intent) between activity transitions.   Whenever an HTTP Request is performed,  NAPPA verifies if any of the extras captured on previous activity transitions corresponds to an URL component.  If so,  an association between an extra and its corresponding static URL components is created—this becomes a prefetch enabled URL candidate. 
-
-## Build
-In order to enable prefetching with NAPPA,  an instrumentation process must take place at development time. This task is performed via a plugin which can be installed in Android Studio in order to inject all critical NAPPA dependencies to an Application’s source code. 
-
-### Requirements
-Currently, NAPPA makes use of [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors) in order to intercept HTTP requests performed by the end-user.  Intercepted requests are served by NAPPA whenever they are stored in the cache.  Otherwise, they are rerouted to the origin server. 
-
-### Installing the Plug-in
-In order to Install the [plug-in](https://github.com/S2-group/NAPPA/tree/master/Plugin/test1) in android studio, please take the following steps:
-
-In order to Install the in android studio, please take the following steps:
-Build the plugin with
-`./gradlew buildPlugin `
-The plugin binaries can be found in
-`build/distributions`
-Install Plugin in Android Studio:
-File -> Settings -> Plugins -> Install plugin from disk
-Restart Android Studio. 
+In order to perform a Navigation-Aware prefetching, NAPPA introduces the notion of an Extended Navigation Graph.
+This graph is built by letting nodes represent activities, and all edges represent activity transitions within the application.
+The ENG plays a central role in the prefetching process by exposing prefetch enabled URLs  ( **What** ) and by keeping track of which prefetch enabled URL Candidates are most likely to be accessed in subsequent activity transitions ( **When**).
 
 <p align="center">
-<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="500"/>
+	<img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="100%"/>
 </p>
 
-### Instrumentation
-In the main bar you will found a new Menu called "Prefetching"
+An URL may be composed of both static components (for example the domain name and path) and also  dynamic components (such as URL parameters).
+The ENG addresses the challenge of identifying dynamic URL components by capturing [intent extras](https://developer.android.com/reference/android/content/Intent) between activity transitions.
+Whenever an HTTP Request is performed, NAPPA verifies if any of the extras captured on previous activity transitions corresponds to an URL component.
+If so, an association between an extra and its corresponding static URL components is created—this becomes a prefetch enabled URL candidate.
 
- <p align="center">
- <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="500"/>
- </p>
- 
-Use "Spot intent" to instrument intents in order to get Intent arguments
-Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
-use "Add prefetching" to instrument Activities in order to get the navigation graph
+## Project
 
-After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. Prefetching is performed transparently without requiring any intervention from the end user.  As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
+This repository holds all NAPPA related projects, each project is in a subdirectory.
+Currently, there is the core [Prefetching Library](Prefetching-Library) and a [Plugin for Android Studio](Android-Studio-Plugin). 
+In addition to these, there is a [Weather and News](Test-App/Weather-and-News-app) test app to demonstrate the usage of NAPPA as a prefetching approach.
 
-### Set up local environment for development
+### NAPPA Prefetching Library  
 
-#### Android Studio Plugin
+Contains an Android Studio project with the core Prefetching Library and a test app.
+For more details on usage, refer to its [README](Prefetching-Library/README.md).
 
-Install the following toos:
+### NAPPA plugin for Android Studio
 
-- [Gradle](https://gradle.org/)
-- [IntelliJ IDEA](https://www.jetbrains.com/idea/)
-- [Android Studio](https://developer.android.com/studio)
+Contains an IntelliJ IDEA project with a plugin for Android Studio.
+This plugin provides running automated tasks to instrument an Android app source-code to enable NAPPA Prefetching Library.
+For more details on usage, refer to its [README](Android-Studio-Plugin/README.md).
 
-Create the file `gradle.properties` in the Gradle installation direcctory with the content:
-```text
-nappaAndroidStudioHome=/absolute/path/to/Android Studio/
-nappaAndroidStudiVersion=/build/version/of/Android Studio
-```
+### Test Apps
 
-To find which version of Android Studio is installed, use the Android Studio `About` dialog screen. 
-An example is shown below.
-In this case, the (BRANCH.BUILD.FIX) version of the IntelliJ Platform is `191.8026.42`.
-Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html) for more details.
+#### Weather and News
 
- <p align="center">
- <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" alt="Android Studio aboud dialog screen" width="500"/>
- </p>
-
-Import the directory [Plugin/test1/](Plugin/test1/) in InteliJ IDEA
-
-Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#)
-
-Click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
-This instance can be run in debug mode.
-Note that changes in the source code require running the command again to take effect. 
+Contains an Android Studio sample project with a simple UI consuming a news and weather API.
+For more details on usage, refer to its [README](Test-App/Weather-and-News-app/README.md).
 
 ## How to cite NAPPA
+
 If NAPPA is helping your research, consider to cite is as follows, thanks!
 
-```
+``` 
 @inproceedings{ICSE_2019_NAPPA,
 	author = {Ivano Malavolta and Francesco Nocera and Patricia Lago and Marina Mongiello},
 	month = {May},
@@ -98,4 +62,4 @@ If NAPPA is helping your research, consider to cite is as follows, thanks!
 
 ## License
 
-This software is licensed under the MIT License.
+This software is licensed under the [MIT License](LICENSE).

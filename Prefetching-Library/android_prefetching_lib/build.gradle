@@ -14,7 +14,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -35,7 +35,6 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$roomRuntimeVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
 
     implementation files('libs')
 

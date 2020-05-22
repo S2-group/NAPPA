@@ -32,8 +32,8 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
 
-    implementation project(path: ':android_prefetching_lib')
-
+    implementation project(":nappa-prefetching-library")
+    implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "androidx.room:room-runtime:$roomRuntimeVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
