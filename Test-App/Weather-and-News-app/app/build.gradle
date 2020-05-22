@@ -33,7 +33,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardviewVersion"
 
     implementation project(":nappa-prefetching-library")
-
+    implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "androidx.room:room-runtime:$roomRuntimeVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
