@@ -25,6 +25,10 @@ To update the plugin, simply download a new version and repeat the process.
 
 There are four actions to inject NAPPA dependencies in the project source code, each described below.
 
+<p align="center">
+	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="757"/>
+</p>
+
 #### Instrument Activities
 
 Searches for Android [Activity](https://developer.android.com/reference/android/app/Activity) classes to inject navigation probes.
@@ -137,9 +141,7 @@ Restart Android Studio.
 
 In the main bar you will found a new Menu called "Prefetching"
 
-<p align="center">
-	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="500"/>
-</p>
+
  
 Use "Spot intent" to instrument intents in order to get Intent arguments
 Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
