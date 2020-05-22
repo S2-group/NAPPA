@@ -18,6 +18,7 @@ project.ext {
 THIS WILL BREAK THE BUILD
 THIS WILL TOO
 TEST 3
+TEST 4
 
 buildscript {
     repositories {
