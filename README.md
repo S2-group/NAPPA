@@ -10,7 +10,7 @@ This graph is built by letting nodes represent activities, and all edges represe
 The ENG plays a central role in the prefetching process by exposing prefetch enabled URLs  ( **What** ) and by keeping track of which prefetch enabled URL Candidates are most likely to be accessed in subsequent activity transitions ( **When**).
 
 <p align="center">
-	<img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="100"/>
+	<img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="100%"/>
 </p>
 
 An URL may be composed of both static components (for example the domain name and path) and also  dynamic components (such as URL parameters).
