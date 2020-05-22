@@ -16,7 +16,7 @@ This plugin injects all critical NAPPA dependencies to an Application’s source
 * You should see a new entry in the menu bar named `Prefetching`. 
 
 <p align="center">
-	<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="910"/>
+   <img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="910"/>
 </p>
 
 To update the plugin, simply download a new version and repeat the process.
@@ -25,11 +25,11 @@ To update the plugin, simply download a new version and repeat the process.
 
 There are four actions to inject NAPPA dependencies in the project source code (see figure below).
 After the instrumentation process takes place, NAPPA performs the ENG construction dynamically.
-Prefetching is performed transparently without requiring any intervention from the end user.
+Prefetching is performed transparently without requiring any intervention from the end-user.
 As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
 
 <p align="center">
-	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="910"/>
+   <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="910"/>
 </p>
 
 #### Instrument Activities
@@ -48,7 +48,7 @@ protected void onResume() {
 
 #### Instrument Intent Extras
 
-Searches for usage of Android [Intent Extras](https://developer.android.com/reference/android/content/Intent) to inject extra probes.
+Searches for the usage of Android [Intent Extras](https://developer.android.com/reference/android/content/Intent) to inject extra probes.
 
 Injected source-code:
 
@@ -111,15 +111,15 @@ nappaAndroidStudioVersion=/build/version/of/Android Studio
 
 To find the installed version of Android Studio, use the Android Studio `About` dialog screen. 
 An example is shown below.
-In this case, the (BRANCH. BUILD. FIX) version of the IntelliJ Platform is `191.8026.42` .
+In this case, the (BRANCH. BUILD. FIX) version of the IntelliJ Platform is `191.8026.42`.
 Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html) for more details.
 
 <p align="center">
 <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" 
-	alt="Android Studio about dialog screen" width="910"/>
+   alt="Android Studio about dialog screen" width="910"/>
 </p>
 
-Import this project in InteliJ IDEA.
+Import this project in IntelliJ IDEA.
 
 ### Running the plugin
 
@@ -164,4 +164,4 @@ Each instrumentation described above is implemented as an Action and are mapped 
 There is a set of utility libraries implemented to abstract common logic between the actions.
 
 Changes in the source-code are not automatically pushed to the current instance of Android Studio.
-The `unIde` command must be executed again to reflect the changes.
+The `runIde` command must be executed again to reflect the changes.
