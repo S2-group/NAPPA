@@ -22,6 +22,7 @@ If so, an association between an extra and its corresponding static URL componen
 
 This repository holds all NAPPA related projects, each project is in a subdirectory.
 Currently, there is the core [Prefetching Library](Prefetching-Library) and a [Plugin for Android Studio](Android-Studio-Plugin). 
+In addition to these, there is a [Weather and News](Test-App/Weather-and-News-app) test app to demonstrate the usage of NAPPA as a prefetching approach.
 
 ### NAPPA Prefetching Library  
 
@@ -33,6 +34,13 @@ For more details on usage, refer to its [README](Prefetching-Library/README.md).
 Contains an IntelliJ IDEA project with a plugin for Android Studio.
 This plugin provides running automated tasks to instrument an Android app source-code to enable NAPPA Prefetching Library.
 For more details on usage, refer to its [README](Android-Studio-Plugin/README.md).
+
+### Test Apps
+
+#### Weather and News
+
+Contains an Android Studio sample project with a simple UI consuming a news and weather API.
+For more details on usage, refer to its [README](Test-App/Weather-and-News-app/README.md).
 
 ## How to cite NAPPA
 
