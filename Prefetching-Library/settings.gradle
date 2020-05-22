@@ -1,1 +1,1 @@
-include ':app', ':android_prefetching_lib'
+include ':android_prefetching_lib'
