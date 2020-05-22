@@ -15,7 +15,7 @@ This project contains a library for Android to support prefetching of network re
 * Click on `Import .JAR/.AAR Package` then click `Next`.
 * Enter the location of the compiled AAR or JAR file then click `Finish`.
 
-#### Configur Gradle
+#### Configure Gradle
 
 Make sure the library is listed at the top of your `settings.gradle` file, as shown here for a library named "android_prefetching_lib": 
 
@@ -35,4 +35,11 @@ Click Sync Project with Gradle Files.
 
 ### Usage
 
-## Implementing a custom prefetching strategy
+## Modifying the library
+
+### Implementing a custom prefetching strategy
+
+### Create a new build 
+
+To create a new build with the modifications implemneted in the library, click on `Build > Make Project`.
+Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar/).
