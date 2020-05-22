@@ -1,7 +1,1 @@
-# NAPPA Android Prefetch Library
-
-## Getting started
-
-### Installation
-
-### Usage
+# Weather and News Test App
