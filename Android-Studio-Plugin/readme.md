@@ -16,7 +16,7 @@ This plugin injects all critical NAPPA dependencies to an Application’s source
 * You should see a new entry in the menu bar named `Prefetching`. 
 
 <p align="center">
-   <img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="910"/>
+   <img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="100%"/>
 </p>
 
 To update the plugin, simply download a new version and repeat the process.
@@ -29,7 +29,7 @@ Prefetching is performed transparently without requiring any intervention from t
 As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
 
 <p align="center">
-   <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="910"/>
+   <img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="100%"/>
 </p>
 
 #### Instrument Activities
@@ -116,7 +116,7 @@ Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/
 
 <p align="center">
 <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" 
-   alt="Android Studio about dialog screen" width="910"/>
+   alt="Android Studio about dialog screen" width="100%"/>
 </p>
 
 Import this project in IntelliJ IDEA.
