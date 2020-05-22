@@ -1,6 +1,6 @@
 # NAPPA
 
-Implementation of a navigation-aware technique for personalized prefetching of network requests of Android apps.
+Implementation of a Navigation-Aware technique for Personalized Prefetching of network requests of Android apps.
 A description of the internals of the NAPPA approach is available in our [ICSE 2019 publication](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf).  
 
 ## Introduction
