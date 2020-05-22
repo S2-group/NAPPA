@@ -18,6 +18,22 @@ The ENG addresses the challenge of identifying dynamic URL components by capturi
 Whenever an HTTP Request is performed, NAPPA verifies if any of the extras captured on previous activity transitions corresponds to an URL component.
 If so, an association between an extra and its corresponding static URL components is created—this becomes a prefetch enabled URL candidate.
 
+## Project
+
+This repository holds all NAPPA related projects, each project is in a subdirectory.
+Currently, there is the core [Prefetching Library](Prefetching-Library) and a [Plugin for Android Studio](Android-Studio-Plugin). 
+
+### NAPPA Prefetching Library  
+
+Contains an Android Studio project with the core Prefetching Library and a test app.
+For more details on usage, refer to its [readme](Prefetching-Library/README.md).
+
+### NAPPA plugin for Android Studio
+
+Contains an IntelliJ IDEA project with a plugin for Android Studio.
+This plugin provides running automated tasks to instrument an Android app source-code to enable NAPPA Prefetching Library.
+For more details on usage, refer to its [readme](Android-Studio-Plugin/README.md).
+
 ## How to cite NAPPA
 
 If NAPPA is helping your research, consider to cite is as follows, thanks!
