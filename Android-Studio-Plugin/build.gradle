@@ -27,7 +27,7 @@ intellij {
     // https://github.com/JetBrains/gradle-intellij-plugin
     // https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html
     // Needs to be defined in the Gradle installation directory
-    version nappaAndroidStudiVersion
+    version nappaAndroidStudioVersion
 
     plugins 'android',
             'java'

@@ -76,7 +76,7 @@ Create the file `gradle.properties` in the Gradle installation direcctory with t
 
 ``` text
 nappaAndroidStudioHome=/absolute/path/to/Android Studio/
-nappaAndroidStudiVersion=/build/version/of/Android Studio
+nappaAndroidStudioVersion=/build/version/of/Android Studio
 ```
 
 To find which version of Android Studio is installed, use the Android Studio `About` dialog screen. 
