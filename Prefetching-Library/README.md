@@ -31,7 +31,7 @@ dependencies {
 }
 ```
 
-Click Sync Project with Gradle Files.
+Click `Sync Project with Gradle Files`.
 
 ### Usage
 
