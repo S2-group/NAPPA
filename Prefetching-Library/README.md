@@ -33,6 +33,17 @@ dependencies {
 
 Click `Sync Project with Gradle Files`.
 
+#### Import library dependencies
+
+Import the following libraries to your project
+
+```gradle
+implementation "org.bitbucket.cowwoc:diff-match-patch:1.1"
+implementation "com.squareup.okhttp3:okhttp:3.14.8"
+implementation "androidx.room:room-runtime:2.2.5"
+implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+```
+
 ### Usage
 
 Import the library:
