@@ -70,7 +70,7 @@ protected void onResume() {
 }
 ```
 
-For existing projects, use the [NAPPA Plugin for Android Studio](../Android-Studio-Plugin) to automatically enable NAPPA in the project.
+For existing projects, use the [NAPPA Plugin for Android Studio](../Android-Studio-Plugin) to automatically make these changes and enable NAPPA in the project.
 
 
 ### Available prefetching strategies
