@@ -12,6 +12,12 @@
 
 # IDEA
 # ----
+/.idea
+!/.idea/vcs.xml
+!/.idea/codeStyles
+!/.idea/inspectionProfiles
+!/.idea/icon.png
+!/.idea/icon_dark.png
 .shelf
 /*.iml
 /*.ipr
