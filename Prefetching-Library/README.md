@@ -75,9 +75,16 @@ For existing projects, use the [NAPPA Plugin for Android Studio](../Android-Stud
 
 ### Available prefetching strategies
 
+NAPPA does not impose a specific prefetching strategy, but rather allows for a modular specification of prefetching strategies.
+The default strategy uses a greedy-based algorithm.
+
 #### Greedy
 
-
+The Greedy appraoch determines which activity successors can benefit the most from prefetching by traversing the ENG tree using a "weight" factor.
+It recursively consider all successors that can "add value" by prefetching it.
+The weight is defined as the score that has been calculated in the previous iteration.
+Therefore, with each recursive iteration, the weight score decreases. 
+There is a fixed threshold to limit the number of candidate URLs to prefetch.
 
 ## Modifying the library
 
@@ -88,9 +95,14 @@ For existing projects, use the [NAPPA Plugin for Android Studio](../Android-Stud
 
 ### Implementing a custom prefetching strategy
 
-All prefetching strategies are implemented at [android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch).
+The prefetching strategies are implemented at [android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch).
+These can be used as references on how to implement a new strategy.
 
+All prefetching strategies must implement the [PrefetchStrategy](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch/PrefetchStrategy.java) interface and override the method `getTopNUrlToPrefetchForNode`
 
+TODO &mdash; analyse prefetch library to understand how a prefetching solution is selected and the describe the steps here
+
+After implementing a strategy, please consider sharing it by creating a PR to the official [NAPPA](https://github.com/S2-group/NAPPA) repository.
 
 ### Create a new build 
 
