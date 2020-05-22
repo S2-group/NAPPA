@@ -10,7 +10,7 @@ This graph is built by letting nodes represent activities, and all edges represe
 The ENG plays a central role in the prefetching process by exposing prefetch enabled URLs  ( **What** ) and by keeping track of which prefetch enabled URL Candidates are most likely to be accessed in subsequent activity transitions ( **When**).
 
 <p align="center">
-	<img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="100%"/>
+	<img src="docs/img/ENG_A.png" alt="Extended Navigation Graph" width="100"/>
 </p>
 
 An URL may be composed of both static components (for example the domain name and path) and also  dynamic components (such as URL parameters).
@@ -26,13 +26,13 @@ Currently, there is the core [Prefetching Library](Prefetching-Library) and a [P
 ### NAPPA Prefetching Library  
 
 Contains an Android Studio project with the core Prefetching Library and a test app.
-For more details on usage, refer to its [readme](Prefetching-Library/README.md).
+For more details on usage, refer to its [README](Prefetching-Library/README.md).
 
 ### NAPPA plugin for Android Studio
 
 Contains an IntelliJ IDEA project with a plugin for Android Studio.
 This plugin provides running automated tasks to instrument an Android app source-code to enable NAPPA Prefetching Library.
-For more details on usage, refer to its [readme](Android-Studio-Plugin/README.md).
+For more details on usage, refer to its [README](Android-Studio-Plugin/README.md).
 
 ## How to cite NAPPA
 
