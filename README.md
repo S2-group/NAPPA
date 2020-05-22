@@ -117,4 +117,4 @@ If NAPPA is helping your research, consider to cite is as follows, thanks!
 
 ## License
 
-This software is licensed under the MIT License.
+This software is licensed under the [MIT License](LICENSE).
