@@ -45,6 +45,40 @@ Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET reques
 use "Add prefetching" to instrument Activities in order to get the navigation graph
 
 After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. Prefetching is performed transparently without requiring any intervention from the end user.  As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
+
+### Set up local environment for development
+
+#### Android Studio Plugin
+
+Install the following toos:
+
+- [Gradle](https://gradle.org/)
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+- [Android Studio](https://developer.android.com/studio)
+
+Create the file `gradle.properties` in the Gradle installation direcctory with the content:
+```text
+nappaAndroidStudioHome=/absolute/path/to/Android Studio/
+nappaAndroidStudiVersion=/build/version/of/Android Studio
+```
+
+To find which version of Android Studio is installed, use the Android Studio `About` dialog screen. 
+An example is shown below.
+In this case, the (BRANCH.BUILD.FIX) version of the IntelliJ Platform is `191.8026.42`.
+Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html) for more details.
+
+ <p align="center">
+ <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" alt="Android Studio aboud dialog screen" width="500"/>
+ </p>
+
+Import the directory [Plugin/test1/](Plugin/test1/) in InteliJ IDEA
+
+Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#)
+
+Click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
+This instance can be run in debug mode.
+Note that changes in the source code require running the command again to take effect. 
+
 ## How to cite NAPPA
 If NAPPA is helping your research, consider to cite is as follows, thanks!
 

@@ -26,8 +26,8 @@ intellij {
     // Refer to the docs for more information
     // https://github.com/JetBrains/gradle-intellij-plugin
     // https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html
-    version '192.7142.36' // Android studio build; version = 3.6.3
-    type 'IC'
+    // Needs to be defined in the Gradle installation directory
+    version nappaAndroidStudiVersion
 
     plugins 'android',
             'java'
@@ -35,9 +35,9 @@ intellij {
     updateSinceUntilBuild false
 }
 
-// TODO: Verify possibility of defining runIde as a local configuration only
 runIde {
-    ideDirectory '/opt/android-studio/'
+    // Needs to be defined in the Gradle installation directory
+    ideDirectory nappaAndroidStudioHome
 }
 
 patchPluginXml {
