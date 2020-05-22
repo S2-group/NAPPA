@@ -122,13 +122,37 @@ Import this project in InteliJ IDEA.
 
 ### Running the plugin
 
-Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
-Double click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
-This instance can be run in debug mode.
-Note that changes in the source code require running the command again to take effect. 
-
+Running the plugin will open an instance of Android Studio with the plugin installed.
 A few exceptions might take place when opening the Android Studio stance. 
 The cause of these exceptions are undefined configurations (e.g. SDK) and can be ignored.
+
+#### Running the plugin from IntelliJ IDEA
+
+Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
+Double click on `test1 > Tasks > IntelliJ > runIde`.
+ 
+Running from the IntelliJ IDEA allows the plugin to be executed in debug mode. 
+
+#### Running the plugin from bash
+
+```bash
+sudo sh ./gradlew runIde
+```
+
+### Create a new build
+
+Gradle places new builds in the directory [build/distributions](build/distributions).
+
+#### Create a new build from IntelliJ IDEA
+
+Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
+Double click on `test1 > Tasks > IntelliJ > buildPlugin`
+
+#### Create a new build from bash
+
+```bash
+sudo sh ./gradlew buildPlugin
+```
 
 ### Development
 
@@ -137,3 +161,6 @@ The official IntelliJ documentation on developing plugins is available [here](ht
 Each instrumentation described above is implemented as an Action and are mapped in the [plugin.xml](src/main/resources/META-INF/plugin.xml) file under the `<actions>` tag.
 
 There is a set of utility libraries implemented to abstract common logic between the actions.
+
+Changes in the source-code are not automatically pushed to the current instance of Android Studio.
+The `unIde` command must be executed again to reflect the changes.
