@@ -35,6 +35,50 @@ Click Sync Project with Gradle Files.
 
 ### Usage
 
+Import the library:
+
+```java
+import nl.vu.cs.s2group.PrefetchingLib;
+``` 
+
+Encapsulate the creation of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) instances:
+
+```java
+// Default usage
+OkHttpClient client = PrefetchingLib.getOkHttp(new OkHttpClient());
+
+// Using builder
+OkHttpClient.Builder builder = new OkHttpClient.Builder();
+// add build configurations
+OkHttpClient client = PrefetchingLib.getOkHttp(builder.build());
+```
+
+Inform the library about the usage of Android [Intent Extras](https://developer.android.com/reference/android/content/Intent):
+
+```java
+PrefetchingLib.notifyExtras(intent.getExtras());
+startActivity(intent); 
+```
+
+Inform the library when navigating between Android [Activity](https://developer.android.com/reference/android/app/Activity):
+
+```java
+@Override
+protected void onResume() {
+    super.onResume();
+    PrefetchingLib.setCurrentActivity(this);
+}
+```
+
+For existing projects, use the [NAPPA Plugin for Android Studio](../Android-Studio-Plugin) to automatically enable NAPPA in the project.
+
+
+### Available prefetching strategies
+
+#### Greedy
+
+
+
 ## Modifying the library
 
 ### Required Tools
@@ -44,7 +88,11 @@ Click Sync Project with Gradle Files.
 
 ### Implementing a custom prefetching strategy
 
+All prefetching strategies are implemented at [android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch).
+
+
+
 ### Create a new build 
 
 To create a new build with the modifications implemneted in the library, click on `Build > Make Project`.
-Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar/).
+Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
