@@ -1,5 +1,21 @@
 # NAPPA plugin for Android Studio
 
+This project contains a plugin for Android Studio to automate the task of enabling NAPPA in an existing Android project.
+This plugin injects all critical NAPPA dependencies to an Application’s source code. 
+
+## Installation
+
+* Go to this repository [releases](https://github.com/S2-group/NAPPA/releases) page.
+* Download the latest version of the plugin from `Android Studio Plugin v1.x`.
+* Open Android Studio.
+* Go to `File > Settings > Plugins > Cog icon > Install plugin from disk` (see figure below).
+* Select the downloaded file.
+* Restart Android Studio.
+* You should see a new entry in the menu bar. 
+
+<p align="center">
+	<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="910"/>
+</p>
 
 
 INSTRUCTIONS
@@ -48,9 +64,7 @@ Install Plugin in Android Studio:
 File -> Settings -> Plugins -> Install plugin from disk
 Restart Android Studio. 
 
-<p align="center">
-	<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="500"/>
-</p>
+
 
 ### Instrumentation
 
