@@ -95,11 +95,12 @@ There is a fixed threshold to limit the number of candidate URLs to prefetch.
 
 ### Implementing a custom prefetching strategy
 
-The prefetching strategies are implemented at [android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch).
+The prefetching strategies are implemented in the [nl.vu.cs.s2group.prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch) package.
 These can be used as references on how to implement a new strategy.
 
-All prefetching strategies must implement the [PrefetchStrategy](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch/PrefetchStrategy.java) interface and override the method `getTopNUrlToPrefetchForNode`
+To define a new strategy, you must implement the [PrefetchStrategy](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch/PrefetchStrategy.java) interface and override the method `getTopNUrlToPrefetchForNode`.
 
+After implementing the strategy, it cam be enabled by ...
 TODO &mdash; analyse prefetch library to understand how a prefetching solution is selected and the describe the steps here
 
 After implementing a strategy, please consider sharing it by creating a PR to the official [NAPPA](https://github.com/S2-group/NAPPA) repository.
