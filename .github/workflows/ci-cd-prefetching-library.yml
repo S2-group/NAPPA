@@ -22,3 +22,7 @@ jobs:
           java-version: 1.8
       - name: Build with Gradle
         run: ./gradlew build
+    defaults:
+      run:
+        shell: bash
+        working-directory: Prefetching-Library/
