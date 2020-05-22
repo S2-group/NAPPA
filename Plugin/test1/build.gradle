@@ -1,29 +1,45 @@
 plugins {
-    id 'java'
-    id 'org.jetbrains.intellij' version '0.3.4'
+    id 'java-library'
+    id 'org.jetbrains.intellij' version '0.4.21'
 }
 
 group 'test'
-version '1.05-SNAPSHOT'
+version '1.7-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+// When this option is enabled and `ideDirectory` is set to Android Studio,
+// the build fails and generates the exception https://youtrack.jetbrains.com/issue/KT-32401
+// As a result of disabling building searchable options,
+// the configurables that your plugin provides won't be searchable in the Settings dialog.
+buildSearchableOptions.enabled = false
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 intellij {
-    version '2018.1.5'
+    // Refer to the docs for more information
+    // https://github.com/JetBrains/gradle-intellij-plugin
+    // https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html
+    version '192.7142.36' // Android studio build; version = 3.6.3
+    type 'IC'
 
-    plugins 'android'
+    plugins 'android',
+            'java'
+
     updateSinceUntilBuild false
 }
+
+// TODO: Verify possibility of defining runIde as a local configuration only
+runIde {
+    ideDirectory '/opt/android-studio/'
+}
+
 patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+    changeNotes
 }
