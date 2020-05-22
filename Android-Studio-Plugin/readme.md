@@ -26,7 +26,7 @@ To update the plugin, simply download a new version and repeat the process.
 There are four actions to inject NAPPA dependencies in the project source code, each described below.
 
 <p align="center">
-	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="757"/>
+	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="910"/>
 </p>
 
 #### Instrument Activities
