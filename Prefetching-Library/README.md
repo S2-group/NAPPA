@@ -37,6 +37,11 @@ Click Sync Project with Gradle Files.
 
 ## Modifying the library
 
+### Required Tools
+
+* [Gradle](https://gradle.org/) v5.6.4
+* [Android Studio](https://developer.android.com/studio)
+
 ### Implementing a custom prefetching strategy
 
 ### Create a new build 
