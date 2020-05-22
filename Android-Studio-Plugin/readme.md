@@ -159,7 +159,7 @@ sudo sh ./gradlew buildPlugin
 
 The official IntelliJ documentation on developing plugins is available [here](https://www.jetbrains.org/intellij/sdk/docs/intro/welcome.html).
 
-Each instrumentation described above is implemented as an Action and are mapped in the [plugin.xml](src/main/resources/META-INF/plugin.xml) file under the `<actions>` tag.
+Each instrumentation described above is implemented as an Action and are mapped in the [plugin.xml](src/main/resources/META-INF/plugin.xml#L29) file.
 
 There is a set of utility libraries implemented to abstract common logic between the actions.
 
