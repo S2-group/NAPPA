@@ -122,7 +122,18 @@ Import this project in InteliJ IDEA.
 
 ### Running the plugin
 
-Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#)
+Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
 Double click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
 This instance can be run in debug mode.
 Note that changes in the source code require running the command again to take effect. 
+
+A few exceptions might take place when opening the Android Studio stance. 
+The cause of these exceptions are undefined configurations (e.g. SDK) and can be ignored.
+
+### Development
+
+The official IntelliJ documentation on developing plugins is available [here](https://www.jetbrains.org/intellij/sdk/docs/intro/welcome.html).
+
+Each instrumentation described above is implemented as an Action and are mapped in the [plugin.xml](src/main/resources/META-INF/plugin.xml) file under the `<actions>` tag.
+
+There is a set of utility libraries implemented to abstract common logic between the actions.
