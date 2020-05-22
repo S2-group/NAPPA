@@ -17,17 +17,17 @@ This project contains a library for Android to support prefetching of network re
 
 #### Configure Gradle
 
-Make sure the library is listed at the top of your `settings.gradle` file, as shown here for a library named "android_prefetching_lib": 
+Make sure the library is listed at the top of your `settings.gradle` file, as shown here for a library named "nappa-prefetching-library": 
 
 ```gradle
-include ':app', :android_prefetching_lib
+include ':app', :nappa-prefetching-library
 ```
 
 Open the app module's `build.gradle` file and add a new line to the dependencies block as shown in the following snippet: 
 
 ```gradle
 dependencies {
-    implementation project(":my-library-module")
+    implementation project(":nappa-prefetching-library")
 }
 ```
 
