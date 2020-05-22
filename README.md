@@ -1,10 +1,6 @@
 # NAPPA
 Implementation of a navigation-aware technique for personalized prefetching of network requests of Android apps.
-A description of the internals of the NAPPA approach is available in our [ICSE 2019 publication](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf).
-
-**Important:** 
-This repository was forked to work during the thesis project.
-If you want to use NAPPA, please go to the parent repository in the [S2 Group](https://github.com/S2-group/NAPPA).
+A description of the internals of the NAPPA approach is available in our [ICSE 2019 publication](http://www.ivanomalavolta.com/files/papers/ICSE_2019_NAPPA.pdf).  
 
 ## Introduction
 In order to perform a Navigation-Aware prefetching, NAPPA introduces the notion of an Extended Navigation Graph.  This graph is built by letting nodes represent activities,  and all edges represent activity transitions within the application. The ENG plays a central role in the prefetching process by exposing prefetch enabled URLs  ( **What** ) and by keeping track of which prefetch enabled URL Candidates are most likely to be accessed in subsequent activity transitions ( **When**).
