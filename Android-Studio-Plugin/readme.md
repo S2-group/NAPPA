@@ -53,6 +53,7 @@ Searches for usage of Android [Intent Extras](https://developer.android.com/refe
 Injected source-code:
 
 ```java
+/* Source-code inject before the original source code */
 PrefetchingLib.notifyExtras(intent.getExtras());
 
 /* Original source-code */
