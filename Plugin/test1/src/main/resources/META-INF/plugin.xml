@@ -33,7 +33,7 @@
             <action class="test.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines" />
             <action class="test.ExtrasInstrumentationAction" id="test2Id" text="Instrument Intent Extras"
                     description="Spots intents"/>
-            <action class="test.LastAction" id="test3Id" text="Instrument okHttpClients with Interceptor"
+            <action class="test.OkHttpInstrumentationAction" id="test3Id" text="Instrument okHttpClients with Interceptor"
                     description="Spots okHttpClients"/>
             <action class="test.RetrofitInstrumentationAction" id="InstrumetnRetrofit" text="Instrument Retrofit" description="Instrument Retrofit Client with Interceptor"/>
         </group>
