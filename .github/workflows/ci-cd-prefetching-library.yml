@@ -1,0 +1,11 @@
+name: CI/CD Workflow for the Prefetching Library
+on:
+  push:
+    paths:
+      - 'Prefetching-Library/*'
+
+jobs:
+  build:
+    name: Build Prefetching Library
+    runs-on: ubuntu-18.04
+    
