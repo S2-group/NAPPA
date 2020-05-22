@@ -91,8 +91,8 @@ The default strategy uses a greedy-based algorithm.
 
 #### Greedy
 
-The Greedy appraoch determines which activity successors can benefit the most from prefetching by traversing the ENG tree using a "weight" factor.
-It recursively consider all successors that can "add value" by prefetching it.
+The Greedy approach determines which activity successors can benefit the most from prefetching by traversing the ENG tree using a "weight" factor.
+It recursively considers all successors that can "add value" by prefetching it.
 The weight is defined as the score that has been calculated in the previous iteration.
 Therefore, with each recursive iteration, the weight score decreases. 
 There is a fixed threshold to limit the number of candidate URLs to prefetch.
@@ -111,13 +111,13 @@ These can be used as references on how to implement a new strategy.
 
 To define a new strategy, you must implement the [PrefetchStrategy](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch/PrefetchStrategy.java) interface and override the method `getTopNUrlToPrefetchForNode`.
 
-After implementing the strategy, it cam be enabled by ...
+After implementing the strategy, it can be enabled by ...
 TODO &mdash; analyse prefetch library to understand how a prefetching solution is selected and the describe the steps here
 
 After implementing a strategy, please consider sharing it by creating a PR to the official [NAPPA](https://github.com/S2-group/NAPPA) repository.
 
 ### Create a new build 
 
-To create a new build with the modifications implemneted in the library, click on `Build > Make Project`.
+To create a new build with the modifications implemented in the library, click on `Build > Make Project`.
 Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
-To use this build, repeat the `Import library` instructions in the `Installation` section.
+To use this build, repeat the `Import Library` instructions in the `Installation` section.
