@@ -3,7 +3,9 @@
 This project contains a plugin for Android Studio to automate the task of enabling NAPPA in an existing Android project.
 This plugin injects all critical NAPPA dependencies to an Application’s source code. 
 
-## Installation
+## Getting started
+
+### Installation
 
 * Go to this repository [releases](https://github.com/S2-group/NAPPA/releases) page.
 * Download the latest version of the plugin from `Android Studio Plugin v1.x`.
@@ -11,11 +13,76 @@ This plugin injects all critical NAPPA dependencies to an Application’s source
 * Go to `File > Settings > Plugins > Cog icon > Install plugin from disk` (see figure below).
 * Select the downloaded file.
 * Restart Android Studio.
-* You should see a new entry in the menu bar. 
+* You should see a new entry in the menu bar named `Prefetching`. 
 
 <p align="center">
 	<img src="docs/img/PluginInstall.png" alt="Plugin Installation" width="910"/>
 </p>
+
+To update the plugin, simply download a new version and repeat the process.
+
+### Usage
+
+There are four actions to inject NAPPA dependencies in the project source code, each described below.
+
+#### Instrument Activities
+
+Searches for Android [Activity](https://developer.android.com/reference/android/app/Activity) classes to inject navigation probes.
+
+Injected source-code:
+
+```java
+@Override
+protected void onResume() {
+    super.onResume();
+    PrefetchingLib.setCurrentActivity(this);
+}
+```
+
+#### Instrument Intent Extras
+
+Searches for usage of Android [Intent Extras](https://developer.android.com/reference/android/content/Intent) to inject extra probes.
+
+Injected source-code:
+
+```java
+PrefetchingLib.notifyExtras(intent.getExtras());
+
+/* Original source-code */
+startActivity(intent); 
+```
+
+#### Instrument OkHttpClient
+
+Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a network interceptor.
+
+Injected source-code:
+
+```java
+/* Original source-code */
+okHttpClient = new OkHttpClient();
+okHttpClient = new OkHttpClient.Builder().build;
+
+/* New source-code */
+okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient());
+okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient.Builder().build);
+```
+
+#### Instrument Retrofit
+
+Searches for usage of [Retrofit](https://square.github.io/retrofit/) to instantiate a network interceptor.
+
+Injected source-code:
+
+```java
+/* Original source-code */
+retrofitClient = new Retrofit.Builder().client(new OkHttpClient())
+
+/* New source-code */
+retrofitClient = new Retrofit.Builder().client(PrefetchingLib.getOkHttp())
+```
+
+## Run the project locally
 
 
 INSTRUCTIONS
