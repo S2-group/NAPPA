@@ -23,9 +23,9 @@ To update the plugin, simply download a new version and repeat the process.
 
 ### Usage
 
-There are four actions to inject NAPPA dependencies in the project source code, each described below.
-After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. 
-Prefetching is performed transparently without requiring any intervention from the end user.  
+There are four actions to inject NAPPA dependencies in the project source code (see figure below).
+After the instrumentation process takes place, NAPPA performs the ENG construction dynamically.
+Prefetching is performed transparently without requiring any intervention from the end user.
 As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
 
 <p align="center">
@@ -62,7 +62,7 @@ startActivity(intent);
 #### Instrument OkHttpClient
 
 Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors).
-NAPPA serve intercepted requests whenever they are stored in the cache.  
+NAPPA serve intercepted requests whenever they are stored in the cache.
 Otherwise, they are rerouted to the origin server. 
 
 Injected source-code:
