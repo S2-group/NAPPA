@@ -2,7 +2,7 @@ name: CI/CD Workflow for the Prefetching Library
 
 on:
   push:
-    branches: [master]
+    branches: [master, 33/set-up-ci-cd-pipeline-via-github-actions]
     paths:
       - "Prefetching-Library/**"
   pull_request:
