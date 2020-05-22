@@ -9,7 +9,7 @@ This project contains a library for Android to support prefetching of network re
 #### Import library
 
 * Go to this repository [releases](https://github.com/S2-group/NAPPA/releases) page.
-* Download the latest version of the library from `Prefetching Library v1.x`.
+* Download the latest version of the library from `NAPPA Prefetching Library v1.x`.
 * Open Android Studio.
 * Click on `File > New > New Module`.
 * Click on `Import .JAR/.AAR Package` then click `Next`.

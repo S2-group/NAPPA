@@ -8,7 +8,7 @@ This plugin injects all critical NAPPA dependencies to an Application’s source
 ### Installation
 
 * Go to this repository [releases](https://github.com/S2-group/NAPPA/releases) page.
-* Download the latest version of the plugin from `Android Studio Plugin v1.x`.
+* Download the latest version of the plugin from `NAPPA Plugin for Android Studio v1.x`.
 * Open Android Studio.
 * Go to `File > Settings > Plugins > Cog icon > Install plugin from disk` (see figure below).
 * Select the downloaded file.
