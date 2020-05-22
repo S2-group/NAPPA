@@ -24,6 +24,9 @@ To update the plugin, simply download a new version and repeat the process.
 ### Usage
 
 There are four actions to inject NAPPA dependencies in the project source code, each described below.
+After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. 
+Prefetching is performed transparently without requiring any intervention from the end user.  
+As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
 
 <p align="center">
 	<img src="docs/img/Plugin.png" alt="Nappa Android Studio Plugin" width="910"/>
@@ -58,7 +61,9 @@ startActivity(intent);
 
 #### Instrument OkHttpClient
 
-Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a network interceptor.
+Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors).
+NAPPA serve intercepted requests whenever they are stored in the cache.  
+Otherwise, they are rerouted to the origin server. 
 
 Injected source-code:
 
@@ -74,7 +79,7 @@ okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient.Builder().build);
 
 #### Instrument Retrofit
 
-Searches for usage of [Retrofit](https://square.github.io/retrofit/) to instantiate a network interceptor.
+Searches for usage of [Retrofit](https://square.github.io/retrofit/) to provide an instrumented OkHttpClient.
 
 Injected source-code:
 
@@ -86,80 +91,15 @@ retrofitClient = new Retrofit.Builder().client(new OkHttpClient())
 retrofitClient = new Retrofit.Builder().client(PrefetchingLib.getOkHttp())
 ```
 
-## Run the project locally
+## Running the plugin in a local environment for development
 
+### Required Tools
 
-INSTRUCTIONS
-
-Build plugin with
-
-./gradlew buildPlugin
-
-The plugin binaries can be found in 
-
-build/distributions
-
-Install Plugin in Android Studio:
-
-File -> Settings -> Plugins -> Install plugin from disk
-
-Restart Android Studio.
-
-In the main bar you will found a new Menu called "Prefetching"
-
-Use "Spot intent" to instrument intents in order to get Intent arguments
-Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
-use "Add prefetching" to instrument Activities in orer to get the navigation graph
-
-## Build
-
-In order to enable prefetching with NAPPA, an instrumentation process must take place at development time. 
-This task is performed via a plugin which can be installed in Android Studio in order to inject all critical NAPPA dependencies to an Application’s source code. 
-
-### Requirements
-
-Currently, NAPPA makes use of [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors) in order to intercept HTTP requests performed by the end-user.  
-Intercepted requests are served by NAPPA whenever they are stored in the cache.  
-Otherwise, they are rerouted to the origin server. 
-
-### Installing the Plug-in
-
-In order to Install the [plug-in](https://github.com/S2-group/NAPPA/tree/master/Plugin/test1) in android studio, please take the following steps:
-
-In order to Install the in android studio, please take the following steps:
-Build the plugin with
-`./gradlew buildPlugin ` 
-The plugin binaries can be found in
-`build/distributions` 
-Install Plugin in Android Studio:
-File -> Settings -> Plugins -> Install plugin from disk
-Restart Android Studio. 
-
-
-
-### Instrumentation
-
-In the main bar you will found a new Menu called "Prefetching"
-
-
- 
-Use "Spot intent" to instrument intents in order to get Intent arguments
-Use "Spot OkHttp" to instrument OkHttp Builder in order to track HTTP/GET requests
-use "Add prefetching" to instrument Activities in order to get the navigation graph
-
-After the instrumentation process takes place, NAPPA performs the ENG construction dynamically. 
-Prefetching is performed transparently without requiring any intervention from the end user.  
-As the user navigates an application's activities, the ENG is built and prefetching is performed whenever a suitable candidate is encountered.
-
-### Set up local environment for development
-
-#### Android Studio Plugin
-
-Install the following toos:
-
-* [Gradle](https://gradle.org/)
+* [Gradle](https://gradle.org/) v5.6.4
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 * [Android Studio](https://developer.android.com/studio)
+
+### Configuration
 
 Create the file `gradle.properties` in the Gradle installation direcctory with the content:
 
@@ -168,20 +108,21 @@ nappaAndroidStudioHome=/absolute/path/to/Android Studio/
 nappaAndroidStudioVersion=/build/version/of/Android Studio
 ```
 
-To find which version of Android Studio is installed, use the Android Studio `About` dialog screen. 
+To find the installed version of Android Studio, use the Android Studio `About` dialog screen. 
 An example is shown below.
 In this case, the (BRANCH. BUILD. FIX) version of the IntelliJ Platform is `191.8026.42` .
 Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html) for more details.
 
 <p align="center">
 <img src="https://www.jetbrains.org/intellij/sdk/docs/products/img/android_studio_build.png" 
-	alt="Android Studio aboud dialog screen" width="500"/>
+	alt="Android Studio about dialog screen" width="910"/>
 </p>
 
-Import the directory [Plugin/test1/](Plugin/test1/) in InteliJ IDEA
+Import the directory [Android-Studio-Plugin/](Android-Studio-Plugin/) in InteliJ IDEA
+
+### Running the plugin
 
 Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#)
-
-Click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
+Double click on `test1 > Tasks > IntelliJ > runIde` to open an instance of Android Studio with the plugin installed. 
 This instance can be run in debug mode.
 Note that changes in the source code require running the command again to take effect. 
