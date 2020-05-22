@@ -62,7 +62,7 @@ startActivity(intent);
 
 #### Instrument OkHttpClient
 
-Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a [OkHTTP3 interceptors](https://github.com/square/okhttp/wiki/Interceptors).
+Searches for usage of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) to instantiate a [OkHttp Interceptors](https://square.github.io/okhttp/interceptors/).
 NAPPA serve intercepted requests whenever they are stored in the cache.
 Otherwise, they are rerouted to the origin server. 
 
