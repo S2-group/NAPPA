@@ -109,3 +109,4 @@ After implementing a strategy, please consider sharing it by creating a PR to th
 
 To create a new build with the modifications implemneted in the library, click on `Build > Make Project`.
 Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
+To use this build, repeat the `Import library` instructions in the `Installation` section.
