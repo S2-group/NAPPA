@@ -24,6 +24,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Run SonnarCloud
+        run: ./gradlew sonarqube
     defaults:
       run:
         shell: bash
