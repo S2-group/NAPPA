@@ -121,6 +121,8 @@ Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/
 
 Import this project in IntelliJ IDEA.
 
+**Info**: If no property is defined, Gradle will download the latest build of IntelliJ IDEA Community Edition.
+
 ### Running the plugin
 
 Running the plugin will open an instance of Android Studio with the plugin installed.
