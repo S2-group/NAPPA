@@ -10,7 +10,15 @@ on:
       - "Prefetching-Library/**"
 
 jobs:
-  build:
+  sonar_cloud_scan:
+    name: Sonar Cloud Scan
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Run scan
+        uses: SonarSource/sonarcloud-github-action@v1.2
+        with:
+          projectBaseDir: Prefetching-Library/
+  gradle_build:
     name: Build Prefetching Library
     runs-on: ubuntu-18.04
     steps:
