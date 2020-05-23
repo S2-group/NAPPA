@@ -15,10 +15,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
                 <Button
                     android:id="@+id/button_kabul"
                     android:layout_width="wrap_content"
@@ -29,11 +25,6 @@
                     app:layout_constraintHorizontal_bias="0.506"
                     app:layout_constraintStart_toStartOf="@+id/button_news"
                     app:layout_constraintTop_toBottomOf="@+id/button_news" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
                 <Button
                     android:id="@+id/button_session"
@@ -45,11 +36,6 @@
                     app:layout_constraintHorizontal_bias="0.506"
                     app:layout_constraintStart_toStartOf="@+id/button_news"
                     app:layout_constraintTop_toBottomOf="@+id/button_news" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <Button
                     android:id="@+id/button_news"
@@ -61,7 +47,6 @@
                     app:layout_constraintHorizontal_bias="0.506"
                     app:layout_constraintStart_toStartOf="@+id/button_news"
                     app:layout_constraintTop_toBottomOf="@+id/button_news" />
-            </RelativeLayout>
         </LinearLayout>
 
     </RelativeLayout>
