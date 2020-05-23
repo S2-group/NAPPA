@@ -14,7 +14,7 @@ project.ext {
     runnerVersion = "1.2.0"
     diffMatchPatch = "1.1"
 }
-THIS WILL BREAK THE BUILD
+
 buildscript {
     repositories {
         google()

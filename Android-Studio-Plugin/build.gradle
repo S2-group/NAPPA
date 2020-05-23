@@ -21,7 +21,7 @@ repositories {
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
-THIS WILL BREAK THE BUILD
+
 intellij {
     // Refer to the docs for more information
     // https://github.com/JetBrains/gradle-intellij-plugin
