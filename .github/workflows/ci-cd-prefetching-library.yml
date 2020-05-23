@@ -25,11 +25,11 @@ jobs:
         run: ./gradlew build
 
       - name: Run SonnarCloud
-        run: ./gradlew sonarqube -PnappaSonarLogin=${{ secrets.SONAR_KEY }} -PnappaSonarOrganization=vu-thesis-2019-2020-wesley-shann
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_KEY }}
+        run: ./gradlew sonarqube -PnappaSonarLogin=${{ secrets.SONAR_KEY }} -PnappaSonarOrganization=vu-thesis-2019-2020-wesley-shann
+        continue-on-error: true
     defaults:
       run:
         shell: bash
