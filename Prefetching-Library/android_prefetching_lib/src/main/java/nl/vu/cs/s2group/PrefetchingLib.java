@@ -168,6 +168,7 @@ public class PrefetchingLib {
                 // Iterate through the activity table which contains the activity name and its id
                 for (String actName: activityMap.keySet()) {
                     Log.i("PrefetchingLib", "Init nodes");
+	            Log.i("PrefetchingLib", "Init nodes");
                     activityGraph.initNodes(actName);
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
