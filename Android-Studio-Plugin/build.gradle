@@ -27,7 +27,7 @@ intellij {
     // https://github.com/JetBrains/gradle-intellij-plugin
     // https://www.jetbrains.org/intellij/sdk/docs/products/android_studio.html
     // Needs to be defined in the Gradle installation directory
-    version nappaAndroidStudioVersion
+    version project.hasProperty('nappaAndroidStudioVersion') ? nappaAndroidStudioVersion : 'LATEST-EAP-SNAPSHOT'
 
     plugins 'android',
             'java'
@@ -35,9 +35,11 @@ intellij {
     updateSinceUntilBuild false
 }
 
-runIde {
-    // Needs to be defined in the Gradle installation directory
-    ideDirectory nappaAndroidStudioHome
+if (project.hasProperty('nappaAndroidStudioHome')) {
+    runIde {
+        // Needs to be defined in the Gradle installation directory
+        ideDirectory nappaAndroidStudioHome
+    }
 }
 
 patchPluginXml {
