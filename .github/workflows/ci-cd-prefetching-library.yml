@@ -1,4 +1,4 @@
-name: CI/CD Workflow for the Prefetching Library
+name: CI/CD - Prefetching Library
 
 on:
   push:
