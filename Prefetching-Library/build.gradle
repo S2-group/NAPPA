@@ -55,5 +55,6 @@ sonarqube {
         property "sonar.organization", project.organizationKey
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.login", nappaSonarLogin
+        property "sonar.branch.name", "master"
     }
 }
