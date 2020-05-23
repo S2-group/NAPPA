@@ -20,7 +20,7 @@ buildscript {
         google()
         jcenter()
     }
-
+THIS WILL BREAK THE BUILD
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
 

@@ -20,7 +20,7 @@ project.ext {
     constraintlayoutVersion = "1.1.3"
     diffMatchPatch = "1.1"
 }
-
+THIS WILL BREAK THE BUILD
 buildscript {
     repositories {
         google()
