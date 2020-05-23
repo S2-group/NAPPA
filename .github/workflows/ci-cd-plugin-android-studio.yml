@@ -25,7 +25,7 @@ jobs:
         run: ./gradlew buildPlugin
 
       - name: Run SonnarCloud
-        run: ./gradlew sonarqube -PnappaSonarLogin=${{ SONAR_KEY }} -PnappaSonarOrganization=vu-thesis-2019-2020-wesley-shann
+        run: ./gradlew sonarqube -PnappaSonarLogin=${{ secrets.SONAR_KEY }} -PnappaSonarOrganization=vu-thesis-2019-2020-wesley-shann
         continue-on-error: true
     defaults:
       run:
