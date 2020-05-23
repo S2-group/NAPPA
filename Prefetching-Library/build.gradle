@@ -15,11 +15,6 @@ project.ext {
     diffMatchPatch = "1.1"
 }
 
-THIS WILL BREAK THE BUILD
-THIS WILL TOO
-TEST 3
-TEST 4
-
 buildscript {
     repositories {
         google()
