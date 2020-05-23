@@ -38,9 +38,6 @@ project.ext {
     gsonVersion = "2.8.5"
     constraintlayoutVersion = "1.1.3"
     diffMatchPatch = "1.1"
-
-    // SonarCloud
-    organizationKey = project.hasProperty('nappaSonarOrganization') ? nappaSonarOrganization : 's2-group'
 }
 
 allprojects {
@@ -56,9 +53,9 @@ task clean(type: Delete) {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", project.organizationKey + "_nappa-sample-app-weather-and-news"
+        property "sonar.projectKey", nappaSonarOrganization + "_nappa-sample-app-weather-and-news"
         property "sonar.projectName", "NAPPA - Sample - Weather and News"
-        property "sonar.organization", project.organizationKey
+        property "sonar.organization", nappaSonarOrganization
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.login", nappaSonarLogin
     }

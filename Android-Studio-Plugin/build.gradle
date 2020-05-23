@@ -47,15 +47,11 @@ patchPluginXml {
     changeNotes
 }
 
-project.ext {
-    organizationKey = project.hasProperty('nappaSonarOrganization') ? nappaSonarOrganization : 's2-group'
-}
-
 sonarqube {
     properties {
-        property "sonar.projectKey", project.organizationKey + "_nappa-plugin-android-studio"
+        property "sonar.projectKey", nappaSonarOrganization + "_nappa-plugin-android-studio"
         property "sonar.projectName", "NAPPA - Plugin for Android Studio"
-        property "sonar.organization", project.organizationKey
+        property "sonar.organization", nappaSonarOrganization
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.login", nappaSonarLogin
     }

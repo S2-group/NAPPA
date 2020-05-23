@@ -32,9 +32,6 @@ project.ext {
     espressoCoreVersion = "3.2.0"
     runnerVersion = "1.2.0"
     diffMatchPatch = "1.1"
-
-    // SonarCloud
-    organizationKey = project.hasProperty('nappaSonarOrganization') ? nappaSonarOrganization : 's2-group'
 }
 
 allprojects {
@@ -50,9 +47,9 @@ task clean(type: Delete) {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", project.organizationKey + "_nappa-prefetching-library"
+        property "sonar.projectKey", nappaSonarOrganization + "_nappa-prefetching-library"
         property "sonar.projectName", "NAPPA - Prefetching Library"
-        property "sonar.organization", project.organizationKey
+        property "sonar.organization", nappaSonarOrganization
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.login", nappaSonarLogin
     }
