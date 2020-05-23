@@ -1,5 +1,5 @@
 # Although this workflow is identical to the Prefetching Library, since they are different projects it might be better to keep then separate.
-name: CI/CD - Sample app Weather and News 
+name: Sample app Weather and News 
 
 on:
   push:

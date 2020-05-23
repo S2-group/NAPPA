@@ -1,4 +1,4 @@
-name: CI/CD - Prefetching Library
+name: Prefetching Library
 
 on:
   push:

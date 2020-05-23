@@ -1,4 +1,4 @@
-name: CI/CD - Plugin for Android Studio
+name: Plugin for Android Studio
 
 on:
   push:
