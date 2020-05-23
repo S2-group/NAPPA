@@ -1,3 +1,5 @@
+![Plugin for Android Studio](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Plugin%20for%20Android%20Studio/badge.svg)
+
 # NAPPA plugin for Android Studio
 
 This project contains a plugin for Android Studio to automate the task of enabling NAPPA in an existing Android project.
