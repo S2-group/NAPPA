@@ -1,3 +1,7 @@
+![Plugin for Android Studio](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/CI/CD%20-%20Plugin%20for%20Android%20Studio/badge.svg)
+![CI/CD - Prefetching Library](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/CI/CD%20-%20Prefetching%20Library/badge.svg)
+![CI/CD - Sample app Weather and News](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/CI/CD%20-%20Sample%20app%20Weather%20and%20News/badge.svg)
+
 # NAPPA
 
 Implementation of a Navigation-Aware technique for Personalized Prefetching of network requests of Android apps.
