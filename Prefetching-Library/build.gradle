@@ -1,20 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-project.ext {
-    // Android SDK versions
-    compileSdkVersion = 29
-    targetSdkVersion = 29
-    minSdkVersion = 19
-
-    // Dependencies
-    okhttpVersion = "3.14.8"
-    roomRuntimeVersion = "2.2.5"
-    lifecycleVersion = "2.2.0"
-    espressoCoreVersion = "3.2.0"
-    runnerVersion = "1.2.0"
-    diffMatchPatch = "1.1"
-}
-
 buildscript {
     repositories {
         google()
@@ -30,6 +15,25 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.8"
+}
+
+project.ext {
+    // Android SDK versions
+    compileSdkVersion = 29
+    targetSdkVersion = 29
+    minSdkVersion = 19
+
+    // Dependencies
+    okhttpVersion = "3.14.8"
+    roomRuntimeVersion = "2.2.5"
+    lifecycleVersion = "2.2.0"
+    espressoCoreVersion = "3.2.0"
+    runnerVersion = "1.2.0"
+    diffMatchPatch = "1.1"
+}
+
 allprojects {
     repositories {
         google()
@@ -39,4 +43,14 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", nappaSonarOrganization + "_nappa-prefetching-library"
+        property "sonar.projectName", "NAPPA - Prefetching Library"
+        property "sonar.organization", nappaSonarOrganization
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", nappaSonarLogin
+    }
 }

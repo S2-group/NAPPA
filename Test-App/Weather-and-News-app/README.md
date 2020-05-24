@@ -1,3 +1,5 @@
+![Sample app Weather and News](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Sample%20app%20Weather%20and%20News/badge.svg)
+
 # Weather and News Test App
 
 This project contains a sample app to validate the NAPPA Prefetching Library correctness.

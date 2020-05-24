@@ -1,5 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.3'
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "2.8"
+}
+
 project.ext {
     // Android SDK versions
     compileSdkVersion = 29
@@ -21,21 +40,6 @@ project.ext {
     diffMatchPatch = "1.1"
 }
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
-
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
 allprojects {
     repositories {
         google()
@@ -45,4 +49,14 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", nappaSonarOrganization + "_nappa-sample-app-weather-and-news"
+        property "sonar.projectName", "NAPPA - Sample - Weather and News"
+        property "sonar.organization", nappaSonarOrganization
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.login", nappaSonarLogin
+    }
 }

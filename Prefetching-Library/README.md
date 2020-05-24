@@ -1,3 +1,5 @@
+![Prefetching Library](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Prefetching%20Library/badge.svg)
+
 # NAPPA Android Prefetch Library
 
 This project contains a library for Android to support prefetching of network requests.

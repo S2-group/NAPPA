@@ -1,3 +1,5 @@
+![Plugin for Android Studio](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Plugin%20for%20Android%20Studio/badge.svg)
+
 # NAPPA plugin for Android Studio
 
 This project contains a plugin for Android Studio to automate the task of enabling NAPPA in an existing Android project.
@@ -120,6 +122,8 @@ Refer to [Android Studio Plugin Development](https://www.jetbrains.org/intellij/
 </p>
 
 Import this project in IntelliJ IDEA.
+
+**Info**: If no property is defined, Gradle will download the latest build of IntelliJ IDEA Community Edition.
 
 ### Running the plugin
 
