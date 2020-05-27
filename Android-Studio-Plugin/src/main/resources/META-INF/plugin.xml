@@ -1,13 +1,13 @@
-<idea-plugin>
-    <id>test.test1</id>
-    <idea-version since-build="131" />
-    <name>Prefetching 2018</name>
+<idea-plugin url="https://github.com/S2-group/NAPPA">
+    <id>nl.vu.cs.s2group.nappa.plugin</id>
+    <idea-version since-build="131"/>
+    <name>NAPPA Instrumentation</name>
     <vendor email="support@yourcodsampany.com" url="http://www.yoasdaurcompany.com">YourCompaadsany</vendor>
 
-    <description><![CDATA[
-    This plugin lets you easily add source code lines
-    to integrate the prefetching library
-    ]]></description>
+    <description>
+        This plugin lets you easily add source code lines
+        to integrate the prefetching library
+    </description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -23,22 +23,37 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <moduleBuilder  />
+        <moduleBuilder/>
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
-        <group id="MyPlugin.SampleMenu" text="Prefetching" description="Prefetching menu">
+        <group id="nappa"
+               text="NAPPA"
+               description="Contains actions to instrument an app to enable NAPPA">
+            <!-- Defines where this group menu is added -->
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines" />
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.ExtrasInstrumentationAction" id="test2Id" text="Instrument Intent Extras"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.TestAction"
+                    id="Nappa.InstrumentActivity"
+                    text="Instrument Activity"
+                    description="Insert prefetching lines"/>
+
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.ExtrasInstrumentationAction"
+                    id="Nappa.InstrumentIntentExtra"
+                    text="Instrument Intent Extras"
                     description="Spots intents"/>
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.OkHttpInstrumentationAction" id="test3Id" text="Instrument okHttpClients with Interceptor"
-                    description="Spots okHttpClients"/>
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.RetrofitInstrumentationAction" id="InstrumetnRetrofit" text="Instrument Retrofit" description="Instrument Retrofit Client with Interceptor"/>
+
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.OkHttpInstrumentationAction"
+                    id="Nappa.InstrumentOkHttpClient"
+                    text="Instrument OkHttpClients"
+                    description="Instrument OkHttpClients with interceptor"/>
+
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.RetrofitInstrumentationAction"
+                    id="Nappa.InstrumentRetrofit"
+                    text="Instrument Retrofit"
+                    description="Instrument Retrofit client with interceptor"/>
         </group>
     </actions>
-
+    <!-- Description of changes in the *latest* version of the plugin. -->
     <change-notes>
         The Plugin has been upgraded to handle A) Retrofit Clients, and B) to perform instrumentation at StartActivity
         As opposed to instrumentation per Extras Definition. The Per extra definition can be retrieved by changing
