@@ -29,10 +29,6 @@ public class InstrumentActivityAction extends AnAction {
     private List<String> javaActivityNameList = new LinkedList<>();
     private Project project;
 
-    public InstrumentActivityAction() {
-        super("Hello!");
-    }
-
     //PrefetchingLib.init(this);
 
 
