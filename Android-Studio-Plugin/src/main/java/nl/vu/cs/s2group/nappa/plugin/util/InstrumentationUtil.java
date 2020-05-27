@@ -17,6 +17,7 @@ import java.util.function.Consumer;
  * An class containing common utility methods to simplify the instrumentation actions
  */
 public final class InstrumentationUtil {
+    private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
 
     /**
      * Scan the project directory for all source files to search for all Java source files
@@ -36,7 +37,7 @@ public final class InstrumentationUtil {
             PsiFile[] psiJavaFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
             // Remove the files from the NAPPA library from the list to process
             psiJavaFiles = Arrays.stream(psiJavaFiles)
-                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains("nl.vu.cs.s2group.nappa"))
+                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains(NAPPA_PACKAGE_NAME))
                     .toArray(PsiFile[]::new);
 
             psiFiles.addAll(Arrays.asList(psiJavaFiles));
@@ -50,15 +51,14 @@ public final class InstrumentationUtil {
      * @param psiElement The reference element to add the library import to
      */
     public static void addLibraryImport(Project project, @NotNull PsiElement psiElement) {
-        String packageName = "nl.vu.cs.s2group.nappa";
         PsiJavaFile psiJavaFile = (PsiJavaFile) getAncestorPsiElementFromElement(psiElement, PsiJavaFile.class);
 
         if (psiJavaFile == null) return;
         PsiImportList importList = psiJavaFile.getImportList();
 
-        if (importList == null || importList.findOnDemandImportStatement(packageName) != null) return;
+        if (importList == null || importList.findOnDemandImportStatement(NAPPA_PACKAGE_NAME) != null) return;
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(packageName));
+            importList.add(PsiElementFactory.getInstance(project).createImportStatementOnDemand(NAPPA_PACKAGE_NAME));
         });
     }
 
