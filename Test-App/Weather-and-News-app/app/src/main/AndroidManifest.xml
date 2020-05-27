@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nl.vu.cs.s2group.android_prefetching_2018">
+    package="nl.vu.cs.s2group.nappa.sample.app.weather_and_news">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.InterActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.InterActivity"
             android:label="@string/title_activity_inter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.MainActivity">
+        <activity android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,27 +23,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.NewsActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.NewsActivity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.WeatherActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.WeatherActivity"
             android:label="@string/title_activity_weather"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.CapitalListActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.CapitalListActivity"
             android:label="@string/title_activity_capital_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.StatsActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.StatsActivity"
             android:label="@string/title_activity_stats"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="nl.vu.cs.s2group.android_prefetching_2018.GraphActivity"
+            android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.GraphActivity"
             android:label="@string/title_activity_graph" />
-        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.ListActivityActivity" />
-        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.stats.SessionDataActivity" />
-        <activity android:name="nl.vu.cs.s2group.android_prefetching_2018.CityDetailsActivity" />
+        <activity android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.ListActivityActivity" />
+        <activity android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.SessionDataActivity" />
+        <activity android:name="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.CityDetailsActivity" />
     </application>
 
 </manifest>

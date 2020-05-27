@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="nl.vu.cs.s2group.android_prefetching_2018.InterActivity"
+    tools:context="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.InterActivity"
     tools:showIn="@layout/activity_inter">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
