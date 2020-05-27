@@ -51,7 +51,7 @@ implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 Import the library:
 
 ```java
-import nl.vu.cs.s2group.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
 ``` 
 
 Encapsulate the creation of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) instances:
@@ -108,7 +108,7 @@ There is a fixed threshold to limit the number of candidate URLs to prefetch.
 
 ### Implementing a custom prefetching strategy
 
-The prefetching strategies are implemented in the [nl.vu.cs.s2group.prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch) package.
+The prefetching strategies are implemented in the [nl.vu.cs.s2group.nappa.prefetch](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch) package.
 These can be used as references on how to implement a new strategy.
 
 To define a new strategy, you must implement the [PrefetchStrategy](android_prefetching_lib/src/main/java/nl/vu/cs/s2group/prefetch/PrefetchStrategy.java) interface and override the method `getTopNUrlToPrefetchForNode`.
