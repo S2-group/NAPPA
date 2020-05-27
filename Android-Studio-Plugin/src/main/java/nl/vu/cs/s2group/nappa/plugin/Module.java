@@ -1,4 +1,4 @@
-package test;
+package nl.vu.cs.s2group.nappa.plugin;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;

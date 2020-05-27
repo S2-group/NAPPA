@@ -1,4 +1,4 @@
-package test;
+package nl.vu.cs.s2group.nappa.plugin.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -7,8 +7,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.InstrumentationResultMessage;
-import util.InstrumentationUtil;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentationResultMessage;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentationUtil;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     /**
      * Scan a statement to search for a instance of OkHttpClient to instrument.
      * This method is used as {@link java.util.function.Consumer} callback for the method
-     * {@link util.InstrumentationUtil#runScanOnJavaFile}
+     * {@link nl.vu.cs.s2group.nappa.plugin.util.InstrumentationUtil#runScanOnJavaFile}
      * <br/><br/>
      *
      * <p>The following occurrences should be instrumented </p>

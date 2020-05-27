@@ -1,4 +1,4 @@
-package util;
+package nl.vu.cs.s2group.nappa.plugin.util;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;

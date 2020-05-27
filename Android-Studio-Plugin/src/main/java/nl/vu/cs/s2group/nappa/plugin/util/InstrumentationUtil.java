@@ -1,4 +1,4 @@
-package util;
+package nl.vu.cs.s2group.nappa.plugin.util;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
@@ -36,7 +36,7 @@ public final class InstrumentationUtil {
             PsiFile[] psiJavaFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
             // Remove the files from the NAPPA library from the list to process
             psiJavaFiles = Arrays.stream(psiJavaFiles)
-                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains("nl.vu.cs.s2group"))
+                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains("nl.vu.cs.s2group.nappa"))
                     .toArray(PsiFile[]::new);
 
             psiFiles.addAll(Arrays.asList(psiJavaFiles));
@@ -50,7 +50,7 @@ public final class InstrumentationUtil {
      * @param psiElement The reference element to add the library import to
      */
     public static void addLibraryImport(Project project, @NotNull PsiElement psiElement) {
-        String packageName = "nl.vu.cs.s2group";
+        String packageName = "nl.vu.cs.s2group.nappa";
         PsiJavaFile psiJavaFile = (PsiJavaFile) getAncestorPsiElementFromElement(psiElement, PsiJavaFile.class);
 
         if (psiJavaFile == null) return;

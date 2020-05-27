@@ -17,7 +17,7 @@
 
     <project-components>
         <component>
-            <implementation-class>test.TestProjectComponent</implementation-class>
+            <implementation-class>nl.vu.cs.s2group.nappa.plugin.TestProjectComponent</implementation-class>
         </component>
     </project-components>
 
@@ -30,18 +30,19 @@
         <!-- Add your actions here -->
         <group id="MyPlugin.SampleMenu" text="Prefetching" description="Prefetching menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action class="test.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines" />
-            <action class="test.ExtrasInstrumentationAction" id="test2Id" text="Instrument Intent Extras"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.TestAction" id="testId" text="Add prefetching" description="Insert prefetching lines" />
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.ExtrasInstrumentationAction" id="test2Id" text="Instrument Intent Extras"
                     description="Spots intents"/>
-            <action class="test.OkHttpInstrumentationAction" id="test3Id" text="Instrument okHttpClients with Interceptor"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.OkHttpInstrumentationAction" id="test3Id" text="Instrument okHttpClients with Interceptor"
                     description="Spots okHttpClients"/>
-            <action class="test.RetrofitInstrumentationAction" id="InstrumetnRetrofit" text="Instrument Retrofit" description="Instrument Retrofit Client with Interceptor"/>
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.RetrofitInstrumentationAction" id="InstrumetnRetrofit" text="Instrument Retrofit" description="Instrument Retrofit Client with Interceptor"/>
         </group>
     </actions>
 
     <change-notes>
         The Plugin has been upgraded to handle A) Retrofit Clients, and B) to perform instrumentation at StartActivity
         As opposed to instrumentation per Extras Definition. The Per extra definition can be retrieved by changing
-        the class of the "test2Id" action to make use of the test.AnotherAction class instead.
+        the class of the "test2Id" action to make use of the nl.vu.cs.s2group.nappa.plugin.action.AnotherAction class
+        instead.
     </change-notes>
 </idea-plugin>

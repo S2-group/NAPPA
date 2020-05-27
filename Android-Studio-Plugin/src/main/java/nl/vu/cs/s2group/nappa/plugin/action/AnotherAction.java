@@ -1,4 +1,4 @@
-package test;
+package nl.vu.cs.s2group.nappa.plugin.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

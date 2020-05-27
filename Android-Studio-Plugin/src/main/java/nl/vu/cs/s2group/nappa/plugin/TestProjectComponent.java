@@ -1,4 +1,4 @@
-package test;
+package nl.vu.cs.s2group.nappa.plugin;
 
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.ProjectManager;
