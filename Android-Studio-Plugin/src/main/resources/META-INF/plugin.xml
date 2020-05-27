@@ -15,12 +15,6 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
-    <project-components>
-        <component>
-            <implementation-class>nl.vu.cs.s2group.nappa.plugin.TestProjectComponent</implementation-class>
-        </component>
-    </project-components>
-
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <moduleBuilder/>
