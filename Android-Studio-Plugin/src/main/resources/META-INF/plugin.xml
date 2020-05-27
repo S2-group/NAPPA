@@ -26,22 +26,22 @@
                description="Contains actions to instrument an app to enable NAPPA">
             <!-- Defines where this group menu is added -->
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.TestAction"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.InstrumentActivityAction"
                     id="Nappa.InstrumentActivity"
                     text="Instrument Activity"
                     description="Insert prefetching lines"/>
 
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.ExtrasInstrumentationAction"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.InstrumentIntentExtrasAction"
                     id="Nappa.InstrumentIntentExtra"
                     text="Instrument Intent Extras"
                     description="Spots intents"/>
 
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.OkHttpInstrumentationAction"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.InstrumentOkHttpAction"
                     id="Nappa.InstrumentOkHttpClient"
                     text="Instrument OkHttpClients"
                     description="Instrument OkHttpClients with interceptor"/>
 
-            <action class="nl.vu.cs.s2group.nappa.plugin.action.RetrofitInstrumentationAction"
+            <action class="nl.vu.cs.s2group.nappa.plugin.action.InstrumentRetrofitAction"
                     id="Nappa.InstrumentRetrofit"
                     text="Instrument Retrofit"
                     description="Instrument Retrofit client with interceptor"/>

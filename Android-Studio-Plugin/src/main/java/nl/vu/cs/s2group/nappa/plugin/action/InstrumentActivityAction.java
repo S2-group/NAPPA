@@ -23,13 +23,13 @@ import java.util.List;
  *  Furthermore injects the Prefetch.init code to the project in order to initialize the prefetching
  *  library
  */
-public class TestAction extends AnAction {
+public class InstrumentActivityAction extends AnAction {
 
     private String cat  = "okfile";
     private List<String> javaActivityNameList = new LinkedList<>();
     private Project project;
 
-    public TestAction() {
+    public InstrumentActivityAction() {
         super("Hello!");
     }
 

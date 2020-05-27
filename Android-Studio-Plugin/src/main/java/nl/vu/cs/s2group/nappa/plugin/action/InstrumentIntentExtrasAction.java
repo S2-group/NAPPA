@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * startActivity(intent);
  */
 
-public class ExtrasInstrumentationAction extends AnAction {
+public class InstrumentIntentExtrasAction extends AnAction {
     Project project;
     PsiMethod signature;
     StringBuilder displayMessage = new StringBuilder();

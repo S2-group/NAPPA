@@ -31,7 +31,7 @@ import java.util.List;
  * .build();
  */
 
-public class RetrofitInstrumentationAction extends AnAction {
+public class InstrumentRetrofitAction extends AnAction {
     Project project;
     PsiMethod signature;
     StringBuilder displayMessage = new StringBuilder();

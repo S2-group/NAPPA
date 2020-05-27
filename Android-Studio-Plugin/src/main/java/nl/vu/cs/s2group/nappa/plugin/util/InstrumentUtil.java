@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 /**
  * An class containing common utility methods to simplify the instrumentation actions
  */
-public final class InstrumentationUtil {
+public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
 
     /**
@@ -82,7 +82,7 @@ public final class InstrumentationUtil {
     }
 
     /**
-     * Auxiliary method for {@link InstrumentationUtil#runScanOnJavaFile} to be able to scan inner classes
+     * Auxiliary method for {@link InstrumentUtil#runScanOnJavaFile} to be able to scan inner classes
      *
      * @param psiClass    A Java class
      * @param classFilter Skip all classes that does not contain any of the strings in the provided array

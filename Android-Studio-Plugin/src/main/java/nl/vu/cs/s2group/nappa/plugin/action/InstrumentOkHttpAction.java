@@ -7,8 +7,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import nl.vu.cs.s2group.nappa.plugin.util.InstrumentationResultMessage;
-import nl.vu.cs.s2group.nappa.plugin.util.InstrumentationUtil;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentResultMessage;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentUtil;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
  * Implements the action responsible to identify {@code OkHttpClient} instances and, when applicable,
  * instrument them to inject the NAPPA library HTTP interceptor
  */
-public class OkHttpInstrumentationAction extends AnAction {
+public class InstrumentOkHttpAction extends AnAction {
     private static final int STATEMENT_TYPE_DECLARATION = 0;
     private static final int STATEMENT_TYPE_ASSIGNMENT = 1;
     private static final int STATEMENT_TYPE_RETURN = 2;
 
     private Project project;
-    private InstrumentationResultMessage resultMessage;
+    private InstrumentResultMessage resultMessage;
 
     /**
      * Checks the existence of okHttp variables in this project AND Instruments to get OkHttp
@@ -32,13 +32,13 @@ public class OkHttpInstrumentationAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         project = e.getProject();
-        resultMessage = new InstrumentationResultMessage();
+        resultMessage = new InstrumentResultMessage();
         String[] fileFilter = new String[]{"import okhttp3"};
         String[] classFilter = new String[]{"OkHttpClient"};
 
         try {
-            List<PsiFile> psiFiles = InstrumentationUtil.getAllJavaFilesInProjectAsPsi(project);
-            InstrumentationUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
+            List<PsiFile> psiFiles = InstrumentUtil.getAllJavaFilesInProjectAsPsi(project);
+            InstrumentUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
             resultMessage.showResultDialog(project, "OkHttp Instrumentation Result");
         } catch (Exception exception) {
             resultMessage.showErrorDialog(project, exception, "Failed to Instrument OkHttpClient");
@@ -48,7 +48,7 @@ public class OkHttpInstrumentationAction extends AnAction {
     /**
      * Scan a statement to search for a instance of OkHttpClient to instrument.
      * This method is used as {@link java.util.function.Consumer} callback for the method
-     * {@link nl.vu.cs.s2group.nappa.plugin.util.InstrumentationUtil#runScanOnJavaFile}
+     * {@link InstrumentUtil#runScanOnJavaFile}
      * <br/><br/>
      *
      * <p>The following occurrences should be instrumented </p>
@@ -92,16 +92,16 @@ public class OkHttpInstrumentationAction extends AnAction {
                     return;
                 }
 
-                PsiCodeBlock psiBody = (PsiCodeBlock) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiCodeBlock.class);
+                PsiCodeBlock psiBody = (PsiCodeBlock) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiCodeBlock.class);
 
                 if (psiBody != null && psiBody.getText().contains(instrumentedLine)) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
 
-                PsiClass psiClass = (PsiClass) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
+                PsiClass psiClass = (PsiClass) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
 
-                PsiMethod psiMethod = (PsiMethod) InstrumentationUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
+                PsiMethod psiMethod = (PsiMethod) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
 
                 PsiElement instrumentedElement = PsiElementFactory
                         .getInstance(project)
@@ -112,7 +112,7 @@ public class OkHttpInstrumentationAction extends AnAction {
                 });
 
                 //noinspection ConstantConditions -- Since we loop through classes, it is certain that there is a parent Java class
-                InstrumentationUtil.addLibraryImport(project, psiClass);
+                InstrumentUtil.addLibraryImport(project, psiClass);
 
                 resultMessage.incrementInstrumentationCount().appendPsiClass(psiClass);
 
