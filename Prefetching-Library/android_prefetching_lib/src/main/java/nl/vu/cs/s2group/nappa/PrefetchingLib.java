@@ -33,11 +33,6 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl5;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl6;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl7;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl8;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl9;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -48,7 +43,6 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.GreedyPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
@@ -71,7 +65,6 @@ public class PrefetchingLib {
     private static LiveData<List<ActivityData>> listLiveData;
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
-    private static PrefetchingStrategy strategyHistory = new PrefetchingStrategyImpl();
     private static PrefetchingStrategy strategyIntent;
     //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
@@ -93,29 +86,7 @@ public class PrefetchingLib {
 
     private PrefetchingLib(int prefetchStrategyNum) {
         this.prefetchStrategyNum = prefetchStrategyNum;
-        switch(prefetchStrategyNum){
-            case 4:
-                strategyIntent = new PrefetchingStrategyImpl4(0.6f);
-                break;
-            case 5:
-                strategyIntent = new PrefetchingStrategyImpl5(0.6f);
-                break;
-            case 6:
-                strategyIntent = new PrefetchingStrategyImpl6(0.6f);
-                break;
-            case 7:
-                strategyIntent = new PrefetchingStrategyImpl7(0.6f);
-                break;
-            case 8:
-                strategyIntent = new PrefetchingStrategyImpl8(0.6f);
-                break;
-            case 9:
-                strategyIntent = new PrefetchingStrategyImpl9(0.6f);
-                break;
-            case PrefetchingStrategy.STRATEGY_GREEDY:
-            default:
-                strategyIntent = new GreedyPrefetchingStrategy();
-        }
+        strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
     }
 
 
@@ -361,7 +332,6 @@ public class PrefetchingLib {
             }
 
             poolExecutor.schedule(() -> {
-                //List<String> topNUrls = strategyHistory.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 1);
                 List<String> topNUrls = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                 for (String url : topNUrls) {
                     Log.e("TO_BE_PREF", url);
