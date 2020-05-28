@@ -114,7 +114,7 @@ public class PrefetchingLib {
                 break;
             case PrefetchingStrategy.STRATEGY_GREEDY:
             default:
-                strategyIntent = new GreedyPrefetchingStrategy(0.6f);
+                strategyIntent = new GreedyPrefetchingStrategy();
         }
     }
 

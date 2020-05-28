@@ -17,11 +17,33 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * Implements a Greedy-based strategy to identify URLs for prefetching
+ *
+ * <p> You may define a c value or use the default value of 60.0 %.
+ * The threshold filters all URLs that have score below the threshold
+ */
 public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
-    private float threshold;
+    private final float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
+    /**
+     * Construct strategy with default threshold value of 60.0 %
+     */
+    public GreedyPrefetchingStrategy() {
+        this(0.6f);
+    }
+
+    /**
+     * Construct strategy with the given threshold
+     *
+     * @param threshold Limits the number of URLs selected for prefetching based on the score.
+     *                  A value between 0 and 1/
+     */
+    @SuppressWarnings("WeakerAccess")
     public GreedyPrefetchingStrategy(float threshold) {
+        if (threshold < 0 || threshold > 1)
+            throw new IllegalArgumentException("Threshold must be a number between 0 and 1");
         this.threshold = threshold;
     }
 
