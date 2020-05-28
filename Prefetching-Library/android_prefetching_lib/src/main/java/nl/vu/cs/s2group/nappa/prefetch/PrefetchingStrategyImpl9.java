@@ -1,3 +1,23 @@
+/*for (ActivityNode node1 : probableNodes) {
+        for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
+        ActivityNode node2 = probableNodes.get(i);
+        if(node1.prob<node2.prob){
+        ActivityNode temp=node1;
+        probableNodes.set(probableNodes.lastIndexOf(node1),node2);
+        probableNodes.set(probableNodes.lastIndexOf(node2),temp);
+        node1=node2;
+        }
+        }
+        }
+        List<String> listUrlToPrefetch = new LinkedList<>();
+        maxNumber = (int) (threshold*probableNodes.size() +1);
+
+        for (int i=0; i<maxNumber; i++) {
+        listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
+        Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
+
+        }*/
+
 package nl.vu.cs.s2group.nappa.prefetch;
 
 import androidx.annotation.NonNull;
@@ -14,12 +34,12 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl4 implements PrefetchStrategy {
+public class PrefetchingStrategyImpl9 implements PrefetchingStrategy {
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
-    public  PrefetchStrategyImpl4(float threshold) {
+    public PrefetchingStrategyImpl9(float threshold) {
         this.threshold = threshold;
     }
     public static int lastN = 2;
@@ -34,6 +54,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
             reversedHashMap.put(activityMap.get(key), key);
         }
         List<ActivityNode> probableNodes = getMostProbableNodes(node);
+
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
@@ -53,6 +74,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
             Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
+
         //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
@@ -78,40 +100,39 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
         int total = 0;
         for(Long candidate : successorCountMap.keySet()) {
             total+=successorCountMap.get(candidate);
-            Log.d("PREFSTRAT4","actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
+            Log.d("PREFSTRAT9","actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
         }
         //////////////////////////// Will calculate the probability to access a node by partial match based on a 0-order markov-model
         //////////////////////////// https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
 
         for (Long succ : successorCountMap.keySet()) {
             float prob = 0;
-            if(total>0) prob= (float)successorCountMap.get(succ)/total; // * succ.pageRank or others
+            if(total>0) prob= (float)successorCountMap.get(succ)/total*PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).authority;
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);
-            Log.e("PREFSTRAT4", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.e("PREFSTRAT9", "Computed probability: " + prob + " for " + node1.activityName);
         }
         return probableNodes;
     }
 
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
-        //Log.d("PREFSTRAT4 visit",node.activityName);
+        //Log.d("PREFSTRAT9 visit",node.activityName);
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            //Log.d("PREFSTRAT4 parent of",succ.actName);
+            //Log.d("PREFSTRAT9 parent of",succ.actName);
             successorCountMap = zeroContextNodes(PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){
-                //Log.d("PREFSTRAT4 update count",succ.countSource2Dest+" "+successorCountMap.get(succ.idActDest)+"");
+                //Log.d("PREFSTRAT9 update count",succ.countSource2Dest+" "+successorCountMap.get(succ.idActDest)+"");
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }
-            else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT4 insert count",succ.countSource2Dest+"");}
+            else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT9 insert count",succ.countSource2Dest+"");}
         }
         return  successorCountMap;
     }
 
     private List<String> computeCandidateUrl2(ActivityNode toBeChecked, ActivityNode node) {
         node.parameteredUrlMap.keySet();
-
         List<String> candidates = new LinkedList<>();
 
 
@@ -127,7 +148,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
         //}
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT4", candidate + " for: " + toBeChecked.activityName);
+            Log.e("PREFSTRAT9", candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

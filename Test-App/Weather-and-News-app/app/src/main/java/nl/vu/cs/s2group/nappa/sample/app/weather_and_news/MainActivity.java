@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PrefetchingLib.init(this,9);
+        PrefetchingLib.init(this,3);
         OkHttpProvider.getInstance();
 
         setContentView(R.layout.activity_main);

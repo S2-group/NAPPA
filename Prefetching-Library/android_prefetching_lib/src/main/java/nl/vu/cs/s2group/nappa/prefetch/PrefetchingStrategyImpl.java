@@ -12,7 +12,7 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl implements PrefetchStrategy {
+public class PrefetchingStrategyImpl implements PrefetchingStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {

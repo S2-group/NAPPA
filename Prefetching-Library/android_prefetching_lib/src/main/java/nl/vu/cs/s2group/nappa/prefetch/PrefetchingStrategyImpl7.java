@@ -13,11 +13,11 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl7 implements PrefetchStrategy {
+public class PrefetchingStrategyImpl7 implements PrefetchingStrategy {
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private float threshold;
 
-    public  PrefetchStrategyImpl7(float threshold) {this.threshold = threshold;}
+    public PrefetchingStrategyImpl7(float threshold) {this.threshold = threshold;}
 
 
 

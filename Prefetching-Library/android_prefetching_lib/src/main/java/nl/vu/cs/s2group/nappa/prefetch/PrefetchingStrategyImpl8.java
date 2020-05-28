@@ -13,11 +13,13 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl6 implements PrefetchStrategy{
+public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
+    private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
-    float threshold;
 
-    public  PrefetchStrategyImpl6(float threshold) {this.threshold=threshold;}
+    public PrefetchingStrategyImpl8(float threshold) {
+        this.threshold = threshold;
+    }
 
 
 
@@ -30,19 +32,16 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
             reversedHashMap.put(activityMap.get(key), key);
         }
 
-        List<ActivityNode> probableNodes = getMostProbableNodes(node, new LinkedList<>());
-        //for (ActivityNode node1 : probableNodes) Log.d("PREFSTRAT5xxxxxxxx",node1.activityName+" - "+node1.pageRank);
+        List<ActivityNode> probableNodes = getMostProbableNodes(node, 1, new LinkedList<>());
+
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                //Log.d("PREFSTRAT5NODE",node1.activityName+" --> "+node2.activityName);
-                if(node1.authority<node2.authority){
-                    //Log.d("PREFSTRAT5NODE","SCAMBIO");
+                if(node1.prob<node2.prob){
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
                     node1=node2;
-                    //for (ActivityNode noder : probableNodes) Log.d("PREFSTRAT5vvvvv",noder.activityName+" - "+noder.pageRank);
                 }
             }
         }
@@ -51,18 +50,11 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT6","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+            Log.e("PREFSTRAT8","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
 
-        /*float n = 1/(float)reversedHashMap.keySet().size();
-        for (int i=0; i<probableNodes.size(); i++) {
-            if(probableNodes.get(i).authority>n) {
-                listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.e("PREFSTRAT6", "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
-            }
-        }*/
-
+        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -73,52 +65,75 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
      * node->successorA->...->successorN
      *
      * @param node Current activity to be considered for prefetching
-     *
+     * @param initialProbability The probability calculated for a predcessor, used as a weight in order to calculate
+     *                           the probabilities of each successor
      * @param probableNodes List containing all the probable nodes, corresponding to those nodes that
      *                      have a probability exceeding the prescribed threshold.
      * @return The set of probable nodes {@code List<ActivityNode>} with respect to the initial activity {@code node}
      */
-    private List<ActivityNode> getMostProbableNodes(ActivityNode node, List<ActivityNode> probableNodes) {
+    private List<ActivityNode> getMostProbableNodes(ActivityNode node, float initialProbability, List<ActivityNode> probableNodes) {
         // Fetch the current state of the session aggregate
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList();
-        HashMap<Long, Float> successorCountMap = new HashMap<>();
+        HashMap<Long, Integer> successorCountMap = new HashMap<>();
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authority);
+            // Add the total number of transitions between nodes for a given source and all destinations
+            total += succ.countSource2Dest;
+            // For all successors, track the number of transitions
+            successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
+
         }
 
+        // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
-
+            // Individual successor divided by total accesses
+            float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
-            if (!probableNodes.contains(node1)) {
-                probableNodes.add(node1);
-                getMostProbableNodes(node1, probableNodes);
-            }
+            //prob *= node1.pageRank;
 
+            //if (prob >= threshold) {
+                // If not yet added, add this current node to the probable nodes and calculate the
+                //     next probability using this nodes probability as an initial probability.
+                if (!probableNodes.contains(node1)) {
+                    node1.prob=prob;
+                    probableNodes.add(node1);
+                    // Compute the probable nodes using this successor as the current activity
+                    // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
+                    getMostProbableNodes(node1, prob, probableNodes);
+                }else if(prob>node1.prob){
+                    node1.prob=prob;
+                }
+
+            //}
+            //Log.e("PREFSTRAT8", "Computed probability: " + node1.prob + " for " + node1.activityName+ " s - "+threshold
+                    //+" pr: " +node1.pageRank);
         }
-
         return probableNodes;
     }
-
     private List<String> computeCandidateUrl2(ActivityNode toBeChecked, ActivityNode node) {
         node.parameteredUrlMap.keySet();
 
         List<String> candidates = new LinkedList<>();
 
+
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
+
         for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
-            if ((null != extrasMap) && !extrasMap.isEmpty() && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
+            
+            if ((null != extrasMap) && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
                 candidates.add(
                         parameteredUrl.fillParams(extrasMap)
                 );
             }
+        }
+        
 
-        }
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT6", candidate + " url for: " + toBeChecked.activityName);
+            Log.e("PREFSTRAT8", candidate + " for: " + toBeChecked.activityName);
         }
+
         return candidates;
     }
 }
