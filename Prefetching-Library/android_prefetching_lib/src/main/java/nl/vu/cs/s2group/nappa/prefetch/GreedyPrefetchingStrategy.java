@@ -51,7 +51,7 @@ public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
      * node->successorA->...->successorN
      *
      * @param node               Current activity to be considered for prefetching
-     * @param initialProbability The probability calculated for a predcessor, used as a weight in order to calculate
+     * @param initialProbability The probability calculated for a predecessor, used as a weight in order to calculate
      *                           the probabilities of each successor
      * @param probableNodes      List containing all the probable nodes, corresponding to those nodes that
      *                           have a probability exceeding the prescribed threshold.
