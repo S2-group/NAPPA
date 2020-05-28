@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.prefetch;
+package nl.vu.cs.s2group.nappa.prefetching.strategy;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +11,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * request in the immediate future
  */
 public interface PrefetchingStrategy {
+    int STRATEGY_GREEDY = 10;
 
     /**
      * @param node      Represents the current {@link android.app.Activity} to where the user navigated to

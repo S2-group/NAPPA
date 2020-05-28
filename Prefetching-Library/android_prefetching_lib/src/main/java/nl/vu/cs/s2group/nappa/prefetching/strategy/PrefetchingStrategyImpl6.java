@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.prefetch;
+package nl.vu.cs.s2group.nappa.prefetching.strategy;
 
 import androidx.annotation.NonNull;
 import android.util.Log;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 @Deprecated

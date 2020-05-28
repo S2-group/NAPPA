@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.prefetchurl;
+package nl.vu.cs.s2group.nappa.prefetching.url;
 
 import androidx.annotation.NonNull;
 

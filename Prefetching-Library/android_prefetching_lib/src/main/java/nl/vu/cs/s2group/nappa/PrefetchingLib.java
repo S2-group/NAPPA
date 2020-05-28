@@ -32,13 +32,13 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl5;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl6;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl7;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl8;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl9;
-import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl5;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl6;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl7;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl8;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl9;
+import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.RequestData;
@@ -47,9 +47,9 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl;
-import nl.vu.cs.s2group.nappa.prefetch.GreedyPrefetchingStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl4;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.GreedyPrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -94,9 +94,6 @@ public class PrefetchingLib {
     private PrefetchingLib(int prefetchStrategyNum) {
         this.prefetchStrategyNum = prefetchStrategyNum;
         switch(prefetchStrategyNum){
-            case 3:
-                strategyIntent = new GreedyPrefetchingStrategy(0.6f);
-                break;
             case 4:
                 strategyIntent = new PrefetchingStrategyImpl4(0.6f);
                 break;
@@ -115,6 +112,7 @@ public class PrefetchingLib {
             case 9:
                 strategyIntent = new PrefetchingStrategyImpl9(0.6f);
                 break;
+            case PrefetchingStrategy.STRATEGY_GREEDY:
             default:
                 strategyIntent = new GreedyPrefetchingStrategy(0.6f);
         }
