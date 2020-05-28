@@ -42,7 +42,6 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
