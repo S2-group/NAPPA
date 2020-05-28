@@ -48,7 +48,7 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl3;
+import nl.vu.cs.s2group.nappa.prefetch.GreedyPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
@@ -95,7 +95,7 @@ public class PrefetchingLib {
         this.prefetchStrategyNum = prefetchStrategyNum;
         switch(prefetchStrategyNum){
             case 3:
-                strategyIntent = new PrefetchingStrategyImpl3(0.6f);
+                strategyIntent = new GreedyPrefetchingStrategy(0.6f);
                 break;
             case 4:
                 strategyIntent = new PrefetchingStrategyImpl4(0.6f);
@@ -116,7 +116,7 @@ public class PrefetchingLib {
                 strategyIntent = new PrefetchingStrategyImpl9(0.6f);
                 break;
             default:
-                strategyIntent = new PrefetchingStrategyImpl3(0.6f);
+                strategyIntent = new GreedyPrefetchingStrategy(0.6f);
         }
     }
 
