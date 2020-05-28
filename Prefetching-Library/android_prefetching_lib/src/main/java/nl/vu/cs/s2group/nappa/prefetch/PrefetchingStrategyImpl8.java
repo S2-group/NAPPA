@@ -13,6 +13,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+@Deprecated
 public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
