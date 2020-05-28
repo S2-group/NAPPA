@@ -8,7 +8,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.vu.cs.s2group.android_prefetching_2018.GraphActivity">
+    tools:context="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.GraphActivity">
 
     <TextView
         android:id="@+id/text_graph"

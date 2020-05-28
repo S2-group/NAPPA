@@ -7,7 +7,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.vu.cs.s2group.android_prefetching_2018.stats.SessionDataActivity">
+    tools:context="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.SessionDataActivity">
 
     <TextView
         android:id="@+id/text_session_data"

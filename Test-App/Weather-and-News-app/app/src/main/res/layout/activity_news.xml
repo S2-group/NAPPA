@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="nl.vu.cs.s2group.android_prefetching_2018.NewsActivity">
+    tools:context="nl.vu.cs.s2group.nappa.sample.app.weather_and_news.NewsActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="?attr/actionBarSize"
