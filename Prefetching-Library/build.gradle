@@ -24,14 +24,6 @@ project.ext {
     compileSdkVersion = 29
     targetSdkVersion = 29
     minSdkVersion = 19
-
-    okhttpVersion = "3.14.8"
-    roomRuntimeVersion = "2.2.5"
-    lifecycleVersion = "2.2.0"
-    espressoCoreVersion = "3.2.0"
-    runnerVersion = "1.2.0"
-    diffMatchPatch = "1.1"
-    jetbrainsAnnotation = "19.0.0"
 }
 
 allprojects {
