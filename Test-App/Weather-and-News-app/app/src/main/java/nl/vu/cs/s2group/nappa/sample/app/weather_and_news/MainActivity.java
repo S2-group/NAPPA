@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.ListActivityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.SessionDataActivity;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PrefetchingLib.init(this,9);
+        PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
         OkHttpProvider.getInstance();
 
         setContentView(R.layout.activity_main);
