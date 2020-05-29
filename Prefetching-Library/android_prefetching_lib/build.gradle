@@ -26,13 +26,14 @@ android {
 }
 
 ext {
-    okhttpVersion = "3.14.8"
-    roomRuntimeVersion = "2.2.5"
-    lifecycleVersion = "2.2.0"
-    espressoCoreVersion = "3.2.0"
-    runnerVersion = "1.2.0"
-    diffMatchPatch = "1.1"
-    jetbrainsAnnotation = "19.0.0"
+    okhttpVersion = '3.14.8'
+    roomRuntimeVersion = '2.2.5'
+    lifecycleVersion = '2.2.0'
+    espressoCoreVersion = '3.2.0'
+    runnerVersion = '1.2.0'
+    diffMatchPatch = '1.1'
+    jetbrainsAnnotation = '19.0.0'
+    junitVersion = '1.1.1';
 }
 
 dependencies {
@@ -50,6 +51,7 @@ dependencies {
     implementation files('libs')
 
     testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test.ext:junit:$junitVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "androidx.room:room-testing:$roomRuntimeVersion"
