@@ -87,37 +87,10 @@ public class PrefetchingLib {
         strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
     }
 
-
-    public static void init(Context context,int prefetchStrategyNum) {
+    public static void init(Context context, int prefetchStrategyNum) {
         if (instance == null) {
-            //configuration file for
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, "config.txt");
-            String psn = Integer.toString(prefetchStrategyNum);
-            int size;
-            FileInputStream stream = null;
-            try {
-                stream = new FileInputStream(file);
-                try {
-                    psn ="";
-                    while ((size = stream.read()) != -1) {
-                        psn += Character.toString((char) size);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
             final Long start = new Date().getTime();
-            Log.e("PREFSTRATEGYNUM",psn);
-            instance = new PrefetchingLib(Integer.parseInt(psn));
+            instance = new PrefetchingLib(prefetchStrategyNum);
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
