@@ -1,20 +1,20 @@
 package nl.vu.cs.s2group.nappa;
 
 import android.app.Activity;
-import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -42,7 +43,6 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -55,48 +55,56 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
-
     private static PrefetchingLib instance;
-    private static boolean libGet = false;
     private static File cacheDir;
     private static String currentActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
-    public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
     private static PrefetchingStrategy strategyIntent;
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
     private static LruCache<String, SimpleResponse> responseLruCache = new LruCache<>(100);
-    // Corresponds to a Map whose key is the Activity ID and the value is list of extras (key-value pairs)
-    //  for the given activity.
+    /**
+     * Corresponds to a Map whose key is the Activity ID and the value is list of extras (key-value pairs)
+     * for the given activity.
+     */
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
-    public static int prefetchStrategyNum;
+
     private static boolean prefetchEnabled = true;
-    private static int candidatePrefetchableUrlThreshold = 2;
     private static int requestP = 0, requestNP = 0;
     private static float timeSaved = 0f;
+    private static boolean libGet = false;
+
+    /**
+     * Map of ActivityNodes containing Key: ActivityName Value: ID,
+     */
+    public static HashMap<String, Long> activityMap = new HashMap<>();
+    public static int prefetchStrategyNum;
+
+    @Contract(pure = true)
     public static LongSparseArray<Map<String, String>> getExtrasMap() {
         return extrasMap;
     }
 
-    private PrefetchingLib(int prefetchStrategyNum) {
-        this.prefetchStrategyNum = prefetchStrategyNum;
-        strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
+    @Contract(pure = true)
+    private PrefetchingLib() {
     }
 
     public static void init(Context context, int prefetchStrategyNum) {
         if (instance == null) {
-            final Long start = new Date().getTime();
-            instance = new PrefetchingLib(prefetchStrategyNum);
-            PrefetchingDatabase.getInstance(context);
+            final long start = new Date().getTime();
+
+            instance = new PrefetchingLib();
+            PrefetchingLib.prefetchStrategyNum = prefetchStrategyNum;
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
+            PrefetchingDatabase.getInstance(context);
 
             poolExecutor.schedule(() -> {
-
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
                 Session session = new Session(new Date().getTime());
                 PrefetchingDatabase.getInstance().sessionDao().insertSession(session);
