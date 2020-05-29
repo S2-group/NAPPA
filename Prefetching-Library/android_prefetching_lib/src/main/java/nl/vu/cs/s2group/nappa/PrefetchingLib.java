@@ -93,6 +93,7 @@ public class PrefetchingLib {
     private PrefetchingLib() {
     }
 
+    @SuppressWarnings("unused")
     public static void init(Context context, int prefetchStrategyNum) {
         if (instance == null) {
             final long start = new Date().getTime();
@@ -171,6 +172,7 @@ public class PrefetchingLib {
 
     }
 
+    @Contract(pure = true)
     public static LiveData<List<ActivityData>> getActivityLiveData() {
         return listLiveData;
     }
@@ -180,7 +182,7 @@ public class PrefetchingLib {
      * The Keys in the map are the activity name (String) and the value is the Activity ID (Long)
      * @param dataList - The list of all activities as stored in the database.
      */
-    private static void updateActivityMap(List<ActivityData> dataList) {
+    private static void updateActivityMap(@NotNull List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
             activityMap.remove(activityData.activityName);
             activityMap.put(activityData.activityName, activityData.id);
@@ -218,7 +220,7 @@ public class PrefetchingLib {
      * @param okHttpClient The identified okHttpClient as identified from the original code
      * @return An Instrumented OkHTTP client
      */
-    public static OkHttpClient getOkHttp(OkHttpClient okHttpClient) {
+    public static OkHttpClient getOkHttp(@NotNull OkHttpClient okHttpClient) {
         synchronized (okHttpClient) {
             PrefetchingLib.okHttpClient = okHttpClient
                     .newBuilder()
@@ -315,6 +317,7 @@ public class PrefetchingLib {
         Log.e("STATS","Time saved until now: "+timeSaved);
     }
 
+    @Contract(pure = true)
     public static ActivityGraph getActivityGraph() {
         return activityGraph;
     }
@@ -362,6 +365,7 @@ public class PrefetchingLib {
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
      */
+    @SuppressWarnings("unused")
     public static void notifyExtras(Bundle allExtras) {
         // Note:  if the currentActivityName has not been set (Activity Transition before
         // setCurrentActivity() is called), then notification is ignored
@@ -420,6 +424,7 @@ public class PrefetchingLib {
      * @param key The key provided to the original putExtra method call.
      * @param value The value provided to the original putExtra method call.
      */
+    @SuppressWarnings("unused")
     public static void notifyExtra(String key, String value) {
         //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
         final Long idAct = activityMap.get(currentActivityName);
@@ -450,7 +455,7 @@ public class PrefetchingLib {
         return activityMap.get(activityName);
     }
 
-    private static void prefetchUrls(List<String> requests) {
+    private static void prefetchUrls(@NotNull List<String> requests) {
         libGet=true;
         for (String request : requests) {
             try {
@@ -558,7 +563,9 @@ public class PrefetchingLib {
      */
     private static class CustomInterceptor implements Interceptor {
 
-        public Response intercept(Interceptor.Chain chain) {
+        @NotNull
+        @Override
+        public Response intercept(@NotNull Interceptor.Chain chain) {
             Request request = chain.request();
             boolean triggeredByPrefetch = false;
             boolean isGet = request.method().toLowerCase().compareTo("get") == 0;
@@ -727,10 +734,12 @@ public class PrefetchingLib {
         }
     }
 
-    private static String formatDate(long delta, TimeUnit timeUnit) {
+    @NotNull
+    private static String formatDate(long delta, @NotNull TimeUnit timeUnit) {
         return formatDate(new Date(System.currentTimeMillis() + timeUnit.toMillis(delta)));
     }
 
+    @NotNull
     private static String formatDate(Date date) {
         DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
         rfc1123.setTimeZone(TimeZone.getTimeZone("GMT"));
