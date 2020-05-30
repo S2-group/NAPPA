@@ -102,7 +102,7 @@ public class PrefetchingStrategyImpl4 implements PrefetchingStrategy {
             if(successorCountMap.containsKey(succ.idActDest)){
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }
-            else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT4 insert count",succ.countSource2Dest+"");}
+            else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }
         }
         return  successorCountMap;
     }

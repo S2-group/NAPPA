@@ -605,7 +605,7 @@ public class PrefetchingLib {
                     .build();
 
 
-            Log.d("HEADER REQUEST", "--------------");
+            Log.d(LOG_TAG, "HEADER REQUEST");
             Headers headers = request.headers();
             for (String name : headers.names()) {
                 Log.d(LOG_TAG, name + " - " + headers.get(name));
