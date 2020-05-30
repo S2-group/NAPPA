@@ -21,9 +21,17 @@ import nl.vu.cs.s2group.nappa.db.room.session.Session;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
-@Database(entities = {
-        RequestData.class, Activity.class, Session.class, SessionContent.class, ActivityExtra.class,
-        UrlCandidate.class, UrlCandidateParts.class, LARData.class},
+@Database(
+        entities = {
+                RequestData.class,
+                Activity.class,
+                Session.class,
+                SessionContent.class,
+                ActivityExtra.class,
+                UrlCandidate.class,
+                UrlCandidateParts.class,
+                LARData.class
+        },
         version = 10)
 public abstract class PrefetchingDatabase extends RoomDatabase {
 
