@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();
@@ -31,7 +31,7 @@ public class ActivityNode {
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
-    private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
+    private LiveData<List<ActivityExtra>> listActivityExtraLiveData;
     public float pageRank,authority,hub,authorityS,hubS,prob;
     /**
      * Initializes the current activity node by creating an object of the activity, and also
@@ -75,7 +75,7 @@ public class ActivityNode {
 
     }
 
-    public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
+    public LiveData<List<ActivityExtra>> getListActivityExtraLiveData() {
         return listActivityExtraLiveData;
     }
 
@@ -132,12 +132,12 @@ public class ActivityNode {
      *
      * @param listActivityExtraLiveData The activity from which all extras will be recorded
      */
-    public void setListActivityExtraLiveData(LiveData<List<ActivityExtraData>> listActivityExtraLiveData) {
+    public void setListActivityExtraLiveData(LiveData<List<ActivityExtra>> listActivityExtraLiveData) {
         this.listActivityExtraLiveData = listActivityExtraLiveData;
         //TODO update here
         this.listActivityExtraLiveData.observeForever((list) -> {
             Log.d(LOG_TAG, "PREFSTRAT2" + activityName);
-            for (ActivityExtraData listElem : list) {
+            for (ActivityExtra listElem : list) {
                 Log.d(LOG_TAG, "PREFSTRAT2" + "actid: " + listElem.idActivity + ", key: " + listElem.key);
             }
         });

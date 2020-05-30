@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
@@ -38,7 +39,6 @@ import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.graph.Activity;
 import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.db.RequestData;
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.db.room.session.Session;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
@@ -405,10 +405,10 @@ public class PrefetchingLib {
                     // Iterate through All Extras
                     for (String key : allExtras.keySet()) {
                         // Create an Database Object and store it
-                        ActivityExtraData activityExtraData =
-                                new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
+                        ActivityExtra activityExtra =
+                                new ActivityExtra(session.id, idAct, key, allExtras.getString(key));
                         Log.d(LOG_TAG, "ADDING NEW ACTEXTRADATA");
-                        PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
+                        PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
                     }
                 }, 0, TimeUnit.SECONDS);
 
@@ -445,10 +445,10 @@ public class PrefetchingLib {
             }
         }, 0, TimeUnit.SECONDS);
         poolExecutor.schedule(() -> {
-            ActivityExtraData activityExtraData =
-                    new ActivityExtraData(session.id, idAct, key, value);
+            ActivityExtra activityExtra =
+                    new ActivityExtra(session.id, idAct, key, value);
             Log.d(LOG_TAG, "ADDING NEW ACTEXTRADATA");
-            PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
+            PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -493,7 +493,7 @@ public class PrefetchingLib {
      *               name currentActivityName
      * <br><br>
      * FOR ALL parents OF the current activity {@code node}, check the given {@code url} with ALL the
-     * {@link ActivityExtraData}(an extra key-value pair) owned by  a given parent node.  If the requested {@code URL} contains
+     * {@link ActivityExtra}(an extra key-value pair) owned by  a given parent node.  If the requested {@code URL} contains
      * the value of a parent's extra,  then begin building a {@link UrlCandidate} with its corresponding
      * {@link UrlCandidateParts}.
      * <br>

@@ -11,7 +11,7 @@ import java.util.List;
 public interface ActivityExtraDao {
 
     @Insert
-    void insertActivityExtra(ActivityExtraData activityExtraData);
+    void insertActivityExtra(ActivityExtra activityExtra);
 
     /**
      * Get all the extra's key-value pairs for a given activity
@@ -19,6 +19,6 @@ public interface ActivityExtraDao {
      * @return A list contatining all extra's key value pairs
      */
     @Query("SELECT * FROM pf_activity_extra WHERE id_activity = :idAct")
-    LiveData<List<ActivityExtraData>> getActivityExtraLiveData(Long idAct);
+    LiveData<List<ActivityExtra>> getActivityExtraLiveData(Long idAct);
 
 }

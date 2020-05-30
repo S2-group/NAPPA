@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 
 /**
  * Represents an individual part of a URL candidate, which can either be a statically defined piece of an URL,
@@ -15,7 +15,7 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
  * <br>
  * <B>ELSE IF</B>  {@code UrlCandidateParts.type == PARAMETER}, then this implies that a fragment of a full URL has also
  * been defined as an EXTRA through intent transitions.  Therefore the {@code UrlCandidateParts.urlPiece} will
- * reference the key of an {@link ActivityExtraData} object
+ * reference the key of an {@link ActivityExtra} object
  */
 @Entity(tableName = "pf_url_candidate_part")
 public class UrlCandidateParts {

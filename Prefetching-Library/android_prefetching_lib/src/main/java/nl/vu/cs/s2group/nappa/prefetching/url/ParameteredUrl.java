@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
@@ -54,7 +54,7 @@ public class ParameteredUrl {
     /**
      * From a list of diff operations,  add parameters to  the urlParameterList
      * @param diffs List of diff operations, which where a diff represents an insertion, a deletion, or
-     *              equals (keep) operation.  This diff is performed between a URL and a {@link ActivityExtraData#value}
+     *              equals (keep) operation.  This diff is performed between a URL and a {@link ActivityExtra#value}
      *              out of an extra key value pair to determine where an extra value is contained in an URL
      * @param inverse Whether an EQUAL or INSERT operation corresponds to a STATIC Type or a PARAMETER
      *                type or viceversa.  Inverse = TRUE is used when Inserting Static URL aspects
