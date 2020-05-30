@@ -16,10 +16,10 @@ public interface ActivityDao {
     @Insert
     void insert(Activity activityData);
 
-    @Query("SELECT id, activity_name FROM pf_activity")
+    @Query("SELECT id, activity_name FROM nappa_activity")
     List<Activity> getListActivity();
 
-    @Query("SELECT id, activity_name FROM pf_activity")
+    @Query("SELECT id, activity_name FROM nappa_activity")
     LiveData<List<Activity>> getListActivityLiveData();
 
     @Insert
@@ -28,6 +28,6 @@ public interface ActivityDao {
     @Update
     void updateLAR(LARData LARData);
 
-    @Query("SELECT * FROM pf_LAR WHERE activity_name=:activity_name")
+    @Query("SELECT * FROM nappa_LAR WHERE activity_name=:activity_name")
     LARData getLAR(String activity_name);
 }

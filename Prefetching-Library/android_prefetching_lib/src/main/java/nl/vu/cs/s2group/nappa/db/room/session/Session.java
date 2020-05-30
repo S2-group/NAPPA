@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "pf_session")
+@Entity(tableName = "nappa_session")
 public class Session {
 
     @PrimaryKey(autoGenerate = true) public Long id;

@@ -42,7 +42,7 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
         if (instance == null)
             synchronized (PrefetchingDatabase.class) {
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        PrefetchingDatabase.class, "pf_db")
+                        PrefetchingDatabase.class, "nappa_db")
                         //TODO remove and provide migrations in production
                         .fallbackToDestructiveMigration()
                         .build();

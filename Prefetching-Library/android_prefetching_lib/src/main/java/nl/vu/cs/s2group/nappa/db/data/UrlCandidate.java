@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 /**
  * Represents an individual URL candidate
  */
-@Entity(tableName = "pf_url_candidate")
+@Entity(tableName = "nappa_url_candidate")
 public class UrlCandidate {
 
     @PrimaryKey(autoGenerate = true) public Long id;

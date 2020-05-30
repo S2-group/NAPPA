@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 /**
  * Represents all data corresponding to an http request
  */
-@Entity(tableName = "pf_url")
+@Entity(tableName = "nappa_url")
 public class RequestData {
 
     @PrimaryKey(autoGenerate = true) public Long id;

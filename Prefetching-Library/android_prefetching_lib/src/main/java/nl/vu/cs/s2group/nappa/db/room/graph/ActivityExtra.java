@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.Contract;
 
-@Entity(tableName = "pf_activity_extra")
+@Entity(tableName = "nappa_activity_extra")
 public class ActivityExtra {
 
     @PrimaryKey(autoGenerate = true) public Long id;
