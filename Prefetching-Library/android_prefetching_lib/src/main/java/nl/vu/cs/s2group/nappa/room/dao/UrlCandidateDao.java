@@ -8,6 +8,9 @@ import androidx.room.Update;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 
 @Dao
 public interface UrlCandidateDao {
+    String LOG_TAG = UrlCandidateDao.class.getSimpleName();
 
     @Insert
     Long insertUrlCandidate(UrlCandidate urlCandidate);
@@ -70,10 +74,12 @@ public interface UrlCandidateDao {
          * @param parameterList A list of URL parameters
          * @return A list of parametered URLS
          */
-        public static List<ParameteredUrl> getParameteredUrlList(List<UrlCandidateToUrlParameter> parameterList) {
+        @NotNull
+        @Contract("_ -> new")
+        public static List<ParameteredUrl> getParameteredUrlList(@NotNull List<UrlCandidateToUrlParameter> parameterList) {
             ArrayMap<Long, ParameteredUrl> parameteredUrlHashMap = new ArrayMap<>();
 
-            Log.e("PARAM", "COUNT: " + parameterList.size());
+            Log.d(LOG_TAG, "PARAM " + "COUNT: " + parameterList.size());
 
             // For each parameter in the parameter list,  build a parameteredUrl object and store it
             //  in the hashmap
@@ -85,18 +91,15 @@ public interface UrlCandidateDao {
                     parameteredUrlHashMap.put(parameter.id, parameteredUrl);
                 }
 
-                Log.e("PARAM", "ID_ACTIVITY: " + parameter.idActivity);
+                Log.d(LOG_TAG, "PARAM " + "ID_ACTIVITY: " + parameter.idActivity);
 
-                /*try {*/
-                    Log.e("PARAM", parameter.urlPiece);
-                    Log.e("PARAM", parameter.type+"");
-                    Log.e("PARAM", parameter.urlOrder+"");
-                    parameteredUrl.addParameter(parameter.urlOrder,
-                            ParameteredUrl.getTYPESFromId(parameter.type),
-                            parameter.urlPiece);
-                /*} catch (Exception e) {
-                    e.printStackTrace();
-                }*/
+                Log.d(LOG_TAG, "PARAM " + parameter.urlPiece);
+                Log.d(LOG_TAG, "PARAM " + parameter.type + "");
+                Log.d(LOG_TAG, "PARAM " + parameter.urlOrder + "");
+                parameteredUrl.addParameter(parameter.urlOrder,
+                        ParameteredUrl.getTYPESFromId(parameter.type),
+                        parameter.urlPiece);
+
             }
             // Return an Iterable list of all the values stored in the hashmap
             return new LinkedList<>(parameteredUrlHashMap.values());
