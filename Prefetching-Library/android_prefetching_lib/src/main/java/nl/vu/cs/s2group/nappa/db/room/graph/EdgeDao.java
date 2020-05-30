@@ -6,7 +6,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface GraphEdgeDao {
+public interface EdgeDao {
 
     /**
      * Get all the edges corresponding to a given activity.

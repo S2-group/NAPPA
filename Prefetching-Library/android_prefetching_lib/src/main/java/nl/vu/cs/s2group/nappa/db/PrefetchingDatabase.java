@@ -12,7 +12,7 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.Activity;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
-import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
+import nl.vu.cs.s2group.nappa.db.room.graph.EdgeDao;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
@@ -50,7 +50,7 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
     public abstract AggregateUrlDao urlDao();
     public abstract ActivityDao activityDao();
     public abstract SessionDao sessionDao();
-    public abstract GraphEdgeDao graphEdgeDao();
+    public abstract EdgeDao graphEdgeDao();
     public abstract ActivityExtraDao activityExtraDao();
     public abstract UrlCandidateDao urlCandidateDao();
 }
