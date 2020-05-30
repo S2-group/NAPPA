@@ -6,12 +6,12 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "pf_activity", indices = @Index(value = {"activity_name"}, unique = true))
-public class ActivityData {
+public class Activity {
     @PrimaryKey(autoGenerate = true) public Long id;
     // activityName is UNIQUE, thus no two rows may have the same activity name
     @ColumnInfo(name = "activity_name") public String activityName;
 
-    public ActivityData(String activityName) {
+    public Activity(String activityName) {
         this.activityName = activityName;
     }
 }

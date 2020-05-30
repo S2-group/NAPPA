@@ -1,6 +1,5 @@
 package nl.vu.cs.s2group.nappa;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,7 +35,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityData;
+import nl.vu.cs.s2group.nappa.db.room.graph.Activity;
 import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.db.RequestData;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
@@ -61,7 +60,7 @@ public class PrefetchingLib {
     private static File cacheDir;
     private static String currentActivityName;
     private static ActivityGraph activityGraph;
-    private static LiveData<List<ActivityData>> listLiveData;
+    private static LiveData<List<Activity>> listLiveData;
     private static Session session;
     private static PrefetchingStrategy strategyIntent;
     private static OkHttpClient okHttpClient;
@@ -175,7 +174,7 @@ public class PrefetchingLib {
     }
 
     @Contract(pure = true)
-    public static LiveData<List<ActivityData>> getActivityLiveData() {
+    public static LiveData<List<Activity>> getActivityLiveData() {
         return listLiveData;
     }
 
@@ -184,8 +183,8 @@ public class PrefetchingLib {
      * The Keys in the map are the activity name (String) and the value is the Activity ID (Long)
      * @param dataList - The list of all activities as stored in the database.
      */
-    private static void updateActivityMap(@NotNull List<ActivityData> dataList) {
-        for (ActivityData activityData : dataList) {
+    private static void updateActivityMap(@NotNull List<Activity> dataList) {
+        for (Activity activityData : dataList) {
             activityMap.remove(activityData.activityName);
             activityMap.put(activityData.activityName, activityData.id);
             Log.d(LOG_TAG, activityData.activityName + ": " + activityData.id);
@@ -203,7 +202,7 @@ public class PrefetchingLib {
      */
     public static void registerActivity(String activityName) {
         if (!activityMap.containsKey(activityName)) {
-            ActivityData activityData = new ActivityData(activityName);
+            Activity activityData = new Activity(activityName);
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().insert(activityData);
                 updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
@@ -267,7 +266,7 @@ public class PrefetchingLib {
      * Notifies the prefetching library whenever an activity transition takes place
      * @param activity
      */
-    public static void setCurrentActivity(@NonNull Activity activity) {
+    public static void setCurrentActivity(@NonNull android.app.Activity activity) {
         boolean shouldPrefetch;
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD

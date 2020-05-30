@@ -14,13 +14,13 @@ import nl.vu.cs.s2group.nappa.db.data.LARData;
 public interface ActivityDao {
 
     @Insert
-    void insert(ActivityData activityData);
+    void insert(Activity activityData);
 
     @Query("SELECT id, activity_name FROM pf_activity")
-    List<ActivityData> getListActivity();
+    List<Activity> getListActivity();
 
     @Query("SELECT id, activity_name FROM pf_activity")
-    LiveData<List<ActivityData>> getListActivityLiveData();
+    LiveData<List<Activity>> getListActivityLiveData();
 
     @Insert
     void insertLAR(LARData PR);

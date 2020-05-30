@@ -9,7 +9,7 @@ import android.content.Context;
 import org.jetbrains.annotations.Contract;
 
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityDao;
-import nl.vu.cs.s2group.nappa.db.room.graph.ActivityData;
+import nl.vu.cs.s2group.nappa.db.room.graph.Activity;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
@@ -22,7 +22,7 @@ import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
 @Database(entities = {
-        RequestData.class, ActivityData.class, Session.class, SessionContent.class, ActivityExtraData.class,
+        RequestData.class, Activity.class, Session.class, SessionContent.class, ActivityExtraData.class,
         UrlCandidate.class, UrlCandidateParts.class, LARData.class},
         version = 10)
 public abstract class PrefetchingDatabase extends RoomDatabase {
