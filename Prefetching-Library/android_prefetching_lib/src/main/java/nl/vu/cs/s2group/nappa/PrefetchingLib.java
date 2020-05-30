@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
@@ -40,7 +41,6 @@ import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.db.RequestData;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.db.room.session.Session;
-import nl.vu.cs.s2group.nappa.db.room.session.SessionData;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 import okhttp3.Cache;
@@ -334,7 +334,7 @@ public class PrefetchingLib {
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            SessionContent data = new SessionContent(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
             Log.d(LOG_TAG, activityMap.toString());
             PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
@@ -348,12 +348,12 @@ public class PrefetchingLib {
      */
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            SessionContent data = new SessionContent(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
             PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
-    public static LiveData<List<SessionData>> getSessionDataListLiveData() {
+    public static LiveData<List<SessionContent>> getSessionDataListLiveData() {
         return PrefetchingDatabase.getInstance().sessionDao().getSessionDataListLiveData();
     }
 

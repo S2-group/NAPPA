@@ -12,17 +12,17 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityData;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.db.data.LARData;
 import nl.vu.cs.s2group.nappa.db.room.session.Session;
-import nl.vu.cs.s2group.nappa.db.room.session.SessionData;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
 @Database(entities = {
-        RequestData.class, ActivityData.class, Session.class, SessionData.class, ActivityExtraData.class,
+        RequestData.class, ActivityData.class, Session.class, SessionContent.class, ActivityExtraData.class,
         UrlCandidate.class, UrlCandidateParts.class, LARData.class},
         version = 10)
 public abstract class PrefetchingDatabase extends RoomDatabase {

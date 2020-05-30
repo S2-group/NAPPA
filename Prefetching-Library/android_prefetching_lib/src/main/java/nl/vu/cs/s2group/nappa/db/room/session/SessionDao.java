@@ -17,10 +17,10 @@ public interface SessionDao {
     void insertSession(Session session);
 
     @Insert
-    void insertSessionData(SessionData sessionData);
+    void insertSessionData(SessionContent sessionContent);
 
     @Update
-    void updateSessionData(SessionData sessionData);
+    void updateSessionData(SessionContent sessionContent);
 
     @Query("SELECT id, date from pf_session")
     LiveData<List<Session>> getSessionListLiveData();
@@ -28,8 +28,8 @@ public interface SessionDao {
     @Query("SELECT id, date from pf_session where date=:date")
     Session getSession(Long date);
 
-    @Query("SELECT id_session, id_activity_source, id_activity_destination, count_source_destination FROM pf_session_data")
-    LiveData<List<SessionData>> getSessionDataListLiveData();
+    @Query("SELECT id_session, id_activity_source, id_activity_destination, count_source_destination FROM pf_session_content")
+    LiveData<List<SessionContent>> getSessionDataListLiveData();
 
     /**
      * Gets the count of the number of instances a (source --> destination) edge has been followed, for
@@ -40,7 +40,7 @@ public interface SessionDao {
      * @return Given x, for all y of Y,  a total count of all transitions x --> y  will be returned.
      */
     @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest " +
-            "FROM pf_session_data " +
+            "FROM pf_session_content " +
             "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +
             "WHERE id_activity_source = :idSource " +
             "GROUP BY id_activity_destination")
@@ -48,11 +48,11 @@ public interface SessionDao {
 
     @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest "+
             "FROM (SELECT id_activity_destination , activity_name , count_source_destination, id_session  " +
-            "FROM pf_session_data " +
+            "FROM pf_session_content " +
             "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +
             "WHERE id_activity_source = :idSource " +
             "ORDER BY id_session DESC) as X " +
-            "WHERE X.id_session >= ((SELECT MAX(id_session) FROM pf_session_data) - :lastN) " +
+            "WHERE X.id_session >= ((SELECT MAX(id_session) FROM pf_session_content) - :lastN) " +
             "GROUP BY id_activity_destination ")
     LiveData<List<SessionAggregate>> getCountForActivitySource(Long idSource, int lastN);
 

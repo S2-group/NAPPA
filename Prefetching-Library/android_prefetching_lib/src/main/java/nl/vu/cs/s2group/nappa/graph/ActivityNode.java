@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.db.room.session.SessionData;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();
@@ -187,7 +187,7 @@ public class ActivityNode {
      * Updates the {@linkplain ActivityNode} transitions in the database and also determines whether prefetching
      * should take place or not. If the current node is not yet part of the activity graph, this is also added to the graph.
      * If it already exitsis, it will increment the transition count.  All updates are reflected in the database entity
-     * {@link SessionData}.
+     * {@link SessionContent}.
      * Overall, prefetching takes place IFF moving from the current node to as successor AND NOT
      * from current node to an ancestor.
      *
