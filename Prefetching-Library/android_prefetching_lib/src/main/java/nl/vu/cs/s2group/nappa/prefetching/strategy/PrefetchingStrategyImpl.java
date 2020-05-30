@@ -10,7 +10,7 @@ import java.util.List;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl implements PrefetchingStrategy {

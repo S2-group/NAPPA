@@ -12,12 +12,12 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityData;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
-import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.db.data.LARData;
-import nl.vu.cs.s2group.nappa.db.data.Session;
-import nl.vu.cs.s2group.nappa.db.data.SessionData;
+import nl.vu.cs.s2group.nappa.db.room.session.Session;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionData;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 

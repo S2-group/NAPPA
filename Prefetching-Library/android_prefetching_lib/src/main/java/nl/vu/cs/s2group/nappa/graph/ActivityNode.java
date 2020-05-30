@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.db.data.SessionData;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionData;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();

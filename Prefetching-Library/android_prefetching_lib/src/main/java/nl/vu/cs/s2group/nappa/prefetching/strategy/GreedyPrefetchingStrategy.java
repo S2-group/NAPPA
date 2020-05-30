@@ -15,7 +15,7 @@ import java.util.Map;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 
 /**
  * Implements a Greedy-based strategy to identify URLs for prefetching

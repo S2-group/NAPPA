@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.db.dao;
+package nl.vu.cs.s2group.nappa.db.room.session;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,8 +8,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.db.data.Session;
-import nl.vu.cs.s2group.nappa.db.data.SessionData;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
 @Dao

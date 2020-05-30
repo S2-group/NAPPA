@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.db.data;
+package nl.vu.cs.s2group.nappa.db.room.session;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
