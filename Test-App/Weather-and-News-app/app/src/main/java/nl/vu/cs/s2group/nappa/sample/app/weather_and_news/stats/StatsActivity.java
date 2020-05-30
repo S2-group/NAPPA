@@ -1,17 +1,19 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats;
 
-import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.room.http.AggregateURL;
+import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -45,7 +47,7 @@ public class StatsActivity extends AppCompatActivity {
         viewModel.getLiveData().observe(this, datas -> {
             //AggregateUrlDao.AggregateURL aggregateURL = datas.get(0);
             //textView.setText(aggregateURL.toString());
-            for (AggregateUrlDao.AggregateURL data : datas) {
+            for (AggregateURL data : datas) {
                 textView.append(data.toString()+"\n\n\n");
             }
         });

@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.room.data.SessionData;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 
 public class ViewModelSessionDataList extends ViewModel {
 
-    public LiveData<List<SessionData>> listLiveData;
+    public LiveData<List<SessionContent>> listLiveData;
 
     public ViewModelSessionDataList() {
         listLiveData = PrefetchingLib.getSessionDataListLiveData();

@@ -1,14 +1,15 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats;
 
-import androidx.lifecycle.ViewModelProviders;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
+
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.viewmodel.ViewModelSessionDataList;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.room.data.SessionData;
 
 public class SessionDataActivity extends AppCompatActivity {
 
@@ -23,7 +24,7 @@ public class SessionDataActivity extends AppCompatActivity {
 
         sessionDataList.listLiveData.observe(this, sessionData -> {
             StringBuilder sb = new StringBuilder();
-            for (SessionData data : sessionData) {
+            for (SessionContent data : sessionData) {
                 sb.append(data.toString()).append("\n\n");
             }
             textView.setText(sb.toString());
