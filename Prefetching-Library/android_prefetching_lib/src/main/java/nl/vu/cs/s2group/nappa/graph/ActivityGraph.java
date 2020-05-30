@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.db.room.graph.Edge;
-import nl.vu.cs.s2group.nappa.db.data.LARData;
+import nl.vu.cs.s2group.nappa.db.room.graph.LARData;
 
 
 public class ActivityGraph {
@@ -32,7 +32,7 @@ public class ActivityGraph {
         Log.d(LOG_TAG, "ACT_GRAPH" + "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
         //link analysis ranking (LAR)
-        LARData LAR = NappaDB.getInstance().activityDao().getLAR(activityName);
+        LARData LAR = NappaDB.getInstance().larDao().getLAR(activityName);
         Log.d(LOG_TAG, "LARDataInitFetchDB" + activityName + " Pagerank: " + LAR.PR + " HITS-Authority: " + LAR.authority + " HITS-Hub: " + LAR.hub + " SALSA-Authority: " + LAR.authorityS + " SALSA-Hub: " + LAR.hubS);
 
         // Verify if the current activity node already exists in the activity graph
@@ -62,7 +62,7 @@ public class ActivityGraph {
 
             if (edge != null && edge.actName != null) {
                 ActivityNode temp2 = new ActivityNode(edge.actName);
-                LAR = NappaDB.getInstance().activityDao().getLAR(edge.actName);
+                LAR = NappaDB.getInstance().larDao().getLAR(edge.actName);
                 Log.d(LOG_TAG, "LARDataInitFetchDB" + activityName + " Pagerank: " + LAR.PR + " HITS-Authority: " + LAR.authority + " HITS-Hub: " + LAR.hub + " SALSA-Authority: " + LAR.authorityS + " SALSA-Hub: " + LAR.hubS + " loaded following an edge");
 
                 if (nodeList.contains(temp2)) {
@@ -118,7 +118,7 @@ public class ActivityGraph {
             temp.hubS=initialHubS;
             nodeList.add(temp);
             poolExecutor.schedule(() -> {
-                NappaDB.getInstance().activityDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub,initialAuthorityS,initialHubS));
+                NappaDB.getInstance().larDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub,initialAuthorityS,initialHubS));
             }, 0, TimeUnit.SECONDS);
             Log.d(LOG_TAG, "node " + temp.activityName + " added to nodelist");
             Log.d(LOG_TAG, "LARDataUpdate" + " Pagerank: " + temp.pageRank + " HITS-Authority: " + temp.authority + " HITS-Hub: " + temp.hub + " SALSA-Authority: " + temp.authorityS + " SALSA-Hub: " + temp.hubS);
@@ -201,7 +201,7 @@ public class ActivityGraph {
         nodeList.set(index, temp);
         final ActivityNode temp_= temp;
         poolExecutor.schedule(() -> {
-            NappaDB.getInstance().activityDao().updateLAR(new LARData(temp_.activityName, temp_.pageRank,temp_.authority,temp_.hub,temp_.authorityS,temp_.hubS));
+            NappaDB.getInstance().larDao().updateLAR(new LARData(temp_.activityName, temp_.pageRank,temp_.authority,temp_.hub,temp_.authorityS,temp_.hubS));
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -239,7 +239,7 @@ public class ActivityGraph {
             int index = nodeList.lastIndexOf(node);
             nodeList.set(index,node);
             poolExecutor.schedule(() -> {
-                NappaDB.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
+                NappaDB.getInstance().larDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -312,7 +312,7 @@ public class ActivityGraph {
         }
         for (ActivityNode node: nodeList){
             poolExecutor.schedule(() -> {
-                NappaDB.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
+                NappaDB.getInstance().larDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
         }
     }
