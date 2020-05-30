@@ -15,11 +15,12 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.db.room.graph.EdgeDao;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
-import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
+import nl.vu.cs.s2group.nappa.db.room.url.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.db.data.LARData;
 import nl.vu.cs.s2group.nappa.db.room.session.Session;
-import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
-import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidate;
+import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidateParts;
 
 @Database(
         entities = {

@@ -17,7 +17,7 @@ import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
-import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
+import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidateDao;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();

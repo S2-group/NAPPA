@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.db.dao;
+package nl.vu.cs.s2group.nappa.db.room.url;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -15,8 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
-import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
 @Dao
 public interface UrlCandidateDao {

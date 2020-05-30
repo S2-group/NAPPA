@@ -9,7 +9,7 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.room.url.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 
 @Deprecated

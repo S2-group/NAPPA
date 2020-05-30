@@ -15,7 +15,7 @@ import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.room.url.AggregateUrlDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
