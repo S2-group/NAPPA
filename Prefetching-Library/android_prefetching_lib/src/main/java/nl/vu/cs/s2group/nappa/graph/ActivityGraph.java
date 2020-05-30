@@ -313,16 +313,6 @@ public class ActivityGraph {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
-            /*for(ActivityNode node2: nodeList) {
-                for (ActivityNode ancestor : node2.ancestors.keySet()) {
-                    if(ancestor.activityName.equals(node.activityName)) {ancestor.authorityS=node.authorityS;
-                    ancestor.hubS=node.hubS;}
-                }
-                for (ActivityNode successor : node2.successors.keySet()) {
-                    if(successor.activityName.equals(node.activityName)){ successor.authorityS=node.authorityS;
-                    successor.hubS=node.hubS;}
-                }
-            }*/
         }
     }
 }

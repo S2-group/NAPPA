@@ -3,6 +3,9 @@ package nl.vu.cs.s2group.nappa.graph;
 import androidx.lifecycle.LiveData;
 import android.util.Log;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -210,14 +213,6 @@ public class ActivityNode {
             //  RETURN: TRUE (Prefetch)
             else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
                 successors.put(activityNode, successors.get(activityNode) + 1);
-                //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
-                /*if ( successors.get(activityNode) > 0 ) {
-                    PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
-                    Log.w("ACTNODE", "CREATING, NOT IN DB");
-                } else {
-                    Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
-                    PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
-                }*/
                 Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
                 PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
                 return true;
@@ -226,8 +221,6 @@ public class ActivityNode {
             //  RETURN: False
             else if (/*!successors.containsKey(activityNode) &&*/ ancestors.containsKey(activityNode)) {
                 //DO NOTHING
-                //activityNode.ancestors.put(this, ancestors.get(activityNode) + 1);
-                //ancestors.put(activityNode, ancestors.get(activityNode) + 1);
                 return false;
             }
         }
@@ -240,7 +233,8 @@ public class ActivityNode {
      * @param parents The list of parents to be returned
      * @return a {@code List<ActivityNode>} containing all the parents of the requested {@code node}
      */
-    public static List<ActivityNode> getAllParents(ActivityNode node, List<ActivityNode> parents) {
+    @Contract("_, _ -> param2")
+    public static List<ActivityNode> getAllParents(@NotNull ActivityNode node, List<ActivityNode> parents) {
         for (ActivityNode parent : node.ancestors.keySet()) {
             if (!parents.contains(parent)) {
                 parents.add(parent);
@@ -250,7 +244,8 @@ public class ActivityNode {
         return parents;
     }
 
-    public static List<ActivityNode> getAllSuccessors(ActivityNode node, List<ActivityNode> successors) {
+    @Contract("_, _ -> param2")
+    public static List<ActivityNode> getAllSuccessors(@NotNull ActivityNode node, List<ActivityNode> successors) {
         for (ActivityNode successor : node.successors.keySet()) {
             if (!successors.contains(successor)) {
                 successors.add(successor);

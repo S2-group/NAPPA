@@ -71,7 +71,6 @@ public class ParameteredUrl {
         }
 
         for (DiffMatchPatch.Diff diff : diffs) {
-            //System.out.println(diff);
 
             if (diff.operation == op1) {
                 this.addParameter(count, ParameteredUrl.TYPES.STATIC, diff.text);
