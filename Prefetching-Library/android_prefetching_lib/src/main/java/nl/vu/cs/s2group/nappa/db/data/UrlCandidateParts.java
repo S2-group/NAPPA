@@ -1,8 +1,10 @@
-package nl.vu.cs.s2group.nappa.room.data;
+package nl.vu.cs.s2group.nappa.db.data;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 
 /**
  * Represents an individual part of a URL candidate, which can either be a statically defined piece of an URL,

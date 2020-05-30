@@ -12,7 +12,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl4 implements PrefetchingStrategy {

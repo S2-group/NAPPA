@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
-import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
+import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
 /**
  * Represents an individual URL composed of both static components and parameter components.  The

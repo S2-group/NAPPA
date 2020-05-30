@@ -8,9 +8,9 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
-import nl.vu.cs.s2group.nappa.room.data.LARData;
+import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
+import nl.vu.cs.s2group.nappa.db.data.LARData;
 
 
 public class ActivityGraph {

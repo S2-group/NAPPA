@@ -13,9 +13,9 @@ import java.util.Map;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
 
 @Deprecated
 public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {

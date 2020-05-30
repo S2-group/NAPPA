@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl implements PrefetchingStrategy {

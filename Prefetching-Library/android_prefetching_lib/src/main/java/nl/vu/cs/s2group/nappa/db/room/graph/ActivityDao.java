@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room;
+package nl.vu.cs.s2group.nappa.db.room.graph;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,10 +8,10 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.room.data.LARData;
+import nl.vu.cs.s2group.nappa.db.data.LARData;
 
 @Dao
-public interface ActivityTableDao {
+public interface ActivityDao {
 
     @Insert
     void insert(ActivityData activityData);

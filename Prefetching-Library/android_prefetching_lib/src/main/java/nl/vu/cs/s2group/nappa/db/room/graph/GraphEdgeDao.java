@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room.dao;
+package nl.vu.cs.s2group.nappa.db.room.graph;
 
 import androidx.room.Dao;
 import androidx.room.Query;
@@ -7,7 +7,6 @@ import java.util.List;
 
 @Dao
 public interface GraphEdgeDao {
-
 
     /**
      * Get all the edges corresponding to a given activity.

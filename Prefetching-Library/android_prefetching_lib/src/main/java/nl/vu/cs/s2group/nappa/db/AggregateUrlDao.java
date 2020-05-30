@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room;
+package nl.vu.cs.s2group.nappa.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

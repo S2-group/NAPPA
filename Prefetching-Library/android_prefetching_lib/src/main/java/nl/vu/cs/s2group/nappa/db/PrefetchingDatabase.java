@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room;
+package nl.vu.cs.s2group.nappa.db;
 
 
 import androidx.room.Database;
@@ -6,16 +6,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
-import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
-import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
-import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
-import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.data.LARData;
-import nl.vu.cs.s2group.nappa.room.data.Session;
-import nl.vu.cs.s2group.nappa.room.data.SessionData;
-import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
-import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
+import org.jetbrains.annotations.Contract;
+
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityDao;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityData;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraDao;
+import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
+import nl.vu.cs.s2group.nappa.db.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.db.dao.UrlCandidateDao;
+import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.db.data.LARData;
+import nl.vu.cs.s2group.nappa.db.data.Session;
+import nl.vu.cs.s2group.nappa.db.data.SessionData;
+import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
+import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
 
 @Database(entities = {
         RequestData.class, ActivityData.class, Session.class, SessionData.class, ActivityExtraData.class,
@@ -38,12 +42,13 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
         return instance;
     }
 
+    @Contract(pure = true)
     public static PrefetchingDatabase getInstance() {
         return instance;
     }
 
     public abstract AggregateUrlDao urlDao();
-    public abstract ActivityTableDao activityDao();
+    public abstract ActivityDao activityDao();
     public abstract SessionDao sessionDao();
     public abstract GraphEdgeDao graphEdgeDao();
     public abstract ActivityExtraDao activityExtraDao();
