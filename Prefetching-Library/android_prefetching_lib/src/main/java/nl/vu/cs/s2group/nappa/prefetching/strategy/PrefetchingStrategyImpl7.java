@@ -37,12 +37,12 @@ public class PrefetchingStrategyImpl7 implements PrefetchingStrategy {
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                if(node1.authorityS<node2.authorityS){
+                if(node1.lar.authorityS<node2.lar.authorityS){
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
                     node1=node2;
-                }else if(node1.authorityS==node2.authorityS&&node1.hubS<node2.hubS){
+                }else if(node1.lar.authorityS==node2.lar.authorityS&&node1.lar.hubS<node2.lar.hubS){
                         ActivityNode temp=node1;
                         probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                         probableNodes.set(probableNodes.lastIndexOf(node2),temp);
@@ -55,7 +55,7 @@ public class PrefetchingStrategyImpl7 implements PrefetchingStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authorityS);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).lar.authorityS);
 
         }
 
@@ -81,7 +81,7 @@ public class PrefetchingStrategyImpl7 implements PrefetchingStrategy {
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authorityS);
+            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).lar.authorityS);
         }
 
         for (Long succ : successorCountMap.keySet()) {

@@ -86,7 +86,7 @@ public class PrefetchingStrategyImpl4 implements PrefetchingStrategy {
 
         for (Long succ : successorCountMap.keySet()) {
             float prob = 0;
-            if(total>0) prob= (float)successorCountMap.get(succ)/total; // * succ.pageRank or others
+            if(total>0) prob= (float)successorCountMap.get(succ)/total; // * succ.lar.PR or others
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);

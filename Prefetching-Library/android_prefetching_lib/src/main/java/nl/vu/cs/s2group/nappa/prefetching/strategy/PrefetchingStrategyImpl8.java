@@ -90,7 +90,7 @@ public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
         // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
             // Individual successor divided by total accesses
-            float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
+            float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).lar.PR);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
 

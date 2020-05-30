@@ -36,7 +36,7 @@ public class PrefetchingStrategyImpl6 implements PrefetchingStrategy {
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                if(node1.authority<node2.authority){
+                if(node1.lar.authority<node2.lar.authority){
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
@@ -49,7 +49,7 @@ public class PrefetchingStrategyImpl6 implements PrefetchingStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).lar.authority);
 
         }
 
@@ -75,7 +75,7 @@ public class PrefetchingStrategyImpl6 implements PrefetchingStrategy {
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authority);
+            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).lar.authority);
         }
 
         for (Long succ : successorCountMap.keySet()) {

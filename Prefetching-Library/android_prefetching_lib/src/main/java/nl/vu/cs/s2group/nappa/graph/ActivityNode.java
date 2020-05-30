@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
+import nl.vu.cs.s2group.nappa.db.room.graph.LAR;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.db.room.http.UrlCandidateToUrlParameter;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
@@ -21,7 +22,7 @@ import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();
-    
+
     public String activityName;
 
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
@@ -32,7 +33,11 @@ public class ActivityNode {
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
     private LiveData<List<ActivityExtra>> listActivityExtraLiveData;
-    public float pageRank,authority,hub,authorityS,hubS,prob;
+    public float prob;
+
+    @Deprecated
+    public LAR lar;
+
     /**
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
@@ -153,7 +158,7 @@ public class ActivityNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nHITS-Authority :"+authority+"\nHITS-Hub :"+hub+"\nSALSA-Authority :"+authorityS+"\nSALSA-Hub :"+hubS);
+        StringBuilder builder = new StringBuilder();
 
         builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
         builder.append("Successors:\n");

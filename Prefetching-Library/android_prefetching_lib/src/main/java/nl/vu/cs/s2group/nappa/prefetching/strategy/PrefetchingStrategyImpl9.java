@@ -109,7 +109,7 @@ public class PrefetchingStrategyImpl9 implements PrefetchingStrategy {
 
         for (Long succ : successorCountMap.keySet()) {
             float prob = 0;
-            if(total>0) prob= (float)successorCountMap.get(succ)/total*PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).authority;
+            if(total>0) prob= (float)successorCountMap.get(succ)/total*PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).lar.authority;
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);

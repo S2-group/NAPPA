@@ -5,6 +5,9 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.Contract;
+
+@Deprecated
 @Entity(tableName = "nappa_lar", primaryKeys = {"activity_name"}, indices = @Index(value = {"activity_name"}, unique = true))
 public class LAR {
     @NonNull @ColumnInfo(name = "activity_name") public String activity_name;
@@ -14,6 +17,7 @@ public class LAR {
     @NonNull @ColumnInfo(name = "authorityS") public float authorityS;
     @NonNull @ColumnInfo(name = "hubS") public float hubS;
 
+    @Contract(pure = true)
     public LAR(@NonNull String activity_name, @NonNull float PR, @NonNull float authority, @NonNull float hub, @NonNull float authorityS, @NonNull float hubS ) {
         this.activity_name = activity_name;
         this.PR = PR;
@@ -21,5 +25,16 @@ public class LAR {
         this.hub = hub;
         this.authorityS = authorityS;
         this.hubS = hubS;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Activity Name: " + activity_name + "\n" +
+                "PageRank: " + PR + "\n" +
+                "HITS-Authority: " + authority + "\n" +
+                "HITS-Hub: " + hub + "\n" +
+                "SALSA-Authority: " + authorityS + "\n" +
+                "SALSA-Hub: " + hubS + "\n";
     }
 }
