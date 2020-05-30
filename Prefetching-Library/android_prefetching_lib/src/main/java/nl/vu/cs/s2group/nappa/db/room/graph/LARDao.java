@@ -8,11 +8,11 @@ import androidx.room.Update;
 @Dao
 public interface LARDao {
     @Insert
-    void insertLAR(LARData PR);
+    void insertLAR(LAR PR);
 
     @Update
-    void updateLAR(LARData LARData);
+    void updateLAR(LAR LAR);
 
     @Query("SELECT * FROM nappa_LAR WHERE activity_name=:activity_name")
-    LARData getLAR(String activity_name);
+    LAR getLAR(String activity_name);
 }
