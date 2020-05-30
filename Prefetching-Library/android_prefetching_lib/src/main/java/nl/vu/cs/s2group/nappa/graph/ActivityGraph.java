@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.db.room.graph.GraphEdgeDao;
+import nl.vu.cs.s2group.nappa.db.room.graph.Edge;
 import nl.vu.cs.s2group.nappa.db.data.LARData;
 
 
@@ -51,14 +51,14 @@ public class ActivityGraph {
 
 
         // Get all edges (destinations) for a given activity (source)
-        List<GraphEdgeDao.GraphEdge> edges = PrefetchingDatabase.getInstance().graphEdgeDao().getEdgesForActivity(activityName);
+        List<Edge> edges = PrefetchingDatabase.getInstance().graphEdgeDao().getEdgesForActivity(activityName);
         Log.d(LOG_TAG, "ACT_GRAPH" + "Edges size: " + edges.size());
 
 
         // Verify if all edges (destinations) for this activity already exists in the
         // database AND the static hashmap.  Also, check if they exist in the Activity graph.
         // If not,  add any missing edges.
-        for (GraphEdgeDao.GraphEdge edge : edges) {
+        for (Edge edge : edges) {
 
             if (edge != null && edge.actName != null) {
                 ActivityNode temp2 = new ActivityNode(edge.actName);

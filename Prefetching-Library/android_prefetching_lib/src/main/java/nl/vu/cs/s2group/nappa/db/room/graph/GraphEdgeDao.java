@@ -21,12 +21,7 @@ public interface GraphEdgeDao {
             "FROM pf_session_content as psd " +
             "LEFT JOIN pf_activity as pa ON pa.id = psd.id_activity_destination " +
             "WHERE id_activity_source = (SELECT id FROM pf_activity WHERE activity_name = :actName) ")
-    List<GraphEdge> getEdgesForActivity(String actName);
+    List<Edge> getEdgesForActivity(String actName);
 
-
-    class GraphEdge {
-        public Long idActDest;
-        public String actName;
-    }
 
 }
