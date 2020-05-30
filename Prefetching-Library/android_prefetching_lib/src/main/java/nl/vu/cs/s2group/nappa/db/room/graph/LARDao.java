@@ -13,6 +13,6 @@ public interface LARDao {
     @Update
     void updateLAR(LAR LAR);
 
-    @Query("SELECT * FROM nappa_LAR WHERE activity_name=:activity_name")
+    @Query("SELECT * FROM nappa_lar WHERE activity_name=:activity_name")
     LAR getLAR(String activity_name);
 }
