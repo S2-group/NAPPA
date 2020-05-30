@@ -33,16 +33,16 @@ import nl.vu.cs.s2group.nappa.db.data.UrlCandidateParts;
                 LARData.class
         },
         version = 10)
-public abstract class PrefetchingDatabase extends RoomDatabase {
+public abstract class NappaDB extends RoomDatabase {
 
-    private static PrefetchingDatabase instance = null;
-    PrefetchingDatabase(){}
+    private static NappaDB instance = null;
+    NappaDB(){}
 
-    public static PrefetchingDatabase getInstance(Context context) {
+    public static NappaDB getInstance(Context context) {
         if (instance == null)
-            synchronized (PrefetchingDatabase.class) {
+            synchronized (NappaDB.class) {
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        PrefetchingDatabase.class, "nappa_db")
+                        NappaDB.class, "nappa_db")
                         //TODO remove and provide migrations in production
                         .fallbackToDestructiveMigration()
                         .build();
@@ -51,7 +51,7 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
     }
 
     @Contract(pure = true)
-    public static PrefetchingDatabase getInstance() {
+    public static NappaDB getInstance() {
         return instance;
     }
 

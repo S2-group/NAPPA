@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.AggregateUrlDao;
-import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
 
 @Deprecated
 public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
@@ -32,7 +32,7 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                 List<ParameteredUrl> parameteredUrls = new LinkedList<>();
 
                 for (ActivityNode successor : successors.keySet()) {
-                    List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance()
+                    List<AggregateUrlDao.AggregateURL> list = NappaDB.getInstance()
                             .urlDao()
                             .getAggregateForIdActivity(PrefetchingLib.getActivityIdFromName(successor.activityName), 10);
                     for (AggregateUrlDao.AggregateURL aggregateURL : list) {

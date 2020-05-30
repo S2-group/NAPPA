@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
@@ -37,7 +38,6 @@ import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetching.strategy.PrefetchingStrategyImpl4;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.graph.Activity;
-import nl.vu.cs.s2group.nappa.db.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.db.RequestData;
 import nl.vu.cs.s2group.nappa.db.room.session.Session;
 import nl.vu.cs.s2group.nappa.db.data.UrlCandidate;
@@ -104,16 +104,16 @@ public class PrefetchingLib {
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
-            PrefetchingDatabase.getInstance(context);
+            NappaDB.getInstance(context);
 
             poolExecutor.schedule(() -> {
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
                 Session session = new Session(new Date().getTime());
-                PrefetchingDatabase.getInstance().sessionDao().insertSession(session);
-                PrefetchingLib.session = PrefetchingDatabase.getInstance().sessionDao().getSession(session.date);
+                NappaDB.getInstance().sessionDao().insertSession(session);
+                PrefetchingLib.session = NappaDB.getInstance().sessionDao().getSession(session.date);
 
                 // This fetches the activities stored in the DB and their ID into the activitymap
-                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
 
                 // Iterate through the activity table which contains the activity name and its id
                 for (String actName: activityMap.keySet()) {
@@ -128,12 +128,12 @@ public class PrefetchingLib {
                     if (byName.shouldSetSessionAggregateLiveData()) {
                         Log.d(LOG_TAG, "loading data for " + actName);
                         byName.setListSessionAggregateLiveData(
-                                PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
+                                NappaDB.getInstance().sessionDao().getCountForActivitySource(
                                         actId
                                 )
                         );
 
-                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId, PrefetchingStrategyImpl4.lastN));
+                        byName.setLastNListSessionAggregateLiveData(NappaDB.getInstance().sessionDao().getCountForActivitySource(actId, PrefetchingStrategyImpl4.lastN));
 
                     }
 
@@ -142,7 +142,7 @@ public class PrefetchingLib {
                     if (byName.shouldSetActivityExtraLiveData()) {
                         Log.d(LOG_TAG, "loading extras for " + actName);
                         byName.setListActivityExtraLiveData(
-                                PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
+                                NappaDB.getInstance().activityExtraDao().getActivityExtraLiveData(
                                         actId
                                 )
                         );
@@ -154,7 +154,7 @@ public class PrefetchingLib {
                         // Build
                         byName.setUrlCandidateDbLiveData(
                                 // Fetch the URL candidates stored in the database
-                                PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(
+                                NappaDB.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(
                                         actId
                                 )
                         );
@@ -162,7 +162,7 @@ public class PrefetchingLib {
                 }
 
 
-                listLiveData = PrefetchingDatabase.getInstance().activityDao().getListActivityLiveData();
+                listLiveData = NappaDB.getInstance().activityDao().getListActivityLiveData();
 
                 Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
 
@@ -204,8 +204,8 @@ public class PrefetchingLib {
         if (!activityMap.containsKey(activityName)) {
             Activity activityData = new Activity(activityName);
             poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().insert(activityData);
-                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                NappaDB.getInstance().activityDao().insert(activityData);
+                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -274,18 +274,18 @@ public class PrefetchingLib {
         if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
             Log.d(LOG_TAG, "loading data for " + currentActivityName);
             activityGraph.getCurrent().setListSessionAggregateLiveData(
-                    PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
+                    NappaDB.getInstance().sessionDao().getCountForActivitySource(
                             activityMap.get(currentActivityName)
                     )
             );
-            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PrefetchingStrategyImpl4.lastN));
+            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(NappaDB.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PrefetchingStrategyImpl4.lastN));
 
         }
 
         if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {
             Log.d(LOG_TAG, "loading extras for " + currentActivityName);
             activityGraph.getCurrent().setListActivityExtraLiveData(
-                    PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
+                    NappaDB.getInstance().activityExtraDao().getActivityExtraLiveData(
                             activityMap.get(currentActivityName)
                     )
             );
@@ -335,7 +335,7 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             SessionContent data = new SessionContent(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
             Log.d(LOG_TAG, activityMap.toString());
-            PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
+            NappaDB.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -348,12 +348,12 @@ public class PrefetchingLib {
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
             SessionContent data = new SessionContent(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-            PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
+            NappaDB.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
     public static LiveData<List<SessionContent>> getSessionDataListLiveData() {
-        return PrefetchingDatabase.getInstance().sessionDao().getSessionDataListLiveData();
+        return NappaDB.getInstance().sessionDao().getSessionDataListLiveData();
     }
 
 
@@ -408,7 +408,7 @@ public class PrefetchingLib {
                         ActivityExtra activityExtra =
                                 new ActivityExtra(session.id, idAct, key, allExtras.getString(key));
                         Log.d(LOG_TAG, "ADDING NEW ACTEXTRADATA");
-                        PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
+                        NappaDB.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
                     }
                 }, 0, TimeUnit.SECONDS);
 
@@ -448,7 +448,7 @@ public class PrefetchingLib {
             ActivityExtra activityExtra =
                     new ActivityExtra(session.id, idAct, key, value);
             Log.d(LOG_TAG, "ADDING NEW ACTEXTRADATA");
-            PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
+            NappaDB.getInstance().activityExtraDao().insertActivityExtra(activityExtra);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -480,10 +480,10 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "start adding");
             UrlCandidate urlCandidate = new UrlCandidate(activityMap.get(currentActivityName), 1);
             // Save the URL candidate as a
-            Long id = PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
+            Long id = NappaDB.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
             List<UrlCandidateParts> urlCandidateParts = ParameteredUrl.toUrlCandidateParts(url, id);
 
-            PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidateParts(urlCandidateParts);
+            NappaDB.getInstance().urlCandidateDao().insertUrlCandidateParts(urlCandidateParts);
             Log.d(LOG_TAG, "end adding");
         }, 0, TimeUnit.SECONDS);
     }
@@ -676,7 +676,7 @@ public class PrefetchingLib {
                 }
 
 
-                PrefetchingDatabase.getInstance().urlDao().insert(req);
+                NappaDB.getInstance().urlDao().insert(req);
 
                 // Instrument the response to include new cache control aspects
                 if (response.cacheControl().maxAgeSeconds() < 300) {
