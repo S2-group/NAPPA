@@ -35,29 +35,4 @@ public interface AggregateUrlDao {
     LiveData<List<AggregateURL>> getAggregateLiveData();
 
 
-
-    static class AggregateURL {
-
-        public String getUrl() {
-            return url;
-        }
-
-        String url;
-        Integer count;
-        Long sizeAvg;
-        String activityName;
-
-        public AggregateURL(String url, Integer count, Long sizeAvg, String activityName) {
-            this.url = url;
-            this.count = count;
-            this.sizeAvg = sizeAvg;
-            this.activityName = activityName;
-        }
-
-        @Override
-        public String toString() {
-            return url+"\ncount: "+count+"\nsizeAvg: "+sizeAvg+" bytes"+"\nActivity_name: "+activityName+"\n\n";
-        }
-    }
-
 }

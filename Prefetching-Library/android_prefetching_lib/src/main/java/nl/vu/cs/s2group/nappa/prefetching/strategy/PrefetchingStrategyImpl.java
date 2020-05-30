@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.db.NappaDB;
+import nl.vu.cs.s2group.nappa.db.room.http.AggregateURL;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.db.room.http.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
 
 @Deprecated
@@ -36,9 +36,9 @@ public class PrefetchingStrategyImpl implements PrefetchingStrategy {
             }
             if (best != null) {
                 Log.d(LOG_TAG, "Chosen successor: " + best.actName);
-                List<AggregateUrlDao.AggregateURL> list = NappaDB.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
+                List<AggregateURL> list = NappaDB.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
                 LinkedList<String> toBeReturned = new LinkedList<String>();
-                for (AggregateUrlDao.AggregateURL elem : list) {
+                for (AggregateURL elem : list) {
                     toBeReturned.add(elem.getUrl());
                 }
                 return toBeReturned;

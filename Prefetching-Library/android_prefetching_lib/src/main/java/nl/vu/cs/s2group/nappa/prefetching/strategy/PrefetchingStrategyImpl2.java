@@ -13,9 +13,9 @@ import java.util.Map;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.db.NappaDB;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
+import nl.vu.cs.s2group.nappa.db.room.http.AggregateURL;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
-import nl.vu.cs.s2group.nappa.db.room.http.AggregateUrlDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
@@ -32,15 +32,15 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                 List<ParameteredUrl> parameteredUrls = new LinkedList<>();
 
                 for (ActivityNode successor : successors.keySet()) {
-                    List<AggregateUrlDao.AggregateURL> list = NappaDB.getInstance()
+                    List<AggregateURL> list = NappaDB.getInstance()
                             .urlDao()
                             .getAggregateForIdActivity(PrefetchingLib.getActivityIdFromName(successor.activityName), 10);
-                    for (AggregateUrlDao.AggregateURL aggregateURL : list) {
-                        List<AggregateUrlDao.AggregateURL> newlist = new LinkedList<>(list);
+                    for (AggregateURL aggregateURL : list) {
+                        List<AggregateURL> newlist = new LinkedList<>(list);
 
                         newlist.remove(newlist.indexOf(aggregateURL));
 
-                        for (AggregateUrlDao.AggregateURL aggregateURL1 : newlist) {
+                        for (AggregateURL aggregateURL1 : newlist) {
                             LinkedList<DiffMatchPatch.Diff> diffs = dmp.diffMain(aggregateURL.getUrl(), aggregateURL1.getUrl());
                             dmp.diffCleanupEfficiency(diffs);
 
