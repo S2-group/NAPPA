@@ -24,6 +24,8 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * The threshold filters all URLs that have score below the threshold
  */
 public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
+
     private final float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
@@ -110,7 +112,7 @@ public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
                     getMostProbableNodes(node1, prob, probableNodes);
                 }
             }
-            Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
 
         return probableNodes;
@@ -133,7 +135,7 @@ public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
         }
 
         for (String candidate : candidates) {
-            Log.e("PREFSTRAT3", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

@@ -15,6 +15,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 @Deprecated
 public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
+    private final static String LOG_TAG = PrefetchingStrategyImpl8.class.getSimpleName();
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
@@ -51,7 +52,7 @@ public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT8","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
 
@@ -92,24 +93,14 @@ public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
             float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
-            //prob *= node1.pageRank;
 
-            //if (prob >= threshold) {
-                // If not yet added, add this current node to the probable nodes and calculate the
-                //     next probability using this nodes probability as an initial probability.
                 if (!probableNodes.contains(node1)) {
                     node1.prob=prob;
                     probableNodes.add(node1);
-                    // Compute the probable nodes using this successor as the current activity
-                    // NOTE TO SELF: The further this calculation recurses, the lower the probabilities become.
                     getMostProbableNodes(node1, prob, probableNodes);
                 }else if(prob>node1.prob){
                     node1.prob=prob;
                 }
-
-            //}
-            //Log.e("PREFSTRAT8", "Computed probability: " + node1.prob + " for " + node1.activityName+ " s - "+threshold
-                    //+" pr: " +node1.pageRank);
         }
         return probableNodes;
     }
@@ -117,7 +108,6 @@ public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
         node.parameteredUrlMap.keySet();
 
         List<String> candidates = new LinkedList<>();
-
 
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
 
@@ -132,7 +122,7 @@ public class PrefetchingStrategyImpl8 implements PrefetchingStrategy {
         
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT8", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;
