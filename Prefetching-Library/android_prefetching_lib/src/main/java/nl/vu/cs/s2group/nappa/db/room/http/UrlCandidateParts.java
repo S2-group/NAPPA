@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.db.room.url;
+package nl.vu.cs.s2group.nappa.db.room.http;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

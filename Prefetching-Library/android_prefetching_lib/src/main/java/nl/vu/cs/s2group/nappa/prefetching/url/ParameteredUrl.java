@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
-import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidate;
-import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.db.room.http.UrlCandidate;
+import nl.vu.cs.s2group.nappa.db.room.http.UrlCandidateParts;
 
 /**
  * Represents an individual URL composed of both static components and parameter components.  The

@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.db.room.graph.ActivityExtra;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionContent;
+import nl.vu.cs.s2group.nappa.db.room.http.UrlCandidateToUrlParameter;
 import nl.vu.cs.s2group.nappa.prefetching.url.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.db.room.session.SessionDao;
-import nl.vu.cs.s2group.nappa.db.room.url.UrlCandidateDao;
 
 public class ActivityNode {
     private final static String LOG_TAG = ActivityNode.class.getSimpleName();
@@ -30,7 +30,7 @@ public class ActivityNode {
     private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
-    public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
+    public LiveData<List<UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
     private LiveData<List<ActivityExtra>> listActivityExtraLiveData;
     public float pageRank,authority,hub,authorityS,hubS,prob;
     /**
@@ -82,10 +82,10 @@ public class ActivityNode {
     /**
      * Statically instantiates a List of UrlCandidateToUrlParameters Object, which compose a full URL
      * along with its parameters.  An observer updates the activity's list of parametered URLS whenever
-     * there is an update to the list of {@linkplain UrlCandidateDao.UrlCandidateToUrlParameter}
+     * there is an update to the list of {@linkplain UrlCandidateToUrlParameter}
      * @param urlCandidateDbLiveData
      */
-    public void setUrlCandidateDbLiveData(LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> urlCandidateDbLiveData) {
+    public void setUrlCandidateDbLiveData(LiveData<List<UrlCandidateToUrlParameter>> urlCandidateDbLiveData) {
         this.urlCandidateDbLiveData = urlCandidateDbLiveData;
 
         // This observable updates an activity's list of parametered URLS whenever there is a change in
@@ -93,7 +93,7 @@ public class ActivityNode {
         this.urlCandidateDbLiveData.observeForever(parameterList -> {
            // From the UPDATED set of candidate candidates, build a list containing the parameters for all URLS
             if (parameterList!=null)
-                this.parameteredUrlList = UrlCandidateDao.UrlCandidateToUrlParameter.getParameteredUrlList(parameterList);
+                this.parameteredUrlList = UrlCandidateToUrlParameter.getParameteredUrlList(parameterList);
         });
     }
 

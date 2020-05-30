@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.db.room.url;
+package nl.vu.cs.s2group.nappa.db.room.http;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,8 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
-
-import nl.vu.cs.s2group.nappa.db.RequestData;
 
 @Dao
 public interface AggregateUrlDao {
