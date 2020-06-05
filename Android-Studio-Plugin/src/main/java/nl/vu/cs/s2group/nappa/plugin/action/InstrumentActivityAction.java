@@ -285,32 +285,9 @@ public class InstrumentActivityAction extends AnAction {
                     if (psiMethods.length > 0) {
 
                         try {
-                            //PsiCommentImpl comment = new PsiCommentImpl(
-                            //        JavaTokenType.C_STYLE_COMMENT, "//CIAO, TI HO INSERITO?");
-
-                            //        psiMethods[0].getBody().add();
-
-
                             // Determine if On Resume is writable
                             cat += psiMethods[0].getBody().isWritable()? "writable" : "not writable";
                             cat += "\n";
-                            //PsiElement last = psiMethods[0].getBody().getLastBodyElement();
-
-                            //comment.getParent().replace(psiMethods[0].getBody());
-
-                            //psiMethods[0].getBody().addBefore(
-                            //        comment, last
-                            //);
-
-                            //cat += psiMethods[0].getBody().isEmpty()? "\nonResume empyy\n" : "\nonResume not empty";
-
-                            //if (!psiMethods[0].getBody().isEmpty()) {
-                            //psiMethods[0].getBody().add(
-                            //PsiElementFactory.SERVICE.getInstance(project).createExpressionFromText("//Ti inserisco", null)
-                            //        PsiElementFactory.SERVICE.getInstance(project).createCommentFromText("//ciao", null)
-                            //);
-                            //}
-
 
                             // THis is the statement added to instrument intent transitions
                             final PsiElement psiElementToAdd = PsiElementFactory.SERVICE.getInstance(project).createStatementFromText(
@@ -332,15 +309,9 @@ public class InstrumentActivityAction extends AnAction {
                                     cat += "\n"+statement.getText()+"\n\n";
                                 }
                             }
-                            //if (psiMethods[0].getBody().getStatements())
 
                             if (addStatement) {
                                 WriteCommandAction.runWriteCommandAction(project, () -> {
-                                /*psiClass.add(
-                                        PsiElementFactory.SERVICE.getInstance(project).createMethodFromText(
-                                                "public void onNull(){}", psiClass
-                                        )
-                                );*/
                                     psiMethods[0].getBody().add(
                                             //PsiElementFactory.SERVICE.getInstance(project).createExpressionFromText("System.out.println(\"ciao amico\");", psiClass)
                                             //PsiElementFactory.SERVICE.getInstance(project).createStatementFromText("System.out.println(\"ciao amico\");", psiClass)
@@ -350,13 +321,6 @@ public class InstrumentActivityAction extends AnAction {
                             } else {
                                 cat += "\nNOT ADDED in "+javaActivityName+"\n\n";
                             }
-                            /*psiClass.add(
-                                    PsiElementFactory.SERVICE.getInstance(project).createMethodFromText(
-                                            "public void onNull(){}", psiClass
-                                    )
-                            );*/
-
-
 
                         } catch (Exception e3) {
                             cat += e3.toString()+"\n";
@@ -402,7 +366,6 @@ public class InstrumentActivityAction extends AnAction {
             cat += "  "+file.getPath()+" ";
             cat += file.isDirectory()? " isDir" : " notisdir";
             FileType fileType = file.getFileType();
-            //String extension = fileType.getDefaultExtension();
             cat += " with extension"+file.getExtension();
         } catch (Exception exc) {
             cat += " and no extensionzzzzz";
