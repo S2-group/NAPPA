@@ -510,7 +510,7 @@ public class PrefetchingLib {
                 prefetchUrls(toBePrefetched);
             }
             /*for (String url : toBePrefetched) {
-                Log.d(LOG_TAG, "URL: "+url);
+                Log.e("PREFSTRAT2", "URL: "+url);
                 Request request = new Request.Builder().get().url(url).build();
                 try {
                     okHttpClient.newCall(request).execute();

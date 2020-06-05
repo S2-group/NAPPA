@@ -214,9 +214,9 @@ public class ActivityNode {
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
                 /*if ( successors.get(activityNode) > 0 ) {
                     PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
-                    Log.d("ACTNODE", "CREATING, NOT IN DB");
+                    Log.w("ACTNODE", "CREATING, NOT IN DB");
                 } else {
-                    Log.d("ACTNODE", "UPDATING AFTER LOADING FROM DB");
+                    Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
                     PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
                 }*/
                 Log.d(LOG_TAG, "ACTNODE " + "UPDATING AFTER LOADING FROM DB");
