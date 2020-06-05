@@ -67,14 +67,9 @@ public class CapitalListActivity extends AppCompatActivity {
         CapitalCardViewAdapterObservable adapter2 = new CapitalCardViewAdapterObservable();
         Observable<Capital> capitalObservable = Observable.fromIterable(capitalList);
 
-        //recyclerView.setAdapter(adapter);
         recyclerView.setAdapter(adapter2);
 
-        //adapter.capitalList = capitalList;
-        //adapter.notifyDataSetChanged();
-
         adapter2.capitalList = capitalObservable;
-        //adapter.notifyDataSetChanged();
 
         TextInputEditText textInputEditText = findViewById(R.id.text_capital_filter);
         textInputEditText.addTextChangedListener(new TextWatcher() {
@@ -85,7 +80,6 @@ public class CapitalListActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //capitalObservable.filter(capital -> capital.city.toLowerCase().matches(charSequence.toString()+".*"));
             }
 
             @Override

@@ -40,11 +40,7 @@ public class StatsActivity extends AppCompatActivity {
 
         viewModel.loadAggregate();
 
-        //viewModel?.liveAggregate?.observeForever { textView.text = it?.joinToString("\n") }
-
         viewModel.getLiveData().observe(this, datas -> {
-            //AggregateUrlDao.AggregateURL aggregateURL = datas.get(0);
-            //textView.setText(aggregateURL.toString());
             for (AggregateUrlDao.AggregateURL data : datas) {
                 textView.append(data.toString()+"\n\n\n");
             }
