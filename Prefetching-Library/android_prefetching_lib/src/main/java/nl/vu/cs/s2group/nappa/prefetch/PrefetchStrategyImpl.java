@@ -12,6 +12,7 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+@Deprecated
 public class PrefetchStrategyImpl implements PrefetchStrategy {
     @NonNull
     @Override

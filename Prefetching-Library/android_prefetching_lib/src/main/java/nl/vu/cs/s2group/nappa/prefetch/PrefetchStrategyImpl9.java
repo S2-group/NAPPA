@@ -34,6 +34,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+@Deprecated
 public class PrefetchStrategyImpl9 implements PrefetchStrategy {
 
     private float threshold;

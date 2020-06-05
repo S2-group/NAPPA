@@ -17,6 +17,7 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
+@Deprecated
 public class PrefetchStrategyImpl2 implements PrefetchStrategy {
 
     private DiffMatchPatch dmp = new DiffMatchPatch();

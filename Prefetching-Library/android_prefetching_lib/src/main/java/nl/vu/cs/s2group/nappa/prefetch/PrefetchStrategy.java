@@ -10,14 +10,22 @@ import java.util.List;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
 public interface PrefetchStrategy {
+    @Deprecated
     int STRATEGY_1 = 1;
+    @Deprecated
     int STRATEGY_2 = 2;
     int STRATEGY_GREEDY = 3;
+    @Deprecated
     int STRATEGY_4 = 4;
+    @Deprecated
     int STRATEGY_5 = 5;
+    @Deprecated
     int STRATEGY_6 = 6;
+    @Deprecated
     int STRATEGY_7 = 7;
+    @Deprecated
     int STRATEGY_8 = 8;
+    @Deprecated
     int STRATEGY_9 = 9;
 
     /**
