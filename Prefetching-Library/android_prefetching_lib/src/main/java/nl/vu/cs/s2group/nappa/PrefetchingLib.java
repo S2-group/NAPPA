@@ -33,11 +33,6 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl5;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl6;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl7;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl8;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl9;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -47,8 +42,6 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl3;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
@@ -71,7 +64,6 @@ public class PrefetchingLib {
     private static LiveData<List<ActivityData>> listLiveData;
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
-    private static PrefetchStrategy strategyHistory = new PrefetchStrategyImpl();
     private static PrefetchStrategy strategyIntent;
     //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
@@ -93,31 +85,7 @@ public class PrefetchingLib {
 
     private PrefetchingLib(int prefetchStrategyNum) {
         this.prefetchStrategyNum = prefetchStrategyNum;
-        switch(prefetchStrategyNum){
-            case 3:
-                strategyIntent = new PrefetchStrategyImpl3(0.6f);
-                break;
-            case 4:
-                strategyIntent = new PrefetchStrategyImpl4(0.6f);
-                break;
-            case 5:
-                strategyIntent = new PrefetchStrategyImpl5(0.6f);
-                break;
-            case 6:
-                strategyIntent = new PrefetchStrategyImpl6(0.6f);
-                break;
-            case 7:
-                strategyIntent = new PrefetchStrategyImpl7(0.6f);
-                break;
-            case 8:
-                strategyIntent = new PrefetchStrategyImpl8(0.6f);
-                break;
-            case 9:
-                strategyIntent = new PrefetchStrategyImpl9(0.6f);
-                break;
-            default:
-                strategyIntent = new PrefetchStrategyImpl3(0.6f);
-        }
+        strategyIntent = PrefetchStrategy.getStrategy(prefetchStrategyNum);
     }
 
 

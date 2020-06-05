@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotation
 
     implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
 
