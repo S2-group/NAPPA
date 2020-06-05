@@ -1,14 +1,15 @@
 package nl.vu.cs.s2group.nappa;
 
 import android.app.Activity;
-import androidx.lifecycle.LiveData;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl4;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -42,7 +44,6 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl4;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
