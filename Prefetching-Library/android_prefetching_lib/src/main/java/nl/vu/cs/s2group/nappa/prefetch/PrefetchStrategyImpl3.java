@@ -14,6 +14,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 public class PrefetchStrategyImpl3 implements PrefetchStrategy {
+    private final static String LOG_TAG = PrefetchStrategyImpl3.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -91,7 +92,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
                 }
 
             }
-            Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
 
 
@@ -103,7 +104,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
         for (ActivityNode succ : successorCountMap.keySet()) {
             float prob = initialProbability * (successorCountMap.get(succ)/total);
-            Log.e("PREFSTRAT3", "Computed probability: " + prob);
+            Log.d(LOG_TAG, "Computed probability: " + prob);
             if (prob >= threshold) {
                 if (!probableNodes.contains(succ)) {
                     probableNodes.add(succ);
@@ -143,7 +144,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
         }
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT3", candidate);
+            Log.d(LOG_TAG, candidate);
         }
 
         return candidates;
@@ -171,8 +172,8 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
             for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
 
-                //for(String k: extrasMap.keySet())Log.e("PREFSTRAT5In",k);
-                //Log.e("PREFSTRAT5In",extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())+"");
+                //for(String k: extrasMap.keySet())Log.d("PREFSTRAT5In",k);
+                //Log.d("PREFSTRAT5In",extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())+"");
                 //BUG -- 1 crash if extrasMap is null
                 if ((null != extrasMap) && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
                     candidates.add(
@@ -183,7 +184,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
         //}
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT3", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

@@ -14,6 +14,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 public class PrefetchStrategyImpl6 implements PrefetchStrategy{
+    private final static String LOG_TAG = PrefetchStrategyImpl6.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;
 
@@ -51,7 +52,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT6","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
 
         }
 
@@ -59,7 +60,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
         for (int i=0; i<probableNodes.size(); i++) {
             if(probableNodes.get(i).authority>n) {
                 listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.e("PREFSTRAT6", "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+                Log.d(LOG_TAG, "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
             }
         }*/
 
@@ -117,7 +118,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         }
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT6", candidate + " url for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " url for: " + toBeChecked.activityName);
         }
         return candidates;
     }

@@ -62,6 +62,7 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
+    private final static String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
     private static PrefetchingLib instance;
     private static boolean libGet = false;
@@ -149,7 +150,7 @@ public class PrefetchingLib {
             }
 
             final Long start = new Date().getTime();
-            Log.e("PREFSTRATEGYNUM",psn);
+            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + psn);
             instance = new PrefetchingLib(Integer.parseInt(psn));
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
@@ -167,7 +168,7 @@ public class PrefetchingLib {
 
                 // Iterate through the activity table which contains the activity name and its id
                 for (String actName: activityMap.keySet()) {
-                    Log.i("PrefetchingLib", "Init nodes");
+                    Log.d(LOG_TAG, "Init nodes");
                     activityGraph.initNodes(actName);
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
@@ -176,7 +177,7 @@ public class PrefetchingLib {
                     // Instantiate the static aggregated data for the count of Source --> Destination
                     // edge visits.  Set up the observers to ensure consistency with the database
                     if (byName.shouldSetSessionAggregateLiveData()) {
-                        Log.i("PREF_LIB", "loading data for " + actName);
+                        Log.d(LOG_TAG, "loading data for " + actName);
                         byName.setListSessionAggregateLiveData(
                                 PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
                                         actId
@@ -190,7 +191,7 @@ public class PrefetchingLib {
                     // Instantiate all extras data for this activity AND set up all the observers to
                     // ensure consistency with the database
                     if (byName.shouldSetActivityExtraLiveData()) {
-                        Log.i("PREF_LIB", "loading extras for " + actName);
+                        Log.d(LOG_TAG, "loading extras for " + actName);
                         byName.setListActivityExtraLiveData(
                                 PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
                                         actId
@@ -200,7 +201,7 @@ public class PrefetchingLib {
 
                     // Instantiate the static UrlCandidate
                     if (byName.shouldSetUrlCandidateDbLiveDataLiveData()) {
-                        Log.i("PREF_LIB", "loading urlcandidate for " + actName);
+                        Log.d(LOG_TAG, "loading urlcandidate for " + actName);
                         // Build
                         byName.setUrlCandidateDbLiveData(
                                 // Fetch the URL candidates stored in the database
@@ -217,18 +218,18 @@ public class PrefetchingLib {
                 listLiveData.observeForever(new Observer<List<ActivityData>>() {
                     @Override
                     public void onChanged(@Nullable List<ActivityData> activityData) {
-                        Log.i("PREFETCHINGLIB", "Added/Removed/Updated a new Activity");
+                        Log.d(LOG_TAG, "Added/Removed/Updated a new Activity");
                         synchronized (activityMap) {
                             updateActivityMap(activityData);
                         }
                     }
                 });*/
 
-                Log.w("PrefetchingLib", "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
+                Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
 
             }, 0, TimeUnit.SECONDS);
 
-            Log.w("PrefetchingLib", "Startup-time: " + (new Date().getTime() - start) + " ms");
+            Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
     }
@@ -246,7 +247,7 @@ public class PrefetchingLib {
         for (ActivityData activityData : dataList) {
             activityMap.remove(activityData.activityName);
             activityMap.put(activityData.activityName, activityData.id);
-            Log.i("pref-lib::updActMap", activityData.activityName + ": " + activityData.id);
+            Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
         }
     }
 
@@ -288,7 +289,7 @@ public class PrefetchingLib {
                     .cache(new Cache(cacheDir, (10 * 10 * 1024)))
                     .build();
 
-            Log.w("TAG", "okHttpClient initialized");
+            Log.d(LOG_TAG, "TAG " + "okHttpClient initialized");
         }
         return PrefetchingLib.okHttpClient;
     }
@@ -331,7 +332,7 @@ public class PrefetchingLib {
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
         if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
-            Log.i("PREF_LIB", "loading data for " + currentActivityName);
+            Log.d(LOG_TAG, "loading data for " + currentActivityName);
             activityGraph.getCurrent().setListSessionAggregateLiveData(
                     PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
                             activityMap.get(currentActivityName)
@@ -342,7 +343,7 @@ public class PrefetchingLib {
         }
 
         if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {
-            Log.i("PREF_LIB", "loading extras for " + currentActivityName);
+            Log.d(LOG_TAG, "loading extras for " + currentActivityName);
             activityGraph.getCurrent().setListActivityExtraLiveData(
                     PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
                             activityMap.get(currentActivityName)
@@ -352,11 +353,11 @@ public class PrefetchingLib {
 
         //TODO prefetching spot here
 
-        Log.w("SHOULD_PREFETCH", ""+shouldPrefetch);
+        Log.d(LOG_TAG, "SHOULD_PREFETCH " + ""+shouldPrefetch);
         if (shouldPrefetch) {
             for (ActivityNode node : activityGraph.getByName(currentActivityName).successors.keySet()) {
                 try {
-                    Log.i("SUCCESSORS", node.activityName);
+                    Log.d(LOG_TAG, "SUCCESSORS " +  node.activityName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -366,16 +367,16 @@ public class PrefetchingLib {
                 //List<String> topNUrls = strategyHistory.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 1);
                 List<String> topNUrls = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                 for (String url : topNUrls) {
-                    Log.e("TO_BE_PREF", url);
+                    Log.d(LOG_TAG, "TO_BE_PREF " +  url);
                 }
                 if (prefetchEnabled) {
                     prefetchUrls(topNUrls);
                 }
             }, 0, TimeUnit.SECONDS);
         }
-        Log.e("STATS","Number of requests not prefetched: "+requestNP);
-        Log.e("STATS","Number of requests prefetched: "+requestP);
-        Log.e("STATS","Time saved until now: "+timeSaved);
+        Log.d(LOG_TAG, "STATS " + "Number of requests not prefetched: "+requestNP);
+        Log.d(LOG_TAG, "STATS " + "Number of requests prefetched: "+requestP);
+        Log.d(LOG_TAG, "STATS " + "Time saved until now: "+timeSaved);
     }
 
     /*private static List<ActivityNode> getAllParents(ActivityNode node, List<ActivityNode> parents) {
@@ -401,7 +402,7 @@ public class PrefetchingLib {
     public static void addSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
             SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-            Log.i("PREFLIB", activityMap.toString());
+            Log.d(LOG_TAG, activityMap.toString());
             PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
@@ -457,7 +458,7 @@ public class PrefetchingLib {
                 poolExecutor.schedule(() -> {
                     List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                     for (String url : toBePrefetched) {
-                        Log.e("PREFSTRAT2", "URL: " + url);
+                        Log.d(LOG_TAG, "PREFSTRAT2 " + "URL: " + url);
                     }
                     // Trigger Prefetching
                     if (prefetchEnabled) {
@@ -473,7 +474,7 @@ public class PrefetchingLib {
                         // Create an Database Object and store it
                         ActivityExtraData activityExtraData =
                                 new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
-                        Log.i("PREFSTRAT2", "ADDING NEW ACTEXTRADATA");
+                        Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
                         PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
                     }
                 }, 0, TimeUnit.SECONDS);
@@ -503,13 +504,13 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
             for (String url : toBePrefetched) {
-                Log.e("PREFSTRAT2", "URL: " + url);
+                Log.d(LOG_TAG, "PREFSTRAT2 " + "URL: " + url);
             }
             if (prefetchEnabled) {
                 prefetchUrls(toBePrefetched);
             }
             /*for (String url : toBePrefetched) {
-                Log.e("PREFSTRAT2", "URL: "+url);
+                Log.d(LOG_TAG, "URL: "+url);
                 Request request = new Request.Builder().get().url(url).build();
                 try {
                     okHttpClient.newCall(request).execute();
@@ -522,7 +523,7 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             ActivityExtraData activityExtraData =
                     new ActivityExtraData(session.id, idAct, key, value);
-            Log.i("PREFSTRAT2", "ADDING NEW ACTEXTRADATA");
+            Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
             PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
         }, 0, TimeUnit.SECONDS);
     }
@@ -552,14 +553,14 @@ public class PrefetchingLib {
     private static void serializeAndSaveParameteredUrl(ParameteredUrl url) {
 
         poolExecutor.schedule(() -> {
-            Log.i("serializeAndSavePar", "start adding");
+            Log.d(LOG_TAG, "serializeAndSavePar " + "start adding");
             UrlCandidate urlCandidate = new UrlCandidate(activityMap.get(currentActivityName), 1);
             // Save the URL candidate as a
             Long id = PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
             List<UrlCandidateParts> urlCandidateParts = ParameteredUrl.toUrlCandidateParts(url, id);
 
             PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidateParts(urlCandidateParts);
-            Log.i("serializeAndSavePar", "end adding");
+            Log.d(LOG_TAG, "serializeAndSavePar " + "end adding");
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -580,19 +581,19 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             ActivityNode node = activityGraph.getByName(currentActivityName);
             List<ActivityNode> parents = ActivityNode.getAllParents(node, new LinkedList<>());
-            Log.i("PARENTS", "\nOf: " + node.activityName + " -> ");
+            Log.d(LOG_TAG, "PARENTS " + "\nOf: " + node.activityName + " -> ");
             for (ActivityNode parent : parents) {
-                Log.i("PARENTS", parent.activityName);
+                Log.d(LOG_TAG, "PARENTS " +  parent.activityName);
                 // For a given parent of the current Activity, fetch all extras (key-value pairs) for this activity
                 Map<String, String> extrasMap_ = extrasMap.get(activityMap.get(parent.activityName), new HashMap<>());
                 // Iterate through all extras for a given parent
                 if (extrasMap_.size() > 0) {
                     for (String key :extrasMap_.keySet()) {
                         String value = extrasMap_.get(key);
-                        Log.i("PARENTS", "has extra: (" + key + ", " + value + ")");
+                        Log.d(LOG_TAG, "PARENTS " + "has extra: (" + key + ", " + value + ")");
                         // Verify if the Original URL contains  an extra from the extras map
                         if (url.contains(value)) {
-                            Log.i("PARENTS", "value of key '" + key + "' is contained into " + url);
+                            Log.d(LOG_TAG, "PARENTS " + "value of key '" + key + "' is contained into " + url);
                             // Create a diff-map which checks what values from the URL are not part of the extras
                             // and those parts which are of INSERT type represent static URL values, while the parts
                             // with EQUAL type represent a PARAMETER
@@ -603,19 +604,19 @@ public class PrefetchingLib {
                                 // From the list of parameters, identify which corresponds to an extra's value
                                 // and store the extra's key as the urlPiece
                                 if (parameter.type == ParameteredUrl.TYPES.STATIC) {
-                                    Log.i("PARENTS", parameter.urlPiece);
+                                    Log.d(LOG_TAG, "PARENTS " +  parameter.urlPiece);
                                 } else { // url Piece must represent the key not the value
                                     if (parameter.urlPiece.compareTo(value) == 0) {
                                         parameter.urlPiece = key;
                                     }
-                                    Log.i("PARENTS", "PARAM: " + parameter.urlPiece);
+                                    Log.d(LOG_TAG, "PARENTS " + "PARAM: " + parameter.urlPiece);
                                 }
                             }
                             // Checks if a given parameteredUrl is contained in the parameteredUrlList.
                             // Semantically, two extras sent from different parent nodes which also contain the
                             // same value will also
                             if (!node.parameteredUrlList.contains(parameteredUrl)) {
-                                Log.i("PARENTS ", " NODE " + node.activityName + " DOES NOT CONTAIN THIS URL");
+                                Log.d(LOG_TAG, "PARENTS  " + " NODE " + node.activityName + " DOES NOT CONTAIN THIS URL");
 
                                 //TODO TO-BE-REMOVED
                                 node.parameteredUrlMap.put(key, parameteredUrl);
@@ -624,7 +625,7 @@ public class PrefetchingLib {
                                 serializeAndSaveParameteredUrl(parameteredUrl);
 
                             } else {
-                                Log.i("PARENTS ", " NODE " + node.activityName + " ALREADY CONTAINS THIS URL");
+                                Log.d(LOG_TAG, "PARENTS  " + " NODE " + node.activityName + " ALREADY CONTAINS THIS URL");
                             }
                         }
 
@@ -644,7 +645,7 @@ public class PrefetchingLib {
             boolean triggeredByPrefetch = false;
             boolean isGet = request.method().toLowerCase().compareTo("get") == 0;
 
-            Log.w("NETWORK-PROVIDER", request.url().toString());
+            Log.d(LOG_TAG, "NETWORK-PROVIDER " + request.url().toString());
 
             // Focus on Get requests only and not posts to avoid side effects
             if (isGet) {
@@ -654,15 +655,15 @@ public class PrefetchingLib {
 
             if ( request.header("X-PREF") != null ) {
                 triggeredByPrefetch = true;
-                Log.i("REQ_PREFETCHING", request.url().toString());
-                Log.w("REQ_TIMINGS", prefetchRequest.get(request.url().toString()) + "\t"+new Date().getTime());
+                Log.d(LOG_TAG, "REQ_PREFETCHING " +  request.url().toString());
+                Log.d(LOG_TAG, "REQ_TIMINGS " +  prefetchRequest.get(request.url().toString()) + "\t"+new Date().getTime());
                 // Ensure a that the request is both prefetched and Fresh (not stale beyond 30000 Milliseconds)
                 if (prefetchRequest.contains(request.url().toString()) &&
                         (new Date().getTime() - prefetchRequest.get(request.url().toString())) < 30000L ) {
-                    Log.i("REQ_PREFETCHING", "discarded");
+                    Log.d(LOG_TAG, "REQ_PREFETCHING " + "discarded");
                     return null;
                 } else {
-                    Log.i("REQ_PREFETCHING", "done");
+                    Log.d(LOG_TAG, "REQ_PREFETCHING " + "done");
                     prefetchRequest.put(request.url().toString(), new Date().getTime());
                     request = request.newBuilder().removeHeader("X-PREF").build();
                 }
@@ -678,24 +679,24 @@ public class PrefetchingLib {
                     .build();
 
 
-            Log.d("HEADER REQUEST", "--------------");
+            Log.d(LOG_TAG, "HEADER REQUEST");
             Headers headers = request.headers();
             for (String name : headers.names()) {
-                Log.d(name, headers.get(name));
+                Log.d(LOG_TAG, name + " " + headers.get(name));
             }
 
             SimpleResponse cachedResp = responseLruCache.get(request.url().toString());
             // If the request is both a Get request and is cached
             if (isGet && cachedResp != null) {
-                Log.i("PREFLIB", "GET REQUEST " + request.url().toString());
+                Log.d(LOG_TAG, "PREFLIB " + "GET REQUEST " + request.url().toString());
                 //SET TIMEOUT FOR STALE RESOURCES = 300 SECONDS
                 if ((new Date().getTime() - cachedResp.receivedDate.getTime()) < 300*1000 ) {
-                    Log.i("PREFLIB", "found " + request.url().toString() + ", sending it back");
+                    Log.d(LOG_TAG, "PREFLIB " + "found " + request.url().toString() + ", sending it back");
                     if(!libGet) {
                         timeSaved += cachedResp.timeToHandle;
                         requestP++;
                     }
-                    Log.i("CONTENT", cachedResp.body);
+                    Log.d(LOG_TAG, "CONTENT " +  cachedResp.body);
 
                     // Return the Cached Response
                     return new Response.Builder().body(
@@ -706,10 +707,10 @@ public class PrefetchingLib {
                             .message("Ok")
                             .build();
                 } else {
-                    Log.i("PREFLIB", "found " + request.url().toString() + ", found but stale");
+                    Log.d(LOG_TAG, "PREFLIB " + "found " + request.url().toString() + ", found but stale");
                 }
             } else {
-                Log.i("PREFLIB", "NOT A GET REQUEST OR NOT IN CACHE" + request.method());
+                Log.d(LOG_TAG, "PREFLIB " + "NOT A GET REQUEST OR NOT IN CACHE" + request.method());
             }
 
             try {
@@ -773,7 +774,7 @@ public class PrefetchingLib {
 
                 // Instrument the response to include new cache control aspects
                 if (response.cacheControl().maxAgeSeconds() < 300) {
-                    Log.w("CACHE_CONTROL", "SETTING NEW MAX-AGE");
+                    Log.d(LOG_TAG, "CACHE_CONTROL " + "SETTING NEW MAX-AGE");
                     response = response.newBuilder()
                             .removeHeader("cache-control")
                             .removeHeader("Cache-control")
@@ -787,25 +788,25 @@ public class PrefetchingLib {
                 }
 
 
-                Log.d("HEADER RESPONSE", "--------------");
+                Log.d(LOG_TAG, "HEADER RESPONSE");
                 headers = response.headers();
                 for (String name : headers.names()) {
-                    Log.d(name, headers.get(name));
+                    Log.d(LOG_TAG, name + " " + headers.get(name));
                 }
 
-                Log.w("CACHEABLE", ""+ CacheStrategy.isCacheable(response, request));
+                Log.d(LOG_TAG, "CACHEABLE " + ""+ CacheStrategy.isCacheable(response, request));
 
-                Log.i("REQ", request.url().toString());
+                Log.d(LOG_TAG, "REQ " + request.url().toString());
                 if (response.networkResponse() != null) {
-                    Log.i("REQ_SERV_BY", "net");
+                    Log.d(LOG_TAG, "REQ_SERV_BY " + "net");
                 } else if (response.cacheResponse() != null) {
-                    Log.i("REQ_SERV_BY", "cache");
+                    Log.d(LOG_TAG, "REQ_SERV_BY " + "cache");
                 }
 
                 // If the response is successful and if the request is a get request, add the
                 // response to the cache
                 if (response.isSuccessful() && isGet) {
-                    Log.i("PREFLIB", "Adding response to lrucache");
+                    Log.d(LOG_TAG, "PREFLIB " + "Adding response to lrucache");
                     Float timeToHandle = (response.receivedResponseAtMillis()-response.sentRequestAtMillis())/1000f;
                     responseLruCache.put(request.url().toString(), new SimpleResponse(response.body().contentType().toString(), response.body().string(),timeToHandle));
                     cachedResp = responseLruCache.get(request.url().toString());
