@@ -26,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
+    private final static String LOG_TAG = WeatherActivity.class.getSimpleName();
 
     private String city;
     private Gson gson;
@@ -80,7 +81,7 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Long end = new Date().getTime();
-                Log.d("PERF_REQUEST", (end-start)+" ms");
+                Log.d(LOG_TAG, "PERF_REQUEST " + (end-start)+" ms");
                 Weather weather = gson.fromJson(response.body().charStream(), Weather.class);
                 handler.post(() -> {
                     try {
