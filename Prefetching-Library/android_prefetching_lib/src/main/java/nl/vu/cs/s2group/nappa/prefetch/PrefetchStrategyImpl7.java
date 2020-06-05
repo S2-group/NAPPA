@@ -31,20 +31,15 @@ public class PrefetchStrategyImpl7 implements PrefetchStrategy {
         }
 
         List<ActivityNode> probableNodes = getMostProbableNodes(node, new LinkedList<>());
-        //for (ActivityNode node1 : probableNodes) Log.d("PREFSTRAT5xxxxxxxx",node1.activityName+" - "+node1.pageRank);
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                //Log.d("PREFSTRAT5NODE",node1.activityName+" --> "+node2.activityName);
                 if(node1.authorityS<node2.authorityS){
-                    //Log.d("PREFSTRAT5NODE","SCAMBIO");
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
                     node1=node2;
-                    //for (ActivityNode noder : probableNodes) Log.d("PREFSTRAT5vvvvv",noder.activityName+" - "+noder.pageRank);
                 }else if(node1.authorityS==node2.authorityS&&node1.hubS<node2.hubS){
-                        //Log.d("PREFSTRAT5NODE","SCAMBIO");
                         ActivityNode temp=node1;
                         probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                         probableNodes.set(probableNodes.lastIndexOf(node2),temp);
@@ -61,18 +56,6 @@ public class PrefetchStrategyImpl7 implements PrefetchStrategy {
 
         }
 
-        /*float n = 1/(float)reversedHashMap.keySet().size();
-        for (int i=0; i<probableNodes.size(); i++) {
-            if(probableNodes.get(i).authorityS>n) {
-                listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.e("PREFSTRAT7", "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
-                Log.e("PREFSTRAT7", probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
-            }else if(probableNodes.get(i).authorityS==n&&probableNodes.get(i).hubS>n){
-                listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.e("PREFSTRAT7", "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
-                Log.e("PREFSTRAT7", probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
-            }
-        }*/
         return listUrlToPrefetch;
     }
 

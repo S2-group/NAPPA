@@ -213,16 +213,6 @@ public class PrefetchingLib {
 
 
                 listLiveData = PrefetchingDatabase.getInstance().activityDao().getListActivityLiveData();
-                /*
-                listLiveData.observeForever(new Observer<List<ActivityData>>() {
-                    @Override
-                    public void onChanged(@Nullable List<ActivityData> activityData) {
-                        Log.i("PREFETCHINGLIB", "Added/Removed/Updated a new Activity");
-                        synchronized (activityMap) {
-                            updateActivityMap(activityData);
-                        }
-                    }
-                });*/
 
                 Log.w("PrefetchingLib", "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
 
@@ -378,14 +368,6 @@ public class PrefetchingLib {
         Log.e("STATS","Time saved until now: "+timeSaved);
     }
 
-    /*private static List<ActivityNode> getAllParents(ActivityNode node, List<ActivityNode> parents) {
-        for (ActivityNode parent : node.ancestors.keySet()) {
-            parents.add(parent);
-            getAllParents(parent, parents);
-        }
-        return parents;
-    }*/
-
     public static ActivityGraph getActivityGraph() {
         return activityGraph;
     }
@@ -484,8 +466,6 @@ public class PrefetchingLib {
 
     }
 
-
-
     /**
      *
      * @param key The key provided to the original putExtra method call.
@@ -508,16 +488,6 @@ public class PrefetchingLib {
             if (prefetchEnabled) {
                 prefetchUrls(toBePrefetched);
             }
-            /*for (String url : toBePrefetched) {
-                Log.e("PREFSTRAT2", "URL: "+url);
-                Request request = new Request.Builder().get().url(url).build();
-                try {
-                    okHttpClient.newCall(request).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }*/
         }, 0, TimeUnit.SECONDS);
         poolExecutor.schedule(() -> {
             ActivityExtraData activityExtraData =
@@ -749,27 +719,7 @@ public class PrefetchingLib {
                             Calendar.getInstance().getTimeInMillis());
                 }
 
-
                 PrefetchingDatabase.getInstance().urlDao().insert(req);
-
-
-                /*SimpleDateFormat format = new SimpleDateFormat(
-                        "EEE, dd MMM yyyy HH:mm:ss"
-                );
-                format.setTimeZone(TimeZone.getTimeZone("Europe/London"));*/
-
-                /*
-                response = response.newBuilder()
-                        .removeHeader("cache-control")
-                        .removeHeader("Cache-control")
-                        .removeHeader("Cache-Control")
-                        .removeHeader("Pragma")
-                        .removeHeader("Expires")
-                        .removeHeader("X-Cache-Expires")
-                        .addHeader("Cache-Control", "public, immutable, max-age=300, only-if-cached, max-stale=300")
-                        //.addHeader("Last-Modified", format.format(GregorianCalendar.getInstance().getTime())+" GMT")
-                        .build();
-            */
 
                 // Instrument the response to include new cache control aspects
                 if (response.cacheControl().maxAgeSeconds() < 300) {

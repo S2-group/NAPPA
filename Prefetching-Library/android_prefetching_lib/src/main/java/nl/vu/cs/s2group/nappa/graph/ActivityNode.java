@@ -211,13 +211,6 @@ public class ActivityNode {
             else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
                 successors.put(activityNode, successors.get(activityNode) + 1);
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
-                /*if ( successors.get(activityNode) > 0 ) {
-                    PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
-                    Log.w("ACTNODE", "CREATING, NOT IN DB");
-                } else {
-                    Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
-                    PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
-                }*/
                 Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
                 PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
                 return true;
@@ -226,8 +219,6 @@ public class ActivityNode {
             //  RETURN: False
             else if (/*!successors.containsKey(activityNode) &&*/ ancestors.containsKey(activityNode)) {
                 //DO NOTHING
-                //activityNode.ancestors.put(this, ancestors.get(activityNode) + 1);
-                //ancestors.put(activityNode, ancestors.get(activityNode) + 1);
                 return false;
             }
         }

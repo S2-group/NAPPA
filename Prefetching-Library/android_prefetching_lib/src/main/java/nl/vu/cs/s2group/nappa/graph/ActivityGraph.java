@@ -248,12 +248,6 @@ public class ActivityGraph {
         float sumAuthorityS = 1, sumHubS = 1;
         float tempAuthorityS = 0, tempHubS=0;
         /////////AuthorityS update
-        //check the nodes with in-degree > 0
-        //with out-degree > 0
-        /*for (ActivityNode node: nodeList){
-            if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
-            if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
-        }*/
         //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
         //check it also in the successors' structure of my ancestors
         for (ActivityNode node: nodeList){
@@ -313,16 +307,6 @@ public class ActivityGraph {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
-            /*for(ActivityNode node2: nodeList) {
-                for (ActivityNode ancestor : node2.ancestors.keySet()) {
-                    if(ancestor.activityName.equals(node.activityName)) {ancestor.authorityS=node.authorityS;
-                    ancestor.hubS=node.hubS;}
-                }
-                for (ActivityNode successor : node2.successors.keySet()) {
-                    if(successor.activityName.equals(node.activityName)){ successor.authorityS=node.authorityS;
-                    successor.hubS=node.hubS;}
-                }
-            }*/
         }
     }
 }
