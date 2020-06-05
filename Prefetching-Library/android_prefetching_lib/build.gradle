@@ -39,6 +39,7 @@ dependencies {
     implementation files('libs')
 
     testImplementation "junit:junit:4.12"
+    androidTestImplementation "androidx.test.ext:junit:$junitVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
     androidTestImplementation "androidx.room:room-testing:$roomRuntimeVersion"

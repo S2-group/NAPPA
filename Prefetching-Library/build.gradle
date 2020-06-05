@@ -31,6 +31,7 @@ project.ext {
     lifecycleVersion = "2.2.0"
     espressoCoreVersion = "3.2.0"
     runnerVersion = "1.2.0"
+    junitVersion = '1.1.1'
     diffMatchPatch = "1.1"
 }
 
