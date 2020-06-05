@@ -108,7 +108,7 @@ public class PrefetchStrategyImpl8 implements PrefetchStrategy {
                 }
 
             //}
-            //Log.d(LOG_TAG, "Computed probability: " + node1.prob + " for " + node1.activityName+ " s - "+threshold
+            //Log.e("PREFSTRAT8", "Computed probability: " + node1.prob + " for " + node1.activityName+ " s - "+threshold
                     //+" pr: " +node1.pageRank);
         }
         return probableNodes;

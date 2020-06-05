@@ -60,7 +60,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
         for (int i=0; i<probableNodes.size(); i++) {
             if(probableNodes.get(i).authority>n) {
                 listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.d(LOG_TAG, "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+                Log.e("PREFSTRAT6", "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
             }
         }*/
 

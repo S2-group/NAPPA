@@ -218,7 +218,7 @@ public class PrefetchingLib {
                 listLiveData.observeForever(new Observer<List<ActivityData>>() {
                     @Override
                     public void onChanged(@Nullable List<ActivityData> activityData) {
-                        Log.d(LOG_TAG, "Added/Removed/Updated a new Activity");
+                        Log.i("PREFETCHINGLIB", "Added/Removed/Updated a new Activity");
                         synchronized (activityMap) {
                             updateActivityMap(activityData);
                         }

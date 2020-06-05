@@ -25,23 +25,23 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
-        /*Log.d("PrefStratImpl", "Started for node: "+node.activityName);
+        /*Log.w("PrefStratImpl", "Started for node: "+node.activityName);
         SessionDao.SessionAggregate best = null;
         List<SessionDao.SessionAggregate> sessionAggregateList = node.getSessionAggregateList();
         if (sessionAggregateList!=null) {
             for (SessionDao.SessionAggregate aggregate : sessionAggregateList) {
-                Log.d("PrefStratImpl", "Evaluating successor: " + aggregate.actName);
+                Log.w("PrefStratImpl", "Evaluating successor: " + aggregate.actName);
                 if (best == null) {
                     best = aggregate;
                 } else if (aggregate.countSource2Dest > best.countSource2Dest) {
-                    Log.d("PrefStratImpl",
+                    Log.w("PrefStratImpl",
                             "choosing "+aggregate.actName+": "+aggregate.countSource2Dest+" against " +
                                     best.actName+": "+best.countSource2Dest);
                     best = aggregate;
                 }
             }
             if (best != null) {
-                Log.d("PrefStratImpl", "Chosen successor: " + best.actName);
+                Log.w("PrefStratImpl", "Chosen successor: " + best.actName);
                 List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
                 LinkedList<String> toBeReturned = new LinkedList<String>();
                 for (AggregateUrlDao.AggregateURL elem : list) {
@@ -49,26 +49,26 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
                 }
                 return toBeReturned;
             } else {
-                Log.d("PrefStratImpl", "Null successor");
+                Log.w("PrefStratImpl", "Null successor");
             }
         } else {
-            Log.d("PrefStratImpl", "SessionAggregateList is null");
+            Log.w("PrefStratImpl", "SessionAggregateList is null");
         }*/
         //new Thread(() -> {
             List<ActivityExtraData> extraDataList = node.getListActivityExtraLiveData().getValue();
             if (extraDataList != null) {
                 /*for (ActivityExtraData data : extraDataList) {
-                    Log.d(LOG_TAG, "actId: " + data.idActivity + "\t" + data.key + ": " + data.value);
+                    Log.w("PREFSTRAT2", "actId: " + data.idActivity + "\t" + data.key + ": " + data.value);
 
                     LinkedList<DiffMatchPatch.Diff> list = dmp.diffMain(data.value,
                             "http://api.openweathermap.org/data/2.5/weather?q=Kabul&appid=75f4ddb403cdbac1df21fa8a10c21ce9");
                     dmp.diffCleanupEfficiency(list);
 
                     for (DiffMatchPatch.Diff diff : list) {
-                        Log.d(LOG_TAG, diff.toString());
+                        Log.w("PREFSTRAT2", diff.toString());
                     }
 
-                    Log.d(LOG_TAG, "----------------");
+                    Log.w("PREFSTRAT2", "----------------");
                 }*/
                 Map<ActivityNode, Integer> successors = node.getSuccessors();
 

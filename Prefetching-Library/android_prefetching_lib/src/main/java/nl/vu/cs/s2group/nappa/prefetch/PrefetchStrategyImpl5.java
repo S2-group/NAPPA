@@ -58,7 +58,7 @@ public class PrefetchStrategyImpl5 implements PrefetchStrategy {
         for (int i=0; i<probableNodes.size(); i++) {
             if(probableNodes.get(i).pageRank>n) {
                 listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.d(LOG_TAG, "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).pageRank);
+                Log.e("PREFSTRAT5", "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).pageRank);
             }
         }*/
 

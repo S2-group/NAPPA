@@ -66,12 +66,12 @@ public class PrefetchStrategyImpl7 implements PrefetchStrategy {
         for (int i=0; i<probableNodes.size(); i++) {
             if(probableNodes.get(i).authorityS>n) {
                 listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.d(LOG_TAG, "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
-                Log.d(LOG_TAG, probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
+                Log.e("PREFSTRAT7", "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
+                Log.e("PREFSTRAT7", probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
             }else if(probableNodes.get(i).authorityS==n&&probableNodes.get(i).hubS>n){
                 listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.d(LOG_TAG, "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
-                Log.d(LOG_TAG, probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
+                Log.e("PREFSTRAT7", "SELECTED --> " + probableNodes.get(i).activityName + " index Auth: " + probableNodes.get(i).authorityS+ " index Hub: " + probableNodes.get(i).hubS);
+                Log.e("PREFSTRAT7", probableNodes.get(i).authorityS-probableNodes.get(i).hubS +"");
             }
         }*/
         return listUrlToPrefetch;

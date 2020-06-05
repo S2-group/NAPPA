@@ -104,7 +104,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
         for (ActivityNode succ : successorCountMap.keySet()) {
             float prob = initialProbability * (successorCountMap.get(succ)/total);
-            Log.d(LOG_TAG, "Computed probability: " + prob);
+            Log.e("PREFSTRAT3", "Computed probability: " + prob);
             if (prob >= threshold) {
                 if (!probableNodes.contains(succ)) {
                     probableNodes.add(succ);
@@ -144,7 +144,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
         }
 
         for (String candidate: candidates) {
-            Log.d(LOG_TAG, candidate);
+            Log.e("PREFSTRAT3", candidate);
         }
 
         return candidates;
@@ -172,8 +172,8 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
 
             for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
 
-                //for(String k: extrasMap.keySet())Log.d("PREFSTRAT5In",k);
-                //Log.d("PREFSTRAT5In",extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())+"");
+                //for(String k: extrasMap.keySet())Log.e("PREFSTRAT5In",k);
+                //Log.e("PREFSTRAT5In",extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())+"");
                 //BUG -- 1 crash if extrasMap is null
                 if ((null != extrasMap) && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
                     candidates.add(

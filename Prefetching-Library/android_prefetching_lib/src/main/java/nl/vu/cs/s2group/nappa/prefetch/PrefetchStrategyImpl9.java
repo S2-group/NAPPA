@@ -14,7 +14,7 @@
 
         for (int i=0; i<maxNumber; i++) {
         listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-        Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
+        Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }*/
 
