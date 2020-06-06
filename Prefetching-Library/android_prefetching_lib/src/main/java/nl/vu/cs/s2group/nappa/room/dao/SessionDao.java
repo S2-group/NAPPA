@@ -57,14 +57,6 @@ public interface SessionDao {
             "WHERE X.id_session >= ((SELECT MAX(id_session) FROM pf_session_data) - :lastN) " +
             "GROUP BY id_activity_destination ")
     public LiveData<List<SessionAggregate>> getCountForActivitySource (Long idSource, int lastN);
-/*@Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest "+
-            "FROM (SELECT id_activity_destination , activity_name , count_source_destination, id_session  " +
-            "FROM pf_session_data " +
-            "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +
-            "WHERE id_activity_source = :idSource " +
-            "ORDER BY id_session DESC) as X " +
-            "WHERE X.id_session > ((SELECT MAX(id_session) FROM pf_session_data) - :lastN) " +
-            "GROUP BY id_activity_destination ")*/
     class SessionAggregate {
         public Long idActDest;
         public String actName;

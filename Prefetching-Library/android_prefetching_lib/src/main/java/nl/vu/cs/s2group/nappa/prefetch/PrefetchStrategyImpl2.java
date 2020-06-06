@@ -25,62 +25,10 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
-        /*Log.w("PrefStratImpl", "Started for node: "+node.activityName);
-        SessionDao.SessionAggregate best = null;
-        List<SessionDao.SessionAggregate> sessionAggregateList = node.getSessionAggregateList();
-        if (sessionAggregateList!=null) {
-            for (SessionDao.SessionAggregate aggregate : sessionAggregateList) {
-                Log.w("PrefStratImpl", "Evaluating successor: " + aggregate.actName);
-                if (best == null) {
-                    best = aggregate;
-                } else if (aggregate.countSource2Dest > best.countSource2Dest) {
-                    Log.w("PrefStratImpl",
-                            "choosing "+aggregate.actName+": "+aggregate.countSource2Dest+" against " +
-                                    best.actName+": "+best.countSource2Dest);
-                    best = aggregate;
-                }
-            }
-            if (best != null) {
-                Log.w("PrefStratImpl", "Chosen successor: " + best.actName);
-                List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
-                LinkedList<String> toBeReturned = new LinkedList<String>();
-                for (AggregateUrlDao.AggregateURL elem : list) {
-                    toBeReturned.add(elem.getUrl());
-                }
-                return toBeReturned;
-            } else {
-                Log.w("PrefStratImpl", "Null successor");
-            }
-        } else {
-            Log.w("PrefStratImpl", "SessionAggregateList is null");
-        }*/
-        //new Thread(() -> {
             List<ActivityExtraData> extraDataList = node.getListActivityExtraLiveData().getValue();
             if (extraDataList != null) {
-                /*for (ActivityExtraData data : extraDataList) {
-                    Log.w("PREFSTRAT2", "actId: " + data.idActivity + "\t" + data.key + ": " + data.value);
-
-                    LinkedList<DiffMatchPatch.Diff> list = dmp.diffMain(data.value,
-                            "http://api.openweathermap.org/data/2.5/weather?q=Kabul&appid=75f4ddb403cdbac1df21fa8a10c21ce9");
-                    dmp.diffCleanupEfficiency(list);
-
-                    for (DiffMatchPatch.Diff diff : list) {
-                        Log.w("PREFSTRAT2", diff.toString());
-                    }
-
-                    Log.w("PREFSTRAT2", "----------------");
-                }*/
                 Map<ActivityNode, Integer> successors = node.getSuccessors();
-
-
-
-
-
-
-
-
                 List<ParameteredUrl> parameteredUrls = new LinkedList<>();
-
 
                 for (ActivityNode successor : successors.keySet()) {
                     List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance()
@@ -99,8 +47,6 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
                             int count = 0;
 
                             for (DiffMatchPatch.Diff diff : diffs) {
-                                //System.out.println(diff);
-
                                 if (diff.operation == DiffMatchPatch.Operation.EQUAL) {
                                     temp.addParameter(count, ParameteredUrl.TYPES.STATIC, diff.text);
                                     count++;
@@ -108,67 +54,39 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
                                     temp.addParameter(count, ParameteredUrl.TYPES.PARAMETER, "");
                                     count++;
                                 }
-
                             }
-
                             parameteredUrls.add(temp);
-
-                            //System.out.println("__________________________________");
                         }
                     }
-
-
-
-
-
-
-
                     List<String> candidates = new LinkedList<>();
 
                     Log.d(LOG_TAG, PrefetchingLib.getExtrasMap().toString());
                     Log.d(LOG_TAG,  PrefetchingLib.getActivityIdFromName(node.activityName).toString());
 
                     for (ParameteredUrl url : parameteredUrls) {
-                        //for (ActivityExtraData activityExtraData: extraDataList) {
                             List<ParameteredUrl.UrlParameter> parameterList = url.getUrlParameterList();
                             StringBuilder sb = new StringBuilder();
                             for (ParameteredUrl.UrlParameter parameter : parameterList) {
                                 if (parameter.type == ParameteredUrl.TYPES.STATIC)
-                                    //System.out.println(parameter.urlPiece);
                                     sb.append(parameter.urlPiece);
                                 else
                                     sb.append(PrefetchingLib.getExtrasMap().get(
                                             //2L
                                             PrefetchingLib.getActivityIdFromName(node.activityName)
                                     ));
-                                    //System.out.println("PARAM");
                             }
                             candidates.add(sb.toString());
-                            //System.out.println("-----------------------");
-                        //}
                     }
-
-
 
                     for (String candidate: candidates) {
                         Log.d(LOG_TAG, candidate);
                     }
 
                     return candidates;
-
-
-
-
-
-
                 }
             } else {
                 Log.d(LOG_TAG, "NO EXTRADATA");
             }
-        //}).start();
-
-
-
         return Arrays.asList(new String[]{});
     }
 }

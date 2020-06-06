@@ -1,23 +1,3 @@
-/*for (ActivityNode node1 : probableNodes) {
-        for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
-        ActivityNode node2 = probableNodes.get(i);
-        if(node1.prob<node2.prob){
-        ActivityNode temp=node1;
-        probableNodes.set(probableNodes.lastIndexOf(node1),node2);
-        probableNodes.set(probableNodes.lastIndexOf(node2),temp);
-        node1=node2;
-        }
-        }
-        }
-        List<String> listUrlToPrefetch = new LinkedList<>();
-        maxNumber = (int) (threshold*probableNodes.size() +1);
-
-        for (int i=0; i<maxNumber; i++) {
-        listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-        Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
-
-        }*/
-
 package nl.vu.cs.s2group.nappa.prefetch;
 
 import androidx.annotation.NonNull;
@@ -76,7 +56,6 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
 
         }
 
-        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -119,12 +98,9 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
 
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
-        //Log.d("PREFSTRAT9 visit",node.activityName);
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            //Log.d("PREFSTRAT9 parent of",succ.actName);
             successorCountMap = zeroContextNodes(PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){
-                //Log.d("PREFSTRAT9 update count",succ.countSource2Dest+" "+successorCountMap.get(succ.idActDest)+"");
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }
             else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT9 insert count",succ.countSource2Dest+"");}
@@ -146,7 +122,6 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
                 );
             }
         }
-        //}
 
         for (String candidate: candidates) {
             Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);

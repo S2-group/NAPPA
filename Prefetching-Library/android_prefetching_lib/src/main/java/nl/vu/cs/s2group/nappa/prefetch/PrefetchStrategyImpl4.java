@@ -54,7 +54,6 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
             Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
-        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -97,12 +96,9 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
 
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
-        //Log.d("PREFSTRAT4 visit",node.activityName);
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            //Log.d("PREFSTRAT4 parent of",succ.actName);
             successorCountMap = zeroContextNodes(PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){
-                //Log.d("PREFSTRAT4 update count",succ.countSource2Dest+" "+successorCountMap.get(succ.idActDest)+"");
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }
             else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT4 insert count",succ.countSource2Dest+"");}
@@ -125,7 +121,6 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
                 );
             }
         }
-        //}
 
         for (String candidate: candidates) {
             Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);

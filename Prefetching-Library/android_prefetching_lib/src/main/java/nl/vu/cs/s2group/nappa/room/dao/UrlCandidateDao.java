@@ -94,9 +94,6 @@ public interface UrlCandidateDao {
                     parameteredUrl.addParameter(parameter.urlOrder,
                             ParameteredUrl.getTYPESFromId(parameter.type),
                             parameter.urlPiece);
-                /*} catch (Exception e) {
-                    e.printStackTrace();
-                }*/
             }
             // Return an Iterable list of all the values stored in the hashmap
             return new LinkedList<>(parameteredUrlHashMap.values());

@@ -55,7 +55,6 @@ public class PrefetchStrategyImpl8 implements PrefetchStrategy {
 
         }
 
-        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -92,9 +91,6 @@ public class PrefetchStrategyImpl8 implements PrefetchStrategy {
             float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
-            //prob *= node1.pageRank;
-
-            //if (prob >= threshold) {
                 // If not yet added, add this current node to the probable nodes and calculate the
                 //     next probability using this nodes probability as an initial probability.
                 if (!probableNodes.contains(node1)) {
@@ -106,10 +102,6 @@ public class PrefetchStrategyImpl8 implements PrefetchStrategy {
                 }else if(prob>node1.prob){
                     node1.prob=prob;
                 }
-
-            //}
-            //Log.e("PREFSTRAT8", "Computed probability: " + node1.prob + " for " + node1.activityName+ " s - "+threshold
-                    //+" pr: " +node1.pageRank);
         }
         return probableNodes;
     }
