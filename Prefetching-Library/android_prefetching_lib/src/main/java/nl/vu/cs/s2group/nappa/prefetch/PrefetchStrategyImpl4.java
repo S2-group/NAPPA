@@ -15,6 +15,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 public class PrefetchStrategyImpl4 implements PrefetchStrategy {
+    private final static String LOG_TAG = PrefetchStrategyImpl4.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -50,7 +51,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
         return listUrlToPrefetch;
@@ -77,7 +78,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
         int total = 0;
         for(Long candidate : successorCountMap.keySet()) {
             total+=successorCountMap.get(candidate);
-            Log.d("PREFSTRAT4","actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
+            Log.d(LOG_TAG,"actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
         }
         //////////////////////////// Will calculate the probability to access a node by partial match based on a 0-order markov-model
         //////////////////////////// https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
@@ -88,7 +89,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);
-            Log.e("PREFSTRAT4", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
         return probableNodes;
     }
@@ -122,7 +123,7 @@ public class PrefetchStrategyImpl4 implements PrefetchStrategy {
         }
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT4", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

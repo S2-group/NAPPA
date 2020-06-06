@@ -18,6 +18,7 @@ import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
 public class PrefetchStrategyImpl2 implements PrefetchStrategy {
+    private final static String LOG_TAG = PrefetchStrategyImpl2.class.getSimpleName();
 
     private DiffMatchPatch dmp = new DiffMatchPatch();
 
@@ -59,8 +60,8 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
                     }
                     List<String> candidates = new LinkedList<>();
 
-                    Log.w("PREFSTRAT2", PrefetchingLib.getExtrasMap().toString());
-                    Log.w("PREFSTRAT2",  PrefetchingLib.getActivityIdFromName(node.activityName).toString());
+                    Log.d(LOG_TAG, PrefetchingLib.getExtrasMap().toString());
+                    Log.d(LOG_TAG,  PrefetchingLib.getActivityIdFromName(node.activityName).toString());
 
                     for (ParameteredUrl url : parameteredUrls) {
                             List<ParameteredUrl.UrlParameter> parameterList = url.getUrlParameterList();
@@ -78,13 +79,13 @@ public class PrefetchStrategyImpl2 implements PrefetchStrategy {
                     }
 
                     for (String candidate: candidates) {
-                        Log.e("PREFSTRAT2", candidate);
+                        Log.d(LOG_TAG, candidate);
                     }
 
                     return candidates;
                 }
             } else {
-                Log.e("PREFSTRAT2", "NO EXTRADATA");
+                Log.d(LOG_TAG, "NO EXTRADATA");
             }
         return Arrays.asList(new String[]{});
     }

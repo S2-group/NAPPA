@@ -14,6 +14,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 public class PrefetchStrategyImpl3 implements PrefetchStrategy {
+    private final static String LOG_TAG = PrefetchStrategyImpl3.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -85,7 +86,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
                 }
 
             }
-            Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
 
         return probableNodes;
@@ -108,7 +109,7 @@ public class PrefetchStrategyImpl3 implements PrefetchStrategy {
             }
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT3", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

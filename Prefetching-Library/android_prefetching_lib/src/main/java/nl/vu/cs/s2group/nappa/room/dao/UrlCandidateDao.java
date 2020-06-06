@@ -73,7 +73,7 @@ public interface UrlCandidateDao {
         public static List<ParameteredUrl> getParameteredUrlList(List<UrlCandidateToUrlParameter> parameterList) {
             ArrayMap<Long, ParameteredUrl> parameteredUrlHashMap = new ArrayMap<>();
 
-            Log.e("PARAM", "COUNT: " + parameterList.size());
+            Log.d("PARAM", "COUNT: " + parameterList.size());
 
             // For each parameter in the parameter list,  build a parameteredUrl object and store it
             //  in the hashmap
@@ -85,12 +85,12 @@ public interface UrlCandidateDao {
                     parameteredUrlHashMap.put(parameter.id, parameteredUrl);
                 }
 
-                Log.e("PARAM", "ID_ACTIVITY: " + parameter.idActivity);
+                Log.d("PARAM", "ID_ACTIVITY: " + parameter.idActivity);
 
                 /*try {*/
-                    Log.e("PARAM", parameter.urlPiece);
-                    Log.e("PARAM", parameter.type+"");
-                    Log.e("PARAM", parameter.urlOrder+"");
+                    Log.d("PARAM", parameter.urlPiece);
+                    Log.d("PARAM", parameter.type+"");
+                    Log.d("PARAM", parameter.urlOrder+"");
                     parameteredUrl.addParameter(parameter.urlOrder,
                             ParameteredUrl.getTYPESFromId(parameter.type),
                             parameter.urlPiece);
