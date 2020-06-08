@@ -17,6 +17,7 @@ import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 
 public class ActivityNode {
+    private final static String LOG_TAG = ActivityNode.class.getSimpleName();
 
     public String activityName;
 
@@ -104,9 +105,9 @@ public class ActivityNode {
     public void setListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData) {
         this.listSessionAggregateLiveData = listSessionAggregateLiveData;
         this.listSessionAggregateLiveData.observeForever((list) -> {
-            Log.d("UPDATE SESSION", "source = "+activityName);
+            Log.d(LOG_TAG, "UPDATE SESSION " + "source = "+activityName);
             for (SessionDao.SessionAggregate listElem : list) {
-                Log.d("UPDATE SESSION", "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+                Log.d(LOG_TAG, "UPDATE SESSION " + "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }
@@ -114,9 +115,9 @@ public class ActivityNode {
     public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
         this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
         this.listLastNSessionAggregateLiveData.observeForever((list) -> {
-            Log.d("UPDATED LAST N SESSION ", "source = "+activityName);
+            Log.d(LOG_TAG, "UPDATED LAST N SESSION " + "source = "+activityName);
             for (SessionDao.SessionAggregate listElem : list) {
-                Log.d("UPDATED  LAST N SESSION", "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+                Log.d(LOG_TAG, "UPDATED  LAST N SESSION " + "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }
@@ -132,9 +133,9 @@ public class ActivityNode {
         this.listActivityExtraLiveData = listActivityExtraLiveData;
         //TODO update here
         this.listActivityExtraLiveData.observeForever((list) -> {
-            Log.d("PREFSTRAT2", activityName);
+            Log.d(LOG_TAG, "PREFSTRAT2 " + activityName);
             for (ActivityExtraData listElem : list) {
-                Log.d("PREFSTRAT2", "actid: "+listElem.idActivity+ ", key: " + listElem.key);
+                Log.d(LOG_TAG, "PREFSTRAT2 " + "actid: "+listElem.idActivity+ ", key: " + listElem.key);
             }
         });
     }
@@ -201,7 +202,7 @@ public class ActivityNode {
                 successors.put(activityNode, 1);
                 activityNode.ancestors.put(this, 1);
                 //CREATE NEW SESSIONDATA - THIS IS THE FIRST TIME
-                Log.w("ACTNODE", "CREATING, NOT IN DB");
+                Log.d(LOG_TAG, "ACTNODE " + "CREATING, NOT IN DB");
                 PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
                 return true;
             }
@@ -211,14 +212,7 @@ public class ActivityNode {
             else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
                 successors.put(activityNode, successors.get(activityNode) + 1);
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
-                /*if ( successors.get(activityNode) > 0 ) {
-                    PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
-                    Log.w("ACTNODE", "CREATING, NOT IN DB");
-                } else {
-                    Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
-                    PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
-                }*/
-                Log.w("ACTNODE", "UPDATING AFTER LOADING FROM DB");
+                Log.d(LOG_TAG, "ACTNODE " + "UPDATING AFTER LOADING FROM DB");
                 PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
                 return true;
             }
@@ -226,8 +220,6 @@ public class ActivityNode {
             //  RETURN: False
             else if (/*!successors.containsKey(activityNode) &&*/ ancestors.containsKey(activityNode)) {
                 //DO NOTHING
-                //activityNode.ancestors.put(this, ancestors.get(activityNode) + 1);
-                //ancestors.put(activityNode, ancestors.get(activityNode) + 1);
                 return false;
             }
         }

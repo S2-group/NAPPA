@@ -1,23 +1,3 @@
-/*for (ActivityNode node1 : probableNodes) {
-        for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
-        ActivityNode node2 = probableNodes.get(i);
-        if(node1.prob<node2.prob){
-        ActivityNode temp=node1;
-        probableNodes.set(probableNodes.lastIndexOf(node1),node2);
-        probableNodes.set(probableNodes.lastIndexOf(node2),temp);
-        node1=node2;
-        }
-        }
-        }
-        List<String> listUrlToPrefetch = new LinkedList<>();
-        maxNumber = (int) (threshold*probableNodes.size() +1);
-
-        for (int i=0; i<maxNumber; i++) {
-        listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-        Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
-
-        }*/
-
 package nl.vu.cs.s2group.nappa.prefetch;
 
 import androidx.annotation.NonNull;
@@ -36,6 +16,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 @Deprecated
 public class PrefetchStrategyImpl9 implements PrefetchStrategy {
+    private final static String LOG_TAG = PrefetchStrategyImpl9.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -72,11 +53,10 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT9","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
 
-        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -101,7 +81,7 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
         int total = 0;
         for(Long candidate : successorCountMap.keySet()) {
             total+=successorCountMap.get(candidate);
-            Log.d("PREFSTRAT9","actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
+            Log.d(LOG_TAG,"actName :"+reversedHashMap.get(candidate)+" hit: "+successorCountMap.get(candidate));
         }
         //////////////////////////// Will calculate the probability to access a node by partial match based on a 0-order markov-model
         //////////////////////////// https://pdfs.semanticscholar.org/f9dc/bf7b0c900335932d9a651b9c21d8a59c3679.pdf
@@ -112,19 +92,16 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);
-            Log.e("PREFSTRAT9", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
         return probableNodes;
     }
 
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
-        //Log.d("PREFSTRAT9 visit",node.activityName);
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            //Log.d("PREFSTRAT9 parent of",succ.actName);
             successorCountMap = zeroContextNodes(PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){
-                //Log.d("PREFSTRAT9 update count",succ.countSource2Dest+" "+successorCountMap.get(succ.idActDest)+"");
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }
             else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT9 insert count",succ.countSource2Dest+"");}
@@ -146,10 +123,9 @@ public class PrefetchStrategyImpl9 implements PrefetchStrategy {
                 );
             }
         }
-        //}
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT9", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

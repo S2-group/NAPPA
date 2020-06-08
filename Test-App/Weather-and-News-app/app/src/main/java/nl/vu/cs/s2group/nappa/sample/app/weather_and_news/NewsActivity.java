@@ -26,6 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NewsActivity extends AppCompatActivity {
+    private final static String LOG_TAG = NewsActivity.class.getSimpleName();
 
     private Gson gson = new Gson();
     private Handler handler;
@@ -75,7 +76,7 @@ public class NewsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                Log.e("ERROR", e.getMessage());
+                Log.e(LOG_TAG, "ERROR " + e.getMessage());
             }
 
             @Override

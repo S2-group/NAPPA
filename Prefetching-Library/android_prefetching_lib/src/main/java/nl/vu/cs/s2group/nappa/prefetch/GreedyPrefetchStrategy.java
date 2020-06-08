@@ -14,6 +14,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 public class GreedyPrefetchStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = GreedyPrefetchStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -21,8 +22,6 @@ public class GreedyPrefetchStrategy implements PrefetchStrategy {
     public GreedyPrefetchStrategy(float threshold) {
         this.threshold = threshold;
     }
-
-
 
     @NonNull
     @Override
@@ -40,7 +39,6 @@ public class GreedyPrefetchStrategy implements PrefetchStrategy {
             listUrlToPrefetch.addAll(computeCandidateUrl2(node1, node));
         }
 
-        //return computeCandidateUrl(node);
         return listUrlToPrefetch;
     }
 
@@ -68,7 +66,6 @@ public class GreedyPrefetchStrategy implements PrefetchStrategy {
             total += succ.countSource2Dest;
             // For all successors, track the number of transitions
             successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue());
-
         }
 
         // For each destination calculate the probability of Access
@@ -76,8 +73,6 @@ public class GreedyPrefetchStrategy implements PrefetchStrategy {
             // Individual successor divided by total accesses
             float prob = initialProbability * ((float) successorCountMap.get(succ)/total);
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
-
-            //prob *= node1.pageRank;
 
             if (prob >= threshold) {
                 // If not yet added, add this current node to the probable nodes and calculate the
@@ -91,99 +86,30 @@ public class GreedyPrefetchStrategy implements PrefetchStrategy {
                 }
 
             }
-            Log.e("PREFSTRAT3", "Computed probability: " + prob + " for " + node1.activityName);
+            Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
         }
 
-
-        /*
-        //Map<ActivityNode, Integer> successorCountMap = node.successors;
-        for (ActivityNode succ : successorCountMap.keySet()) {
-            total += successorCountMap.get(succ);
-        }
-
-        for (ActivityNode succ : successorCountMap.keySet()) {
-            float prob = initialProbability * (successorCountMap.get(succ)/total);
-            Log.e("PREFSTRAT3", "Computed probability: " + prob);
-            if (prob >= threshold) {
-                if (!probableNodes.contains(succ)) {
-                    probableNodes.add(succ);
-                    getMostProbableNodes(succ, prob, probableNodes);
-                }
-            }
-        }
-        */
         return probableNodes;
     }
-    /*
-    private List<String> computeCandidateUrl(ActivityNode node) {
-        node.parameteredUrlMap.keySet();
-        List<ActivityNode> successors = ActivityNode.getAllSuccessors(node, new LinkedList<>());
-
-        List<String> candidates = new LinkedList<>();
-
-        Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
-
-        for (ActivityNode successor : successors) {
-
-            //for (String key : extrasMap.keySet()) {
-            //    ParameteredUrl parameteredUrl = successor.parameteredUrlMap.get(key);
-            //    if (parameteredUrl != null) {
-            //        candidates.add(
-            //                parameteredUrl.fillParams(extrasMap)
-            //        );
-            //    }
-            //}
-            for (ParameteredUrl parameteredUrl : successor.parameteredUrlList) {
-                if (extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
-                    candidates.add(
-                            parameteredUrl.fillParams(extrasMap)
-                    );
-                }
-            }
-        }
-
-        for (String candidate: candidates) {
-            Log.e("PREFSTRAT3", candidate);
-        }
-
-        return candidates;
-    }
-    */
 
     private List<String> computeCandidateUrl2(ActivityNode toBeChecked, ActivityNode node) {
         node.parameteredUrlMap.keySet();
-        //List<ActivityNode> successors = ActivityNode.getAllSuccessors(node, new LinkedList<>());
 
         List<String> candidates = new LinkedList<>();
 
         // Get all extras for the current activity
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
-        //for (ActivityNode successor : successors) {
-
-            /*for (String key : extrasMap.keySet()) {
-                ParameteredUrl parameteredUrl = successor.parameteredUrlMap.get(key);
-                if (parameteredUrl != null) {
-                    candidates.add(
-                            parameteredUrl.fillParams(extrasMap)
-                    );
-                }
-            }*/
 
             for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
-
-                //for(String k: extrasMap.keySet())Log.e("PREFSTRAT5In",k);
-                //Log.e("PREFSTRAT5In",extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())+"");
-                //BUG -- 1 crash if extrasMap is null
                 if ((null != extrasMap) && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
                     candidates.add(
                             parameteredUrl.fillParams(extrasMap)
                     );
                 }
             }
-        //}
 
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT3", candidate + " for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
         }
 
         return candidates;

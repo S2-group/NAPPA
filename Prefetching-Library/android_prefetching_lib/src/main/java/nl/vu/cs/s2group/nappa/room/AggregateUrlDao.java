@@ -27,7 +27,6 @@ public interface AggregateUrlDao {
             "LIMIT :maxUrl")
     List<AggregateURL> getAggregateForIdActivity(Long idActivity, Integer maxUrl);
 
-    //@Query("select url, COUNT(*) as count, avg(size) as sizeAvg from pf_url GROUP BY url ORDER BY count DESC")
     @Query("select url, COUNT(*) as count, avg(size) as sizeAvg, activity_name as activityName " +
             "FROM pf_url " +
             "LEFT JOIN pf_activity as a ON id_activity =  a.id " +

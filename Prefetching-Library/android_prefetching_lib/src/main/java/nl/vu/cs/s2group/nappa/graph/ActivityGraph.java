@@ -14,6 +14,7 @@ import nl.vu.cs.s2group.nappa.room.data.LARData;
 
 
 public class ActivityGraph {
+    private final static String LOG_TAG = ActivityGraph.class.getSimpleName();
 
     List<ActivityNode> nodeList;
     ActivityNode current = null;
@@ -28,30 +29,30 @@ public class ActivityGraph {
      * @param activityName The activity 
      */
     public void initNodes(String activityName) {
-        Log.w("ACT_GRAPH", "initNodes() fired for node: " + activityName);
+        Log.d(LOG_TAG, "ACT_GRAPH " + "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
         //link analysis ranking (LAR)
         LARData LAR = PrefetchingDatabase.getInstance().activityDao().getLAR(activityName);
-        Log.d("LARDataInitFetchDB",activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS);
+        Log.d(LOG_TAG, "LARDataInitFetchDB " +activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS);
 
         // Verify if the current activity node already exists in the activity graph
         if (nodeList.contains(temp)) {
             temp = nodeList.get(nodeList.lastIndexOf(temp));
-            Log.d("LARDataInit","already in nodeList");
+            Log.d(LOG_TAG, "LARDataInit " +"already in nodeList");
         } else {
             temp.pageRank = LAR.PR;
             temp.authority = LAR.authority;
             temp.hub = LAR.hub;
             temp.authorityS = LAR.authorityS;
             temp.hubS = LAR.hubS;
-            Log.d("LARDataInit","node "+ temp.activityName+" added to nodeList");
+            Log.d(LOG_TAG, "LARDataInit " +"node "+ temp.activityName+" added to nodeList");
             nodeList.add(temp);
         }
 
 
         // Get all edges (destinations) for a given activity (source)
         List<GraphEdgeDao.GraphEdge> edges = PrefetchingDatabase.getInstance().graphEdgeDao().getEdgesForActivity(activityName);
-        Log.w("ACT_GRAPH", "Edges size: " + edges.size());
+        Log.d(LOG_TAG, "ACT_GRAPH " + "Edges size: " + edges.size());
 
 
         // Verify if all edges (destinations) for this activity already exists in the
@@ -62,26 +63,26 @@ public class ActivityGraph {
             if (edge != null && edge.actName != null) {
                 ActivityNode temp2 = new ActivityNode(edge.actName);
                 LAR = PrefetchingDatabase.getInstance().activityDao().getLAR(edge.actName);
-                Log.d("LARDataInitFetchDB",activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS+" loaded following an edge");
+                Log.d(LOG_TAG, "LARDataInitFetchDB " +activityName+" Pagerank: "+LAR.PR+" HITS-Authority: "+LAR.authority+" HITS-Hub: "+LAR.hub+" SALSA-Authority: "+LAR.authorityS+" SALSA-Hub: "+LAR.hubS+" loaded following an edge");
 
                 if (nodeList.contains(temp2)) {
-                    Log.w("ACT_GRAPH", "contains temp2");
-                    Log.d("LARDataInit","already in nodeList from edge");
+                    Log.d(LOG_TAG, "ACT_GRAPH " + "contains temp2");
+                    Log.d(LOG_TAG, "LARDataInit " +"already in nodeList from edge");
                     temp2 = nodeList.get(nodeList.lastIndexOf(temp2));
                 } else {
-                    Log.w("ACT_GRAPH", "does not contain temp2");
+                    Log.d(LOG_TAG, "ACT_GRAPH " + "does not contain temp2");
                     temp2.pageRank = LAR.PR;
                     temp2.authority = LAR.authority;
                     temp2.hub = LAR.hub;
                     temp2.authorityS = LAR.authorityS;
                     temp2.hubS = LAR.hubS;
-                    Log.d("LARDataInit","node "+ temp2.activityName+" added to nodeList from edge");
+                    Log.d(LOG_TAG, "LARDataInit " +"node "+ temp2.activityName+" added to nodeList from edge");
                     nodeList.add(temp2);
                 }
 
                 //  Add the Source-Successor relationship to both the database and the temp node itself
                 temp.initSuccessor(temp2);
-                Log.w("ACT_GRAPH", "adding successors: " + temp.activityName + " -> " + temp2.activityName);
+                Log.d(LOG_TAG, "ACT_GRAPH " + "adding successors: " + temp.activityName + " -> " + temp2.activityName);
             }
         }
 
@@ -119,8 +120,8 @@ public class ActivityGraph {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().insertLAR(new LARData(tempActivityName,initialPageRank,initialAuthority,initialHub,initialAuthorityS,initialHubS));
             }, 0, TimeUnit.SECONDS);
-            Log.d("LARDataUpdate","node "+temp.activityName+" added to nodelist");
-            Log.d("LARDataUpdate"," Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
+            Log.d(LOG_TAG, "LARDataUpdate " +"node "+temp.activityName+" added to nodelist");
+            Log.d(LOG_TAG, "LARDataUpdate " +" Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
         }
         if (current!=null) {
             shouldPrefetch = current.addSuccessor(temp);
@@ -128,7 +129,7 @@ public class ActivityGraph {
             //updates
             updateLAR(activityName);
             temp = nodeList.get(nodeList.lastIndexOf(temp));
-            Log.d("LARDataCalculatedUpdate",temp.activityName+" Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
+            Log.d(LOG_TAG, "LARDataCalculatedUpdate " +temp.activityName+" Pagerank: "+temp.pageRank+" HITS-Authority: "+temp.authority+" HITS-Hub: "+temp.hub+" SALSA-Authority: "+temp.authorityS+" SALSA-Hub: "+temp.hubS);
         }
         current = temp;
         return shouldPrefetch;
@@ -248,12 +249,6 @@ public class ActivityGraph {
         float sumAuthorityS = 1, sumHubS = 1;
         float tempAuthorityS = 0, tempHubS=0;
         /////////AuthorityS update
-        //check the nodes with in-degree > 0
-        //with out-degree > 0
-        /*for (ActivityNode node: nodeList){
-            if(node.ancestors.keySet().size()!=0) sumAuthorityS+=node.authorityS;
-            if(node.successors.keySet().size()!=0) sumHubS+=node.hubS;
-        }*/
         //IF in-degree > 0 tempAuthority=1/norm-1-of(all node with in-degree>0) ELSE tempAuthority=0
         //check it also in the successors' structure of my ancestors
         for (ActivityNode node: nodeList){
@@ -313,16 +308,6 @@ public class ActivityGraph {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().updateLAR(new LARData(node.activityName, node.pageRank,node.authority,node.hub,node.authorityS,node.hubS));
             }, 0, TimeUnit.SECONDS);
-            /*for(ActivityNode node2: nodeList) {
-                for (ActivityNode ancestor : node2.ancestors.keySet()) {
-                    if(ancestor.activityName.equals(node.activityName)) {ancestor.authorityS=node.authorityS;
-                    ancestor.hubS=node.hubS;}
-                }
-                for (ActivityNode successor : node2.successors.keySet()) {
-                    if(successor.activityName.equals(node.activityName)){ successor.authorityS=node.authorityS;
-                    successor.hubS=node.hubS;}
-                }
-            }*/
         }
     }
 }

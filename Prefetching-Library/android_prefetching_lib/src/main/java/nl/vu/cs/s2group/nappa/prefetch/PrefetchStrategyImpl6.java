@@ -15,6 +15,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 @Deprecated
 public class PrefetchStrategyImpl6 implements PrefetchStrategy{
+    private final static String LOG_TAG = PrefetchStrategyImpl6.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;
 
@@ -32,18 +33,14 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
         }
 
         List<ActivityNode> probableNodes = getMostProbableNodes(node, new LinkedList<>());
-        //for (ActivityNode node1 : probableNodes) Log.d("PREFSTRAT5xxxxxxxx",node1.activityName+" - "+node1.pageRank);
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                //Log.d("PREFSTRAT5NODE",node1.activityName+" --> "+node2.activityName);
                 if(node1.authority<node2.authority){
-                    //Log.d("PREFSTRAT5NODE","SCAMBIO");
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
                     node1=node2;
-                    //for (ActivityNode noder : probableNodes) Log.d("PREFSTRAT5vvvvv",noder.activityName+" - "+noder.pageRank);
                 }
             }
         }
@@ -52,17 +49,9 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.e("PREFSTRAT6","SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
 
         }
-
-        /*float n = 1/(float)reversedHashMap.keySet().size();
-        for (int i=0; i<probableNodes.size(); i++) {
-            if(probableNodes.get(i).authority>n) {
-                listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-                Log.e("PREFSTRAT6", "SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
-            }
-        }*/
 
         return listUrlToPrefetch;
     }
@@ -118,7 +107,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         }
         for (String candidate: candidates) {
-            Log.e("PREFSTRAT6", candidate + " url for: " + toBeChecked.activityName);
+            Log.d(LOG_TAG, candidate + " url for: " + toBeChecked.activityName);
         }
         return candidates;
     }
