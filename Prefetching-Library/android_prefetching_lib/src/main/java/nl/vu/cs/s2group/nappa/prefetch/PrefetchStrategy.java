@@ -27,7 +27,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *     <li> {@link #STRATEGY_4}</li>
  *     <li> {@link #STRATEGY_5}</li>
  *     <li> {@link #STRATEGY_6}</li>
- *     <li> {@link #STRATEGY_7}</li>
+ *     <li> {@link #STRATEGY_SALSA}</li>
  *     <li> {@link #STRATEGY_8}</li>
  *     <li> {@link #STRATEGY_9}</li>
  * </ul>
@@ -70,10 +70,10 @@ public interface PrefetchStrategy {
     int STRATEGY_6 = 6;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl7}
+     * ID for strategy implemented at {@link SALSAPrefetchStrategy}
      */
     @Deprecated
-    int STRATEGY_7 = 7;
+    int STRATEGY_SALSA = 7;
 
     /**
      * ID for strategy implemented at {@link PrefetchStrategyImpl8}
@@ -122,8 +122,8 @@ public interface PrefetchStrategy {
                 return new PrefetchStrategyImpl5(0.6f);
             case STRATEGY_6:
                 return new PrefetchStrategyImpl6(0.6f);
-            case STRATEGY_7:
-                return new PrefetchStrategyImpl7(0.6f);
+            case STRATEGY_SALSA:
+                return new SALSAPrefetchStrategy(0.6f);
             case STRATEGY_8:
                 return new PrefetchStrategyImpl8(0.6f);
             case STRATEGY_9:
