@@ -13,6 +13,11 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * This strategy utilizes the PageRank link analysis algorithm to determine which
+ * nodes to select. This strategy only considers the direct successors of the
+ * current node.
+ */
 @Deprecated
 public class PageRankPrefetchingStrategy implements PrefetchStrategy {
     private final static String LOG_TAG = PageRankPrefetchingStrategy.class.getSimpleName();

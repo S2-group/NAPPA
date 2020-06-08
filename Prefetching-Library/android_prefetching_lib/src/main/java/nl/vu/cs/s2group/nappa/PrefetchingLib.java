@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategyImpl4;
+import nl.vu.cs.s2group.nappa.prefetch.PartialMatchPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -153,7 +153,7 @@ public class PrefetchingLib {
                                 )
                         );
 
-                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId,PrefetchStrategyImpl4.lastN));
+                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId, PartialMatchPrefetchingStrategy.lastN));
 
                     }
 
@@ -297,7 +297,7 @@ public class PrefetchingLib {
                             activityMap.get(currentActivityName)
                     )
             );
-            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName),PrefetchStrategyImpl4.lastN));
+            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PartialMatchPrefetchingStrategy.lastN));
 
         }
 

@@ -14,14 +14,23 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+// TODO: Describe what is being matched.
+//  Check method zeroContextNodes() for that.
+//  Update the class name and the JavaDoc description to better describe this strategy
+//  Also update the ID mapping in the PrefetchStrategy class
+/**
+ * This strategy utilizes calculates the probability of visiting a node using partial
+ * match based on a 0-order markov-model. This strategy only considers the direct
+ * successors of the current node.
+ */
 @Deprecated
-public class PrefetchStrategyImpl4 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl4.class.getSimpleName();
+public class PartialMatchPrefetchingStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = PartialMatchPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
-    public  PrefetchStrategyImpl4(float threshold) {
+    public PartialMatchPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
     public static int lastN = 2;

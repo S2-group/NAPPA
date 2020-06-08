@@ -12,9 +12,13 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * This strategy selects the most visited successor of the current node. This strategy
+ * only considers the direct successors of the current node.
+ */
 @Deprecated
-public class MostVisitedSuccessorsPrefetchingStrategy implements PrefetchStrategy {
-    private final static String LOG_TAG = MostVisitedSuccessorsPrefetchingStrategy.class.getSimpleName();
+public class MostVisitedSuccessorPrefetchingStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = MostVisitedSuccessorPrefetchingStrategy.class.getSimpleName();
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {

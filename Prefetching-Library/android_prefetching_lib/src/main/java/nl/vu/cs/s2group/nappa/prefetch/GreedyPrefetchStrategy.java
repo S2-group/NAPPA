@@ -14,10 +14,10 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
- * Greedily determine which activity successors can benefit the most from prefetching.
- * This is not limited to immediate successors but can consider successors at a higher
- * depth in the ENG, provided that the "added value" of prefetching these high-depth
- * successors is sufficient.
+ * This strategy greedily determine which activity successors can benefit the most from
+ * prefetching. This is not limited to immediate successors but can consider successors
+ * at a higher depth in the ENG, provided that the "added value" of prefetching these
+ * high-depth successors is sufficient.
  * <br/><br/>
  *
  * <p> The node selection process introduces the notion of a "Weight" factor.

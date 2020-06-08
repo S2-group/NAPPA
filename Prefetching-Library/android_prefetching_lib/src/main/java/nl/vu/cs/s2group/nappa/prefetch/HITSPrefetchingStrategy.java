@@ -14,8 +14,9 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
- * Utilizes the Hyperlink-Induced Topic Search (HITS) link analysis
- * algorithm to determine which nodes to select.
+ * This strategy utilizes the Hyperlink-Induced Topic Search (HITS) link analysis
+ * algorithm to determine which nodes to select. This strategy only considers the
+ * direct successors of the current node.
  * <br/><br/>
  *
  * <p> The HITS algorithm is defined in the paper

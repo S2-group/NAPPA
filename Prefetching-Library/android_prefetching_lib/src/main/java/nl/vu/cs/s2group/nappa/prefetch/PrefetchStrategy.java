@@ -21,10 +21,10 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * <p>The available values of the {@code STRATEGY_ID} parameter are in the following list:
  *
  * <ul>
- *     <li> {@link #STRATEGY_MOST_VISITED_SUCCESSORS}</li>
+ *     <li> {@link #STRATEGY_MOST_VISITED_SUCCESSOR}</li>
  *     <li> {@link #STRATEGY_2}</li>
  *     <li> {@link #STRATEGY_GREEDY}</li>
- *     <li> {@link #STRATEGY_4}</li>
+ *     <li> {@link #STRATEGY_PARTIAL_MATCH}</li>
  *     <li> {@link #STRATEGY_PAGERANK}</li>
  *     <li> {@link #STRATEGY_HITS}</li>
  *     <li> {@link #STRATEGY_SALSA}</li>
@@ -35,10 +35,10 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  */
 public interface PrefetchStrategy {
     /**
-     * ID for strategy implemented at {@link MostVisitedSuccessorsPrefetchingStrategy}
+     * ID for strategy implemented at {@link MostVisitedSuccessorPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_MOST_VISITED_SUCCESSORS = 1;
+    int STRATEGY_MOST_VISITED_SUCCESSOR = 1;
 
     /**
      * ID for strategy implemented at {@link PrefetchStrategyImpl2}
@@ -52,10 +52,10 @@ public interface PrefetchStrategy {
     int STRATEGY_GREEDY = 3;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl4}
+     * ID for strategy implemented at {@link PartialMatchPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_4 = 4;
+    int STRATEGY_PARTIAL_MATCH = 4;
 
     /**
      * ID for strategy implemented at {@link PageRankPrefetchingStrategy}
@@ -110,14 +110,14 @@ public interface PrefetchStrategy {
     @Contract("_ -> new")
     static PrefetchStrategy getStrategy(int strategyId) {
         switch (strategyId) {
-            case STRATEGY_MOST_VISITED_SUCCESSORS:
-                return new MostVisitedSuccessorsPrefetchingStrategy();
+            case STRATEGY_MOST_VISITED_SUCCESSOR:
+                return new MostVisitedSuccessorPrefetchingStrategy();
             case STRATEGY_2:
                 return new PrefetchStrategyImpl2();
             case STRATEGY_GREEDY:
                 return new GreedyPrefetchStrategy(0.6f);
-            case STRATEGY_4:
-                return new PrefetchStrategyImpl4(0.6f);
+            case STRATEGY_PARTIAL_MATCH:
+                return new PartialMatchPrefetchingStrategy(0.6f);
             case STRATEGY_PAGERANK:
                 return new PageRankPrefetchingStrategy(0.6f);
             case STRATEGY_HITS:
