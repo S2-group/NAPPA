@@ -24,10 +24,10 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *     <li> {@link #STRATEGY_MOST_VISITED_SUCCESSOR}</li>
  *     <li> {@link #STRATEGY_2}</li>
  *     <li> {@link #STRATEGY_GREEDY}</li>
- *     <li> {@link #STRATEGY_PARTIAL_MATCH}</li>
+ *     <li> {@link #STRATEGY_PPM} (Prediction by Partial Match)</li>
  *     <li> {@link #STRATEGY_PAGERANK}</li>
- *     <li> {@link #STRATEGY_HITS}</li>
- *     <li> {@link #STRATEGY_SALSA}</li>
+ *     <li> {@link #STRATEGY_HITS} (Hyperlink-Induced Topic Search)</li>
+ *     <li> {@link #STRATEGY_SALSA} (Stochastic Approach for Link-Structure Analysis)</li>
  *     <li> {@link #STRATEGY_GREEDY_WITH_PAGERANK_SCORES}</li>
  *     <li> {@link #STRATEGY_9}</li>
  * </ul>
@@ -52,10 +52,10 @@ public interface PrefetchStrategy {
     int STRATEGY_GREEDY = 3;
 
     /**
-     * ID for strategy implemented at {@link PartialMatchPrefetchingStrategy}
+     * ID for strategy implemented at {@link PPMPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_PARTIAL_MATCH = 4;
+    int STRATEGY_PPM = 4;
 
     /**
      * ID for strategy implemented at {@link PageRankPrefetchingStrategy}
@@ -116,8 +116,8 @@ public interface PrefetchStrategy {
                 return new PrefetchStrategyImpl2();
             case STRATEGY_GREEDY:
                 return new GreedyPrefetchStrategy(0.6f);
-            case STRATEGY_PARTIAL_MATCH:
-                return new PartialMatchPrefetchingStrategy(0.6f);
+            case STRATEGY_PPM:
+                return new PPMPrefetchingStrategy(0.6f);
             case STRATEGY_PAGERANK:
                 return new PageRankPrefetchingStrategy(0.6f);
             case STRATEGY_HITS:
