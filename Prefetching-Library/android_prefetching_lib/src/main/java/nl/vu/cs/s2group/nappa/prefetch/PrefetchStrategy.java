@@ -9,22 +9,81 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
+/**
+ * The <tt>PrefetchStrategy</tt> interface provides the API to access and initialize
+ * the implemented prefetching strategies. The strategy is selected upon initializing the
+ * library API via:
+ * <br/><br/>
+ *
+ * <code>PrefetchingLib.init(STRATEGY_ID)</code>
+ * <br/><br/>
+ *
+ * <p>The available values of the {@code STRATEGY_ID} parameter are in the following list:
+ *
+ * <ul>
+ *     <li> {@link #STRATEGY_1}</li>
+ *     <li> {@link #STRATEGY_2}</li>
+ *     <li> {@link #STRATEGY_GREEDY}</li>
+ *     <li> {@link #STRATEGY_4}</li>
+ *     <li> {@link #STRATEGY_5}</li>
+ *     <li> {@link #STRATEGY_6}</li>
+ *     <li> {@link #STRATEGY_7}</li>
+ *     <li> {@link #STRATEGY_8}</li>
+ *     <li> {@link #STRATEGY_9}</li>
+ * </ul>
+ *
+ */
 public interface PrefetchStrategy {
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl}
+     */
     @Deprecated
     int STRATEGY_1 = 1;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl2}
+     */
     @Deprecated
     int STRATEGY_2 = 2;
+
+    /**
+     * ID for strategy implemented at {@link GreedyPrefetchStrategy}
+     */
     int STRATEGY_GREEDY = 3;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl4}
+     */
     @Deprecated
     int STRATEGY_4 = 4;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl5}
+     */
     @Deprecated
     int STRATEGY_5 = 5;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl6}
+     */
     @Deprecated
     int STRATEGY_6 = 6;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl7}
+     */
     @Deprecated
     int STRATEGY_7 = 7;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl8}
+     */
     @Deprecated
     int STRATEGY_8 = 8;
+
+    /**
+     * ID for strategy implemented at {@link PrefetchStrategyImpl9}
+     */
     @Deprecated
     int STRATEGY_9 = 9;
 
