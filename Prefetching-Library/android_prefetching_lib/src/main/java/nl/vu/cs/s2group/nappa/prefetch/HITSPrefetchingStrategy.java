@@ -13,13 +13,22 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * Utilizes the Hyperlink-Induced Topic Search (HITS) link analysis
+ * algorithm to determine which nodes to select.
+ * <br/><br/>
+ *
+ * <p> The HITS algorithm is defined in the paper
+ * <a href="https://dl.acm.org/doi/abs/10.1145/324133.324140">
+ * Authoritative sources in a hyperlinked environment</a>
+ */
 @Deprecated
-public class PrefetchStrategyImpl5 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl5.class.getSimpleName();
-
+public class HITSPrefetchingStrategy implements PrefetchStrategy{
+    private final static String LOG_TAG = HITSPrefetchingStrategy.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;
-    public  PrefetchStrategyImpl5(float threshold) {this.threshold=threshold;}
+
+    public HITSPrefetchingStrategy(float threshold) {this.threshold=threshold;}
 
 
 
@@ -36,7 +45,7 @@ public class PrefetchStrategyImpl5 implements PrefetchStrategy {
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                if(node1.pageRank<node2.pageRank){
+                if(node1.authority<node2.authority){
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
@@ -49,7 +58,8 @@ public class PrefetchStrategyImpl5 implements PrefetchStrategy {
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName+ " index: " + probableNodes.get(i).pageRank);
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
+
         }
 
         return listUrlToPrefetch;
@@ -74,17 +84,17 @@ public class PrefetchStrategyImpl5 implements PrefetchStrategy {
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).pageRank);
+            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authority);
         }
 
         for (Long succ : successorCountMap.keySet()) {
 
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
-                if (!probableNodes.contains(node1)) {
-                    probableNodes.add(node1);
-                    getMostProbableNodes(node1, probableNodes);
-                }
+            if (!probableNodes.contains(node1)) {
+                probableNodes.add(node1);
+                getMostProbableNodes(node1, probableNodes);
+            }
 
         }
 
@@ -111,4 +121,3 @@ public class PrefetchStrategyImpl5 implements PrefetchStrategy {
         return candidates;
     }
 }
-

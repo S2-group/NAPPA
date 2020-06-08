@@ -25,8 +25,8 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *     <li> {@link #STRATEGY_2}</li>
  *     <li> {@link #STRATEGY_GREEDY}</li>
  *     <li> {@link #STRATEGY_4}</li>
- *     <li> {@link #STRATEGY_5}</li>
- *     <li> {@link #STRATEGY_6}</li>
+ *     <li> {@link #STRATEGY_PAGERANK}</li>
+ *     <li> {@link #STRATEGY_HITS}</li>
  *     <li> {@link #STRATEGY_SALSA}</li>
  *     <li> {@link #STRATEGY_8}</li>
  *     <li> {@link #STRATEGY_9}</li>
@@ -58,16 +58,16 @@ public interface PrefetchStrategy {
     int STRATEGY_4 = 4;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl5}
+     * ID for strategy implemented at {@link PageRankPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_5 = 5;
+    int STRATEGY_PAGERANK = 5;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl6}
+     * ID for strategy implemented at {@link HITSPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_6 = 6;
+    int STRATEGY_HITS = 6;
 
     /**
      * ID for strategy implemented at {@link SALSAPrefetchStrategy}
@@ -118,10 +118,10 @@ public interface PrefetchStrategy {
                 return new GreedyPrefetchStrategy(0.6f);
             case STRATEGY_4:
                 return new PrefetchStrategyImpl4(0.6f);
-            case STRATEGY_5:
-                return new PrefetchStrategyImpl5(0.6f);
-            case STRATEGY_6:
-                return new PrefetchStrategyImpl6(0.6f);
+            case STRATEGY_PAGERANK:
+                return new PageRankPrefetchingStrategy(0.6f);
+            case STRATEGY_HITS:
+                return new HITSPrefetchingStrategy(0.6f);
             case STRATEGY_SALSA:
                 return new SALSAPrefetchStrategy(0.6f);
             case STRATEGY_8:
