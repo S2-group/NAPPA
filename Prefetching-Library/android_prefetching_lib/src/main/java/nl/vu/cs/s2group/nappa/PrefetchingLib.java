@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
@@ -66,7 +66,7 @@ public class PrefetchingLib {
     private static LiveData<List<ActivityData>> listLiveData;
     public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
     private static Session session;
-    private static PrefetchStrategy strategyIntent;
+    private static PrefetchingStrategy strategyIntent;
     //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
@@ -87,7 +87,7 @@ public class PrefetchingLib {
 
     private PrefetchingLib(int prefetchStrategyNum) {
         this.prefetchStrategyNum = prefetchStrategyNum;
-        strategyIntent = PrefetchStrategy.getStrategy(prefetchStrategyNum);
+        strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
     }
 
 

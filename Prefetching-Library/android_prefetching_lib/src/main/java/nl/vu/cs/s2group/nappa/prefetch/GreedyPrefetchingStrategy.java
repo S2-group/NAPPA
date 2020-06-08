@@ -32,13 +32,13 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * then the scores corresponding to all subsequent nodes decreases. To limit the number
  * of node candidates generated, a threshold value is inserted.
  */
-public class GreedyPrefetchStrategy implements PrefetchStrategy {
-    private final static String LOG_TAG = GreedyPrefetchStrategy.class.getSimpleName();
+public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
-    public GreedyPrefetchStrategy(float threshold) {
+    public GreedyPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
 

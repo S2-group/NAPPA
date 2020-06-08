@@ -19,7 +19,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * current node.
  */
 @Deprecated
-public class PageRankPrefetchingStrategy implements PrefetchStrategy {
+public class PageRankPrefetchingStrategy implements PrefetchingStrategy {
     private final static String LOG_TAG = PageRankPrefetchingStrategy.class.getSimpleName();
 
     private HashMap<Long, String> reversedHashMap = new HashMap<>();

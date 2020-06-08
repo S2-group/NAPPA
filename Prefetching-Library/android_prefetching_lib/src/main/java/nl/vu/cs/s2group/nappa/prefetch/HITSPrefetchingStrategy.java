@@ -24,7 +24,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * Authoritative sources in a hyperlinked environment</a>
  */
 @Deprecated
-public class HITSPrefetchingStrategy implements PrefetchStrategy{
+public class HITSPrefetchingStrategy implements PrefetchingStrategy {
     private final static String LOG_TAG = HITSPrefetchingStrategy.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;

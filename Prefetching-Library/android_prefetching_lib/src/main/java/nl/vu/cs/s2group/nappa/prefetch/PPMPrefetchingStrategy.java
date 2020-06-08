@@ -25,7 +25,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * performance</a>
  */
 @Deprecated
-public class PPMPrefetchingStrategy implements PrefetchStrategy {
+public class PPMPrefetchingStrategy implements PrefetchingStrategy {
     private final static String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;

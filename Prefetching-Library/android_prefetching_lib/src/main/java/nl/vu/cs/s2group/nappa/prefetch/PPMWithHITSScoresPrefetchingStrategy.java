@@ -20,7 +20,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * This strategy only considers the direct successors of the current node.
  */
 @Deprecated
-public class PPMWithHITSScoresPrefetchingStrategy implements PrefetchStrategy {
+public class PPMWithHITSScoresPrefetchingStrategy implements PrefetchingStrategy {
     private final static String LOG_TAG = PPMWithHITSScoresPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;

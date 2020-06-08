@@ -19,8 +19,8 @@ import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
 // TODO: Read the strategy, provide a JavaDoc with basic description and update class name
 @Deprecated
-public class PrefetchStrategyImpl2 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl2.class.getSimpleName();
+public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
+    private final static String LOG_TAG = PrefetchingStrategyImpl2.class.getSimpleName();
 
     private DiffMatchPatch dmp = new DiffMatchPatch();
 

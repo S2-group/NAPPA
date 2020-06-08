@@ -24,12 +24,12 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  * SALSA: the stochastic approach for link-structure analysis</a>
  */
 @Deprecated
-public class SALSAPrefetchStrategy implements PrefetchStrategy {
-    private final static String LOG_TAG = SALSAPrefetchStrategy.class.getSimpleName();
+public class SALSAPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = SALSAPrefetchingStrategy.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private float threshold;
 
-    public SALSAPrefetchStrategy(float threshold) {this.threshold = threshold;}
+    public SALSAPrefetchingStrategy(float threshold) {this.threshold = threshold;}
 
 
 

@@ -33,7 +33,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * </ul>
  *
  */
-public interface PrefetchStrategy {
+public interface PrefetchingStrategy {
     /**
      * ID for strategy implemented at {@link MostVisitedSuccessorPrefetchingStrategy}
      */
@@ -41,13 +41,13 @@ public interface PrefetchStrategy {
     int STRATEGY_MOST_VISITED_SUCCESSOR = 1;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl2}
+     * ID for strategy implemented at {@link PrefetchingStrategyImpl2}
      */
     @Deprecated
     int STRATEGY_2 = 2;
 
     /**
-     * ID for strategy implemented at {@link GreedyPrefetchStrategy}
+     * ID for strategy implemented at {@link GreedyPrefetchingStrategy}
      */
     int STRATEGY_GREEDY = 3;
 
@@ -70,7 +70,7 @@ public interface PrefetchStrategy {
     int STRATEGY_HITS = 6;
 
     /**
-     * ID for strategy implemented at {@link SALSAPrefetchStrategy}
+     * ID for strategy implemented at {@link SALSAPrefetchingStrategy}
      */
     @Deprecated
     int STRATEGY_SALSA = 7;
@@ -100,7 +100,7 @@ public interface PrefetchStrategy {
     /**
      * Instantiate the prefetching strategy corresponding to the provided ID.
      * If the ID is unknown, instantiate the default Greedy-based strategy implemented by
-     * {@link GreedyPrefetchStrategy}
+     * {@link GreedyPrefetchingStrategy}
      *
      * @param strategyId The identification number of the prefetching strategy.
      * @return A implemented prefetching strategy.
@@ -108,14 +108,14 @@ public interface PrefetchStrategy {
     @SuppressWarnings("DuplicateBranchesInSwitch")
     @NotNull
     @Contract("_ -> new")
-    static PrefetchStrategy getStrategy(int strategyId) {
+    static PrefetchingStrategy getStrategy(int strategyId) {
         switch (strategyId) {
             case STRATEGY_MOST_VISITED_SUCCESSOR:
                 return new MostVisitedSuccessorPrefetchingStrategy();
             case STRATEGY_2:
-                return new PrefetchStrategyImpl2();
+                return new PrefetchingStrategyImpl2();
             case STRATEGY_GREEDY:
-                return new GreedyPrefetchStrategy(0.6f);
+                return new GreedyPrefetchingStrategy(0.6f);
             case STRATEGY_PPM:
                 return new PPMPrefetchingStrategy(0.6f);
             case STRATEGY_PAGERANK:
@@ -123,13 +123,13 @@ public interface PrefetchStrategy {
             case STRATEGY_HITS:
                 return new HITSPrefetchingStrategy(0.6f);
             case STRATEGY_SALSA:
-                return new SALSAPrefetchStrategy(0.6f);
+                return new SALSAPrefetchingStrategy(0.6f);
             case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
                 return new GreedyWithPageRankScoresPrefetchingStrategy(0.6f);
             case STRATEGY_PPM_WITH_HITS_SCORES:
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             default:
-                return new GreedyPrefetchStrategy(0.6f);
+                return new GreedyPrefetchingStrategy(0.6f);
         }
     }
 }
