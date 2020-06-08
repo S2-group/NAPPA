@@ -13,13 +13,17 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * This strategy is based in the {@link GreedyPrefetchStrategy}, where the score
+ * calculation is changed to use the PageRank score
+ */
 @Deprecated
-public class PrefetchStrategyImpl8 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl8.class.getSimpleName();
+public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = GreedyWithPageRankScoresPrefetchingStrategy.class.getSimpleName();
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
-    public  PrefetchStrategyImpl8(float threshold) {
+    public GreedyWithPageRankScoresPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
 

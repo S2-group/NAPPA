@@ -28,7 +28,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *     <li> {@link #STRATEGY_PAGERANK}</li>
  *     <li> {@link #STRATEGY_HITS}</li>
  *     <li> {@link #STRATEGY_SALSA}</li>
- *     <li> {@link #STRATEGY_8}</li>
+ *     <li> {@link #STRATEGY_GREEDY_WITH_PAGERANK_SCORES}</li>
  *     <li> {@link #STRATEGY_9}</li>
  * </ul>
  *
@@ -76,10 +76,10 @@ public interface PrefetchStrategy {
     int STRATEGY_SALSA = 7;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl8}
+     * ID for strategy implemented at {@link GreedyWithPageRankScoresPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_8 = 8;
+    int STRATEGY_GREEDY_WITH_PAGERANK_SCORES = 8;
 
     /**
      * ID for strategy implemented at {@link PrefetchStrategyImpl9}
@@ -124,8 +124,8 @@ public interface PrefetchStrategy {
                 return new HITSPrefetchingStrategy(0.6f);
             case STRATEGY_SALSA:
                 return new SALSAPrefetchStrategy(0.6f);
-            case STRATEGY_8:
-                return new PrefetchStrategyImpl8(0.6f);
+            case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
+                return new GreedyWithPageRankScoresPrefetchingStrategy(0.6f);
             case STRATEGY_9:
                 return new PrefetchStrategyImpl9(0.6f);
             default:
