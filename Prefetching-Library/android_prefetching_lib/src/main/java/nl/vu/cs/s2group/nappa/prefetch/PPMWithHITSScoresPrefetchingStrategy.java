@@ -14,14 +14,19 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
+/**
+ * This strategy is based in the {@link PPMPrefetchingStrategy}, where the score
+ * calculation is changed to use the HITS score used in {@link HITSPrefetchingStrategy}.
+ * This strategy only considers the direct successors of the current node.
+ */
 @Deprecated
-public class PrefetchStrategyImpl9 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl9.class.getSimpleName();
+public class PPMWithHITSScoresPrefetchingStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = PPMWithHITSScoresPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
-    public  PrefetchStrategyImpl9(float threshold) {
+    public PPMWithHITSScoresPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
     public static int lastN = 2;

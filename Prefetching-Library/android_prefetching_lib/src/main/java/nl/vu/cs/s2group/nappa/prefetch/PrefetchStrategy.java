@@ -29,7 +29,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *     <li> {@link #STRATEGY_HITS} (Hyperlink-Induced Topic Search)</li>
  *     <li> {@link #STRATEGY_SALSA} (Stochastic Approach for Link-Structure Analysis)</li>
  *     <li> {@link #STRATEGY_GREEDY_WITH_PAGERANK_SCORES}</li>
- *     <li> {@link #STRATEGY_9}</li>
+ *     <li> {@link #STRATEGY_PPM_WITH_HITS_SCORES}</li>
  * </ul>
  *
  */
@@ -82,10 +82,10 @@ public interface PrefetchStrategy {
     int STRATEGY_GREEDY_WITH_PAGERANK_SCORES = 8;
 
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl9}
+     * ID for strategy implemented at {@link PPMWithHITSScoresPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_9 = 9;
+    int STRATEGY_PPM_WITH_HITS_SCORES = 9;
 
     /**
      * Obtain the most likely {@link android.app.Activity} the user is likely to navigate to
@@ -126,8 +126,8 @@ public interface PrefetchStrategy {
                 return new SALSAPrefetchStrategy(0.6f);
             case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
                 return new GreedyWithPageRankScoresPrefetchingStrategy(0.6f);
-            case STRATEGY_9:
-                return new PrefetchStrategyImpl9(0.6f);
+            case STRATEGY_PPM_WITH_HITS_SCORES:
+                return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             default:
                 return new GreedyPrefetchStrategy(0.6f);
         }

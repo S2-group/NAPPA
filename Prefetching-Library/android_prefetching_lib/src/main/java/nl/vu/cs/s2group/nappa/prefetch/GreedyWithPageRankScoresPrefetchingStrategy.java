@@ -15,8 +15,8 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
  * This strategy is based in the {@link GreedyPrefetchStrategy}, where the score
- * calculation is changed to use the PageRank score. This strategy only considers
- * the direct successors of the current node.
+ * calculation is changed to use the PageRank score used in {@link PageRankPrefetchingStrategy}.
+ * This strategy only considers the direct successors of the current node.
  */
 @Deprecated
 public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchStrategy {
