@@ -17,6 +17,7 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
+// TODO: Read the strategy, provide a JavaDoc with basic description and update class name
 @Deprecated
 public class PrefetchStrategyImpl2 implements PrefetchStrategy {
     private final static String LOG_TAG = PrefetchStrategyImpl2.class.getSimpleName();
