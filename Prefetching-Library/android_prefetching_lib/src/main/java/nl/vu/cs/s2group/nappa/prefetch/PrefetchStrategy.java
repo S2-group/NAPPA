@@ -21,7 +21,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * <p>The available values of the {@code STRATEGY_ID} parameter are in the following list:
  *
  * <ul>
- *     <li> {@link #STRATEGY_1}</li>
+ *     <li> {@link #STRATEGY_MOST_VISITED_SUCCESSORS}</li>
  *     <li> {@link #STRATEGY_2}</li>
  *     <li> {@link #STRATEGY_GREEDY}</li>
  *     <li> {@link #STRATEGY_4}</li>
@@ -35,10 +35,10 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  */
 public interface PrefetchStrategy {
     /**
-     * ID for strategy implemented at {@link PrefetchStrategyImpl}
+     * ID for strategy implemented at {@link MostVisitedSuccessorsPrefetchingStrategy}
      */
     @Deprecated
-    int STRATEGY_1 = 1;
+    int STRATEGY_MOST_VISITED_SUCCESSORS = 1;
 
     /**
      * ID for strategy implemented at {@link PrefetchStrategyImpl2}
@@ -110,8 +110,8 @@ public interface PrefetchStrategy {
     @Contract("_ -> new")
     static PrefetchStrategy getStrategy(int strategyId) {
         switch (strategyId) {
-            case STRATEGY_1:
-                return new PrefetchStrategyImpl();
+            case STRATEGY_MOST_VISITED_SUCCESSORS:
+                return new MostVisitedSuccessorsPrefetchingStrategy();
             case STRATEGY_2:
                 return new PrefetchStrategyImpl2();
             case STRATEGY_GREEDY:

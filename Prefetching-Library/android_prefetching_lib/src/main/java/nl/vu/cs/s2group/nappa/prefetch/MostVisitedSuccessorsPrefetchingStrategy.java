@@ -13,8 +13,8 @@ import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 @Deprecated
-public class PrefetchStrategyImpl implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl.class.getSimpleName();
+public class MostVisitedSuccessorsPrefetchingStrategy implements PrefetchStrategy {
+    private final static String LOG_TAG = MostVisitedSuccessorsPrefetchingStrategy.class.getSimpleName();
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
