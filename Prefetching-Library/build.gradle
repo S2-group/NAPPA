@@ -33,6 +33,7 @@ project.ext {
     runnerVersion = "1.2.0"
     junitVersion = '1.1.1'
     diffMatchPatch = "1.1"
+    jetbrainsAnnotation = '19.0.0'
 }
 
 allprojects {

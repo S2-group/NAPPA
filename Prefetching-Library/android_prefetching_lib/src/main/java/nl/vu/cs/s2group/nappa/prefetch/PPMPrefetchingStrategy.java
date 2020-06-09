@@ -14,13 +14,24 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl4 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl4.class.getSimpleName();
+/**
+ * Utilizes the Prediction by Partial Match (PPM) based on a 0-order markov-model.
+ * This strategy only considers the direct successors of the current node.
+ * <br/><br/>
+ *
+ * <p> The PPM algorithm is defined in the paper
+ * <a href="https://dl.acm.org/doi/10.1145/301453.301557">
+ * Web prefetching between low-bandwidth clients and proxies: potential and
+ * performance</a>
+ */
+@Deprecated
+public class PPMPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
-    public  PrefetchStrategyImpl4(float threshold) {
+    public PPMPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
     public static int lastN = 2;

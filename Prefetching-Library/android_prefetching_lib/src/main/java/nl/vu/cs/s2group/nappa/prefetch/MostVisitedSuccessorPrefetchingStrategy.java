@@ -12,27 +12,33 @@ import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl implements PrefetchStrategy {
+/**
+ * This strategy selects the most visited successor of the current node. This strategy
+ * only considers the direct successors of the current node.
+ */
+@Deprecated
+public class MostVisitedSuccessorPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = MostVisitedSuccessorPrefetchingStrategy.class.getSimpleName();
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
-        Log.d("PrefStratImpl", "Started for node: "+node.activityName);
+        Log.d(LOG_TAG, "Started for node: "+node.activityName);
         SessionDao.SessionAggregate best = null;
         List<SessionDao.SessionAggregate> sessionAggregateList = node.getSessionAggregateList();
         if (sessionAggregateList!=null) {
             for (SessionDao.SessionAggregate aggregate : sessionAggregateList) {
-                Log.d("PrefStratImpl", "Evaluating successor: " + aggregate.actName);
+                Log.d(LOG_TAG, "Evaluating successor: " + aggregate.actName);
                 if (best == null) {
                     best = aggregate;
                 } else if (aggregate.countSource2Dest > best.countSource2Dest) {
-                    Log.d("PrefStratImpl",
+                    Log.d(LOG_TAG,
                             "choosing "+aggregate.actName+": "+aggregate.countSource2Dest+" against " +
                                     best.actName+": "+best.countSource2Dest);
                     best = aggregate;
                 }
             }
             if (best != null) {
-                Log.d("PrefStratImpl", "Chosen successor: " + best.actName);
+                Log.d(LOG_TAG, "Chosen successor: " + best.actName);
                 List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
                 LinkedList<String> toBeReturned = new LinkedList<String>();
                 for (AggregateUrlDao.AggregateURL elem : list) {
@@ -40,10 +46,10 @@ public class PrefetchStrategyImpl implements PrefetchStrategy {
                 }
                 return toBeReturned;
             } else {
-                Log.d("PrefStratImpl", "Null successor");
+                Log.d(LOG_TAG, "Null successor");
             }
         } else {
-            Log.d("PrefStratImpl", "SessionAggregateList is null");
+            Log.d(LOG_TAG, "SessionAggregateList is null");
         }
         return Arrays.asList(new String[]{});
     }
