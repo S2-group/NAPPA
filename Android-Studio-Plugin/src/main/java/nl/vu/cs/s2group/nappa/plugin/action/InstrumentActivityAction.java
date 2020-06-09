@@ -2,12 +2,9 @@ package nl.vu.cs.s2group.nappa.plugin.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -28,10 +25,6 @@ public class InstrumentActivityAction extends AnAction {
     private String cat  = "okfile";
     private List<String> javaActivityNameList = new LinkedList<>();
     private Project project;
-
-    //PrefetchingLib.init(this);
-
-
 
     /**
      * This detects the activitis from the manifest file and also initializes the prefetching library.
