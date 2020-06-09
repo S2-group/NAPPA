@@ -8,21 +8,25 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
- *  This class pertains to the parsing of the android manifest files for Activities
- *  and also setting up the Pre-fetching library package imports for usage on the application/ Project.
- *  Furthermore injects the Prefetch.init code to the project in order to initialize the prefetching
- *  library
+ * This class pertains to the parsing of the android manifest files for Activities
+ * and also setting up the Pre-fetching library package imports for usage on the application/ Project.
+ * Furthermore injects the Prefetch.init code to the project in order to initialize the prefetching
+ * library
  */
 public class InstrumentActivityAction extends AnAction {
 
-    private String cat  = "okfile";
+    private String cat = "okfile";
     private List<String> javaActivityNameList = new LinkedList<>();
     private Project project;
 
@@ -36,7 +40,7 @@ public class InstrumentActivityAction extends AnAction {
 
         // Iterate through all Manifest Files detected within the project
         for (PsiFile file1 : listpsi) {
-            cat += "\n"+file1.getVirtualFile().getPath()+"\n";
+            cat += "\n" + file1.getVirtualFile().getPath() + "\n";
             PsiElement psiElement = file1.findElementAt(0);
 
             // Treat the Android.Xml file as an XML structure
@@ -54,7 +58,7 @@ public class InstrumentActivityAction extends AnAction {
                 // Iterate through each activity tag
                 for (XmlTag tag : activityTags) {
                     // Add the activity name as defined in the manifest
-                    cat += "\n"+tag.getAttribute("android:name").getValue();
+                    cat += "\n" + tag.getAttribute("android:name").getValue();
                     try {
                         // Fetch the java resource file corresponding to the activity name
                         String[] names = tag.getAttribute("android:name").getValue().split("\\.");
@@ -82,20 +86,19 @@ public class InstrumentActivityAction extends AnAction {
                             //       activity if this is found to be present for a given activity.
                             //       There can only be one of each
                             for (XmlTag actionTag : actionTags) {
-                                if (actionTag.getAttribute("android:name")!=null &&
+                                if (actionTag.getAttribute("android:name") != null &&
                                         actionTag.getAttribute("android:name").getValue().compareTo("android.intent.action.MAIN") == 0) {
                                     isMain = true;
                                     break;
                                 }
                             }
-                            for (XmlTag categoryTag: categoryTags) {
-                                if (categoryTag.getAttribute("android:name")!=null &&
+                            for (XmlTag categoryTag : categoryTags) {
+                                if (categoryTag.getAttribute("android:name") != null &&
                                         categoryTag.getAttribute("android:name").getValue().compareTo("android.intent.category.LAUNCHER") == 0) {
                                     isLauncher = true;
                                     break;
                                 }
                             }
-
 
 
                         }
@@ -163,7 +166,7 @@ public class InstrumentActivityAction extends AnAction {
                                                     cat += "FOUND IN SECOND ELSE\n";
                                                     //break;
                                                 } else {
-                                                    cat += "\n"+statement.getText()+"\n";
+                                                    cat += "\n" + statement.getText() + "\n";
                                                 }
                                             }
 
@@ -188,10 +191,10 @@ public class InstrumentActivityAction extends AnAction {
                                                     }
                                                 });
                                             } else {
-                                                cat += "\nINIT PREFETCHING LIB NOT ADDED in "+name+"\n\n";
+                                                cat += "\nINIT PREFETCHING LIB NOT ADDED in " + name + "\n\n";
                                             }
                                         } catch (Exception e) {
-                                            cat += "\n"+e.getMessage()+"\n\n";
+                                            cat += "\n" + e.getMessage() + "\n\n";
                                             e.printStackTrace();
                                         }
                                     }
@@ -201,7 +204,7 @@ public class InstrumentActivityAction extends AnAction {
                         }
 
                     } catch (Exception e2) {
-                        cat += "    "+e2.toString();
+                        cat += "    " + e2.toString();
                     }
 
                 }
@@ -216,7 +219,7 @@ public class InstrumentActivityAction extends AnAction {
     private void instrumentActivityFiles() {
         // Iterate through all the java resource files corresponding to each activity in the Android
         //      App.  Usin the name of the files collected in the previous function
-        for (String javaActivityName: javaActivityNameList) {
+        for (String javaActivityName : javaActivityNameList) {
             // Fetch the file in PSI structure
             PsiFile[] listActJava = FilenameIndex.getFilesByName(project, javaActivityName, GlobalSearchScope.projectScope(project));
 
@@ -224,7 +227,7 @@ public class InstrumentActivityAction extends AnAction {
              * IMPORTANT: This iterates through every activity's corresponding resouce file in order
              * to instrument each activity to make use of the Prefetching lib.
              */
-            for (PsiFile actJava: listActJava) {
+            for (PsiFile actJava : listActJava) {
                 if (actJava instanceof PsiJavaFile) {
                     PsiJavaFile javaFile = (PsiJavaFile) actJava;
                     // FIXME: Assumption of first defined class being the public class
@@ -261,7 +264,7 @@ public class InstrumentActivityAction extends AnAction {
                     }
 
                     // write the full name of the class (inclulding full package description).
-                    cat += "   "+psiClass.getQualifiedName()+"   ";
+                    cat += "   " + psiClass.getQualifiedName() + "   ";
                     // Fetch onResume callbackmethod
                     PsiMethod[] psiMethods = psiClass.findMethodsByName("onResume", false);
 
@@ -279,7 +282,7 @@ public class InstrumentActivityAction extends AnAction {
 
                         try {
                             // Determine if On Resume is writable
-                            cat += psiMethods[0].getBody().isWritable()? "writable" : "not writable";
+                            cat += psiMethods[0].getBody().isWritable() ? "writable" : "not writable";
                             cat += "\n";
 
                             // THis is the statement added to instrument intent transitions
@@ -299,7 +302,7 @@ public class InstrumentActivityAction extends AnAction {
                                     addStatement = false;
                                     break;
                                 } else {
-                                    cat += "\n"+statement.getText()+"\n\n";
+                                    cat += "\n" + statement.getText() + "\n\n";
                                 }
                             }
 
@@ -312,11 +315,11 @@ public class InstrumentActivityAction extends AnAction {
                                     );
                                 });
                             } else {
-                                cat += "\nNOT ADDED in "+javaActivityName+"\n\n";
+                                cat += "\nNOT ADDED in " + javaActivityName + "\n\n";
                             }
 
                         } catch (Exception e3) {
-                            cat += e3.toString()+"\n";
+                            cat += e3.toString() + "\n";
                         }
 
                     } else { //NO onResume METHOD FOUND
@@ -341,18 +344,112 @@ public class InstrumentActivityAction extends AnAction {
         // Open the specific project
         project = e.getProject();
 
+        getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
+            System.out.println(fileName + " -> " + isMainLauncherActivity);
+            PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
+            for (PsiFile psiFile : psiFiles) {
+                PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+                if (isMainLauncherActivity) addLibraryInitializationStatement(psiJavaFile);
+            }
+        });
+
         // OPEN the Android Manifest File(s), and process each one of them in order to instrument them (project level)
-        PsiFile[] listpsi = FilenameIndex.getFilesByName(project, "AndroidManifest.xml", GlobalSearchScope.projectScope(project));
+//        PsiFile[] listpsi = FilenameIndex.getFilesByName(project, "AndroidManifest.xml", GlobalSearchScope.projectScope(project));
+//
+//        /**** Activity Instrumentation begins here ***/
+//
+//        populateActivityNameListFromManifestAndInitLibrary(listpsi);
+//        instrumentActivityFiles();
+//
+//        // This should print "Hello" + "okFile" + <<File Path>> + <<Extension Dialogue>>
+//        //    The actual output from the plug in is generated from
+//        //    populateActivityNameListFromManifestAndInitLibrary(listpsi);
+//        Messages.showMessageDialog("Hello\t" + cat, "World", Messages.getInformationIcon());
+    }
 
-        /**** Activity Instrumentation begins here ***/
+    improve this method as it is quite messy
+    private void addLibraryInitializationStatement(PsiJavaFile javaFile) {
+        String instrumentedText = "Prefetch.init(this);";
+        PsiClass[] psiClasses = javaFile.getClasses();
 
-        populateActivityNameListFromManifestAndInitLibrary(listpsi);
-        instrumentActivityFiles();
+        for (PsiClass psiClass : psiClasses) {
+            // There is only one initialization per app
+            if (psiClass.getText().contains(instrumentedText)) break;
 
-        // This should print "Hello" + "okFile" + <<File Path>> + <<Extension Dialogue>>
-        //    The actual output from the plug in is generated from
-        //    populateActivityNameListFromManifestAndInitLibrary(listpsi);
-        Messages.showMessageDialog("Hello\t"+cat, "World", Messages.getInformationIcon());
+            // The library must be initialized only in the file main class
+            PsiModifierList classModifier = psiClass.getModifierList();
+            if (classModifier == null) continue;
+            if (!classModifier.getText().equals("public")) continue;
 
+            PsiMethod[] psiMethods = psiClass.findMethodsByName("onCreate", false);
+            if (psiMethods.length == 0) return;
+
+            // There should be no other method with the name "onCreate"
+            PsiCodeBlock psiBody = psiMethods[0].getBody();
+            if (psiBody != null) {
+                PsiStatement[] psiStatements = psiBody.getStatements();
+                PsiStatement superOnCreateStatement = null;
+                for (PsiStatement psiStatement : psiStatements) {
+                    if (!psiStatement.getText().contains("super.onCreate")) continue;
+                    superOnCreateStatement = psiStatement;
+                    break;
+                }
+
+                PsiElement instrumentedElement = PsiElementFactory
+                        .getInstance(project)
+                        .createStatementFromText(instrumentedText, psiClass);
+
+                if (superOnCreateStatement == null) {
+                    WriteCommandAction.runWriteCommandAction(project, () -> {
+                        This inserts the statemnt at the end of the oncreate.
+                        since it is possible to make http requests in this emthod, it would be better to instrument
+                                in the beggining of the file instead.
+
+                        psiBody.add(instrumentedElement);
+                    });
+                } else {
+                    PsiStatement finalSuperOnCreateStatement = superOnCreateStatement;
+                    WriteCommandAction.runWriteCommandAction(project, () -> {
+                        psiBody.addAfter(instrumentedElement, finalSuperOnCreateStatement);
+                    });
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Identify all Java classes that are child of the class {@link android.app.Activity} by scanning
+     * all AndroidManifest files within a project. This method also identifies the main launcher activity.
+     *
+     * @return A map of java file names to a flag indicating if this file contains the main launcher activity
+     */
+    @NotNull
+    private Map<String, Boolean> getAllJavaFilesWithAnActivity() {
+        Map<String, Boolean> javaFiles = new HashMap<>();
+        PsiFile[] androidManifestFiles = FilenameIndex.getFilesByName(project, "AndroidManifest.xml", GlobalSearchScope.projectScope(project));
+
+        for (PsiFile psiFile : androidManifestFiles) {
+            XmlFile androidManifestFile = (XmlFile) psiFile;
+            XmlTag rootTag = androidManifestFile.getRootTag();
+
+            if (rootTag == null) continue;
+            XmlTag applicationTag = rootTag.findFirstSubTag("application");
+
+            if (applicationTag == null) continue;
+            XmlTag[] activityTags = applicationTag.findSubTags("activity");
+
+            for (XmlTag activityTag : activityTags) {
+                XmlAttribute tagAndroidName = activityTag.getAttribute("android:name");
+                if (tagAndroidName == null) continue;
+                String activityName = tagAndroidName.getValue();
+                if (activityName == null) continue;
+                activityName = activityName.substring(activityName.lastIndexOf(".") + 1) + ".java";
+                boolean isMainLauncherActivity = activityTag.getText().contains("android.intent.action.MAIN") &&
+                        activityTag.getText().contains("android.intent.category.LAUNCHER");
+                javaFiles.put(activityName, isMainLauncherActivity);
+            }
+        }
+        return javaFiles;
     }
 }
