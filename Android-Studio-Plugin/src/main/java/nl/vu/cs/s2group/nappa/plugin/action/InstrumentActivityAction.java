@@ -347,32 +347,6 @@ public class InstrumentActivityAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         // Open the specific project
         project = e.getProject();
-        System.out.println("ciao");
-
-        VirtualFile file = null;
-
-        try {
-            // Get the project folder and find the Android Manifest file from
-            //     somewhere within the project
-            cat += " "+project.getBasePath()+"  ";
-
-            file = project.getProjectFile().findChild("AndroidManifest.xml");
-        } catch (Exception exc) {
-            // If there is no manifest file, print out the failure
-            cat = "no_ok_file";
-        }
-        try {
-            // Has to do with whether an Android Manifest File has a different extension?
-            cat += "  "+file.getPath()+" ";
-            cat += file.isDirectory()? " isDir" : " notisdir";
-            FileType fileType = file.getFileType();
-            cat += " with extension"+file.getExtension();
-        } catch (Exception exc) {
-            cat += " and no extensionzzzzz";
-        }
-
-        PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
-        //psiFile.ele
 
         // OPEN the Android Manifest File(s), and process each one of them in order to instrument them (project level)
         PsiFile[] listpsi = FilenameIndex.getFilesByName(project, "AndroidManifest.xml", GlobalSearchScope.projectScope(project));
