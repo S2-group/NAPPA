@@ -111,14 +111,8 @@ public class InstrumentActivityAction extends AnAction {
             // There are three cases to inject a navigation probe
             PsiMethod[] psiMethods = psiClass.findMethodsByName("onResume", false);
             // Case 1. There is no method "onResume"
-            if (psiMethods.length == 0) {
-                injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
-
-                resultMessage.incrementInstrumentationCount()
-                        .appendPsiClass(psiClass)
-                        .appendText("Override method \"onResume()\"")
-                        .appendNewBlock();
-            } else {
+            if (psiMethods.length == 0) injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
+            else {
                 PsiCodeBlock psiBody = psiMethods[0].getBody();
                 // Case 2. There is a method "onResume" and it an empty body
                 // Only interfaces and abstracts methods don't have a body.
@@ -187,7 +181,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param instrumentedText Represents the source code to inject
      */
     private void injectNavigationProbesWithoutOnResumeMethod(PsiClass psiClass, String instrumentedText) {
-        PsiElement instrumentedElement = PsiElementFactory
+        PsiMethod instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createMethodFromText("" +
                         "@Override\n" +
@@ -195,6 +189,11 @@ public class InstrumentActivityAction extends AnAction {
                         "super.onResume();\n" +
                         instrumentedText + "\n" +
                         "}", psiClass);
+
+        resultMessage.incrementInstrumentationCount()
+                .appendPsiClass(psiClass)
+                .appendOverridePsiMethod(instrumentedElement)
+                .appendNewBlock();
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
             psiClass.add(instrumentedElement);
