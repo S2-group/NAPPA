@@ -33,7 +33,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param e {@inheritDoc}
      */
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         project = e.getProject();
 
         getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
