@@ -134,7 +134,7 @@ public class InstrumentResultMessage {
     }
 
     /**
-     * Append the class or interface qualified name to the result message
+     * Append the method or constructor qualified name to the result message
      *
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
@@ -142,6 +142,18 @@ public class InstrumentResultMessage {
     @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Method: ").append(psiMethod.getName()).append("\n");
+        return this;
+    }
+
+    /**
+     * Append a free text to the result message
+     *
+     * @param text The text to append.
+     * @return A instance of this object
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public InstrumentResultMessage appendText(String text) {
+        builder.append(text).append("\n");
         return this;
     }
 

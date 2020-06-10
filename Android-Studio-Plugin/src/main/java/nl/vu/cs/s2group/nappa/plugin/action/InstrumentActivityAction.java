@@ -10,6 +10,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentResultMessage;
 import nl.vu.cs.s2group.nappa.plugin.util.InstrumentUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 public class InstrumentActivityAction extends AnAction {
     private Project project;
+    private InstrumentResultMessage resultMessage;
 
     /**
      * This Action is responsible for initializing the Prefetching Library in the main launcher
@@ -35,24 +37,31 @@ public class InstrumentActivityAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         project = e.getProject();
+        resultMessage = new InstrumentResultMessage();
 
         getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
             System.out.println(fileName + " -> " + isMainLauncherActivity);
             PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
             for (PsiFile psiFile : psiFiles) {
+                resultMessage.incrementPossibleInstrumentationCount();
                 PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
                 InstrumentUtil.addLibraryImport(project, psiJavaFile);
                 injectNavigationProbes(psiJavaFile);
-                if (isMainLauncherActivity) addLibraryInitializationStatement(psiJavaFile);
+                if (isMainLauncherActivity) {
+                    resultMessage.incrementPossibleInstrumentationCount();
+                    addLibraryInitializationStatement(psiJavaFile);
+                }
             }
         });
+
+        resultMessage.getMessage();
     }
 
     /**
      * This method finds the {@code onResume()} method implemented in an {@link android.app.Activity} and
      * insert an instrumented text to add the navigation probes.There are three instrumentation cases for
      * injecting the navigation probes.
-     * <br/><br/>
+     * <br/><br/>git che
      *
      * <p> Case 1. The {@link android.app.Activity} don't have the method {@code onResume()}. In this case,
      * the method is injected containing the super constructor and the navigation probe. The injected code
@@ -88,7 +97,10 @@ public class InstrumentActivityAction extends AnAction {
         PsiClass[] psiClasses = javaFile.getClasses();
         for (PsiClass psiClass : psiClasses) {
             // There is only one initialization per app
-            if (psiClass.getText().contains(instrumentedText)) continue;
+            if (psiClass.getText().contains(instrumentedText)) {
+                resultMessage.incrementAlreadyInstrumentedCount();
+                break;
+            }
 
             // The library must be initialized only in the file main class
             if (!InstrumentUtil.isMainPublicClass(psiClass)) continue;
@@ -96,8 +108,14 @@ public class InstrumentActivityAction extends AnAction {
             // There are three cases to inject a navigation probe
             PsiMethod[] psiMethods = psiClass.findMethodsByName("onResume", false);
             // Case 1. There is no method "onResume"
-            if (psiMethods.length == 0) injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
-            else {
+            if (psiMethods.length == 0) {
+                injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
+
+                resultMessage.incrementInstrumentationCount()
+                        .appendPsiClass(psiClass)
+                        .appendText("Override method \"onResume()\"")
+                        .appendNewBlock();
+            } else {
                 PsiCodeBlock psiBody = psiMethods[0].getBody();
                 // Case 2. There is a method "onResume" and it an empty body
                 // Only interfaces and abstracts methods don't have a body.
@@ -108,7 +126,13 @@ public class InstrumentActivityAction extends AnAction {
                     // Case 3. There is a method "onResume" and it has a non-empty body
                 else
                     injectNavigationProbesWithNonEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
+
+                resultMessage.incrementInstrumentationCount()
+                        .appendPsiClass(psiClass)
+                        .appendPsiMethod(psiMethods[0])
+                        .appendNewBlock();
             }
+
         }
     }
 
@@ -197,7 +221,10 @@ public class InstrumentActivityAction extends AnAction {
 
         for (PsiClass psiClass : psiClasses) {
             // There is only one initialization per app
-            if (psiClass.getText().contains(instrumentedText)) break;
+            if (psiClass.getText().contains(instrumentedText)) {
+                resultMessage.incrementAlreadyInstrumentedCount();
+                break;
+            }
 
             // The library must be initialized only in the file main class
             if (!InstrumentUtil.isMainPublicClass(psiClass)) continue;
@@ -219,6 +246,11 @@ public class InstrumentActivityAction extends AnAction {
             PsiElement instrumentedElement = PsiElementFactory
                     .getInstance(project)
                     .createStatementFromText(instrumentedText, psiClass);
+
+            resultMessage.incrementInstrumentationCount()
+                    .appendPsiClass(psiClass)
+                    .appendPsiMethod(psiMethods[0])
+                    .appendNewBlock();
 
             WriteCommandAction.runWriteCommandAction(project, () -> {
                 if (isSuperOnCreate) psiBody.addAfter(instrumentedElement, firstStatement);
