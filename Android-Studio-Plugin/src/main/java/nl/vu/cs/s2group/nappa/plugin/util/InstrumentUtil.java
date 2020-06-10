@@ -132,7 +132,7 @@ public final class InstrumentUtil {
      * @return The Psi representation of the first {@code element} of the type {@code classType}. {@code null} if no Java class is found.
      */
     public static @Nullable
-    PsiElement getAncestorPsiElementFromElement(PsiElement element, Class classType) {
+    PsiElement getAncestorPsiElementFromElement(PsiElement element, Class<? extends PsiElement> classType) {
         PsiElement el = element;
         while (true) {
             if (el == null || el instanceof PsiDirectory) return null;
