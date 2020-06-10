@@ -10,6 +10,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentResultMessage;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -37,20 +40,32 @@ import java.util.List;
 
 public class InstrumentIntentExtrasAction extends AnAction {
     Project project;
+    private InstrumentResultMessage resultMessage;
     PsiMethod signature;
     StringBuilder displayMessage = new StringBuilder();
     StringBuilder logger = new StringBuilder();
 
     /**
      * Will find the location of the startActivity(...) method, and from there it will
-     * perpend a call to prefetchingLib.notifyExtras(intent.getAllExtras).
+     * prepend a call to prefetchingLib.notifyExtras(intent.getAllExtras).
      *
-     * @param event
+     * @param event {@inheritDoc}
      */
     @Override
-    public void actionPerformed(AnActionEvent event) {
-
+    public void actionPerformed(@NotNull AnActionEvent event) {
         project = event.getProject();
+        resultMessage = new InstrumentResultMessage();
+        String[] fileFilter = new String[]{"android.content.Intent"};
+        String[] classFilter = new String[]{"Intent"};
+
+        try {
+            List<PsiFile> psiFiles = InstrumentUtil.getAllJavaFilesInProjectAsPsi(project);
+            InstrumentUtil.runScanOnJavaFile(psiFiles, fileFilter, classFilter, this::processPsiStatement);
+            resultMessage.showResultDialog(project, "Intent Extras Instrumentation Result");
+        } catch (Exception exception) {
+            resultMessage.showErrorDialog(project, exception, "Failed to Instrument Intent Extras");
+        }
+
         boolean activityTransitionFound = false;
         String[] fileNames = FilenameIndex.getAllFilenames(project);
         // Generate a list of all the files included in the Project
@@ -221,6 +236,15 @@ public class InstrumentIntentExtrasAction extends AnAction {
                     .append("\n\nInstrumentation process did not change anything.");
 
         Messages.showMessageDialog(displayMessage.toString(), "Intent Extras Instrumentation", Messages.getInformationIcon());
+    }
+
+    private void processPsiStatement(@NotNull PsiElement rootPsiElement) {
+        rootPsiElement.accept(new JavaRecursiveElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+
+            }
+        });
     }
 
 }
