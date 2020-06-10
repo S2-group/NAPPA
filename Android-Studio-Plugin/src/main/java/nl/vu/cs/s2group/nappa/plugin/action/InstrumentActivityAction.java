@@ -217,7 +217,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param javaFile The Java file containing the main launcher {@link android.app.Activity}
      */
     private void addLibraryInitializationStatement(@NotNull PsiJavaFile javaFile) {
-        String instrumentedText = "Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
+        String instrumentedText = "PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
         PsiClass[] psiClasses = javaFile.getClasses();
 
         for (PsiClass psiClass : psiClasses) {
