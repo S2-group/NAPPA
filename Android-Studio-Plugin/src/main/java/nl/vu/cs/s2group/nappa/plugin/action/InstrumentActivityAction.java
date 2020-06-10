@@ -41,7 +41,6 @@ public class InstrumentActivityAction extends AnAction {
 
         try {
             getAllJavaFilesWithAnActivity().forEach((activityName, isMainLauncherActivity) -> {
-                System.out.println(activityName + " -> " + isMainLauncherActivity);
                 PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, activityName + ".java", GlobalSearchScope.projectScope(project));
                 for (PsiFile psiFile : psiFiles) {
                     resultMessage.incrementPossibleInstrumentationCount();
