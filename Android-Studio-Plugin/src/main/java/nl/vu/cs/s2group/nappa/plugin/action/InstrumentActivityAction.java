@@ -40,9 +40,9 @@ public class InstrumentActivityAction extends AnAction {
         resultMessage = new InstrumentResultMessage();
 
         try {
-            getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
-                System.out.println(fileName + " -> " + isMainLauncherActivity);
-                PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
+            getAllJavaFilesWithAnActivity().forEach((activityName, isMainLauncherActivity) -> {
+                System.out.println(activityName + " -> " + isMainLauncherActivity);
+                PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, activityName + ".java", GlobalSearchScope.projectScope(project));
                 for (PsiFile psiFile : psiFiles) {
                     resultMessage.incrementPossibleInstrumentationCount();
                     PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
@@ -291,7 +291,7 @@ public class InstrumentActivityAction extends AnAction {
                 if (activityName == null) continue;
 
                 // Fetch the java resource file corresponding to the activity name
-                activityName = activityName.substring(activityName.lastIndexOf(".") + 1) + ".java";
+                activityName = activityName.substring(activityName.lastIndexOf(".") + 1);
                 boolean isMainLauncherActivity = activityTag.getText().contains("android.intent.action.MAIN") &&
                         activityTag.getText().contains("android.intent.category.LAUNCHER");
                 javaFiles.put(activityName, isMainLauncherActivity);
