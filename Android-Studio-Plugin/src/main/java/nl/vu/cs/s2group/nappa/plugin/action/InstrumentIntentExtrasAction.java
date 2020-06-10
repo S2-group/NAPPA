@@ -41,9 +41,7 @@ import java.util.List;
 public class InstrumentIntentExtrasAction extends AnAction {
     Project project;
     private InstrumentResultMessage resultMessage;
-    PsiMethod signature;
     StringBuilder displayMessage = new StringBuilder();
-    StringBuilder logger = new StringBuilder();
 
     /**
      * Will find the location of the startActivity(...) method, and from there it will
