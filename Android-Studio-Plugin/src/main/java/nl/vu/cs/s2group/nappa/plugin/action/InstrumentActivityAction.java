@@ -134,10 +134,10 @@ public class InstrumentActivityAction extends AnAction {
     }
 
     /**
-     * Inject the navigation probe to the method {@code onCreate} with empty body to the class
+     * Inject the navigation probe to the method {@code onResume} with empty body to the class
      *
      * @param psiClass         Represents a Java class.
-     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
+     * @param psiBody          Represents the body of the method {@code onResume} found in the class
      * @param instrumentedText Represents the source code to inject
      */
     private void injectNavigationProbesWithEmptyOnResumeMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
@@ -153,10 +153,10 @@ public class InstrumentActivityAction extends AnAction {
     }
 
     /**
-     * Inject the navigation probe to the method {@code onCreate} with empty body to the class
+     * Inject the navigation probe to the method {@code onResume} containing existing code to the class
      *
      * @param psiClass         Represents a Java class.
-     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
+     * @param psiBody          Represents the body of the method {@code onResume} found in the class
      * @param instrumentedText Represents the source code to inject
      */
     private void injectNavigationProbesWithNonEmptyOnResumeMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
