@@ -357,6 +357,7 @@ public class InstrumentActivityAction extends AnAction {
             for (PsiFile psiFile : psiFiles) {
                 PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
                 InstrumentUtil.addLibraryImport(project, psiJavaFile);
+                injectNavigationProbes(psiJavaFile);
                 if (isMainLauncherActivity) addLibraryInitializationStatement(psiJavaFile);
             }
         });
@@ -374,6 +375,96 @@ public class InstrumentActivityAction extends AnAction {
 //        //    populateActivityNameListFromManifestAndInitLibrary(listpsi);
 //        Messages.showMessageDialog("Hello\t" + cat, "World", Messages.getInformationIcon());
     }
+
+    private void injectNavigationProbes(PsiJavaFile javaFile) {
+        String instrumentedText = "PrefetchingLib.setCurrentActivity(this);";
+        PsiClass[] psiClasses = javaFile.getClasses();
+        for (PsiClass psiClass : psiClasses) {
+            // There is only one initialization per app
+            if (psiClass.getText().contains(instrumentedText)) continue;
+
+            // The library must be initialized only in the file main class
+            if (!InstrumentUtil.isMainPublicClass(psiClass)) continue;
+
+            // There are three cases to inject a navigation probe
+            PsiMethod[] psiMethods = psiClass.findMethodsByName("onResume", false);
+            // Case 1. There is no method "onResume"
+            if (psiMethods.length == 0) injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
+            else {
+                PsiCodeBlock psiBody = psiMethods[0].getBody();
+                // Case 2. There is a method "onResume" and it an empty body
+                // noinspection ConstantConditions > If an activity has an "onResume" method, it will always have a body
+                if (psiBody.getStatements().length == 0)
+                    injectNavigationProbesWithEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
+                    // Case 3. There is a method "onResume" and it has a non-empty body
+                else
+                    injectNavigationProbesWithNonEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
+            }
+        }
+    }
+
+    /**
+     * Inject the navigation probe to the method {@code onCreate} with empty body to the class
+     *
+     * @param psiClass         Represents a Java class.
+     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
+     * @param instrumentedText Represents the source code to inject
+     */
+    private void injectNavigationProbesWithEmptyOnResumeMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
+        PsiElement instrumentedElement = PsiElementFactory
+                .getInstance(project)
+                .createStatementFromText("" +
+                        "super.onResume();\n" +
+                        instrumentedText, psiClass);
+
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            psiBody.add(instrumentedElement);
+        });
+    }
+
+    /**
+     * Inject the navigation probe to the method {@code onCreate} with empty body to the class
+     *
+     * @param psiClass         Represents a Java class.
+     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
+     * @param instrumentedText Represents the source code to inject
+     */
+    private void injectNavigationProbesWithNonEmptyOnResumeMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
+        // If there is a super constructor invocation, is must be in the first line of the method
+        PsiStatement firstStatement = psiBody.getStatements()[0];
+        boolean isSuperOnResume = firstStatement.getText().contains("super.onResume(");
+
+        PsiElement instrumentedElement = PsiElementFactory
+                .getInstance(project)
+                .createStatementFromText(instrumentedText, psiClass);
+
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            if (isSuperOnResume) psiBody.addAfter(instrumentedElement, firstStatement);
+            else psiBody.addBefore(instrumentedElement, firstStatement);
+        });
+    }
+
+    /**
+     * Inject a {@code onResume} method with the navigation probes to the class
+     *
+     * @param psiClass         Represents a Java class.
+     * @param instrumentedText Represents the source code to inject
+     */
+    private void injectNavigationProbesWithoutOnResumeMethod(PsiClass psiClass, String instrumentedText) {
+        PsiElement instrumentedElement = PsiElementFactory
+                .getInstance(project)
+                .createMethodFromText("" +
+                        "@Override\n" +
+                        "protected void onResume(){\n" +
+                        "super.onResume();\n" +
+                        instrumentedText + "\n" +
+                        "}", psiClass);
+
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            psiClass.add(instrumentedElement);
+        });
+    }
+
 
     /**
      * This method finds the {@code onCreate()} method implemented in the main launcher
@@ -404,15 +495,13 @@ public class InstrumentActivityAction extends AnAction {
             if (psiClass.getText().contains(instrumentedText)) break;
 
             // The library must be initialized only in the file main class
-            PsiModifierList classModifier = psiClass.getModifierList();
-            if (classModifier == null) continue;
-            if (!classModifier.getText().equals("public")) continue;
+            if (!InstrumentUtil.isMainPublicClass(psiClass)) continue;
 
             // There should be exactly a single method named "onCreate" and it should not be empty
             PsiMethod[] psiMethods = psiClass.findMethodsByName("onCreate", false);
-            if (psiMethods.length == 0) return;
+            if (psiMethods.length == 0) break;
             PsiCodeBlock psiBody = psiMethods[0].getBody();
-            if (psiBody == null) return;
+            if (psiBody == null) break;
 
             // If there is a super constructor invocation, is must be in the first line of the method
             PsiStatement firstStatement = psiBody.getStatements()[0];

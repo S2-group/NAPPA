@@ -25,7 +25,8 @@ public final class InstrumentUtil {
      * @param project An object representing an IntelliJ project.
      * @return A list of all Java source files in the project
      */
-    public static @NotNull List<PsiFile> getAllJavaFilesInProjectAsPsi(Project project) {
+    public static @NotNull
+    List<PsiFile> getAllJavaFilesInProjectAsPsi(Project project) {
         List<PsiFile> psiFiles = new LinkedList<>();
         String[] fileNames = FilenameIndex.getAllFilenames(project);
 
@@ -133,5 +134,16 @@ public final class InstrumentUtil {
             if (classType.isInstance(el)) return el;
             el = el.getParent();
         }
+    }
+
+    /**
+     * Verifies if a class is the main public class
+     *
+     * @param psiClass Represents a Java class or interface.
+     * @return {@code True} if it is the main class or {@code False} otherwise
+     */
+    public static boolean isMainPublicClass(@NotNull PsiClass psiClass) {
+        PsiModifierList classModifier = psiClass.getModifierList();
+        return classModifier != null && classModifier.getText().equals("public");
     }
 }
