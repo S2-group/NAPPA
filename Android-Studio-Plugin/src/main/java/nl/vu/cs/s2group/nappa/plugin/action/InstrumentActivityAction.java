@@ -39,22 +39,25 @@ public class InstrumentActivityAction extends AnAction {
         project = e.getProject();
         resultMessage = new InstrumentResultMessage();
 
-        getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
-            System.out.println(fileName + " -> " + isMainLauncherActivity);
-            PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
-            for (PsiFile psiFile : psiFiles) {
-                resultMessage.incrementPossibleInstrumentationCount();
-                PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-                InstrumentUtil.addLibraryImport(project, psiJavaFile);
-                injectNavigationProbes(psiJavaFile);
-                if (isMainLauncherActivity) {
+        try {
+            getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
+                System.out.println(fileName + " -> " + isMainLauncherActivity);
+                PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
+                for (PsiFile psiFile : psiFiles) {
                     resultMessage.incrementPossibleInstrumentationCount();
-                    addLibraryInitializationStatement(psiJavaFile);
+                    PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+                    InstrumentUtil.addLibraryImport(project, psiJavaFile);
+                    injectNavigationProbes(psiJavaFile);
+                    if (isMainLauncherActivity) {
+                        resultMessage.incrementPossibleInstrumentationCount();
+                        addLibraryInitializationStatement(psiJavaFile);
+                    }
                 }
-            }
-        });
-
-        resultMessage.getMessage();
+            });
+            resultMessage.showResultDialog(project, "Navigation Probes Instrumentation Result");
+        } catch (Exception exception) {
+            resultMessage.showErrorDialog(project, exception, "Failed to Instrument Navigation Probes");
+        }
     }
 
     /**
