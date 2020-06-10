@@ -11,6 +11,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+import nl.vu.cs.s2group.nappa.plugin.util.InstrumentUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -349,6 +350,7 @@ public class InstrumentActivityAction extends AnAction {
             PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
             for (PsiFile psiFile : psiFiles) {
                 PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
+                InstrumentUtil.addLibraryImport(project, psiJavaFile);
                 if (isMainLauncherActivity) addLibraryInitializationStatement(psiJavaFile);
             }
         });
