@@ -19,6 +19,10 @@ import java.util.function.Consumer;
 public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
 
+    private InstrumentUtil() {
+        throw new IllegalStateException("InstrumentUtil is a utility class and should be instantiated!");
+    }
+
     /**
      * Scan the project directory for all source files to search for all Java source files
      *
