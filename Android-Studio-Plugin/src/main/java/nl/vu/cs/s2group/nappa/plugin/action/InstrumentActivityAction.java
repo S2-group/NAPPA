@@ -406,9 +406,14 @@ public class InstrumentActivityAction extends AnAction {
             PsiCodeBlock psiBody = psiMethods[0].getBody();
             if (psiBody == null) return;
 
+            // If there is a super constructor invocation, is must be in the first line of the method
             PsiStatement firstStatement = psiBody.getStatements()[0];
             boolean isSuperOnCreate = firstStatement.getText().contains("super.onCreate(");
 
+            // This is the Element which contains the statement to connect the
+            // Android application's Main activity to the NAPPA Prefetching Library.
+            // Essentially, we add a statement which initializes Nappa at the very beginning
+            // of the application launch
             PsiElement instrumentedElement = PsiElementFactory
                     .getInstance(project)
                     .createStatementFromText(instrumentedText, psiClass);
@@ -431,6 +436,8 @@ public class InstrumentActivityAction extends AnAction {
         Map<String, Boolean> javaFiles = new HashMap<>();
         PsiFile[] androidManifestFiles = FilenameIndex.getFilesByName(project, "AndroidManifest.xml", GlobalSearchScope.projectScope(project));
 
+        // Navigate tags until you reach the Activity Tags according to the following hierarchy
+        //  Manifest -> application -> activity
         for (PsiFile psiFile : androidManifestFiles) {
             XmlFile androidManifestFile = (XmlFile) psiFile;
             XmlTag rootTag = androidManifestFile.getRootTag();
@@ -446,6 +453,8 @@ public class InstrumentActivityAction extends AnAction {
                 if (tagAndroidName == null) continue;
                 String activityName = tagAndroidName.getValue();
                 if (activityName == null) continue;
+
+                // Fetch the java resource file corresponding to the activity name
                 activityName = activityName.substring(activityName.lastIndexOf(".") + 1) + ".java";
                 boolean isMainLauncherActivity = activityTag.getText().contains("android.intent.action.MAIN") &&
                         activityTag.getText().contains("android.intent.category.LAUNCHER");
