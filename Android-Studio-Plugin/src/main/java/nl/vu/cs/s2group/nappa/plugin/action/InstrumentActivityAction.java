@@ -367,9 +367,8 @@ public class InstrumentActivityAction extends AnAction {
 //        Messages.showMessageDialog("Hello\t" + cat, "World", Messages.getInformationIcon());
     }
 
-    improve this method as it is quite messy
     private void addLibraryInitializationStatement(PsiJavaFile javaFile) {
-        String instrumentedText = "Prefetch.init(this);";
+        String instrumentedText = "Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
         PsiClass[] psiClasses = javaFile.getClasses();
 
         for (PsiClass psiClass : psiClasses) {
@@ -381,40 +380,23 @@ public class InstrumentActivityAction extends AnAction {
             if (classModifier == null) continue;
             if (!classModifier.getText().equals("public")) continue;
 
+            // There should be exactly a single method named "onCreate" and it should not be empty
             PsiMethod[] psiMethods = psiClass.findMethodsByName("onCreate", false);
             if (psiMethods.length == 0) return;
-
-            // There should be no other method with the name "onCreate"
             PsiCodeBlock psiBody = psiMethods[0].getBody();
-            if (psiBody != null) {
-                PsiStatement[] psiStatements = psiBody.getStatements();
-                PsiStatement superOnCreateStatement = null;
-                for (PsiStatement psiStatement : psiStatements) {
-                    if (!psiStatement.getText().contains("super.onCreate")) continue;
-                    superOnCreateStatement = psiStatement;
-                    break;
-                }
+            if (psiBody == null) return;
 
-                PsiElement instrumentedElement = PsiElementFactory
-                        .getInstance(project)
-                        .createStatementFromText(instrumentedText, psiClass);
+            PsiStatement firstStatement = psiBody.getStatements()[0];
+            boolean isSuperOnCreate = firstStatement.getText().contains("super.onCreate(");
 
-                if (superOnCreateStatement == null) {
-                    WriteCommandAction.runWriteCommandAction(project, () -> {
-                        This inserts the statemnt at the end of the oncreate.
-                        since it is possible to make http requests in this emthod, it would be better to instrument
-                                in the beggining of the file instead.
+            PsiElement instrumentedElement = PsiElementFactory
+                    .getInstance(project)
+                    .createStatementFromText(instrumentedText, psiClass);
 
-                        psiBody.add(instrumentedElement);
-                    });
-                } else {
-                    PsiStatement finalSuperOnCreateStatement = superOnCreateStatement;
-                    WriteCommandAction.runWriteCommandAction(project, () -> {
-                        psiBody.addAfter(instrumentedElement, finalSuperOnCreateStatement);
-                    });
-                }
-            }
-
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                if (isSuperOnCreate) psiBody.addAfter(instrumentedElement, firstStatement);
+                else psiBody.addBefore(instrumentedElement, firstStatement);
+            });
         }
     }
 
