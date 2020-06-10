@@ -13,12 +13,23 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl7 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl7.class.getSimpleName();
+/**
+ * Utilizes the Stochastic Approach for Link-Structure Analysis (SALSA) ranking
+ * algorithm to determine which nodes to select. This strategy only considers the
+ * direct successors of the current node.
+ * <br/><br/>
+ *
+ * <p> The SALSA algorithm is defined in the paper
+ * <a href="https://dl.acm.org/doi/10.1145/382979.383041">
+ * SALSA: the stochastic approach for link-structure analysis</a>
+ */
+@Deprecated
+public class SALSAPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = SALSAPrefetchingStrategy.class.getSimpleName();
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     private float threshold;
 
-    public  PrefetchStrategyImpl7(float threshold) {this.threshold = threshold;}
+    public SALSAPrefetchingStrategy(float threshold) {this.threshold = threshold;}
 
 
 

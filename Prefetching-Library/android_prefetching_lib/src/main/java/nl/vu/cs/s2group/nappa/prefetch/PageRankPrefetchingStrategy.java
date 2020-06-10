@@ -13,12 +13,18 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl6 implements PrefetchStrategy{
-    private final static String LOG_TAG = PrefetchStrategyImpl6.class.getSimpleName();
+/**
+ * This strategy utilizes the PageRank link analysis algorithm to determine which
+ * nodes to select. This strategy only considers the direct successors of the
+ * current node.
+ */
+@Deprecated
+public class PageRankPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = PageRankPrefetchingStrategy.class.getSimpleName();
+
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;
-
-    public  PrefetchStrategyImpl6(float threshold) {this.threshold=threshold;}
+    public PageRankPrefetchingStrategy(float threshold) {this.threshold=threshold;}
 
 
 
@@ -35,7 +41,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
         for (ActivityNode node1 : probableNodes) {
             for (int i=probableNodes.lastIndexOf(node1)+1;i<probableNodes.size();i++) {
                 ActivityNode node2 = probableNodes.get(i);
-                if(node1.authority<node2.authority){
+                if(node1.pageRank<node2.pageRank){
                     ActivityNode temp=node1;
                     probableNodes.set(probableNodes.lastIndexOf(node1),node2);
                     probableNodes.set(probableNodes.lastIndexOf(node2),temp);
@@ -48,8 +54,7 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         for (int i=0; i<maxNumber; i++) {
             listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
-            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
-
+            Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName+ " index: " + probableNodes.get(i).pageRank);
         }
 
         return listUrlToPrefetch;
@@ -74,17 +79,17 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authority);
+            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).pageRank);
         }
 
         for (Long succ : successorCountMap.keySet()) {
 
             ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
 
-            if (!probableNodes.contains(node1)) {
-                probableNodes.add(node1);
-                getMostProbableNodes(node1, probableNodes);
-            }
+                if (!probableNodes.contains(node1)) {
+                    probableNodes.add(node1);
+                    getMostProbableNodes(node1, probableNodes);
+                }
 
         }
 
@@ -111,3 +116,4 @@ public class PrefetchStrategyImpl6 implements PrefetchStrategy{
         return candidates;
     }
 }
+

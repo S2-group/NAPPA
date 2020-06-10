@@ -13,13 +13,32 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
-public class PrefetchStrategyImpl3 implements PrefetchStrategy {
-    private final static String LOG_TAG = PrefetchStrategyImpl3.class.getSimpleName();
+/**
+ * This strategy greedily determine which activity successors can benefit the most from
+ * prefetching. This is not limited to immediate successors but can consider successors
+ * at a higher depth in the ENG, provided that the "added value" of prefetching these
+ * high-depth successors is sufficient.
+ * <br/><br/>
+ *
+ * <p> The node selection process introduces the notion of a "Weight" factor.
+ * The algorithm recursively traverses the set of all successors in a depth first way
+ * up to the point where the base case does not hold. With every recursive
+ * iteration of the algorithm, the weight value is defined as the score that has been
+ * calculated in the previous iteration. With every iteration of the recursive step,
+ * the weight value decays further.
+ * <br/><br/>
+ *
+ * <p> Considering the recursive step, it can be seen that as the graph depth increases,
+ * then the scores corresponding to all subsequent nodes decreases. To limit the number
+ * of node candidates generated, a threshold value is inserted.
+ */
+public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
+    private final static String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
-    public  PrefetchStrategyImpl3(float threshold) {
+    public GreedyPrefetchingStrategy(float threshold) {
         this.threshold = threshold;
     }
 
