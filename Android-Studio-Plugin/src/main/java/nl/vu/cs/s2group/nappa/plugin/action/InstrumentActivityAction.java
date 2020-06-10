@@ -376,7 +376,42 @@ public class InstrumentActivityAction extends AnAction {
 //        Messages.showMessageDialog("Hello\t" + cat, "World", Messages.getInformationIcon());
     }
 
-    private void injectNavigationProbes(PsiJavaFile javaFile) {
+    /**
+     * This method finds the {@code onResume()} method implemented in an {@link android.app.Activity} and
+     * insert an instrumented text to add the navigation probes.There are three instrumentation cases for
+     * injecting the navigation probes.
+     * <br/><br/>
+     *
+     * <p> Case 1. The {@link android.app.Activity} don't have the method {@code onResume()}. In this case,
+     * the method is injected containing the super constructor and the navigation probe. The injected code
+     * is as follows:
+     *
+     * <pre>{@code
+     * @Override
+     * protected void onResume() {
+     *     super.onResume();
+     *     PrefetchingLib.setCurrentActivity(this);
+     * }
+     * }</pre>
+     *
+     * <p> Case 2. The {@link android.app.Activity} has a method {@code onResume()} with existing source
+     * code. In this case, the navigation probe is inserted at the top of the method {@code onResume()},
+     * after invoking the super constructor, if it present, or before the first statement in the method.
+     * The injected code is as follows:
+     *
+     * <pre>{@code PrefetchingLib.setCurrentActivity(this);}</pre>
+     *
+     * <p> Case 3. The {@link android.app.Activity} has an empty method {@code onResume()}. In this case,
+     * the super constructor is injected together with the navigation probe. The injected code is as follows:
+     *
+     * <pre>{@code
+     * super.onResume();
+     * PrefetchingLib.setCurrentActivity(this);
+     * }</pre>
+     *
+     * @param javaFile The Java file containing the an {@link android.app.Activity}
+     */
+    private void injectNavigationProbes(@NotNull PsiJavaFile javaFile) {
         String instrumentedText = "PrefetchingLib.setCurrentActivity(this);";
         PsiClass[] psiClasses = javaFile.getClasses();
         for (PsiClass psiClass : psiClasses) {
@@ -393,7 +428,9 @@ public class InstrumentActivityAction extends AnAction {
             else {
                 PsiCodeBlock psiBody = psiMethods[0].getBody();
                 // Case 2. There is a method "onResume" and it an empty body
-                // noinspection ConstantConditions > If an activity has an "onResume" method, it will always have a body
+                // Only interfaces and abstracts methods don't have a body.
+                // The method "onResume" will always have a body.
+                // noinspection ConstantConditions
                 if (psiBody.getStatements().length == 0)
                     injectNavigationProbesWithEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
                     // Case 3. There is a method "onResume" and it has a non-empty body
@@ -455,7 +492,7 @@ public class InstrumentActivityAction extends AnAction {
                 .getInstance(project)
                 .createMethodFromText("" +
                         "@Override\n" +
-                        "protected void onResume(){\n" +
+                        "protected void onResume() {\n" +
                         "super.onResume();\n" +
                         instrumentedText + "\n" +
                         "}", psiClass);
@@ -478,11 +515,7 @@ public class InstrumentActivityAction extends AnAction {
      *
      * <p> The following source code is instrumented:
      *
-     * <pre>
-     * {@code
-     * Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
-     * }
-     * </pre>
+     * <pre>{@code Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);}</pre>
      *
      * @param javaFile The Java file containing the main launcher {@link android.app.Activity}
      */
