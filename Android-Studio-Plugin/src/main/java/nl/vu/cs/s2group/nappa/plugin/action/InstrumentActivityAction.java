@@ -340,9 +340,15 @@ public class InstrumentActivityAction extends AnAction {
         }
     }
 
+    /**
+     * This Action is responsible for initializing the Prefetching Library in the main launcher
+     * {@link android.app.Activity} and to inject navigation probes in all {@link android.app.Activity}.
+     * <br/><br/>
+     *
+     * @param e {@inheritDoc}
+     */
     @Override
     public void actionPerformed(AnActionEvent e) {
-        // Open the specific project
         project = e.getProject();
 
         getAllJavaFilesWithAnActivity().forEach((fileName, isMainLauncherActivity) -> {
