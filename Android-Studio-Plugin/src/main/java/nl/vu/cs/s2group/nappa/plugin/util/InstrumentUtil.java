@@ -2,6 +2,7 @@ package nl.vu.cs.s2group.nappa.plugin.util;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -15,6 +16,10 @@ import java.util.function.Consumer;
 
 /**
  * An class containing common utility methods to simplify the instrumentation actions
+ *
+ * For utility methods to manipulate the PSI Tree, check the utility classes provided by IntelliJ at
+ * {@link com.intellij.psi.util}, in particular {@link com.intellij.psi.util.PsiTreeUtil PsiTreeUtil}
+ * and {@link com.intellij.psi.util.PsiUtil PsiUtil}.
  */
 public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
@@ -121,6 +126,9 @@ public final class InstrumentUtil {
     /**
      * Traverse the Psi tree from the {@code element} in direction to the root until finding a Psi element representing
      * the Psi element class provided in {@code classType}
+     *
+     * This method is similar to {@link com.intellij.psi.util.PsiTreeUtil#findFirstParent(PsiElement, Condition)},
+     * both return the same object, however, this method executes faster.
      *
      * @param element   The reference element to find a parent Psi element from
      * @param classType The class of the desired Psi element
