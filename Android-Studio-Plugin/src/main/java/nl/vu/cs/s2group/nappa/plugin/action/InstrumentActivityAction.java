@@ -367,7 +367,27 @@ public class InstrumentActivityAction extends AnAction {
 //        Messages.showMessageDialog("Hello\t" + cat, "World", Messages.getInformationIcon());
     }
 
-    private void addLibraryInitializationStatement(PsiJavaFile javaFile) {
+    /**
+     * This method finds the {@code onCreate()} method implemented in the main launcher
+     * {@link android.app.Activity} and insert an instrumented text containing the Prefetching Library
+     * initialization with the default Greedy Prefetching Strategy
+     * <br/><br/>
+     *
+     * <p> The initialization is inserted at the top of the {@code onCreate()} method, after
+     * invoking the super constructor, if present, or before the first statement in the method.
+     * <br/><br/>
+     *
+     * <p> The following source code is instrumented:
+     *
+     * <pre>
+     * {@code
+     * Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
+     * }
+     * </pre>
+     *
+     * @param javaFile The Java file containing the main launcher {@link android.app.Activity}
+     */
+    private void addLibraryInitializationStatement(@NotNull PsiJavaFile javaFile) {
         String instrumentedText = "Prefetch.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
         PsiClass[] psiClasses = javaFile.getClasses();
 
