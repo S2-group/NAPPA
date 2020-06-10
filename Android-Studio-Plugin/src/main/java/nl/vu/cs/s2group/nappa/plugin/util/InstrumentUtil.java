@@ -144,6 +144,6 @@ public final class InstrumentUtil {
      */
     public static boolean isMainPublicClass(@NotNull PsiClass psiClass) {
         PsiModifierList classModifier = psiClass.getModifierList();
-        return classModifier != null && classModifier.getText().equals("public");
+        return classModifier != null && classModifier.getText().contains("public");
     }
 }
