@@ -7,6 +7,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.JavaElementType;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -241,13 +242,6 @@ public class InstrumentIntentExtrasAction extends AnAction {
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                // Verifies if this element is already instrumented
-                if (element.getText().contains("PrefetchingLib.notifyExtras(")) {
-                    resultMessage.incrementPossibleInstrumentationCount()
-                            .incrementAlreadyInstrumentedCount();
-                    return;
-                }
-
                 // Verifies if the element contain the method to instrument.
                 // This verification is done here to reduce the number of recursive calls
                 if (!element.getText().contains("startActivity")) return;
@@ -274,32 +268,33 @@ public class InstrumentIntentExtrasAction extends AnAction {
         PsiExpressionList parameterList = PsiTreeUtil.findChildOfType(element, PsiExpressionList.class);
         // Get the Identifier of the intent
         PsiReferenceExpression intentNameHandle = PsiTreeUtil.findChildOfType(parameterList, PsiReferenceExpression.class);
+        PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(element, PsiStatement.class);
 
-        if (intentNameHandle == null) return;
-
-        PsiClass psiClass = (PsiClass) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
-        PsiMethod psiMethod = (PsiMethod) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
-
-        // Fetch the intent Name and create the injectable statement
-        instrumentLine = instrumentLine.replace("INTENT_NAME", intentNameHandle.getText());
+        if (intentNameHandle == null || referenceStatement == null) return;
 
         resultMessage.incrementPossibleInstrumentationCount();
 
-        if (psiMethod != null && psiMethod.getText().contains(instrumentLine)) {
+        instrumentLine = instrumentLine.replace("INTENT_NAME", intentNameHandle.getText());
+
+        // Verifies if this element is already instrumented
+        PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
+        if (previousStatement != null && previousStatement.getText().equals(instrumentLine)) {
             resultMessage.incrementAlreadyInstrumentedCount();
             return;
         }
+
+        PsiClass psiClass = (PsiClass) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class);
+        PsiMethod psiMethod = (PsiMethod) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiMethod.class);
 
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentLine, psiClass);
 
-        PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(element, PsiStatement.class);
-
         //noinspection ConstantConditions -- Since we loop through classes, it is certain that there is a parent Java class
         resultMessage.incrementInstrumentationCount()
                 .appendPsiClass(psiClass)
-                .appendPsiMethod(psiMethod);
+                .appendPsiMethod(psiMethod)
+                .appendNewBlock();
 
         // Inject the instrumented notifier of extra changes
         WriteCommandAction.runWriteCommandAction(project, () -> {

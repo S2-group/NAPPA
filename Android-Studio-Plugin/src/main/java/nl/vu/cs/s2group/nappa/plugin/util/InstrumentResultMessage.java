@@ -144,10 +144,10 @@ public class InstrumentResultMessage {
         if (unneededInstrumentationCount != 0) {
             message.append(unneededInstrumentationCount)
                     .append(" statements do not need to be instrumented.")
-                    .append("\n\n");
+                    .append("\n");
         }
 
-
+        message.append("\n");
         builder.insert(0, message);
     }
 
