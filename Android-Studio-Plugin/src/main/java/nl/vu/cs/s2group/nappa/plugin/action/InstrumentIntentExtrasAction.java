@@ -424,7 +424,6 @@ public class InstrumentIntentExtrasAction extends AnAction {
                                                               @NotNull String instrumentedText) {
         String intentDeclarationText = "Intent intent = " + intentParameter.getText() + ";";
         String methodCallText = methodCall.getText().replace(intentParameter.getText(), "intent");
-        methodCallText = methodCallText.contains(";") ? methodCallText : methodCallText.concat(";");
         methodCallText = methodCallText.replace("\n", "").replaceAll(" {2}", " ");
 
         PsiElement instrumentedElementIntent = PsiElementFactory
@@ -433,9 +432,6 @@ public class InstrumentIntentExtrasAction extends AnAction {
         PsiElement instrumentedElementLibrary = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentedText.replace("INTENT", "intent"), psiClass);
-        PsiElement instrumentedElementMethodCall = PsiElementFactory
-                .getInstance(project)
-                .createStatementFromText(methodCallText, psiClass);
 
         resultMessage.incrementInstrumentationCount();
 
@@ -443,10 +439,17 @@ public class InstrumentIntentExtrasAction extends AnAction {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{
                     instrumentedElementIntent,
                     instrumentedElementLibrary,
-                    instrumentedElementMethodCall,
+                    PsiElementFactory
+                            .getInstance(project)
+                            .createStatementFromText(methodCallText + ";", psiClass),
             });
             return;
         }
+
+
+        PsiElement instrumentedElementMethodCall = PsiElementFactory
+                .getInstance(project)
+                .createStatementFromText(methodCallText, psiClass);
 
         System.out.print("instrument: " + instrumentedElementIntent.getText() + "\n" + instrumentedElementLibrary.getText() + "\n" + instrumentedElementMethodCall.getText() + "\n");
         // Inject the instrumented notifier of extra changes
