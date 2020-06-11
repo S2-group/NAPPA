@@ -272,6 +272,16 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 boolean isMethodInInlineLambdaFunction = methodCall.getParent() instanceof PsiLambdaExpression;
                 String instrumentedText = "PrefetchingLib.notifyExtras(INTENT.getExtras());";
 
+                PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(methodCall, PsiStatement.class);
+                if (referenceStatement == null) return;
+
+                // Verifies if this element is already instrumented
+                PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
+                if (previousStatement != null && previousStatement.getText().contains("PrefetchingLib")) {
+                    resultMessage.incrementAlreadyInstrumentedCount();
+                    return;
+                }
+
                 String str = "---\n" +
                         "Class: " + psiClass.getName() + "\n" +
                         "Element: " + element.getText() + "\n" +
@@ -282,7 +292,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 System.out.print(str);
 
                 if (intentParameter instanceof PsiReferenceExpression)
-                    injectExtraProbeForVariableReference(psiClass, methodCall, (PsiReferenceExpression) intentParameter, instrumentedText);
+                    injectExtraProbeForVariableReference(psiClass, referenceStatement, methodCall, (PsiReferenceExpression) intentParameter, instrumentedText);
 
                 System.out.print("\n");
             }
@@ -322,6 +332,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
     }
 
     private void injectExtraProbeForVariableReference(PsiClass psiClass,
+                                                      PsiElement referenceStatement,
                                                       PsiMethodCallExpression methodCall,
                                                       PsiReferenceExpression intentParameter,
                                                       String instrumentedText) {
@@ -333,9 +344,6 @@ public class InstrumentIntentExtrasAction extends AnAction {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{instrumentedElement});
         } else {
             System.out.print("instrument: " + instrumentedElement.getText());
-            PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(methodCall, PsiStatement.class);
-            if (referenceStatement == null) return;
-
             // Inject the instrumented notifier of extra changes
             WriteCommandAction.runWriteCommandAction(project, () -> {
                 referenceStatement.getParent().addBefore(instrumentedElement, referenceStatement);
