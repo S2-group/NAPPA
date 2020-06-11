@@ -7,7 +7,9 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
+import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.tree.JavaElementType;
+import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -262,7 +264,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
     }
 
     private void processStartActivityInstrumentationAsMethod(PsiElement rootPsiElement, PsiElement element) {
-        String instrumentLine = "PrefetchingLib.notifyExtras(INTENT_NAME.getExtras());\n";
+        String instrumentedText = "PrefetchingLib.notifyExtras(INTENT_NAME.getExtras());\n";
 
         // Represents the parameters passed to the startActivity Function, surrounded by parenthesis
         PsiExpressionList parameterList = PsiTreeUtil.findChildOfType(element, PsiExpressionList.class);
@@ -274,11 +276,11 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
         resultMessage.incrementPossibleInstrumentationCount();
 
-        instrumentLine = instrumentLine.replace("INTENT_NAME", intentNameHandle.getText());
+        instrumentedText = instrumentedText.replace("INTENT_NAME", intentNameHandle.getText());
 
         // Verifies if this element is already instrumented
         PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
-        if (previousStatement != null && previousStatement.getText().equals(instrumentLine)) {
+        if (previousStatement != null && previousStatement.getText().equals(instrumentedText)) {
             resultMessage.incrementAlreadyInstrumentedCount();
             return;
         }
@@ -288,7 +290,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
-                .createStatementFromText(instrumentLine, psiClass);
+                .createStatementFromText(instrumentedText, psiClass);
 
         //noinspection ConstantConditions -- Since we loop through classes, it is certain that there is a parent Java class
         resultMessage.incrementInstrumentationCount()
@@ -296,10 +298,13 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 .appendPsiMethod(psiMethod)
                 .appendNewBlock();
 
+        if (element.getParent() instanceof PsiLambdaExpression) {
+            injectExtraProbeOnSingleLineLambdaFunction(psiClass, element, instrumentedText);
+        }
         // Inject the instrumented notifier of extra changes
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            element.getParent().addBefore(instrumentedElement, referenceStatement);
-        });
+//        WriteCommandAction.runWriteCommandAction(project, () -> {
+//            element.getParent().addBefore(instrumentedElement, referenceStatement);
+//        });
     }
 
     private void processStartActivityInstrumentationAsIdentifies(PsiElement rootPsiElement, PsiElement element) {
@@ -308,6 +313,30 @@ public class InstrumentIntentExtrasAction extends AnAction {
         PsiMethodCallExpression fullMethod = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
         if (fullMethod == null) return;
         processStartActivityInstrumentationAsMethod(rootPsiElement, fullMethod);
+    }
+
+    private void injectExtraProbeOnSingleLineLambdaFunction(PsiClass psiClass,
+                                                            PsiElement startActivityElement,
+                                                            String instrumentedText) {
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            PsiElement newCodeBlock = PsiElementFactory
+                    .getInstance(project)
+                    .createCodeBlock();
+            PsiElement instrumentedElement = PsiElementFactory
+                    .getInstance(project)
+                    .createStatementFromText(instrumentedText, psiClass);
+
+            newCodeBlock.add(instrumentedElement);
+            newCodeBlock.add(startActivityElement.copy());
+
+            PsiElement lambdaFunction = startActivityElement.getParent();
+            newCodeBlock = lambdaFunction.add(newCodeBlock);
+            startActivityElement.delete();
+
+            CodeStyleManager
+                    .getInstance(project)
+                    .reformatNewlyAddedElement(lambdaFunction.getNode(), newCodeBlock.getNode());
+        });
     }
 }
 
