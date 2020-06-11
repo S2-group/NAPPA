@@ -284,6 +284,8 @@ public class InstrumentIntentExtrasAction extends AnAction {
                         "Is lambda inline: " + isMethodInInlineLambdaFunction + "\n";
                 System.out.print(str);
 
+                InstrumentUtil.addLibraryImport(project, psiClass);
+
                 if (intentParameter instanceof PsiReferenceExpression)
                     injectExtraProbeForVariableReference(psiClass, referenceStatement, methodCall, (PsiReferenceExpression) intentParameter, instrumentedText);
                 else
