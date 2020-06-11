@@ -318,24 +318,17 @@ public class InstrumentIntentExtrasAction extends AnAction {
     private void injectExtraProbeOnSingleLineLambdaFunction(PsiClass psiClass,
                                                             PsiElement startActivityElement,
                                                             String instrumentedText) {
+        PsiElement newCodeBlock = PsiElementFactory
+                .getInstance(project)
+                .createCodeBlock();
+        PsiElement instrumentedElement = PsiElementFactory
+                .getInstance(project)
+                .createStatementFromText(instrumentedText, psiClass);
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            PsiElement newCodeBlock = PsiElementFactory
-                    .getInstance(project)
-                    .createCodeBlock();
-            PsiElement instrumentedElement = PsiElementFactory
-                    .getInstance(project)
-                    .createStatementFromText(instrumentedText, psiClass);
-
             newCodeBlock.add(instrumentedElement);
             newCodeBlock.add(startActivityElement.copy());
-
-            PsiElement lambdaFunction = startActivityElement.getParent();
-            newCodeBlock = lambdaFunction.add(newCodeBlock);
+            startActivityElement.getParent().add(newCodeBlock);
             startActivityElement.delete();
-
-            CodeStyleManager
-                    .getInstance(project)
-                    .reformatNewlyAddedElement(lambdaFunction.getNode(), newCodeBlock.getNode());
         });
     }
 }
