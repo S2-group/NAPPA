@@ -279,10 +279,12 @@ public class InstrumentIntentExtrasAction extends AnAction {
                         "Parameter list " + parameterList.getText() + "\n" +
                         "Intent parameter " + (intentParameter != null ? intentParameter : "not found") + "\n" +
                         "Is lambda inline: " + isMethodInInlineLambdaFunction + "\n";
-                System.out.println(str);
+                System.out.print(str);
 
                 if (intentParameter instanceof PsiReferenceExpression)
                     injectExtraProbeForVariableReference(psiClass, methodCall, (PsiReferenceExpression) intentParameter, instrumentedText);
+
+                System.out.print("\n");
             }
         });
     }
@@ -330,9 +332,13 @@ public class InstrumentIntentExtrasAction extends AnAction {
         if (methodCall.getParent() instanceof PsiLambdaExpression) {
             injectExtraProbesForInlineLambdaFunction(psiClass, methodCall, new PsiElement[]{instrumentedElement});
         } else {
+            System.out.print("instrument: " + instrumentedElement.getText());
+            PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(methodCall, PsiStatement.class);
+            if (referenceStatement == null) return;
+
             // Inject the instrumented notifier of extra changes
             WriteCommandAction.runWriteCommandAction(project, () -> {
-                methodCall.getParent().addBefore(instrumentedElement, methodCall);
+                referenceStatement.getParent().addBefore(instrumentedElement, referenceStatement);
             });
         }
     }
