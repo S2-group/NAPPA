@@ -16,6 +16,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import nl.vu.cs.s2group.nappa.plugin.util.InstrumentResultMessage;
 import nl.vu.cs.s2group.nappa.plugin.util.InstrumentUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -283,7 +284,17 @@ public class InstrumentIntentExtrasAction extends AnAction {
         });
     }
 
-    private PsiElement findElementSentAsIntentParameter(PsiIdentifier methodIdentifier, PsiMethodCallExpression methodCallExpression) {
+    /**
+     * Scan the parameter list and return the {@link PsiElement} representing the object sent as the
+     * {@link android.content.Intent Intent} parameter for the method {@code startActivity} and its variants
+     *
+     * @param methodIdentifier     Represent the identifier of the method {@code startActivity}
+     * @param methodCallExpression Represents the list of parameter send to the method {@code startActivity}
+     * @return The {@link PsiElement} object representing the parameter {@link android.content.Intent Intent}
+     * or {@code null} otherwise
+     */
+    @Nullable
+    private PsiElement findElementSentAsIntentParameter(@NotNull PsiIdentifier methodIdentifier, PsiMethodCallExpression methodCallExpression) {
         String[] identifierFilter = new String[]{
                 "startActivityFromChild",
                 "startActivityFromFragment",
