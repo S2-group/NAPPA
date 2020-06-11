@@ -47,7 +47,7 @@ public class InstrumentActivityAction extends AnAction {
                     PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
                     InstrumentUtil.addLibraryImport(project, psiJavaFile);
                     injectNavigationProbes(psiJavaFile);
-                    if (isMainLauncherActivity) {
+                    if (Boolean.TRUE.equals(isMainLauncherActivity)) {
                         resultMessage.incrementPossibleInstrumentationCount();
                         addLibraryInitializationStatement(psiJavaFile);
                     }
