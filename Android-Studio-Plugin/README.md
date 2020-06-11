@@ -134,7 +134,7 @@ The cause of these exceptions are undefined configurations (e.g. SDK) and can be
 #### Running the plugin from IntelliJ IDEA
 
 * Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
-* Double click on `test1 > Tasks > IntelliJ > runIde`.
+* Double click on `nappa-plugin-android-studio > Tasks > IntelliJ > runIde`.
  
 Running from the IntelliJ IDEA allows the plugin to be executed in debug mode. 
 
@@ -151,7 +151,7 @@ Gradle places new builds in the directory [build/distributions](build/distributi
 #### Create a new build from IntelliJ IDEA
 
 * Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html#).
-* Double click on `test1 > Tasks > IntelliJ > buildPlugin`
+* Double click on `nappa-plugin-android-studio > Tasks > IntelliJ > buildPlugin`
 
 #### Create a new build from bash
 

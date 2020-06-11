@@ -24,13 +24,18 @@ import java.util.function.Consumer;
 public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
 
+    private InstrumentUtil() {
+        throw new IllegalStateException("InstrumentUtil is a utility class and should be instantiated!");
+    }
+
     /**
      * Scan the project directory for all source files to search for all Java source files
      *
      * @param project An object representing an IntelliJ project.
      * @return A list of all Java source files in the project
      */
-    public static @NotNull List<PsiFile> getAllJavaFilesInProjectAsPsi(Project project) {
+    public static @NotNull
+    List<PsiFile> getAllJavaFilesInProjectAsPsi(Project project) {
         List<PsiFile> psiFiles = new LinkedList<>();
         String[] fileNames = FilenameIndex.getAllFilenames(project);
 
@@ -134,12 +139,24 @@ public final class InstrumentUtil {
      * @param classType The class of the desired Psi element
      * @return The Psi representation of the first {@code element} of the type {@code classType}. {@code null} if no Java class is found.
      */
-    public static @Nullable PsiElement getAncestorPsiElementFromElement(PsiElement element, Class classType) {
+    public static @Nullable
+    PsiElement getAncestorPsiElementFromElement(PsiElement element, Class<? extends PsiElement> classType) {
         PsiElement el = element;
         while (true) {
             if (el == null || el instanceof PsiDirectory) return null;
             if (classType.isInstance(el)) return el;
             el = el.getParent();
         }
+    }
+
+    /**
+     * Verifies if a class is the main public class
+     *
+     * @param psiClass Represents a Java class or interface.
+     * @return {@code True} if it is the main class or {@code False} otherwise
+     */
+    public static boolean isMainPublicClass(@NotNull PsiClass psiClass) {
+        PsiModifierList classModifier = psiClass.getModifierList();
+        return classModifier != null && classModifier.getText().contains("public");
     }
 }
