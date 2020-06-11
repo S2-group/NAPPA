@@ -330,7 +330,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 .createStatementFromText(instrumentedText.replace("INTENT", intentParameter.getText()), psiClass);
 
         if (methodCall.getParent() instanceof PsiLambdaExpression) {
-            injectExtraProbesForInlineLambdaFunction(psiClass, methodCall, new PsiElement[]{instrumentedElement});
+            injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{instrumentedElement});
         } else {
             System.out.print("instrument: " + instrumentedElement.getText());
             PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(methodCall, PsiStatement.class);
@@ -343,7 +343,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
         }
     }
 
-    private void injectExtraProbesForInlineLambdaFunction(PsiClass psiClass, PsiMethodCallExpression methodCall, PsiElement[] elementsToInject) {
+    private void injectExtraProbesForInlineLambdaFunction(PsiMethodCallExpression methodCall, PsiElement[] elementsToInject) {
         PsiElement newCodeBlock = PsiElementFactory
                 .getInstance(project)
                 .createCodeBlock();
