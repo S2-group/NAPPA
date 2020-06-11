@@ -277,7 +277,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
                 // Verifies if this element is already instrumented
                 PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
-                if (previousStatement != null && previousStatement.getText().contains("PrefetchingLib")) {
+                if (previousStatement != null && previousStatement.getText().contains("PrefetchingLib") && !isMethodInInlineLambdaFunction) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
