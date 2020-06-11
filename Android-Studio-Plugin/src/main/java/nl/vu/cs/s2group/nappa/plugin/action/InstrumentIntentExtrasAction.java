@@ -342,15 +342,18 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
         resultMessage.incrementInstrumentationCount();
 
+        // Verifies if we are instrumenting a inline lambda function
         if (methodCall.getParent() instanceof PsiLambdaExpression) {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{instrumentedElement});
-        } else {
-            System.out.print("instrument: " + instrumentedElement.getText());
-            // Inject the instrumented notifier of extra changes
-            WriteCommandAction.runWriteCommandAction(project, () -> {
-                referenceStatement.getParent().addBefore(instrumentedElement, referenceStatement);
-            });
+            return;
         }
+
+        System.out.print("instrument: " + instrumentedElement.getText());
+        // Inject the instrumented notifier of extra changes
+        WriteCommandAction.runWriteCommandAction(project, () -> {
+            referenceStatement.getParent().addBefore(instrumentedElement, referenceStatement);
+        });
+
     }
 
     private void injectExtraProbesForInlineLambdaFunction(PsiMethodCallExpression methodCall, PsiElement[] elementsToInject) {
