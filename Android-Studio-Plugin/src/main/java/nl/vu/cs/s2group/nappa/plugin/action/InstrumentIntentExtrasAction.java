@@ -340,6 +340,8 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 .getInstance(project)
                 .createStatementFromText(instrumentedText.replace("INTENT", intentParameter.getText()), psiClass);
 
+        resultMessage.incrementInstrumentationCount();
+
         if (methodCall.getParent() instanceof PsiLambdaExpression) {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{instrumentedElement});
         } else {
