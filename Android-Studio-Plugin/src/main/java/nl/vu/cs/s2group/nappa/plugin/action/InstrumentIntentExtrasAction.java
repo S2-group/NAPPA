@@ -353,7 +353,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
      * @param referenceStatement Represents the {@link PsiElement} used as reference to inject a new {@link PsiElement}
      * @param methodCall         Represents the method {@code startActivity}
      * @param intentParameter    Represent the object send as the parameter {@link android.content.Intent Intent} in
-     *                           the method {@code startActivity} for the
+     *                           the method {@code startActivity}
      * @param instrumentedText   Represents the template source code to inject
      */
     private void injectExtraProbeForVariableReference(PsiClass psiClass,
@@ -380,6 +380,43 @@ public class InstrumentIntentExtrasAction extends AnAction {
         });
     }
 
+    /**
+     * Instrument the simplest case when the method {@code startActivity} receives a new
+     * {@link android.content.Intent Intent} object, either via a instantiation with keyword {@code new}
+     * or a method call. The target source code and resulting instrumentation are the follow:
+     * <br/><br/>
+     *
+     * <p> Case 1. Instantiation
+     *
+     * <pre>{@code
+     * // Target
+     * startActivity(new Intent(...));
+     *
+     * // Result
+     * Intent intent = new Intent(...);
+     * PrefetchingLib.notifyExtras(intent.getExtras());
+     * startActivity(intent)
+     * }</pre>
+     *
+     * <p> Case 1. Method call
+     *
+     * <pre>{@code
+     * // Target
+     * startActivity(Intent.createChooser(...));
+     *
+     * // Result
+     * Intent intent = Intent.createChooser(...);
+     * PrefetchingLib.notifyExtras(intent.getExtras());
+     * startActivity(intent)
+     * }</pre>
+     *
+     * @param psiClass           Represents a Java class
+     * @param referenceStatement Represents the {@link PsiElement} used as reference to inject a new {@link PsiElement}
+     * @param methodCall         Represents the method {@code startActivity}
+     * @param intentParameter    Represent the object send as the parameter {@link android.content.Intent Intent} in
+     *                           the method {@code startActivity}
+     * @param instrumentedText   Represents the template source code to inject
+     */
     private void injectExtraProbeForMethodCallOrNewExpression(PsiClass psiClass,
                                                               PsiElement referenceStatement,
                                                               @NotNull PsiMethodCallExpression methodCall,
