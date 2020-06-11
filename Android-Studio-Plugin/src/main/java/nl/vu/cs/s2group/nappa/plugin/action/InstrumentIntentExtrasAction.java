@@ -415,8 +415,9 @@ public class InstrumentIntentExtrasAction extends AnAction {
                                                               @NotNull PsiMethodCallExpression methodCall,
                                                               @NotNull PsiElement intentParameter,
                                                               @NotNull String instrumentedText) {
-        String intentDeclarationText = "Intent intent = " + intentParameter.getText() + ";";
-        String methodCallText = methodCall.getText().replace(intentParameter.getText(), "intent");
+        String variableName = InstrumentUtil.getUniqueVariableName(methodCall, "intent");
+        String intentDeclarationText = "Intent " + variableName + " = " + intentParameter.getText() + ";";
+        String methodCallText = methodCall.getText().replace(intentParameter.getText(), variableName);
         methodCallText = methodCallText.replace("\n", "").replaceAll(" {2}", " ");
 
         PsiElement instrumentedElementIntent = PsiElementFactory
@@ -424,7 +425,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 .createStatementFromText(intentDeclarationText, psiClass);
         PsiElement instrumentedElementLibrary = PsiElementFactory
                 .getInstance(project)
-                .createStatementFromText(instrumentedText.replace("INTENT", "intent"), psiClass);
+                .createStatementFromText(instrumentedText.replace("INTENT", variableName), psiClass);
 
         resultMessage.incrementInstrumentationCount();
 
