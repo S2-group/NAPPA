@@ -38,12 +38,18 @@ public class InstrumentResultMessage {
      */
     private int unneededInstrumentationCount;
 
+    /**
+     * Count of statements that were processed in the instrumentation.
+     */
+    private int processedStatements;
+
     public InstrumentResultMessage() {
         builder = new StringBuilder();
         instrumentationCount = 0;
         possibleInstrumentationCount = 0;
         alreadyInstrumentedCount = 0;
         unneededInstrumentationCount = 0;
+        processedStatements = 0;
     }
 
     /**
@@ -54,6 +60,16 @@ public class InstrumentResultMessage {
     public String getMessage() {
         addInstrumentationOverview();
         return builder.toString();
+    }
+
+    /**
+     * Increment by 1 the count of statement processed in this run
+     *
+     * @return A instance of this object
+     */
+    public InstrumentResultMessage incrementProcessedStatementsCount() {
+        processedStatements++;
+        return this;
     }
 
     /**
@@ -105,18 +121,32 @@ public class InstrumentResultMessage {
     private void addInstrumentationOverview() {
         StringBuilder message = new StringBuilder();
 
-        message.append(possibleInstrumentationCount)
-                .append(" statements can be instrumented.")
-                .append("\n")
-                .append(instrumentationCount)
-                .append(" statements were instrumented in this run.")
-                .append("\n")
-                .append(alreadyInstrumentedCount)
-                .append(" statements were already instrumented.")
-                .append("\n")
-                .append(unneededInstrumentationCount)
-                .append(" statements do not need to be instrumented.")
-                .append("\n\n");
+        if (processedStatements != 0) {
+            message.append(processedStatements)
+                    .append(" statements were processed in this run.")
+                    .append("\n\n");
+        }
+        if (possibleInstrumentationCount != 0) {
+            message.append(possibleInstrumentationCount)
+                    .append(" statements can be instrumented.")
+                    .append("\n");
+        }
+        if (instrumentationCount != 0) {
+            message.append(instrumentationCount)
+                    .append(" statements were instrumented in this run.")
+                    .append("\n");
+        }
+        if (alreadyInstrumentedCount != 0) {
+            message.append(alreadyInstrumentedCount)
+                    .append(" statements were already instrumented.")
+                    .append("\n");
+        }
+        if (unneededInstrumentationCount != 0) {
+            message.append(unneededInstrumentationCount)
+                    .append(" statements do not need to be instrumented.")
+                    .append("\n\n");
+        }
+
 
         builder.insert(0, message);
     }
