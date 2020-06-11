@@ -240,11 +240,14 @@ public class InstrumentIntentExtrasAction extends AnAction {
     }
 
     private void processPsiStatement(@NotNull PsiElement rootPsiElement) {
+        // All variations of the method startActivity in the Android API
+        // https://developer.android.com/reference/android/app/Activity#startActivities(android.content.Intent[],%20android.os.Bundle)
         String[] identifierFilter = new String[]{
                 "startActivity",
                 "startActivityForResult",
                 "startActivityFromChild",
                 "startActivityFromFragment",
+                "startActivityIfNeeded",
         };
         resultMessage.incrementProcessedStatementsCount();
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
@@ -259,19 +262,47 @@ public class InstrumentIntentExtrasAction extends AnAction {
                     return;
                 }
 
-                String className = ((PsiClass) InstrumentUtil.getAncestorPsiElementFromElement(rootPsiElement, PsiClass.class)).getName();
-                PsiMethodCallExpression fullMethod = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
-                boolean isInInlineLambdaFunction = fullMethod.getParent() instanceof PsiLambdaExpression;
+                resultMessage.incrementPossibleInstrumentationCount();
+
+                PsiClass psiClass = PsiTreeUtil.getParentOfType(rootPsiElement, PsiClass.class);
+                PsiMethodCallExpression methodCall = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
+                PsiExpressionList parameterList = PsiTreeUtil.getChildOfType(methodCall, PsiExpressionList.class);
+                PsiElement intentParameter = findElementSentAsIntentParameter((PsiIdentifier) element, methodCall);
+                boolean isInInlineLambdaFunction = methodCall.getParent() instanceof PsiLambdaExpression;
+
 
                 String str = "---\n" +
-                        "Class: " + className + "\n" +
+                        "Class: " + psiClass.getName() + "\n" +
                         "Element: " + element.getText() + "\n" +
-                        "Full method " + fullMethod + "\n" +
-                        "Is lambda inline: " + isInInlineLambdaFunction;
+                        "Full method " + methodCall.getText() + "\n" +
+                        "Parameter list " + parameterList.getText() + "\n" +
+                        "Intent parameter " + (intentParameter != null ? intentParameter : "not found") + "\n" +
+                        "Is lambda inline: " + isInInlineLambdaFunction + "\n";
                 System.out.println(str);
-                resultMessage.incrementPossibleInstrumentationCount();
             }
         });
+    }
+
+    private PsiElement findElementSentAsIntentParameter(PsiIdentifier methodIdentifier, PsiMethodCallExpression methodCallExpression) {
+        String[] identifierFilter = new String[]{
+                "startActivityFromChild",
+                "startActivityFromFragment",
+        };
+        // The startActivity methods above receives the Intent in the second parameter
+        int parameterPosition = Arrays.asList(identifierFilter).contains(methodIdentifier.getText()) ? 2 : 1;
+        int currentParameterPosition = 0;
+        PsiExpressionList parameterList = PsiTreeUtil.getChildOfType(methodCallExpression, PsiExpressionList.class);
+
+        if (parameterList == null) return null;
+
+        for (PsiElement child : parameterList.getChildren()) {
+            if (child instanceof PsiReferenceExpression || child instanceof PsiMethodCallExpression || child instanceof PsiNewExpression) {
+                currentParameterPosition++;
+                if (currentParameterPosition == parameterPosition) return child;
+            }
+
+        }
+        return null;
     }
 
 //    private void processStartActivityInstrumentationAsMethod(PsiElement rootPsiElement, PsiElement element) {
