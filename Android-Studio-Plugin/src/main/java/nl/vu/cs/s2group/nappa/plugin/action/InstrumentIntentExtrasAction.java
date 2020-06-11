@@ -331,11 +331,34 @@ public class InstrumentIntentExtrasAction extends AnAction {
         return null;
     }
 
+    /**
+     * Instrument the simplest case when the method {@code startActivity} receives a existing
+     * {@link android.content.Intent Intent} object. The target source code and resulting instrumentation
+     * are the follow"
+     *
+     * <pre>{@code
+     * // Target
+     * Intent myIntent = ...
+     * startActivity(myIntent);
+     *
+     * // Result
+     * Intent myIntent = ...
+     * PrefetchingLib.notifyExtras(myIntent.getExtras());
+     * startActivity(myIntent);
+     * }</pre>
+     *
+     * @param psiClass           Represents a Java class
+     * @param referenceStatement Represents the {@link PsiElement} used as reference to inject a new {@link PsiElement}
+     * @param methodCall         Represents the method {@code startActivity}
+     * @param intentParameter    Represent the object send as the parameter {@link android.content.Intent Intent} in
+     *                           the method {@code startActivity} for the
+     * @param instrumentedText   Represents the template source code to inject
+     */
     private void injectExtraProbeForVariableReference(PsiClass psiClass,
                                                       PsiElement referenceStatement,
-                                                      PsiMethodCallExpression methodCall,
-                                                      PsiReferenceExpression intentParameter,
-                                                      String instrumentedText) {
+                                                      @NotNull PsiMethodCallExpression methodCall,
+                                                      @NotNull PsiReferenceExpression intentParameter,
+                                                      @NotNull String instrumentedText) {
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentedText.replace("INTENT", intentParameter.getText()), psiClass);
