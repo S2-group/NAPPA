@@ -15,6 +15,7 @@ import java.io.StringWriter;
  * Provides a self-contained {@link StringBuilder} to construct the result message for when finishing instrumenting.
  * Provides abstraction to present a result dialog
  */
+@SuppressWarnings({"UnusedReturnValue"})
 public class InstrumentResultMessage {
     private final StringBuilder builder;
 
@@ -87,7 +88,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementPossibleInstrumentationCount() {
         possibleInstrumentationCount++;
         return this;
@@ -98,7 +98,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementUnneededInstrumentationCount() {
         unneededInstrumentationCount++;
         return this;
@@ -109,7 +108,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementAlreadyInstrumentedCount() {
         alreadyInstrumentedCount++;
         return this;
@@ -157,7 +155,6 @@ public class InstrumentResultMessage {
      * @param psiClass A Java class or interface.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiClass(@NotNull PsiClass psiClass) {
         builder.append("Class: ").append(psiClass.getQualifiedName()).append("\n");
         return this;
@@ -169,7 +166,6 @@ public class InstrumentResultMessage {
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Method: ").append(psiMethod.getName()).append("\n");
         return this;
@@ -181,7 +177,6 @@ public class InstrumentResultMessage {
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendOverridePsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Override method: ").append(psiMethod.getName()).append("\n");
         return this;
@@ -194,7 +189,6 @@ public class InstrumentResultMessage {
      * @param text The text to append.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendText(String text) {
         builder.append(text).append("\n");
         return this;
@@ -205,7 +199,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiClassInitializer() {
         builder.append("Initializer block: ").append("\n");
         return this;
@@ -217,7 +210,6 @@ public class InstrumentResultMessage {
      * @param psiField A Java field or enum constant.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiField(@NotNull PsiField psiField) {
         builder.append("Field: ").append(psiField.getName()).append("\n");
         return this;
@@ -239,7 +231,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendNewBlock() {
         builder.append("\n");
         return this;
