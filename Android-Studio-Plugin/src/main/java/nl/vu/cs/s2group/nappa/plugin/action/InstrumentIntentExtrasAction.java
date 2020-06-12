@@ -364,7 +364,12 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
         // Verifies if we are instrumenting a inline lambda function
         if (methodCall.getParent() instanceof PsiLambdaExpression) {
-            injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{instrumentedElement});
+            injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{
+                    instrumentedElement,
+                    PsiElementFactory
+                            .getInstance(project)
+                            .createStatementFromText(methodCall.getText() + ";", psiClass),
+            });
             return;
         }
 
