@@ -247,10 +247,10 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 "startActivityFromFragment",
                 "startActivityIfNeeded",
         };
-        resultMessage.incrementProcessedStatementsCount();
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
+                resultMessage.incrementProcessedElementsCount();
                 // This verification is done here to reduce the number of recursive calls
                 if (!element.getText().contains("startActivity")) return;
 

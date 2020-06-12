@@ -42,7 +42,7 @@ public class InstrumentResultMessage {
     /**
      * Count of statements that were processed in the instrumentation.
      */
-    private int processedStatements;
+    private int processedElements;
 
     public InstrumentResultMessage() {
         builder = new StringBuilder();
@@ -50,7 +50,7 @@ public class InstrumentResultMessage {
         possibleInstrumentationCount = 0;
         alreadyInstrumentedCount = 0;
         unneededInstrumentationCount = 0;
-        processedStatements = 0;
+        processedElements = 0;
     }
 
     /**
@@ -68,8 +68,8 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    public InstrumentResultMessage incrementProcessedStatementsCount() {
-        processedStatements++;
+    public InstrumentResultMessage incrementProcessedElementsCount() {
+        processedElements++;
         return this;
     }
 
@@ -119,9 +119,9 @@ public class InstrumentResultMessage {
     private void addInstrumentationOverview() {
         StringBuilder message = new StringBuilder();
 
-        if (processedStatements != 0) {
-            message.append(processedStatements)
-                    .append(" statements were processed in this run.")
+        if (processedElements != 0) {
+            message.append(processedElements)
+                    .append(" elements were processed in this run.")
                     .append("\n\n");
         }
         if (possibleInstrumentationCount != 0) {
