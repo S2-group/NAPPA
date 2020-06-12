@@ -36,6 +36,10 @@ import java.util.List;
  */
 
 public class InstrumentIntentExtrasAction extends AnAction {
+    private static final int HAS_NO_INLINE_IF = 0;
+    private static final int HAS_INLINE_THEN_BRANCH = 1;
+    private static final int HAS_INLINE_ELSE_BRANCH = 2;
+
     Project project;
     private InstrumentResultMessage resultMessage;
     StringBuilder displayMessage = new StringBuilder();
@@ -262,9 +266,15 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 PsiMethodCallExpression methodCall = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
                 PsiExpressionList parameterList = PsiTreeUtil.getChildOfType(methodCall, PsiExpressionList.class);
                 PsiElement intentParameter = findElementSentAsIntentParameter((PsiIdentifier) element, methodCall);
-                boolean hasInlineIfStatement = isProcessingInlineIf(methodCall);
+                int hasInlineIfStatement = isProcessingInlineIf(methodCall);
                 boolean hasInlineLambdaFunction = methodCall.getParent() instanceof PsiLambdaExpression;
-                boolean requiresToEncapsulateInCodeBlock = hasInlineLambdaFunction || hasInlineIfStatement;
+                boolean requiresToEncapsulateInCodeBlock = hasInlineLambdaFunction || hasInlineIfStatement != HAS_NO_INLINE_IF;
+
+                if (hasInlineIfStatement == HAS_INLINE_THEN_BRANCH) {
+                    PsiIfStatement ifStatement = PsiTreeUtil.getParentOfType(methodCall, PsiIfStatement.class, false, PsiCodeBlock.class);
+                    if (ifStatement != null && ifStatement.getElseBranch() != null)
+                        super.visitElement(ifStatement.getElseBranch());
+                }
 
                 String instrumentedText = "PrefetchingLib.notifyExtras(INTENT.getExtras());";
 
@@ -290,10 +300,19 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 InstrumentUtil.addLibraryImport(project, psiClass);
 
                 if (intentParameter instanceof PsiReferenceExpression)
-                    injectExtraProbeForVariableReference(psiClass, referenceStatement, methodCall, (PsiReferenceExpression) intentParameter, instrumentedText);
+                    injectExtraProbeForVariableReference(psiClass,
+                            referenceStatement,
+                            methodCall,
+                            (PsiReferenceExpression) intentParameter,
+                            instrumentedText,
+                            requiresToEncapsulateInCodeBlock);
                 else
-                    injectExtraProbeForMethodCallOrNewExpression(psiClass, referenceStatement, methodCall, intentParameter, instrumentedText);
-
+                    injectExtraProbeForMethodCallOrNewExpression(psiClass,
+                            referenceStatement,
+                            methodCall,
+                            intentParameter,
+                            instrumentedText,
+                            requiresToEncapsulateInCodeBlock);
                 System.out.print("\n");
             }
         });
@@ -306,26 +325,28 @@ public class InstrumentIntentExtrasAction extends AnAction {
      * @return {@code True} if the {@code startActivity} method is declared either in the THEN or ELSE branch
      * of an IF statement and the branch is an inline branch
      */
-    private boolean isProcessingInlineIf(PsiMethodCallExpression methodCall) {
+    private int isProcessingInlineIf(PsiMethodCallExpression methodCall) {
         // Verifies if the methodCall is inside an IF statement
         PsiIfStatement ifStatement = PsiTreeUtil.getParentOfType(methodCall, PsiIfStatement.class, false, PsiCodeBlock.class);
-        if (ifStatement == null) return false;
+        if (ifStatement == null) return HAS_NO_INLINE_IF;
 
         // Verifies if there is an THEN branch -- It should always have, but just in case...
         PsiStatement thenBranch = ifStatement.getThenBranch();
-        if (thenBranch == null) return false;
+        if (thenBranch == null) return HAS_NO_INLINE_IF;
 
         // Verifies if the THEN branch is inline and if it contains the methodCall
         PsiMethodCallExpression methodCallInThenBranch = PsiTreeUtil.getChildOfType(ifStatement.getThenBranch(), PsiMethodCallExpression.class);
-        if (methodCallInThenBranch != null && methodCallInThenBranch.equals(methodCall)) return true;
+        if (methodCallInThenBranch != null && methodCallInThenBranch.equals(methodCall)) return HAS_INLINE_THEN_BRANCH;
 
         // Verifies if there is an ELSE branch
         PsiStatement elseBranch = ifStatement.getElseBranch();
-        if (elseBranch == null) return false;
+        if (elseBranch == null) return HAS_NO_INLINE_IF;
 
         // Verifies if the ELSE branch is inline and if it contains the methodCall
         PsiMethodCallExpression methodCallInElseBranch = PsiTreeUtil.getChildOfType(ifStatement.getElseBranch(), PsiMethodCallExpression.class);
-        return methodCallInElseBranch != null && methodCallInElseBranch.equals(methodCall);
+        if (methodCallInElseBranch != null && methodCallInElseBranch.equals(methodCall)) return HAS_INLINE_ELSE_BRANCH;
+
+        return HAS_NO_INLINE_IF;
     }
 
     /**
@@ -387,7 +408,8 @@ public class InstrumentIntentExtrasAction extends AnAction {
                                                       PsiElement referenceStatement,
                                                       @NotNull PsiMethodCallExpression methodCall,
                                                       @NotNull PsiReferenceExpression intentParameter,
-                                                      @NotNull String instrumentedText) {
+                                                      @NotNull String instrumentedText,
+                                                      boolean requiresToEncapsulateInCodeBlock) {
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentedText.replace("INTENT", intentParameter.getText()), psiClass);
@@ -395,7 +417,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
         resultMessage.incrementInstrumentationCount();
 
         // Verifies if we are instrumenting a inline lambda function
-        if (methodCall.getParent() instanceof PsiLambdaExpression) {
+        if (requiresToEncapsulateInCodeBlock) {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{
                     instrumentedElement,
                     PsiElementFactory
@@ -453,7 +475,8 @@ public class InstrumentIntentExtrasAction extends AnAction {
                                                               PsiElement referenceStatement,
                                                               @NotNull PsiMethodCallExpression methodCall,
                                                               @NotNull PsiElement intentParameter,
-                                                              @NotNull String instrumentedText) {
+                                                              @NotNull String instrumentedText,
+                                                              boolean requiresToEncapsulateInCodeBlock) {
         String variableName = InstrumentUtil.getUniqueVariableName(methodCall, "intent");
         String intentDeclarationText = "Intent " + variableName + " = " + intentParameter.getText() + ";";
         String methodCallText = methodCall.getText().replace(intentParameter.getText(), variableName);
@@ -468,7 +491,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
         resultMessage.incrementInstrumentationCount();
 
-        if (methodCall.getParent() instanceof PsiLambdaExpression) {
+        if (requiresToEncapsulateInCodeBlock) {
             injectExtraProbesForInlineLambdaFunction(methodCall, new PsiElement[]{
                     instrumentedElementIntent,
                     instrumentedElementLibrary,
@@ -494,15 +517,19 @@ public class InstrumentIntentExtrasAction extends AnAction {
     }
 
     private void injectExtraProbesForInlineLambdaFunction(PsiMethodCallExpression methodCall, PsiElement[] elementsToInject) {
+        PsiLambdaExpression lambdaExpression = PsiTreeUtil.getParentOfType(methodCall, PsiLambdaExpression.class, false, PsiCodeBlock.class);
+        PsiIfStatement ifStatement = PsiTreeUtil.getParentOfType(methodCall, PsiIfStatement.class, false, PsiCodeBlock.class);
+
         PsiElement newCodeBlock = PsiElementFactory
                 .getInstance(project)
                 .createCodeBlock();
+
         WriteCommandAction.runWriteCommandAction(project, () -> {
             for (PsiElement psiElement : elementsToInject) {
                 newCodeBlock.add(psiElement);
             }
-            methodCall.getParent().add(newCodeBlock);
-            methodCall.delete();
+            if (lambdaExpression != null) methodCall.replace(newCodeBlock);
+            else if (ifStatement != null) methodCall.getParent().replace(newCodeBlock);
         });
     }
 }
