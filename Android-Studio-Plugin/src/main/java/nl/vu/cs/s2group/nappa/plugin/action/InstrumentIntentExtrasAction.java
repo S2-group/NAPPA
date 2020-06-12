@@ -299,6 +299,13 @@ public class InstrumentIntentExtrasAction extends AnAction {
         });
     }
 
+    /**
+     * Verifies if the method call is declared in an inline THEN/ELSE branch of an IF statement
+     *
+     * @param methodCall The {@code startActivity} method
+     * @return {@code True} if the {@code startActivity} method is declared either in the THEN or ELSE branch
+     * of an IF statement and the branch is an inline branch
+     */
     private boolean isProcessingInlineIf(PsiMethodCallExpression methodCall) {
         // Verifies if the methodCall is inside an IF statement
         PsiIfStatement ifStatement = PsiTreeUtil.getParentOfType(methodCall, PsiIfStatement.class, false, PsiCodeBlock.class);
