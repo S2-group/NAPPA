@@ -238,15 +238,26 @@ public class InstrumentIntentExtrasAction extends AnAction {
     }
 
     private void processPsiStatement(@NotNull PsiElement rootPsiElement) {
-        // All variations of the method startActivity in the Android API
-        // https://developer.android.com/reference/android/app/Activity#startActivities(android.content.Intent[],%20android.os.Bundle)
+        // Defines all variations of the method startActivity in the Android API
         String[] identifierFilter = new String[]{
+                // https://developer.android.com/reference/android/app/Activity#startActivity(android.content.Intent)
                 "startActivity",
+
+                // https://developer.android.com/reference/android/app/Activity#startActivityForResult(android.content.Intent,%20int)
                 "startActivityForResult",
+
+                // https://developer.android.com/reference/android/app/Activity#startActivityFromChild(android.app.Activity,%20android.content.Intent,%20int)
+                // This method was deprecated in API level 30.
                 "startActivityFromChild",
+
+                // https://developer.android.com/reference/android/app/Activity#startActivityFromFragment(android.app.Fragment,%20android.content.Intent,%20int,%20android.os.Bundle)
+                // This method was deprecated in API level 28.
                 "startActivityFromFragment",
+
+                // https://developer.android.com/reference/android/app/Activity#startActivityIfNeeded(android.content.Intent,%20int,%20android.os.Bundle)
                 "startActivityIfNeeded",
         };
+
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -534,6 +545,45 @@ public class InstrumentIntentExtrasAction extends AnAction {
      * is declared within an inline statement (e.g. lambda function, inline THEN/ELSE branches in IFs statements).
      * It replaces the {@code methodCall} element with a new {@link PsiCodeBlock} containing all elements
      * in the list {@code elementsToInject}
+     * <br/><br/>
+     *
+     * <p> Case 1. Lambda functions
+     *
+     * <pre>{@code
+     * // Target
+     * someMethod((someParams) -> startActivity(intent));
+     * someMethod2((someParams2) -> startActivity(createsNewIntent()));
+     *
+     * // Result
+     * someMethod((someParams) -> {
+     *     PrefetchingLib.notifyExtras(intent.getExtras());
+     *     startActivity(intent);
+     * });
+     * someMethod2((someParams2) -> {
+     *     Intent intent1 = createsNewIntent();
+     *     PrefetchingLib.notifyExtras(intent1.getExtras());
+     *     startActivity(intent1);
+     * });
+     * }</pre>
+     *
+     * <p> Case 1. IF statements
+     *
+     * <pre>{@code
+     * // Target
+     * if(condition) startActivity(new Intent(....));
+     * else startActivity(new Intent(....);
+     *
+     * // Result
+     * if(condition) {
+     *     Intent intent1 = new Intent(....);
+     *     PrefetchingLib.notifyExtras(intent1.getExtras());
+     *     startActivity(intent1);
+     * } else {
+     *     Intent intent = new Intent(....);
+     *     PrefetchingLib.notifyExtras(intent.getExtras());
+     *     startActivity(intent);
+     * }
+     * }</pre>
      *
      * @param methodCall       Represents the startActivity method to instrument
      * @param elementsToInject Represents the list of {@link PsiElement} to inject in this instrumentation
