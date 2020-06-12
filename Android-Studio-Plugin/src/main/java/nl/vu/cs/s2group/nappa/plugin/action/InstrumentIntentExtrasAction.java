@@ -40,7 +40,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
     private static final int HAS_INLINE_THEN_BRANCH = 1;
     private static final int HAS_INLINE_ELSE_BRANCH = 2;
 
-    Project project;
+    private Project project;
     private InstrumentResultMessage resultMessage;
 
     /**
