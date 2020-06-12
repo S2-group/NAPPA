@@ -262,7 +262,10 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 PsiMethodCallExpression methodCall = PsiTreeUtil.getParentOfType(element, PsiMethodCallExpression.class);
                 PsiExpressionList parameterList = PsiTreeUtil.getChildOfType(methodCall, PsiExpressionList.class);
                 PsiElement intentParameter = findElementSentAsIntentParameter((PsiIdentifier) element, methodCall);
-                boolean isMethodInInlineLambdaFunction = methodCall.getParent() instanceof PsiLambdaExpression;
+                boolean hasInlineIfStatement = isProcessingInlineIf(methodCall);
+                boolean hasInlineLambdaFunction = methodCall.getParent() instanceof PsiLambdaExpression;
+                boolean requiresToEncapsulateInCodeBlock = hasInlineLambdaFunction || hasInlineIfStatement;
+
                 String instrumentedText = "PrefetchingLib.notifyExtras(INTENT.getExtras());";
 
                 PsiStatement referenceStatement = PsiTreeUtil.getParentOfType(methodCall, PsiStatement.class);
@@ -270,7 +273,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
                 // Verifies if this element is already instrumented
                 PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
-                if (previousStatement != null && previousStatement.getText().contains("PrefetchingLib") && !isMethodInInlineLambdaFunction) {
+                if (previousStatement != null && previousStatement.getText().contains("PrefetchingLib") && !requiresToEncapsulateInCodeBlock) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
@@ -281,7 +284,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                         "Full method " + methodCall.getText() + "\n" +
                         "Parameter list " + parameterList.getText() + "\n" +
                         "Intent parameter " + (intentParameter != null ? intentParameter : "not found") + "\n" +
-                        "Is lambda inline: " + isMethodInInlineLambdaFunction + "\n";
+                        "Is lambda inline: " + requiresToEncapsulateInCodeBlock + "\n";
                 System.out.print(str);
 
                 InstrumentUtil.addLibraryImport(project, psiClass);
@@ -294,6 +297,28 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 System.out.print("\n");
             }
         });
+    }
+
+    private boolean isProcessingInlineIf(PsiMethodCallExpression methodCall) {
+        // Verifies if the methodCall is inside an IF statement
+        PsiIfStatement ifStatement = PsiTreeUtil.getParentOfType(methodCall, PsiIfStatement.class, false, PsiCodeBlock.class);
+        if (ifStatement == null) return false;
+
+        // Verifies if there is an THEN branch -- It should always have, but just in case...
+        PsiStatement thenBranch = ifStatement.getThenBranch();
+        if (thenBranch == null) return false;
+
+        // Verifies if the THEN branch is inline and if it contains the methodCall
+        PsiMethodCallExpression methodCallInThenBranch = PsiTreeUtil.getChildOfType(ifStatement.getThenBranch(), PsiMethodCallExpression.class);
+        if (methodCallInThenBranch != null && methodCallInThenBranch.equals(methodCall)) return true;
+
+        // Verifies if there is an ELSE branch
+        PsiStatement elseBranch = ifStatement.getElseBranch();
+        if (elseBranch == null) return false;
+
+        // Verifies if the ELSE branch is inline and if it contains the methodCall
+        PsiMethodCallExpression methodCallInElseBranch = PsiTreeUtil.getChildOfType(ifStatement.getElseBranch(), PsiMethodCallExpression.class);
+        return methodCallInElseBranch != null && methodCallInElseBranch.equals(methodCall);
     }
 
     /**
