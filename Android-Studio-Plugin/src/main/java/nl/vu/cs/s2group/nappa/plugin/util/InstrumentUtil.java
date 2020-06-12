@@ -162,7 +162,7 @@ public final class InstrumentUtil {
     }
 
     /**
-     * Verifies if there is a variable with the name {@code variableName} in the {@link PsiCodeBlock}
+     * Verifies if there is a variable with the name {@code variableName} in an ancestor with shared context
      * where the {@code referenceElement} is located in the PSI tree. If a variable is found, then append
      * a number to the variable name to avoid creating a variable with the same name.
      *
@@ -173,14 +173,16 @@ public final class InstrumentUtil {
     public static String getUniqueVariableName(PsiElement referenceElement, String variableName) {
         int number = 0;
         String numberAsStr = "";
-        PsiElement codeBlock = PsiTreeUtil.getParentOfType(referenceElement, PsiCodeBlock.class);
-        if (codeBlock == null) return variableName;
+        PsiElement elementToSearch = PsiTreeUtil.getParentOfType(referenceElement, PsiMethod.class);
+        if (elementToSearch == null)
+            elementToSearch = PsiTreeUtil.getParentOfType(referenceElement, PsiCodeBlock.class);
+        if (elementToSearch == null) return variableName;
         while (true) {
             String[] variableToSearch = new String[]{
                     " " + variableName + numberAsStr + "=",
                     " " + variableName + numberAsStr + " ="
             };
-            if (Arrays.stream(variableToSearch).noneMatch(codeBlock.getText()::contains))
+            if (Arrays.stream(variableToSearch).noneMatch(elementToSearch.getText()::contains))
                 return variableName + numberAsStr;
             number++;
             numberAsStr = Integer.toString(number);
