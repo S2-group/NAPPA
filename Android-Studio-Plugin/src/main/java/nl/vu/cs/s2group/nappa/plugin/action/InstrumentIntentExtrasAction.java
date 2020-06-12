@@ -319,7 +319,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
         if (parameterList == null) return null;
 
         for (PsiElement child : parameterList.getChildren()) {
-            if (child instanceof PsiReferenceExpression || child instanceof PsiMethodCallExpression || child instanceof PsiNewExpression) {
+            if (!(child instanceof PsiJavaToken || child instanceof PsiWhiteSpace)) {
                 currentParameterPosition++;
                 if (currentParameterPosition == parameterPosition) return child;
             }
