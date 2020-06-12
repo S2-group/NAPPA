@@ -8,24 +8,27 @@ Currently, there is a total of 1 sample app:
 
 ## Testing the Prefetching Library
 
-The library is imported using Gradle [flat directory repository](https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver).
-It is located in the sample app module at `sample-app/app/libs/aar`.
-Currently, it must be imported in all modules of the app.
-As there is a single moduel per app, it is not an issue.
-In later stages,we hope to release an stable version of the library and import it via a central repository, such as Maven.
+The library is imported using Gradle [flat directory repository](https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver), 
+configured in the sample app module at `sample-app/app/libs/aar`.
 
 ### Using a newer version of the library
 
-To import a new version of the libray, do the following steps:
+Go to the test app root directory and run the update script to update the imported version of the library:
+
+```bash
+sh scripts/update-nappa-library.sh
+```
+
+Alternatevelly, you can do the following steps to import a new version:
 
 1. Go to the [Prefetching Library](Prefetching-Library) directory
 1. Build the library
-  * Via the command line:
-    * Run the command `./gradlew build`
-  * Via Android Studio
-    * Open the project in Android Studio
-    * Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html)
-    * Double click at `Prefetching-Library > Tasks > build > build`
+   * Via the command line:
+      * Run the command `./gradlew build`
+   * Via Android Studio
+      * Open the project in Android Studio
+      * Open the [Gradle tool window](https://www.jetbrains.com/help/idea/jetgradle-tool-window.html)
+     * Double click at `Prefetching-Library > Tasks > build > build`
 1. Go to `Prefetching-Library/android_prefetching_lib/build/outputs/aar`
 1. Rename the file `android_prefetching_lib-debug` to `nappa-prefetching-library.aar`
 1. Optionally, 
@@ -34,9 +37,8 @@ name it `android_prefetching_lib-debug-vMAJOR.MINOR.PATCH+BUILD`,
 replacing the values with the version specified in the library Gradle build file
 1. Replace the existing library file at `sample-app/app/libs/aar`
 1. Open the sample app project in Android Studio
-1. Open the Gradle build file from the app module
-1. Comment the line `implementation name: 'nappa-prefetching-library', ext: 'aar'` and click to sync (in the pop-up)
-1. Uncomment the line and click to sync (in the pop-up).
+
+If needed, sync Gradle at `File > Sync project with Gradle files`
 
 ### Debugging the library
 
