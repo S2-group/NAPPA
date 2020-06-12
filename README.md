@@ -37,7 +37,7 @@ For more details on usage, refer to its [README](Android-Studio-Plugin/README.md
 
 ### Test Apps
 
-Contains a repository of sample Android apps developed with the purpouse of testing NAPPA.
+Contains a repository of sample Android apps developed with the purpose of testing NAPPA.
 For more details on how to test NAPPA in the available sample apps, refer to its [README](Test-App/README.md).
 
 ## How to cite NAPPA

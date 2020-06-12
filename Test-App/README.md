@@ -1,10 +1,10 @@
 # Test Apps
 
-This directory contains a list fo simple sample apps developed with the purpouse to test the [Prefetching Library](Prefetching-Library) and [Plugin for Android Studio](Android-Studio-Plugin).
+This directory contains a list fo simple sample apps developed with the purpose to test the [Prefetching Library](Prefetching-Library) and [Plugin for Android Studio](Android-Studio-Plugin).
 
 Currently, there is a total of 1 sample app:
 
-* [Weather and News](Test-App/Weather-and-News-app): Cosume two REST APIs about the weather and news and display the content
+* [Weather and News](Test-App/Weather-and-News-app): Consume two REST APIs about the weather and news and display the content
 
 ## Testing the Prefetching Library
 
@@ -19,7 +19,7 @@ Go to the test app root directory and run the update script to update the import
 sh scripts/update-nappa-library.sh
 ```
 
-Alternatevelly, you can do the following steps to import a new version:
+Alternatively, you can do the following steps to import a new version:
 
 1. Go to the [Prefetching Library](Prefetching-Library) directory
 1. Build the library
@@ -44,9 +44,9 @@ If needed, sync Gradle at `File > Sync project with Gradle files`
 
 1. Open the sample app project in Android Studio
 1. Open the class finder at `Navigate > Class` (shortcut: double click shift OR `ctrl + N`)
-1. Click to locate source in the pop-up
+1. Click to locate the source in the pop-up
 1. Select the directory [Prefetching Library/android_prefetching_lib/src/main](Prefetching-Library/android_prefetching_lib/src/main)
-1. Set break points
+1. Set breakpoints
 1. Run the app in debug mode
 
 **Important**: Changes in the library source code will not take effect in the sample app until updating the imported AAR file 
