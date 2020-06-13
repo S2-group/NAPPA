@@ -55,9 +55,11 @@ public class NappaUtil {
         long activityId = PrefetchingLib.getActivityIdFromName(visitedNode.activityName);
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(activityId);
 
+        // Verifies if the current activity contain any registered extras in the current session
         if (extrasMap == null || extrasMap.isEmpty()) return candidateUrls;
 
         for (ParameteredUrl parameteredUrl : candidateNode.parameteredUrlList) {
+            // Verifies if the extras required by the candidate URL are known
             if (extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
                 String urlWithExtras = parameteredUrl.fillParams(extrasMap);
                 candidateUrls.add(urlWithExtras);
