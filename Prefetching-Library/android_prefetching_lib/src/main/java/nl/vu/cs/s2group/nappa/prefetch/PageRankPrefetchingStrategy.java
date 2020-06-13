@@ -21,7 +21,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  */
 @Deprecated
 public class PageRankPrefetchingStrategy implements PrefetchingStrategy {
-    private final static String LOG_TAG = PageRankPrefetchingStrategy.class.getSimpleName();
+    private static final String LOG_TAG = PageRankPrefetchingStrategy.class.getSimpleName();
 
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
     float threshold;

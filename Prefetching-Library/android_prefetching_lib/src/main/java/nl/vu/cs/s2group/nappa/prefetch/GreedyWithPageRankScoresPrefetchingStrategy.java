@@ -21,7 +21,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  */
 @Deprecated
 public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchingStrategy {
-    private final static String LOG_TAG = GreedyWithPageRankScoresPrefetchingStrategy.class.getSimpleName();
+    private static final String LOG_TAG = GreedyWithPageRankScoresPrefetchingStrategy.class.getSimpleName();
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 

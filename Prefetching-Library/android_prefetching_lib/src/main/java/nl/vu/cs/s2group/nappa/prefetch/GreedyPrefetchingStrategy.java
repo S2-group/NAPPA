@@ -34,7 +34,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  * of node candidates generated, a threshold value is inserted.
  */
 public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
-    private final static String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
+    private static final String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();

@@ -27,7 +27,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  */
 @Deprecated
 public class PPMPrefetchingStrategy implements PrefetchingStrategy {
-    private final static String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
+    private static final String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
