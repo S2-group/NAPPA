@@ -1,7 +1,8 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,8 +11,8 @@ import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
  * This strategy utilizes the Hyperlink-Induced Topic Search (HITS) link analysis
@@ -58,7 +59,7 @@ public class HITSPrefetchingStrategy implements PrefetchingStrategy {
         maxNumber = (int) (threshold*probableNodes.size() +1);
 
         for (int i=0; i<maxNumber; i++) {
-            listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
+            listUrlToPrefetch.addAll(NappaUtil.getUrlsFromCandidateNode(node, probableNodes.get(i)));
             Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).authority);
 
         }
@@ -100,25 +101,5 @@ public class HITSPrefetchingStrategy implements PrefetchingStrategy {
         }
 
         return probableNodes;
-    }
-
-    private List<String> computeCandidateUrl2(ActivityNode toBeChecked, ActivityNode node) {
-        node.parameteredUrlMap.keySet();
-
-        List<String> candidates = new LinkedList<>();
-
-        Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
-        for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
-            if ((null != extrasMap) && !extrasMap.isEmpty() && extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
-                candidates.add(
-                        parameteredUrl.fillParams(extrasMap)
-                );
-            }
-
-        }
-        for (String candidate: candidates) {
-            Log.d(LOG_TAG, candidate + " url for: " + toBeChecked.activityName);
-        }
-        return candidates;
     }
 }
