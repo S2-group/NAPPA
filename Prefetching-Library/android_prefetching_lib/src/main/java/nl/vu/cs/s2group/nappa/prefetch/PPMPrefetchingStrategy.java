@@ -1,7 +1,8 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,8 +12,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
  * Utilizes the Prediction by Partial Match (PPM) based on a 0-order markov-model.
@@ -26,7 +27,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
  */
 @Deprecated
 public class PPMPrefetchingStrategy implements PrefetchingStrategy {
-    private final static String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
+    private static final String LOG_TAG = PPMPrefetchingStrategy.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
@@ -61,7 +62,7 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
         maxNumber = (int) (threshold*probableNodes.size() +1);
 
         for (int i=0; i<maxNumber; i++) {
-            listUrlToPrefetch.addAll(computeCandidateUrl2(probableNodes.get(i), node));
+            listUrlToPrefetch.addAll(NappaUtil.getUrlsFromCandidateNode(node, probableNodes.get(i)));
             Log.d(LOG_TAG,"SELECTED --> " + probableNodes.get(i).activityName + " index: " + probableNodes.get(i).prob);
 
         }
@@ -115,28 +116,5 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
             else {successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()); }//Log.d("PREFSTRAT4 insert count",succ.countSource2Dest+"");}
         }
         return  successorCountMap;
-    }
-
-    private List<String> computeCandidateUrl2(ActivityNode toBeChecked, ActivityNode node) {
-        node.parameteredUrlMap.keySet();
-
-        List<String> candidates = new LinkedList<>();
-
-
-        Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(PrefetchingLib.getActivityIdFromName(node.activityName));
-
-        for (ParameteredUrl parameteredUrl : toBeChecked.parameteredUrlList) {
-            if (extrasMap.keySet().containsAll(parameteredUrl.getParamKeys())) {
-                candidates.add(
-                        parameteredUrl.fillParams(extrasMap)
-                );
-            }
-        }
-
-        for (String candidate: candidates) {
-            Log.d(LOG_TAG, candidate + " for: " + toBeChecked.activityName);
-        }
-
-        return candidates;
     }
 }
