@@ -2,9 +2,11 @@ package nl.vu.cs.s2group.nappa.plugin.util;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Condition;
 import com.intellij.psi.*;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +17,10 @@ import java.util.function.Consumer;
 
 /**
  * An class containing common utility methods to simplify the instrumentation actions
+ * <p>
+ * For utility methods to manipulate the PSI Tree, check the utility classes provided by IntelliJ at
+ * {@link com.intellij.psi.util}, in particular {@link com.intellij.psi.util.PsiTreeUtil PsiTreeUtil}
+ * and {@link com.intellij.psi.util.PsiUtil PsiUtil}.
  */
 public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
@@ -126,6 +132,9 @@ public final class InstrumentUtil {
     /**
      * Traverse the Psi tree from the {@code element} in direction to the root until finding a Psi element representing
      * the Psi element class provided in {@code classType}
+     * <p>
+     * This method is similar to {@link com.intellij.psi.util.PsiTreeUtil#findFirstParent(PsiElement, Condition)},
+     * both return the same object, however, this method executes faster.
      *
      * @param element   The reference element to find a parent Psi element from
      * @param classType The class of the desired Psi element
@@ -150,5 +159,33 @@ public final class InstrumentUtil {
     public static boolean isMainPublicClass(@NotNull PsiClass psiClass) {
         PsiModifierList classModifier = psiClass.getModifierList();
         return classModifier != null && classModifier.getText().contains("public");
+    }
+
+    /**
+     * Verifies if there is a variable with the name {@code variableName} in an ancestor with shared context
+     * where the {@code referenceElement} is located in the PSI tree. If a variable is found, then append
+     * a number to the variable name to avoid creating a variable with the same name.
+     *
+     * @param referenceElement Represents the {@link PsiElement} used as reference in the PSI tree
+     * @param variableName     Represents the name of the variable to search for
+     * @return A unique name for the new variable in the reference context
+     */
+    public static String getUniqueVariableName(PsiElement referenceElement, String variableName) {
+        int number = 0;
+        String numberAsStr = "";
+        PsiElement elementToSearch = PsiTreeUtil.getParentOfType(referenceElement, PsiMethod.class);
+        if (elementToSearch == null)
+            elementToSearch = PsiTreeUtil.getParentOfType(referenceElement, PsiCodeBlock.class);
+        if (elementToSearch == null) return variableName;
+        while (true) {
+            String[] variableToSearch = new String[]{
+                    " " + variableName + numberAsStr + "=",
+                    " " + variableName + numberAsStr + " ="
+            };
+            if (Arrays.stream(variableToSearch).noneMatch(elementToSearch.getText()::contains))
+                return variableName + numberAsStr;
+            number++;
+            numberAsStr = Integer.toString(number);
+        }
     }
 }

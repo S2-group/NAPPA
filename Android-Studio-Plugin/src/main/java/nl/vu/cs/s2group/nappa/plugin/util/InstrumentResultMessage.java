@@ -15,6 +15,7 @@ import java.io.StringWriter;
  * Provides a self-contained {@link StringBuilder} to construct the result message for when finishing instrumenting.
  * Provides abstraction to present a result dialog
  */
+@SuppressWarnings({"UnusedReturnValue"})
 public class InstrumentResultMessage {
     private final StringBuilder builder;
 
@@ -38,12 +39,18 @@ public class InstrumentResultMessage {
      */
     private int unneededInstrumentationCount;
 
+    /**
+     * Count of statements that were processed in the instrumentation.
+     */
+    private int processedElements;
+
     public InstrumentResultMessage() {
         builder = new StringBuilder();
         instrumentationCount = 0;
         possibleInstrumentationCount = 0;
         alreadyInstrumentedCount = 0;
         unneededInstrumentationCount = 0;
+        processedElements = 0;
     }
 
     /**
@@ -54,6 +61,16 @@ public class InstrumentResultMessage {
     public String getMessage() {
         addInstrumentationOverview();
         return builder.toString();
+    }
+
+    /**
+     * Increment by 1 the count of statement processed in this run
+     *
+     * @return A instance of this object
+     */
+    public InstrumentResultMessage incrementProcessedElementsCount() {
+        processedElements++;
+        return this;
     }
 
     /**
@@ -71,7 +88,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementPossibleInstrumentationCount() {
         possibleInstrumentationCount++;
         return this;
@@ -82,7 +98,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementUnneededInstrumentationCount() {
         unneededInstrumentationCount++;
         return this;
@@ -93,7 +108,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage incrementAlreadyInstrumentedCount() {
         alreadyInstrumentedCount++;
         return this;
@@ -105,19 +119,33 @@ public class InstrumentResultMessage {
     private void addInstrumentationOverview() {
         StringBuilder message = new StringBuilder();
 
-        message.append(possibleInstrumentationCount)
-                .append(" statements can be instrumented.")
-                .append("\n")
-                .append(instrumentationCount)
-                .append(" statements were instrumented in this run.")
-                .append("\n")
-                .append(alreadyInstrumentedCount)
-                .append(" statements were already instrumented.")
-                .append("\n")
-                .append(unneededInstrumentationCount)
-                .append(" statements do not need to be instrumented.")
-                .append("\n\n");
+        if (processedElements != 0) {
+            message.append(processedElements)
+                    .append(" elements were processed in this run.")
+                    .append("\n\n");
+        }
+        if (possibleInstrumentationCount != 0) {
+            message.append(possibleInstrumentationCount)
+                    .append(" statements can be instrumented.")
+                    .append("\n");
+        }
+        if (instrumentationCount != 0) {
+            message.append(instrumentationCount)
+                    .append(" statements were instrumented in this run.")
+                    .append("\n");
+        }
+        if (alreadyInstrumentedCount != 0) {
+            message.append(alreadyInstrumentedCount)
+                    .append(" statements were already instrumented.")
+                    .append("\n");
+        }
+        if (unneededInstrumentationCount != 0) {
+            message.append(unneededInstrumentationCount)
+                    .append(" statements do not need to be instrumented.")
+                    .append("\n");
+        }
 
+        message.append("\n");
         builder.insert(0, message);
     }
 
@@ -127,7 +155,6 @@ public class InstrumentResultMessage {
      * @param psiClass A Java class or interface.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiClass(@NotNull PsiClass psiClass) {
         builder.append("Class: ").append(psiClass.getQualifiedName()).append("\n");
         return this;
@@ -139,7 +166,6 @@ public class InstrumentResultMessage {
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Method: ").append(psiMethod.getName()).append("\n");
         return this;
@@ -151,7 +177,6 @@ public class InstrumentResultMessage {
      * @param psiMethod A Java method or constructor.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendOverridePsiMethod(@NotNull PsiMethod psiMethod) {
         builder.append("Override method: ").append(psiMethod.getName()).append("\n");
         return this;
@@ -164,7 +189,6 @@ public class InstrumentResultMessage {
      * @param text The text to append.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendText(String text) {
         builder.append(text).append("\n");
         return this;
@@ -175,7 +199,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiClassInitializer() {
         builder.append("Initializer block: ").append("\n");
         return this;
@@ -187,7 +210,6 @@ public class InstrumentResultMessage {
      * @param psiField A Java field or enum constant.
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendPsiField(@NotNull PsiField psiField) {
         builder.append("Field: ").append(psiField.getName()).append("\n");
         return this;
@@ -209,7 +231,6 @@ public class InstrumentResultMessage {
      *
      * @return A instance of this object
      */
-    @SuppressWarnings("UnusedReturnValue")
     public InstrumentResultMessage appendNewBlock() {
         builder.append("\n");
         return this;
