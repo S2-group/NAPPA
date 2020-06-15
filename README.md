@@ -37,10 +37,8 @@ For more details on usage, refer to its [README](Android-Studio-Plugin/README.md
 
 ### Test Apps
 
-#### Weather and News
-
-Contains an Android Studio sample project with a simple UI consuming a news and weather API.
-For more details on usage, refer to its [README](Test-App/Weather-and-News-app/README.md).
+Contains a repository of sample Android apps developed with the purpose of testing NAPPA.
+For more details on how to test NAPPA in the available sample apps, refer to its [README](Test-App/README.md).
 
 ## How to cite NAPPA
 

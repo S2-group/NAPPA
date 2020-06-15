@@ -32,7 +32,10 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
 
-    implementation project(":nappa-prefetching-library")
+    // OpenAndroid.Manifest inside  aar file to check the version
+    // It doesn't seems possible to define version using this import method
+    implementation name: 'nappa-prefetching-library', ext: 'aar'
+
     implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "androidx.room:room-runtime:$roomRuntimeVersion"
