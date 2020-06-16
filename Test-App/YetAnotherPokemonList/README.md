@@ -1,0 +1,10 @@
+![Sample app Weather and News](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Yet%20Another%20Pokemon%20List/badge.svg)
+
+# Yet Another Pokemon List Test App
+
+This project contains a sample app to validate the NAPPA Prefetching Library correctness.
+
+##  Features
+
+* Consume the [PokeAPI](https://pokeapi.co/) to obtain information about the pokemon world
+* List the pokemons
