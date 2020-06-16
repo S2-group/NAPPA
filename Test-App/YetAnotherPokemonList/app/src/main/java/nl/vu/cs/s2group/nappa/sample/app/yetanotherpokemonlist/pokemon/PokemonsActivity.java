@@ -45,8 +45,7 @@ public class PokemonsActivity extends AppCompatActivity {
         SingletonOkHttpClient.getInstance().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG, Objects.requireNonNull(e.getMessage()));
+                Log.e(LOG_TAG, Log.getStackTraceString(e));
             }
 
             @Override
