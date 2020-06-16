@@ -12,6 +12,8 @@ import java.io.IOException;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -35,11 +37,18 @@ public class PokemonsActivity extends AppCompatActivity {
                 .url(API_URL)
                 .build();
 
-        try (Response response = SingletonOkHttpClient.getInstance().newCall(request).execute()) {
-            Log.d(LOG_TAG, response.body().string());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SingletonOkHttpClient.getInstance().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG, e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(LOG_TAG, response.body().string());
+            }
+        });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_listview, mobileArray);
         ListView listView = (ListView) findViewById(R.id.pokemon_list);
