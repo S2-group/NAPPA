@@ -32,6 +32,4 @@ public abstract class ApiResponseWrapper {
     public String getPrevious() {
         return previous;
     }
-
-    public abstract List<?> getResults();
 }

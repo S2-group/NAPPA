@@ -16,7 +16,6 @@ public class PokemonsWrapper extends ApiResponseWrapper {
         results = new ArrayList<>();
     }
 
-    @Override
     public List<Pokemon> getResults() {
         return results;
     }
