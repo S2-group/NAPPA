@@ -1,7 +1,5 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
-import java.util.List;
-
 /**
  * Wrap the a response of the PokeAPI
  */
