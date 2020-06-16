@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Wrap the a response of the PokeAPI
  */
-public class ApiResponseWrapper {
+public abstract class ApiResponseWrapper {
     /**
      * The total number of entries in this API
      */
@@ -22,15 +22,6 @@ public class ApiResponseWrapper {
      */
     String previous;
 
-    /**
-     * An array containing the entries for the current pagination
-     */
-    List<?> results;
-
-    public ApiResponseWrapper() {
-        results = new ArrayList<>();
-    }
-
     public int getCount() {
         return count;
     }
@@ -43,7 +34,5 @@ public class ApiResponseWrapper {
         return previous;
     }
 
-    public List<?> getResults() {
-        return results;
-    }
+    public abstract List<?> getResults();
 }

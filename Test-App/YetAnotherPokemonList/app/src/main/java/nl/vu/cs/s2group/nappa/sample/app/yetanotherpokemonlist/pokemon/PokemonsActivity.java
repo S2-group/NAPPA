@@ -51,15 +51,23 @@ public class PokemonsActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                ApiResponseWrapper parsedResponse = new Gson().fromJson(response.body().charStream(), ApiResponseWrapper.class);
-                List<Pokemon> pokemons = (List<Pokemon>) parsedResponse.getResults();
-
-                Log.d(LOG_TAG, parsedResponse.toString());
+                handleResponse(new Gson().fromJson(response.body().charStream(), PokemonsWrapper.class));
             }
         });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_listview, mobileArray);
-        ListView listView = (ListView) findViewById(R.id.pokemon_list);
+        ListView listView = findViewById(R.id.pokemon_list);
         listView.setAdapter(adapter);
+    }
+
+    private void handleResponse(PokemonsWrapper response) {
+        Log.d(LOG_TAG, response.toString());
+        List<Pokemon> pokemons = (List<Pokemon>) response.getResults();
+
+        runOnUiThread(() -> {
+            PokemonsAdapter adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, pokemons);
+            ListView listView = (ListView) findViewById(R.id.pokemon_list);
+            listView.setAdapter(adapter);
+        });
     }
 }
