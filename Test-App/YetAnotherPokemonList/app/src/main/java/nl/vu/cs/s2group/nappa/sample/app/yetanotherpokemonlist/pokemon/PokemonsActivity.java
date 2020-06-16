@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
+
 public class PokemonsActivity extends AppCompatActivity {
 
     @Override
