@@ -7,11 +7,16 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.ApiResponseWrapper;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon.Pokemon;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -46,7 +51,10 @@ public class PokemonsActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d(LOG_TAG, response.body().string());
+                ApiResponseWrapper parsedResponse = new Gson().fromJson(response.body().charStream(), ApiResponseWrapper.class);
+                List<Pokemon> pokemons = (List<Pokemon>) parsedResponse.getResults();
+
+                Log.d(LOG_TAG, parsedResponse.toString());
             }
         });
 
