@@ -1,6 +1,5 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

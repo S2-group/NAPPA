@@ -1,26 +1,26 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.ApiResponseWrapper;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon.Pokemon;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class PokemonsActivity extends AppCompatActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
@@ -44,14 +44,16 @@ public class PokemonsActivity extends AppCompatActivity {
 
         SingletonOkHttpClient.getInstance().newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
-                Log.e(LOG_TAG, e.getMessage());
+                Log.e(LOG_TAG, Objects.requireNonNull(e.getMessage()));
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                handleResponse(new Gson().fromJson(response.body().charStream(), PokemonsWrapper.class));
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ResponseBody body = Objects.requireNonNull(response.body());
+                Log.d(LOG_TAG, body.string());
+                handleResponse(new Gson().fromJson(body.charStream(), PokemonsWrapper.class));
             }
         });
 
@@ -61,12 +63,9 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void handleResponse(PokemonsWrapper response) {
-        Log.d(LOG_TAG, response.toString());
-        List<Pokemon> pokemons = (List<Pokemon>) response.getResults();
-
         runOnUiThread(() -> {
-            PokemonsAdapter adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, pokemons);
-            ListView listView = (ListView) findViewById(R.id.pokemon_list);
+            PokemonsAdapter adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, response.getResults());
+            ListView listView = findViewById(R.id.pokemon_list);
             listView.setAdapter(adapter);
         });
     }

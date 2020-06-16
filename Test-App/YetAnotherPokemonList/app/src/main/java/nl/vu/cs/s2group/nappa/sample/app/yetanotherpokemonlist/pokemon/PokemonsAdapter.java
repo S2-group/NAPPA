@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon.Pokemon;
@@ -22,10 +23,10 @@ public class PokemonsAdapter extends ArrayAdapter<Pokemon> {
         super(context, resource, objects);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        Object row = getItem(position);
         Pokemon pokemon = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -34,7 +35,7 @@ public class PokemonsAdapter extends ArrayAdapter<Pokemon> {
         // Lookup view for data population
         TextView pokemonName = convertView.findViewById(R.id.pokemonName);
         // Populate the data into the template view using the data object
-        pokemonName.setText(pokemon.getName());
+        pokemonName.setText(Objects.requireNonNull(pokemon).getName());
         // Return the completed view to render on screen
         return convertView;
     }
