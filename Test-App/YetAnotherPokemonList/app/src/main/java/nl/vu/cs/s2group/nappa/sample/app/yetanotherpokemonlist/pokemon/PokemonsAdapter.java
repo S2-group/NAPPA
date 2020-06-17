@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon.Pokemon;
 
 /**
  * Implements an adapter to list Pokemons in the UI
