@@ -1,4 +1,4 @@
-![Sample app Weather and News](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Yet%20Another%20Pokemon%20List/badge.svg)
+![Sample app Yet Another Pokemon List](https://github.com/VU-Thesis-2019-2020-Wesley-Shann/NAPPA/workflows/Sample%20app%20Yet%20Another%20Pokemon%20List/badge.svg)
 
 # Yet Another Pokemon List Test App
 
