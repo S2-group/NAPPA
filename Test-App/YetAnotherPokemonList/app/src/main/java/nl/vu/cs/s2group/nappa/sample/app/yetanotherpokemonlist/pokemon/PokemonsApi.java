@@ -36,10 +36,12 @@ public class PokemonsApi {
 
     public void getNext(Consumer<List<Pokemon>> callback) {
         sendRequest(pokemonsWrapper.getNext(), callback);
+        currentPage++;
     }
 
     public void getPrevious(Consumer<List<Pokemon>> callback) {
         sendRequest(pokemonsWrapper.getPrevious(), callback);
+        currentPage--;
     }
 
     public boolean hasNext() {
