@@ -41,11 +41,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
+                android:onClick="onPrevious"
                 android:text="@string/btn_previous" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:onClick="onNext"
                 android:layout_weight="0.5"
                 android:text="@string/btn_next" />
         </androidx.appcompat.widget.LinearLayoutCompat>
