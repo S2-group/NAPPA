@@ -8,8 +8,6 @@ import androidx.paging.PagedList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon.Pokemon;
-
 public class PokemonViewModel extends ViewModel {
     private Executor executor;
 //    private LiveData<NetworkState> networkState;
