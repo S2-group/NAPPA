@@ -1,7 +1,5 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
-import androidx.annotation.NonNull;
-
 /**
  * Wrap the a response of the PokeAPI
  */
@@ -31,15 +29,5 @@ public abstract class ApiResponseWrapper {
 
     public String getPrevious() {
         return previous;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "ApiResponseWrapper{" +
-                "count=" + count +
-                ", next='" + next + '\'' +
-                ", previous='" + previous + '\'' +
-                '}';
     }
 }

@@ -56,7 +56,6 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void handleResponse(PokemonsWrapper response) {
-        Log.d(LOG_TAG, "Fetched data: " + response.toString());
         Log.d(LOG_TAG, "Fetched pokemons: " + response.getResults().toString());
         runOnUiThread(() -> {
             if (adapter == null)

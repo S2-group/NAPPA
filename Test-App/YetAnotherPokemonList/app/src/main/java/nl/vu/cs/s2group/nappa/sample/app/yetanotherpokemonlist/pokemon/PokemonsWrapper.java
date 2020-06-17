@@ -1,7 +1,5 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +18,5 @@ public class PokemonsWrapper extends ApiResponseWrapper {
 
     public List<Pokemon> getResults() {
         return results;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "PokemonsWrapper{" +
-                "results=" + results.toString() +
-                "} " + super.toString();
     }
 }
