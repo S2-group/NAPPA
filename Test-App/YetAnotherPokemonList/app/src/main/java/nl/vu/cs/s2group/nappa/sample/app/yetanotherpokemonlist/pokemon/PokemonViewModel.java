@@ -10,12 +10,15 @@ import java.util.concurrent.Executors;
 
 public class PokemonViewModel extends ViewModel {
     private Executor executor;
+//    private LiveData<NetworkState> networkState;
     private LiveData<PagedList<Pokemon>> articleLiveData;
 
     private void init() {
         executor = Executors.newFixedThreadPool(5);
 
         PokemonsDataFactory pokemonsDataFactory = new PokemonsDataFactory();
+//        networkState = Transformations.switchMap(feedDataFactory.getMutableLiveData(),
+//                dataSource -> dataSource.getNetworkState());
 
         PagedList.Config pagedListConfig =
                 (new PagedList.Config.Builder())
