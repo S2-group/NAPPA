@@ -1,30 +1,28 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemons;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
 
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.ApiResponseWrapper;
-
-public class PokemonsWrapper extends ApiResponseWrapper {
+public class ApiDefaultResponseWrapper extends ApiResponseWrapper {
     /**
      * An array containing the entries for the current pagination
      */
-    protected List<Pokemon> results;
+    protected List<ApiModel> results;
 
-    public PokemonsWrapper() {
+    public ApiDefaultResponseWrapper() {
         results = new ArrayList<>();
     }
 
-    public List<Pokemon> getResults() {
+    public List<ApiModel> getResults() {
         return results;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "PokemonsWrapper{" +
+        return "ApiDefaultResponseWrapper{" +
                 "results=" + results +
                 "} " + super.toString();
     }
