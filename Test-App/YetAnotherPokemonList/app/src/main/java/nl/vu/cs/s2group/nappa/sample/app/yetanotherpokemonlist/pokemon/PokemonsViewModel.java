@@ -9,10 +9,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class PokemonsViewModel extends ViewModel {
-    private LiveData<PagedList<Pokemon>> pokemonLiveData;
+    private Executor executor;
+    private LiveData<PagedList<Pokemon>> articleLiveData;
 
-    public PokemonsViewModel() {
-        Executor executor = Executors.newFixedThreadPool(5);
+    private void init() {
+        executor = Executors.newFixedThreadPool(5);
 
         PokemonsDataFactory pokemonsDataFactory = new PokemonsDataFactory();
 
@@ -22,12 +23,12 @@ public class PokemonsViewModel extends ViewModel {
                         .setInitialLoadSizeHint(10)
                         .setPageSize(20).build();
 
-        pokemonLiveData = (new LivePagedListBuilder<>(pokemonsDataFactory, pagedListConfig))
+        articleLiveData = (new LivePagedListBuilder<>(pokemonsDataFactory, pagedListConfig))
                 .setFetchExecutor(executor)
                 .build();
     }
 
-    public LiveData<PagedList<Pokemon>> getPokemonLiveData() {
-        return pokemonLiveData;
+    public LiveData<PagedList<Pokemon>> getArticleLiveData() {
+        return articleLiveData;
     }
 }
