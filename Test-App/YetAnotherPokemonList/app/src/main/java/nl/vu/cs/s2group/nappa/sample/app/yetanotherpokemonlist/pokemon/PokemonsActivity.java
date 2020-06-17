@@ -25,6 +25,8 @@ public class PokemonsActivity extends AppCompatActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
     private static final String API_URL = Config.API_URL + "pokemon/";
 
+    private PokemonsAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +58,9 @@ public class PokemonsActivity extends AppCompatActivity {
     private void handleResponse(PokemonsWrapper response) {
         Log.d(LOG_TAG, "Fetched pokemons: " + response.getResults().toString());
         runOnUiThread(() -> {
-            PokemonsAdapter adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, response.getResults());
+            if (adapter == null)
+                adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, response.getResults());
+            else adapter.clear();
             ListView listView = findViewById(R.id.pokemon_list);
             listView.setAdapter(adapter);
         });
