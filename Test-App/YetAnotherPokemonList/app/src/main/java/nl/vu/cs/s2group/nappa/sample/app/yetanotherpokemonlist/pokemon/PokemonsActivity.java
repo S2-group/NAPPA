@@ -2,7 +2,6 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -25,8 +24,6 @@ import okhttp3.ResponseBody;
 public class PokemonsActivity extends AppCompatActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
     private static final String API_URL = Config.API_URL + "pokemon/";
-    String[] mobileArray = {"Android", "IPhone", "WindowsMobile", "Blackberry",
-            "WebOS", "Ubuntu", "Windows7", "Max OS X"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +51,6 @@ public class PokemonsActivity extends AppCompatActivity {
                 handleResponse(new Gson().fromJson(body.charStream(), PokemonsWrapper.class));
             }
         });
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_listview, mobileArray);
-        ListView listView = findViewById(R.id.pokemon_list);
-        listView.setAdapter(adapter);
     }
 
     private void handleResponse(PokemonsWrapper response) {
