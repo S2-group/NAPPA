@@ -17,9 +17,11 @@ public class DefaultActivity extends AppCompatActivity {
     private String apiUrl;
     private DefaultAdapter adapter;
     private DefaultApi api;
+    private int contentLayoutId;
 
-    public DefaultActivity(String logTag, String apiUrl) {
-        super(R.layout.activity_default);
+    public DefaultActivity(int contentLayoutId, String logTag, String apiUrl) {
+        super(contentLayoutId);
+        this.contentLayoutId = contentLayoutId;
         this.logTag = logTag;
         this.apiUrl = apiUrl;
     }
@@ -27,7 +29,7 @@ public class DefaultActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pokemons);
+        setContentView(contentLayoutId);
         api = new DefaultApi(apiUrl, logTag);
     }
 
@@ -59,13 +61,13 @@ public class DefaultActivity extends AppCompatActivity {
         api.getLastPage(this::handleResponse);
     }
 
-    private void handleResponse(List<DefaultApiModel> pokemons) {
+    private void handleResponse(List<DefaultApiModel> list) {
         runOnUiThread(() -> {
             if (adapter == null)
-                adapter = new DefaultAdapter(this, R.layout.activity_pokemons, pokemons);
+                adapter = new DefaultAdapter(this, contentLayoutId, list);
             else {
                 adapter.clear();
-                adapter.addAll(pokemons);
+                adapter.addAll(list);
             }
             ListView listView = findViewById(R.id.default_list);
             listView.setAdapter(adapter);
