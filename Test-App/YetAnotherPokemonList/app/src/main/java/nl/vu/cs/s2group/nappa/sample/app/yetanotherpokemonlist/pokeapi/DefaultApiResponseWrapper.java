@@ -2,10 +2,13 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Wrap the a response of the PokeAPI
  */
-public abstract class ApiResponseWrapper {
+public class DefaultApiResponseWrapper {
     /**
      * The total number of entries in this API
      */
@@ -21,6 +24,15 @@ public abstract class ApiResponseWrapper {
      */
     String previous;
 
+    /**
+     * An array containing the entries for the current pagination
+     */
+    List<DefaultApiModel> results;
+
+    public DefaultApiResponseWrapper() {
+        results = new ArrayList<>();
+    }
+
     public int getCount() {
         return count;
     }
@@ -33,6 +45,10 @@ public abstract class ApiResponseWrapper {
         return previous;
     }
 
+    public List<DefaultApiModel> getResults() {
+        return results;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -40,6 +56,7 @@ public abstract class ApiResponseWrapper {
                 "count=" + count +
                 ", next='" + next + '\'' +
                 ", previous='" + previous + '\'' +
+                "results=" + results.toString() +
                 '}';
     }
 }

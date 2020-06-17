@@ -2,7 +2,7 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
 
 import androidx.annotation.NonNull;
 
-public class ApiDefaultModel implements ApiModel {
+public class DefaultApiModel {
     String name;
     String url;
 
@@ -19,5 +19,4 @@ public class ApiDefaultModel implements ApiModel {
     public String getUrl() {
         return url;
     }
-
 }

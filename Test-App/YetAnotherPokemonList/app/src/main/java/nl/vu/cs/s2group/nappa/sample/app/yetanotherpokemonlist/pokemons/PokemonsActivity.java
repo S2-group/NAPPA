@@ -11,49 +11,52 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApi;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
 
 public class PokemonsActivity extends AppCompatActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
+    private static final String apiUrl = "pokemon/";
 
     private PokemonsAdapter adapter;
-    private PokemonsApi pokemonsApi;
+    private DefaultApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemons);
-        pokemonsApi = new PokemonsApi();
+        api = new DefaultApi(apiUrl);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         beforeRequest();
-        pokemonsApi.getInitialContent(this::handleResponse);
+        api.getInitialContent(this::handleResponse);
     }
 
     public void onFirst(View view) {
         beforeRequest();
-        pokemonsApi.getFirstPage(this::handleResponse);
+        api.getFirstPage(this::handleResponse);
     }
 
 
     public void onPrevious(View view) {
         beforeRequest();
-        pokemonsApi.getPrevious(this::handleResponse);
+        api.getPrevious(this::handleResponse);
     }
 
     public void onNext(View view) {
         beforeRequest();
-        pokemonsApi.getNext(this::handleResponse);
+        api.getNext(this::handleResponse);
     }
 
     public void onLast(View view) {
         beforeRequest();
-        pokemonsApi.getLastPage(this::handleResponse);
+        api.getLastPage(this::handleResponse);
     }
 
-    private void handleResponse(List<Pokemon> pokemons) {
+    private void handleResponse(List<DefaultApiModel> pokemons) {
         runOnUiThread(() -> {
             if (adapter == null)
                 adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, pokemons);
@@ -88,21 +91,21 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void setPaginationButtonState() {
-        findViewById(R.id.btn_first).setEnabled(pokemonsApi.hasPrevious());
-        findViewById(R.id.btn_previous).setEnabled(pokemonsApi.hasPrevious());
-        findViewById(R.id.btn_next).setEnabled(pokemonsApi.hasNext());
-        findViewById(R.id.btn_last).setEnabled(pokemonsApi.hasNext());
+        findViewById(R.id.btn_first).setEnabled(api.hasPrevious());
+        findViewById(R.id.btn_previous).setEnabled(api.hasPrevious());
+        findViewById(R.id.btn_next).setEnabled(api.hasNext());
+        findViewById(R.id.btn_last).setEnabled(api.hasNext());
     }
 
     private void setTotalItems() {
-        String str = pokemonsApi.getTotalItems() + " Pokemons";
+        String str = api.getTotalItems() + " Pokemons";
         ((TextView) findViewById(R.id.tv_total_itens)).setText(str);
 
     }
 
     private void setCurrentPage() {
-        String str = "Page " + pokemonsApi.getCurrentPage() +
-                " of " + pokemonsApi.getTotalPages();
+        String str = "Page " + api.getCurrentPage() +
+                " of " + api.getTotalPages();
         ((TextView) findViewById(R.id.tv_current_page)).setText(str);
     }
 }
