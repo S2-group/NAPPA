@@ -10,4 +10,14 @@ public class PokemonsActivity extends DefaultActivity {
     public PokemonsActivity() {
         super(R.layout.activity_pokemons, LOG_TAG, API_URL);
     }
+
+    @Override
+    protected void setTotalItems() {
+        setTotalItems("pokemons");
+    }
+
+    @Override
+    protected void setHeaderText() {
+        setHeaderText("Pokemons");
+    }
 }

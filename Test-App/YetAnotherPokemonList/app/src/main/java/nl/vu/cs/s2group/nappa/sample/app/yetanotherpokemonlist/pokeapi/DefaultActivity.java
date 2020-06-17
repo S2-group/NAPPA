@@ -12,7 +12,7 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
-public class DefaultActivity extends AppCompatActivity {
+public abstract class DefaultActivity extends AppCompatActivity {
     private String logTag;
     private String apiUrl;
     private DefaultAdapter adapter;
@@ -31,6 +31,7 @@ public class DefaultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(contentLayoutId);
         api = new DefaultApi(apiUrl, logTag);
+        setHeaderText();
     }
 
     @Override
@@ -102,11 +103,18 @@ public class DefaultActivity extends AppCompatActivity {
         findViewById(R.id.btn_last).setEnabled(api.hasNext());
     }
 
-    private void setTotalItems() {
-        String str = api.getTotalItems() + " Pokemons";
+    protected void setTotalItems(String label) {
+        String str = api.getTotalItems() + " " + label;
         ((TextView) findViewById(R.id.tv_total_itens)).setText(str);
-
     }
+
+    protected abstract void setTotalItems();
+
+    protected void setHeaderText(String title) {
+        ((TextView) findViewById(R.id.default_header)).setText(title);
+    }
+
+    protected abstract void setHeaderText();
 
     private void setCurrentPage() {
         String str = "Page " + api.getCurrentPage() +
