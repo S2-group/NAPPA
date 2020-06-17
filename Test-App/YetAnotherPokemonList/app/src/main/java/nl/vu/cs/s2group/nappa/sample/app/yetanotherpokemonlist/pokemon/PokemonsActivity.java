@@ -51,7 +51,6 @@ public class PokemonsActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 ResponseBody body = Objects.requireNonNull(response.body());
-                Log.d(LOG_TAG, body.string());
                 handleResponse(new Gson().fromJson(body.charStream(), PokemonsWrapper.class));
             }
         });
@@ -62,6 +61,7 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void handleResponse(PokemonsWrapper response) {
+        Log.d(LOG_TAG, "Fetched pokemons: " + response.getResults().toString());
         runOnUiThread(() -> {
             PokemonsAdapter adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, response.getResults());
             ListView listView = findViewById(R.id.pokemon_list);
