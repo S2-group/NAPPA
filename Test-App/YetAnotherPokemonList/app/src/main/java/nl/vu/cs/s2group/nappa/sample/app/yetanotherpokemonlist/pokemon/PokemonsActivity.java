@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemons;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
 import android.os.Bundle;
 import android.view.View;
