@@ -30,6 +30,8 @@ project.ext {
     okHttpVersion = '3.14.9'
     gsonVersion = '2.8.6'
     pagingVersion = '2.1.2'
+    rxJavaVersion = '3.0.4'
+    rxAndroidVersion = '3.0.0'
 }
 
 dependencies {
@@ -40,10 +42,14 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "androidx.paging:paging-runtime:$pagingVersion"
+    implementation "androidx.paging:paging-rxjava2:$pagingVersion"
+    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
+
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.paging:paging-common:$pagingVersion"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation "androidx.paging:paging-rxjava2:$pagingVersion"
 
 }
