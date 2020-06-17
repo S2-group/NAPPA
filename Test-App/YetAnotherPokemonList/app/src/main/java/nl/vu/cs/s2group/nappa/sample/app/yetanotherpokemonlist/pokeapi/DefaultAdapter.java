@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,13 +13,9 @@ import java.util.List;
 import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
 
-/**
- * Implements an adapter to list Pokemons in the UI
- */
-public class PokemonsAdapter extends ArrayAdapter<DefaultApiModel> {
-    public PokemonsAdapter(@NonNull Context context, int resource, @NonNull List<DefaultApiModel> objects) {
+public class DefaultAdapter extends ArrayAdapter<DefaultApiModel> {
+    public DefaultAdapter(@NonNull Context context, int resource, @NonNull List<DefaultApiModel> objects) {
         super(context, resource, objects);
     }
 
@@ -27,15 +23,15 @@ public class PokemonsAdapter extends ArrayAdapter<DefaultApiModel> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        DefaultApiModel pokemon = getItem(position);
+        DefaultApiModel model = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_pokemon, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false);
         }
         // Lookup view for data population
-        TextView pokemonName = convertView.findViewById(R.id.pokemonName);
+        TextView name = convertView.findViewById(R.id.defaultItemName);
         // Populate the data into the template view using the data object
-        pokemonName.setText(Objects.requireNonNull(pokemon).getName());
+        name.setText(Objects.requireNonNull(model).getName());
         // Return the completed view to render on screen
         return convertView;
     }

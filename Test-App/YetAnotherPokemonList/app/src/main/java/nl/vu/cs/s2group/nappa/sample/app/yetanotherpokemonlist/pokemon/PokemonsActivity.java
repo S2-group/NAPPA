@@ -13,12 +13,13 @@ import java.util.List;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApi;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultAdapter;
 
 public class PokemonsActivity extends AppCompatActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
     private static final String apiUrl = "pokemon/";
 
-    private PokemonsAdapter adapter;
+    private DefaultAdapter adapter;
     private DefaultApi api;
 
     @Override
@@ -59,7 +60,7 @@ public class PokemonsActivity extends AppCompatActivity {
     private void handleResponse(List<DefaultApiModel> pokemons) {
         runOnUiThread(() -> {
             if (adapter == null)
-                adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, pokemons);
+                adapter = new DefaultAdapter(this, R.layout.activity_pokemons, pokemons);
             else {
                 adapter.clear();
                 adapter.addAll(pokemons);

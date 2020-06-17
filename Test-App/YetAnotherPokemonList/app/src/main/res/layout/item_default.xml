@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/pokemonName"
+        android:id="@+id/defaultItemName"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="10dip"
