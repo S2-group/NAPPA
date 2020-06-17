@@ -41,6 +41,8 @@ public class PokemonsApi {
     }
 
     public void getLastPage(Consumer<List<Pokemon>> callback) {
+        sendRequest(lastPageUrl, callback);
+        currentPage = getTotalPages();
     }
 
     public void getNext(Consumer<List<Pokemon>> callback) {
@@ -89,8 +91,14 @@ public class PokemonsApi {
                 ResponseBody body = Objects.requireNonNull(response.body());
                 pokemonsWrapper = new Gson().fromJson(body.charStream(), PokemonsWrapper.class);
                 Log.d(LOG_TAG, pokemonsWrapper.toString());
+                if (lastPageUrl == null) makeLastPageUrl();
                 callback.accept(pokemonsWrapper.getResults());
             }
         });
+    }
+
+    private void makeLastPageUrl() {
+        int offset = pokemonsWrapper.getCount() - (pokemonsWrapper.getCount() % 20);
+        lastPageUrl = API_URL + "?offset=" + offset + "&limit=20";
     }
 }
