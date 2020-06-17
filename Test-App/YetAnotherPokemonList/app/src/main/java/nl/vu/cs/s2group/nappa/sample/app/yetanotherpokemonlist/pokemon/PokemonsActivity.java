@@ -30,14 +30,17 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     public void onPrevious(View view) {
+        disableButtonsOnLoad();
         pokemonsApi.getPrevious(this::handleResponse);
     }
 
     public void onNext(View view) {
+        disableButtonsOnLoad();
         pokemonsApi.getNext(this::handleResponse);
     }
 
     private void handleResponse(List<Pokemon> pokemons) {
+        updatePaginationButtons();
         runOnUiThread(() -> {
             if (adapter == null)
                 adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, pokemons);
@@ -48,5 +51,16 @@ public class PokemonsActivity extends AppCompatActivity {
             ListView listView = findViewById(R.id.pokemon_list);
             listView.setAdapter(adapter);
         });
+    }
+
+    private void disableButtonsOnLoad() {
+        findViewById(R.id.pokemons_btn_previous).setEnabled(false);
+        findViewById(R.id.pokemons_btn_next).setEnabled(false);
+
+    }
+
+    private void updatePaginationButtons() {
+        findViewById(R.id.pokemons_btn_previous).setEnabled(pokemonsApi.hasPrevious());
+        findViewById(R.id.pokemons_btn_next).setEnabled(pokemonsApi.hasNext());
     }
 }

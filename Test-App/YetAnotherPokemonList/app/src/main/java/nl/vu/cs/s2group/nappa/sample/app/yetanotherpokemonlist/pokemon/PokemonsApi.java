@@ -41,6 +41,14 @@ public class PokemonsApi {
         sendRequest(pokemonsWrapper.getPrevious(), callback);
     }
 
+    public boolean hasNext() {
+        return pokemonsWrapper.getNext() != null;
+    }
+
+    public boolean hasPrevious() {
+        return pokemonsWrapper.getPrevious() != null;
+    }
+
     private void sendRequest(String url, Consumer<List<Pokemon>> callback) {
         Request request = new Request.Builder()
                 .url(url)
