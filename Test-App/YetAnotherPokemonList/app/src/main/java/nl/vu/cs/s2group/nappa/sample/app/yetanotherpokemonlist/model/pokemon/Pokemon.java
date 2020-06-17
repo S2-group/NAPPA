@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.model.pokemon;
 
 import androidx.annotation.NonNull;
 
