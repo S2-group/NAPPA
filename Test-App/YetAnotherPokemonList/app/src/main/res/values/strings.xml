@@ -3,4 +3,6 @@
     <string name="btn_next">Next</string>
     <string name="btn_previous">Previous</string>
     <string name="header_pokemons">Pokemons</string>
+    <string name="btn_pokemons">Pokemons</string>
+    <string name="btn_abilities">Abilities</string>
 </resources>

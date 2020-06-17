@@ -7,12 +7,14 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private Class<AppCompatActivity>[] activities = new Class[]{
-            PokemonsActivity.class
+            PokemonsActivity.class,
+            AbilityActivity.class,
     };
 
     @Override
