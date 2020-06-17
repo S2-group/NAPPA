@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,6 +54,8 @@ public class PokemonsActivity extends AppCompatActivity {
             listView.setAdapter(adapter);
             setPaginationButtonState();
             setProgressBarState(false);
+            setCurrentPage();
+            setTotalItems();
         });
     }
 
@@ -67,13 +70,24 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void disableButtonsOnLoad() {
-        findViewById(R.id.pokemons_btn_previous).setEnabled(false);
-        findViewById(R.id.pokemons_btn_next).setEnabled(false);
-
+        findViewById(R.id.btn_previous).setEnabled(false);
+        findViewById(R.id.btn_next).setEnabled(false);
     }
 
     private void setPaginationButtonState() {
-        findViewById(R.id.pokemons_btn_previous).setEnabled(pokemonsApi.hasPrevious());
-        findViewById(R.id.pokemons_btn_next).setEnabled(pokemonsApi.hasNext());
+        findViewById(R.id.btn_previous).setEnabled(pokemonsApi.hasPrevious());
+        findViewById(R.id.btn_next).setEnabled(pokemonsApi.hasNext());
+    }
+
+    private void setTotalItems() {
+        String str = pokemonsApi.getTotalItems() + " Pokemons";
+        ((TextView) findViewById(R.id.tv_total_itens)).setText(str);
+
+    }
+
+    private void setCurrentPage() {
+        String str = "Page " + pokemonsApi.getCurrentPage() +
+                " of " + pokemonsApi.getTotalPages();
+        ((TextView) findViewById(R.id.tv_current_page)).setText(str);
     }
 }

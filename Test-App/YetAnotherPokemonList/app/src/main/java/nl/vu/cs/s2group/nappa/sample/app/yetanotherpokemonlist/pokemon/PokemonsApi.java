@@ -24,9 +24,10 @@ public class PokemonsApi {
     private static final String API_URL = Config.API_URL + "pokemon/";
 
     private PokemonsWrapper pokemonsWrapper;
+    private int currentPage;
 
     public PokemonsApi() {
-
+        currentPage = 1;
     }
 
     public void getInitialContent(Consumer<List<Pokemon>> callback) {
@@ -43,6 +44,18 @@ public class PokemonsApi {
 
     public boolean hasNext() {
         return pokemonsWrapper.getNext() != null;
+    }
+
+    public int getTotalItems() {
+        return pokemonsWrapper.getCount();
+    }
+
+    public int getTotalPages() {
+        return (int) Math.ceil(pokemonsWrapper.getCount() / (double) Config.ITEMS_PER_PAGE);
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     public boolean hasPrevious() {
@@ -64,7 +77,7 @@ public class PokemonsApi {
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 ResponseBody body = Objects.requireNonNull(response.body());
                 pokemonsWrapper = new Gson().fromJson(body.charStream(), PokemonsWrapper.class);
-                Log.e(LOG_TAG, pokemonsWrapper.toString());
+                Log.d(LOG_TAG, pokemonsWrapper.toString());
                 callback.accept(pokemonsWrapper.getResults());
             }
         });

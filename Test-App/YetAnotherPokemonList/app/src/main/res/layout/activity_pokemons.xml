@@ -31,6 +31,29 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
 
+        <!-- This layout was below the list without a fixed height -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0.1"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_total_itens"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_current_page"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAlignment="textEnd"
+                android:layout_weight="0.5"
+                android:textSize="18sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <ListView
             android:id="@+id/pokemon_list"
             android:layout_width="match_parent"
@@ -44,7 +67,7 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/pokemons_btn_previous"
+                android:id="@+id/btn_previous"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
@@ -52,7 +75,7 @@
                 android:text="@string/btn_previous" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/pokemons_btn_next"
+                android:id="@+id/btn_next"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
