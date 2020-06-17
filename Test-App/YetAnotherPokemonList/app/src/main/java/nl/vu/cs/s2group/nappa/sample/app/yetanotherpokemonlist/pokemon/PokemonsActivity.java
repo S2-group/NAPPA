@@ -49,7 +49,7 @@ public class PokemonsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 ResponseBody body = Objects.requireNonNull(response.body());
                 handleResponse(new Gson().fromJson(body.charStream(), PokemonsWrapper.class));
             }
