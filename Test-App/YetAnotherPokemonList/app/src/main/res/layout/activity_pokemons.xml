@@ -49,8 +49,8 @@
                 android:id="@+id/tv_current_page"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textAlignment="textEnd"
                 android:layout_weight="0.5"
+                android:textAlignment="textEnd"
                 android:textSize="18sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -66,21 +66,41 @@
             android:layout_weight="0.1"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_first"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:contentDescription="@string/btn_previous"
+                android:onClick="onPrevious"
+                android:src="@drawable/ic_baseline_first_page_24" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/btn_previous"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="0.25"
+                android:contentDescription="@string/btn_previous"
                 android:onClick="onPrevious"
-                android:text="@string/btn_previous" />
+                android:src="@drawable/ic_baseline_navigate_before_24" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/btn_next"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="0.25"
+                android:contentDescription="@string/btn_next"
                 android:onClick="onNext"
-                android:text="@string/btn_next" />
+                android:src="@drawable/ic_baseline_navigate_next_24" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_last"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.25"
+                android:contentDescription="@string/btn_next"
+                android:onClick="onNext"
+                android:src="@drawable/ic_baseline_last_page_24" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

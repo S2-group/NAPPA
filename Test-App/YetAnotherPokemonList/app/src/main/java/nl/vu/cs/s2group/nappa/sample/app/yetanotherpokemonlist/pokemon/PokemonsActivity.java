@@ -70,13 +70,17 @@ public class PokemonsActivity extends AppCompatActivity {
     }
 
     private void disableButtonsOnLoad() {
+        findViewById(R.id.btn_first).setEnabled(false);
         findViewById(R.id.btn_previous).setEnabled(false);
         findViewById(R.id.btn_next).setEnabled(false);
+        findViewById(R.id.btn_last).setEnabled(false);
     }
 
     private void setPaginationButtonState() {
+        findViewById(R.id.btn_first).setEnabled(pokemonsApi.hasPrevious());
         findViewById(R.id.btn_previous).setEnabled(pokemonsApi.hasPrevious());
         findViewById(R.id.btn_next).setEnabled(pokemonsApi.hasNext());
+        findViewById(R.id.btn_last).setEnabled(pokemonsApi.hasNext());
     }
 
     private void setTotalItems() {
