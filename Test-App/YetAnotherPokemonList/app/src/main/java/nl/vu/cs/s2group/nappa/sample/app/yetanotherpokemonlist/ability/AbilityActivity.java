@@ -6,7 +6,7 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsA
 
 public class AbilityActivity extends DefaultActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
-    private static final String API_URL = "pokemon/";
+    private static final String API_URL = "ability/";
 
     public AbilityActivity() {
         super(R.layout.activity_ability, LOG_TAG, API_URL);
