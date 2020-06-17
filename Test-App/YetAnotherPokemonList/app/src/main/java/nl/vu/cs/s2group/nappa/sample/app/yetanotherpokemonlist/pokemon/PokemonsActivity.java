@@ -60,7 +60,10 @@ public class PokemonsActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             if (adapter == null)
                 adapter = new PokemonsAdapter(this, R.layout.activity_pokemons, response.getResults());
-            else adapter.clear();
+            else {
+                adapter.clear();
+                adapter.addAll(response.getResults());
+            }
             ListView listView = findViewById(R.id.pokemon_list);
             listView.setAdapter(adapter);
         });
