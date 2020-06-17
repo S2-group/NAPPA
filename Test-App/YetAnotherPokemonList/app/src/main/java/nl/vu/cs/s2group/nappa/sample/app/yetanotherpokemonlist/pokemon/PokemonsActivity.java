@@ -32,6 +32,12 @@ public class PokemonsActivity extends AppCompatActivity {
         pokemonsApi.getInitialContent(this::handleResponse);
     }
 
+    public void onFirst(View view) {
+        beforeRequest();
+        pokemonsApi.getFirstPage(this::handleResponse);
+    }
+
+
     public void onPrevious(View view) {
         beforeRequest();
         pokemonsApi.getPrevious(this::handleResponse);
@@ -40,6 +46,11 @@ public class PokemonsActivity extends AppCompatActivity {
     public void onNext(View view) {
         beforeRequest();
         pokemonsApi.getNext(this::handleResponse);
+    }
+
+    public void onLast(View view) {
+        beforeRequest();
+        pokemonsApi.getLastPage(this::handleResponse);
     }
 
     private void handleResponse(List<Pokemon> pokemons) {

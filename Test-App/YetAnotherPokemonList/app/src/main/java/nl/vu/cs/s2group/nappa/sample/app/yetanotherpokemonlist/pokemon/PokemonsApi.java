@@ -25,6 +25,7 @@ public class PokemonsApi {
 
     private PokemonsWrapper pokemonsWrapper;
     private int currentPage;
+    private String lastPageUrl;
 
     public PokemonsApi() {
         currentPage = 1;
@@ -32,6 +33,14 @@ public class PokemonsApi {
 
     public void getInitialContent(Consumer<List<Pokemon>> callback) {
         sendRequest(API_URL, callback);
+    }
+
+    public void getFirstPage(Consumer<List<Pokemon>> callback) {
+        sendRequest(API_URL, callback);
+        currentPage = 1;
+    }
+
+    public void getLastPage(Consumer<List<Pokemon>> callback) {
     }
 
     public void getNext(Consumer<List<Pokemon>> callback) {

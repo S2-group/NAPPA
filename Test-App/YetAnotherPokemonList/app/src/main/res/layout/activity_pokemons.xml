@@ -72,7 +72,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.25"
                 android:contentDescription="@string/btn_previous"
-                android:onClick="onPrevious"
+                android:onClick="onFirst"
                 android:src="@drawable/ic_baseline_first_page_24" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -99,7 +99,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.25"
                 android:contentDescription="@string/btn_next"
-                android:onClick="onNext"
+                android:onClick="onLast"
                 android:src="@drawable/ic_baseline_last_page_24" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
