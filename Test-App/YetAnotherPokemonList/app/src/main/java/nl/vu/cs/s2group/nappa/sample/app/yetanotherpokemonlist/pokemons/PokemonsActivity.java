@@ -25,7 +25,7 @@ public class PokemonsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemons);
-        api = new DefaultApi(apiUrl);
+        api = new DefaultApi(apiUrl, LOG_TAG);
     }
 
     @Override

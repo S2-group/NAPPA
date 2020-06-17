@@ -20,14 +20,18 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class DefaultApi {
-    private static final String LOG_TAG = DefaultApi.class.getSimpleName();
-
-    protected String baseApiUrl;
-    protected int currentPage;
-    protected String lastPageUrl;
-    protected DefaultApiResponseWrapper wrapper;
+    private String logTag;
+    private String baseApiUrl;
+    private int currentPage;
+    private String lastPageUrl;
+    private DefaultApiResponseWrapper wrapper;
 
     public DefaultApi(String baseApiUrl) {
+        this(baseApiUrl, DefaultApi.class.getSimpleName());
+    }
+
+    public DefaultApi(String baseApiUrl, String logTag) {
+        this.logTag = logTag;
         this.baseApiUrl = Config.API_URL + baseApiUrl;
         currentPage = 1;
     }
@@ -89,14 +93,14 @@ public class DefaultApi {
         SingletonOkHttpClient.getInstance().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e(LOG_TAG, Log.getStackTraceString(e));
+                Log.e(logTag, Log.getStackTraceString(e));
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 ResponseBody body = Objects.requireNonNull(response.body());
                 wrapper = new Gson().fromJson(body.charStream(), DefaultApiResponseWrapper.class);
-                Log.d(LOG_TAG, wrapper.toString());
+                Log.d(logTag, wrapper.toString());
                 if (lastPageUrl == null) makeLastPageUrl();
                 callback.accept(wrapper.getResults());
             }
