@@ -8,7 +8,7 @@ import androidx.paging.PagedList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class PokemonViewModel extends ViewModel {
+public class PokemonsViewModel extends ViewModel {
     private Executor executor;
     private LiveData<PagedList<Pokemon>> articleLiveData;
 
