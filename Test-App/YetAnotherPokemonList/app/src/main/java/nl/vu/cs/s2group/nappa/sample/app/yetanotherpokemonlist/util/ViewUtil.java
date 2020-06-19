@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.commonmodels.Effect;
 
 public class ViewUtil {
     private ViewUtil() {

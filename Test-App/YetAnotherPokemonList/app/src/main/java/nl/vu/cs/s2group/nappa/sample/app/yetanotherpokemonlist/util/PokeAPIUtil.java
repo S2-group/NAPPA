@@ -41,25 +41,26 @@ public class PokeAPIUtil {
         }
     }
 
-    public static <T> T findObjectWithLanguage(List<T> list) {
-        return findObjectWithLanguage(list, "en");
+    public static <T> List<T> filterListByLanguage(List<T> list) {
+        return filterListByLanguage(list, "en");
     }
 
     @Nullable
-    public static <T> T findObjectWithLanguage(List<T> list, String language) {
-        if (list == null) return null;
+    public static <T> List<T> filterListByLanguage(List<T> list, String language) {
+        List<T> filteredList = new ArrayList<>();
+        if (list == null) return filteredList;
         try {
             for (T obj : list) {
                 NamedAPIResource namedAPIResource = (NamedAPIResource) obj.getClass().getMethod("getLanguage").invoke(obj);
                 Objects.requireNonNull(namedAPIResource);
                 if (namedAPIResource.getName().equals(language)) {
-                    return obj;
+                    filteredList.add(obj);
                 }
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             Log.e(LOG_TAG, "Failed to find object with language", e);
             return null;
         }
-        return null;
+        return filteredList;
     }
 }

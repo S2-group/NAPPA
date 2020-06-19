@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import java.util.List;
+
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.PokeAPIUtil;
@@ -51,14 +53,17 @@ public class AbilityActivity extends AppCompatActivity {
     }
 
     private void setAbilityEffectChange() {
+
         runOnUiThread(() -> {
             LinearLayoutCompat layout = findViewById(R.id.ll_ability_effect_change);
             if (ability.effect_changes.isEmpty()) {
                 layout.addView(ViewUtil.createTextView(this, getResources().getString(R.string.empty_list)));
             } else {
                 for (AbilityEffectChange effectChange : ability.effect_changes) {
-                    Effect effect = PokeAPIUtil.findObjectWithLanguage(effectChange.effect_entries);
-                    layout.addView(ViewUtil.createTextView(this, effect.getEffect()));
+                    List<Effect> effects = PokeAPIUtil.filterListByLanguage(effectChange.effect_entries);
+                    for (Effect effect : effects) {
+                        layout.addView(ViewUtil.createTextView(this, effect.getEffect()));
+                    }
                 }
             }
         });
