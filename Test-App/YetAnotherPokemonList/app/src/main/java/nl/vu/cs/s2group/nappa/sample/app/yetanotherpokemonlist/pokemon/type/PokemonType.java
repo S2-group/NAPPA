@@ -2,11 +2,14 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type;
 
 import androidx.annotation.NonNull;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.NamedAPIResource;
 
-public class TypesResponseWrapper {
+/**
+ * Representation of https://pokeapi.co/docs/v2#pokemontype
+ */
+public class PokemonType {
     int slot;
-    DefaultApiModel type;
+    NamedAPIResource type;
 
     @NonNull
     @Override
@@ -21,7 +24,7 @@ public class TypesResponseWrapper {
         return slot;
     }
 
-    public DefaultApiModel getType() {
+    public NamedAPIResource getType() {
         return type;
     }
 }

@@ -13,10 +13,10 @@ public class PokeApiUtil {
         throw new IllegalStateException("PokeApiUtil is an utility class and should be instantiated!");
     }
 
-    public static List<DefaultApiModel> parseLsitToDefaultApiModel(List<?> wrapperList, String method) {
-        List<DefaultApiModel> types = new ArrayList<>();
+    public static List<NamedAPIResource> parseLsitToDefaultApiModel(List<?> wrapperList, String method) {
+        List<NamedAPIResource> types = new ArrayList<>();
         for (Object wrapper : wrapperList) {
-            DefaultApiModel model = parseObjectToDefaultApiModel(wrapper, method);
+            NamedAPIResource model = parseObjectToDefaultApiModel(wrapper, method);
             if (model != null) types.add(model);
         }
 
@@ -24,9 +24,9 @@ public class PokeApiUtil {
     }
 
     @Nullable
-    public static DefaultApiModel parseObjectToDefaultApiModel(@NonNull Object wrapper, String method) {
+    public static NamedAPIResource parseObjectToDefaultApiModel(@NonNull Object wrapper, String method) {
         try {
-            return (DefaultApiModel) wrapper.getClass().getMethod(method).invoke(wrapper);
+            return (NamedAPIResource) wrapper.getClass().getMethod(method).invoke(wrapper);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
             return null;

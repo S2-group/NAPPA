@@ -10,10 +10,10 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultAdapter;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.NamedAPIResource;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.PokeApiUtil;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilitiesResponseWrapper;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type.TypesResponseWrapper;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.PokemonAbility;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type.PokemonType;
 
 public class PokemonActivity extends AppCompatActivity {
 
@@ -34,8 +34,8 @@ public class PokemonActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.page_title)).setText(pokemonName);
     }
 
-    private void setPokemonTypes(List<TypesResponseWrapper> wrapper) {
-        List<DefaultApiModel> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getType");
+    private void setPokemonTypes(List<PokemonType> wrapper) {
+        List<NamedAPIResource> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getType");
         runOnUiThread(() -> {
             DefaultAdapter adapter = new DefaultAdapter(this, R.layout.activity_pokemon, types);
             ListView listView = findViewById(R.id.lv_types);
@@ -43,8 +43,8 @@ public class PokemonActivity extends AppCompatActivity {
         });
     }
 
-    private void setPokemonAbilities(List<AbilitiesResponseWrapper> wrapper) {
-        List<DefaultApiModel> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getAbility");
+    private void setPokemonAbilities(List<PokemonAbility> wrapper) {
+        List<NamedAPIResource> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getAbility");
         runOnUiThread(() -> {
             DefaultAdapter adapter = new DefaultAdapter(this, R.layout.activity_pokemon, types);
             ListView listView = findViewById(R.id.lv_abilities);

@@ -63,7 +63,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
         api.getLastPage(this::handleResponse);
     }
 
-    private void handleResponse(List<DefaultApiModel> list) {
+    private void handleResponse(List<NamedAPIResource> list) {
         runOnUiThread(() -> {
             if (adapter == null)
                 adapter = new DefaultAdapter(this, contentLayoutId, list);

@@ -2,7 +2,10 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
 
 import androidx.annotation.NonNull;
 
-public class DefaultApiModel {
+/**
+ * Representation of https://pokeapi.co/docs/v2#namedapiresource
+ */
+public class NamedAPIResource {
     String name;
     String url;
 

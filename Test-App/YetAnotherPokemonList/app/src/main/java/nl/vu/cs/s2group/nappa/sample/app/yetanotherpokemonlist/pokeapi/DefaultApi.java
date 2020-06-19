@@ -24,7 +24,7 @@ public class DefaultApi {
     private String baseApiUrl;
     private int currentPage;
     private String lastPageUrl;
-    private DefaultApiResponseWrapper wrapper;
+    private NamedAPIResourceList wrapper;
 
     public DefaultApi(String baseApiUrl) {
         this(baseApiUrl, DefaultApi.class.getSimpleName());
@@ -36,26 +36,26 @@ public class DefaultApi {
         currentPage = 1;
     }
 
-    public void getInitialContent(Consumer<List<DefaultApiModel>> callback) {
+    public void getInitialContent(Consumer<List<NamedAPIResource>> callback) {
         sendRequest(baseApiUrl, callback);
     }
 
-    public void getFirstPage(Consumer<List<DefaultApiModel>> callback) {
+    public void getFirstPage(Consumer<List<NamedAPIResource>> callback) {
         sendRequest(baseApiUrl, callback);
         currentPage = 1;
     }
 
-    public void getLastPage(Consumer<List<DefaultApiModel>> callback) {
+    public void getLastPage(Consumer<List<NamedAPIResource>> callback) {
         sendRequest(lastPageUrl, callback);
         currentPage = getTotalPages();
     }
 
-    public void getNext(Consumer<List<DefaultApiModel>> callback) {
+    public void getNext(Consumer<List<NamedAPIResource>> callback) {
         sendRequest(wrapper.getNext(), callback);
         currentPage++;
     }
 
-    public void getPrevious(Consumer<List<DefaultApiModel>> callback) {
+    public void getPrevious(Consumer<List<NamedAPIResource>> callback) {
         sendRequest(wrapper.getPrevious(), callback);
         currentPage--;
     }
@@ -85,7 +85,7 @@ public class DefaultApi {
         lastPageUrl = baseApiUrl + "?offset=" + offset + "&limit=20";
     }
 
-    private void sendRequest(String url, Consumer<List<DefaultApiModel>> callback) {
+    private void sendRequest(String url, Consumer<List<NamedAPIResource>> callback) {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -99,7 +99,7 @@ public class DefaultApi {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 ResponseBody body = Objects.requireNonNull(response.body());
-                wrapper = new Gson().fromJson(body.charStream(), DefaultApiResponseWrapper.class);
+                wrapper = new Gson().fromJson(body.charStream(), NamedAPIResourceList.class);
                 Log.d(logTag, wrapper.toString());
                 if (lastPageUrl == null) makeLastPageUrl();
                 callback.accept(wrapper.getResults());

@@ -2,12 +2,15 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability;
 
 import androidx.annotation.NonNull;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultApiModel;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.NamedAPIResource;
 
-public class AbilitiesResponseWrapper {
+/**
+ * Representation of https://pokeapi.co/docs/v2#pokemonability
+ */
+public class PokemonAbility {
     int slot;
     boolean is_hidden;
-    DefaultApiModel ability;
+    NamedAPIResource ability;
 
     @NonNull
     @Override
@@ -23,7 +26,7 @@ public class AbilitiesResponseWrapper {
         return slot;
     }
 
-    public DefaultApiModel getAbility() {
+    public NamedAPIResource getAbility() {
         return ability;
     }
 

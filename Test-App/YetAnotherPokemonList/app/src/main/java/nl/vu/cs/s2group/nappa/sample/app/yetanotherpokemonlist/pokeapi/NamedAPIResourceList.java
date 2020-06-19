@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wrap the a response of the PokeAPI
+ * Representation of https://pokeapi.co/docs/v2#named
  */
-public class DefaultApiResponseWrapper {
+public class NamedAPIResourceList {
     /**
      * The total number of entries in this API
      */
@@ -27,9 +27,9 @@ public class DefaultApiResponseWrapper {
     /**
      * An array containing the entries for the current pagination
      */
-    List<DefaultApiModel> results;
+    List<NamedAPIResource> results;
 
-    public DefaultApiResponseWrapper() {
+    public NamedAPIResourceList() {
         results = new ArrayList<>();
     }
 
@@ -45,7 +45,7 @@ public class DefaultApiResponseWrapper {
         return previous;
     }
 
-    public List<DefaultApiModel> getResults() {
+    public List<NamedAPIResource> getResults() {
         return results;
     }
 

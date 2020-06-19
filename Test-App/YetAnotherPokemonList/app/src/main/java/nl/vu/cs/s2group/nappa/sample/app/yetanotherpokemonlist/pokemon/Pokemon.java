@@ -4,13 +4,16 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilitiesResponseWrapper;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type.TypesResponseWrapper;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.PokemonAbility;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type.PokemonType;
 
+/**
+ * Representation of https://pokeapi.co/docs/v2#pokemon
+ */
 public class Pokemon {
     String name;
-    List<TypesResponseWrapper> types;
-    List<AbilitiesResponseWrapper> abilities;
+    List<PokemonType> types;
+    List<PokemonAbility> abilities;
 
     @NonNull
     @Override

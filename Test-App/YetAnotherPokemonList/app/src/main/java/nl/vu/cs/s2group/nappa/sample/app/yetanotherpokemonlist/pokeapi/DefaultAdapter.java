@@ -14,8 +14,8 @@ import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
-public class DefaultAdapter extends ArrayAdapter<DefaultApiModel> {
-    public DefaultAdapter(@NonNull Context context, int resource, @NonNull List<DefaultApiModel> objects) {
+public class DefaultAdapter extends ArrayAdapter<NamedAPIResource> {
+    public DefaultAdapter(@NonNull Context context, int resource, @NonNull List<NamedAPIResource> objects) {
         super(context, resource, objects);
     }
 
@@ -23,7 +23,7 @@ public class DefaultAdapter extends ArrayAdapter<DefaultApiModel> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Get the data item for this position
-        DefaultApiModel model = getItem(position);
+        NamedAPIResource model = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_default, parent, false);
