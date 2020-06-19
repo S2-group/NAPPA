@@ -33,6 +33,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/iv_pokemon_sprite_front" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -40,6 +41,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
+                        android:adjustViewBounds="true"
                         android:contentDescription="@string/iv_pokemon_sprite_back" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
