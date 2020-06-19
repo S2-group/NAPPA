@@ -24,4 +24,5 @@
     <string name="empty_list">No items found</string>
     <string name="tv_ability_pokemons">Onwed by pokemons</string>
     <string name="tv_ability_effect_change">Effect Changes</string>
+    <string name="tv_ability_effect_entries">Effect Entries</string>
 </resources>
