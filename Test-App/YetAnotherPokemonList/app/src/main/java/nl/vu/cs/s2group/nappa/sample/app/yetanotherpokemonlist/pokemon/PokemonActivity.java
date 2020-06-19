@@ -35,6 +35,7 @@ public class PokemonActivity extends AppCompatActivity {
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_moves, pokemon.moves, "getMove");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_held_items, pokemon.heldItems, "getItem");
     }
 
     private void setPageTitle() {

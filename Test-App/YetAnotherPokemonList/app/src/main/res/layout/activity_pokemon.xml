@@ -206,6 +206,24 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <!-- Held Items -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ll_pokemon_held_items"
+                    style="@style/LayoutBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_pokemon_held_items" />
+
+                    <!-- Items added here in runtime -->
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
                 <!-- Moves -->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/ll_pokemon_moves"
