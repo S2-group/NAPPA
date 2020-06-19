@@ -1,8 +1,5 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.util.Log;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
@@ -15,12 +12,6 @@ public class LocationsActivity extends DefaultActivity {
 
     public LocationsActivity() {
         super(R.layout.activity_locations, LOG_TAG, API_URL);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_locations);
     }
 
     @Override
