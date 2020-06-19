@@ -38,6 +38,7 @@ public class PokemonActivity extends AppCompatActivity {
         setPokemonStats();
         setNamedAPIResourceList(R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
         setNamedAPIResourceList(R.id.ll_pokemon_types, pokemon.types, "getType");
+        setNamedAPIResourceList(R.id.ll_pokemon_moves, pokemon.moves, "getMove");
     }
 
     private void setPageTitle() {
