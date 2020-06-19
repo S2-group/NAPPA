@@ -28,7 +28,7 @@ public class PokemonActivity extends AppCompatActivity {
         this.pokemon = pokemon;
         setPageTitle();
         setPokemonCharacteristics();
-        setNamedAPIResourceList(R.id.ll_pokemon_stats, pokemon.stats, "getStat");
+        setPokemonStats();
         setNamedAPIResourceList(R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
         setNamedAPIResourceList(R.id.ll_pokemon_types, pokemon.types, "getType");
     }
@@ -52,12 +52,30 @@ public class PokemonActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_pokemon_species_default)).setText(isDefault);
     }
 
+    private void setPokemonStats() {
+        runOnUiThread(() -> {
+            LinearLayoutCompat layout = findViewById(R.id.ll_pokemon_stats);
+            for (PokemonStat pokemonStat : pokemon.stats) {
+                TextView tvStatLabel = ViewUtil.createTextView(this, pokemonStat.getStat().getName(), 0.5f);
+                String stateValueStr = String.format(Config.LOCALE, "%d", pokemonStat.getBase_stat()) +
+                        " (" + String.format(Config.LOCALE, "%d", pokemonStat.effort) + " EV)";
+                TextView tvStatValue = ViewUtil.createTextView(this, stateValueStr, 0.5f);
+
+                LinearLayoutCompat rowLayout = new LinearLayoutCompat(this, null);
+                rowLayout.addView(tvStatLabel);
+                rowLayout.addView(tvStatValue);
+
+                layout.addView(rowLayout);
+            }
+        });
+    }
+
     private void setNamedAPIResourceList(int viewId, List<?> list, String getterMethod) {
         List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         runOnUiThread(() -> {
             LinearLayoutCompat linearLayout = findViewById(viewId);
             for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
-                linearLayout.addView(ViewUtil.createTextViewFromNamedAPIResource(this, namedAPIResource));
+                linearLayout.addView(ViewUtil.createTextView(this, namedAPIResource.getName()));
             }
         });
     }
