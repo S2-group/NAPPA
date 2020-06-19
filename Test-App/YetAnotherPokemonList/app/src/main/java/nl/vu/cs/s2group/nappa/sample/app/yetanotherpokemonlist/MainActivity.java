@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
         int pageIndex = new Random().nextInt(activitiesItem.length - 1);
         int itemId = new Random().nextInt(maxItems[pageIndex]);
         Class<AppCompatActivity> activity = activitiesItem[pageIndex];
-        Log.d(LOG_TAG, "Navigating to page " + activity.getCanonicalName());
+        // There are gaps in the API IDs
+        if (pageIndex == 0 && itemId > 807) itemId += 10001 - 807;
+        if (pageIndex == 1 && itemId > 233) itemId += 10001 - 233;
+        Log.d(LOG_TAG, "Navigating to page " + activity.getCanonicalName() + " with ID " + itemId + " of " + maxItems[pageIndex]);
         Intent intent = new Intent(this, activity);
         intent.putExtra("id", itemId);
         startActivity(intent);
