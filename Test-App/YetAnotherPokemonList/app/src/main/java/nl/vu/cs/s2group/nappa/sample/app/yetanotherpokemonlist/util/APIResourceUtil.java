@@ -17,6 +17,7 @@ public class APIResourceUtil {
 
     public static List<NamedAPIResource> parseListToNamedAPOResourceList(List<?> wrapperList, String method) {
         List<NamedAPIResource> types = new ArrayList<>();
+        if (wrapperList == null) return types;
         for (Object wrapper : wrapperList) {
             NamedAPIResource model = parseObjectToNamedAPIResource(wrapper, method);
             if (model != null) types.add(model);

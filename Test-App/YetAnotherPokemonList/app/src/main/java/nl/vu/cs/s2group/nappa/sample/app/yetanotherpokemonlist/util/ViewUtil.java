@@ -40,8 +40,14 @@ public class ViewUtil {
         List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         activity.runOnUiThread(() -> {
             LinearLayoutCompat linearLayout = activity.findViewById(viewId);
-            for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
-                linearLayout.addView(createTextView(activity, namedAPIResource.getName()));
+            if (namedAPIResourceList.size() == 0) {
+                String emptyListStr = activity.getResources().getString(R.string.empty_list);
+                linearLayout.addView(createTextView(activity, emptyListStr));
+            } else {
+                for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
+                    linearLayout.addView(createTextView(activity, namedAPIResource.getName()));
+                }
+
             }
         });
     }

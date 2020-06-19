@@ -21,4 +21,5 @@
     <string name="iv_pokemon_sprite_back">Sprint of the back view of the Pokemon</string>
     <string name="tv_pokemon_moves">Moves</string>
     <string name="tv_pokemon_held_items">Held Items</string>
+    <string name="empty_list">No items found</string>
 </resources>
