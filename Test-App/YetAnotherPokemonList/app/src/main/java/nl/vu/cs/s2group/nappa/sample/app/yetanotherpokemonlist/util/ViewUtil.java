@@ -62,6 +62,27 @@ public class ViewUtil {
         });
     }
 
+    public static <T> void addListToUI(AppCompatActivity activity, int viewId, List<T> list, String getterMethod) {
+        activity.runOnUiThread(() -> {
+            LinearLayoutCompat linearLayout = activity.findViewById(viewId);
+            try {
+                if (list.isEmpty()) {
+                    String emptyListStr = activity.getResources().getString(R.string.empty_list);
+                    linearLayout.addView(createTextView(activity, emptyListStr));
+                } else {
+                    for (T obj : list) {
+                        String text = (String) obj.getClass().getMethod(getterMethod).invoke(obj);
+                        TextView tv = createTextView(activity, text);
+                        linearLayout.addView(tv);
+                    }
+
+                }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     public static <T> void addNamedAPIResourceListWithLanguageToUI(AppCompatActivity activity, int viewId, List<T> list, String getterMethod) {
         activity.runOnUiThread(() -> {
             LinearLayoutCompat layout = activity.findViewById(viewId);

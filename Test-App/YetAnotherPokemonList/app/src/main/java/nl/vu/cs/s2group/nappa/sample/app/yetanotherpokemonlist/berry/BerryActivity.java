@@ -29,7 +29,7 @@ public class BerryActivity extends AppCompatActivity {
         toggleProgressBarVisibility(false);
         setAbilityCharacteristics();
 
-        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_berry_flavors, berry.flavors, "getFlavorWithPotency");
+        ViewUtil.addListToUI(this, R.id.ll_berry_flavors, berry.flavors, "getFlavorWithPotency");
     }
 
     private void toggleProgressBarVisibility(boolean isVisible) {
