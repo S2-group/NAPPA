@@ -7,7 +7,12 @@ This project contains a sample app to validate the NAPPA Prefetching Library cor
 ##  Features
 
 * Consume the [PokeAPI](https://pokeapi.co/) to obtain information about the pokemon world
-* List the pokemons
+* Pokemons: list, see details, see ability details
+* Pokemons abilities: list, see details, see pokemon details
+* Locations: list and see details
+* Berries: list and see details
+* Open page with random data
+* Find data per type and ID
 
 ## App structure
 
