@@ -40,7 +40,7 @@ public class ViewUtil {
         List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         activity.runOnUiThread(() -> {
             LinearLayoutCompat linearLayout = activity.findViewById(viewId);
-            if (namedAPIResourceList.size() == 0) {
+            if (namedAPIResourceList.isEmpty()) {
                 String emptyListStr = activity.getResources().getString(R.string.empty_list);
                 linearLayout.addView(createTextView(activity, emptyListStr));
             } else {
