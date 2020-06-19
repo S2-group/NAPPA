@@ -9,7 +9,7 @@
     <string name="btn_locations">Locations</string>
     <string name="tv_pokemon_types">Types</string>
     <string name="tv_pokemon_abilities">Abilities</string>
-    <string name="tv_pokemon_characteristics">Characteristics</string>
+    <string name="tv_block_characteristics">Characteristics</string>
     <string name="tv_pokemon_height">Height</string>
     <string name="tv_pokemon_weight">Weight</string>
     <string name="tv_pokemon_base_experience">Base Experience</string>
@@ -26,4 +26,6 @@
     <string name="tv_ability_effect_change">Previous Effects Across Version Groups </string>
     <string name="tv_ability_effect_entries">Effects</string>
     <string name="tv_ability_flavor">Flavors</string>
+    <string name="tv_ability_from_main_serie">Is from main series</string>
+    <string name="tv_ability_generation">Generation</string>
 </resources>

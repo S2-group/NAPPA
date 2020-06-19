@@ -30,6 +30,7 @@ public class AbilityActivity extends AppCompatActivity {
         setPageTitle();
         toggleProgressBarVisibility(false);
         setAbilityEffectChange();
+        setAbilityCharacteristics();
 
 
         ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_entries, ability.effect_entries, "getEffect");
@@ -48,6 +49,14 @@ public class AbilityActivity extends AppCompatActivity {
 
     private void setPageTitle() {
         ((TextView) findViewById(R.id.page_title)).setText(ability.name);
+    }
+
+    private void setAbilityCharacteristics() {
+        int isDefaultTextId = ability.is_main_series ? R.string.yes : R.string.no;
+        String isDefault = getResources().getString(isDefaultTextId);
+        ((TextView) findViewById(R.id.tv_ability_from_main_serie)).setText(isDefault);
+
+        ((TextView) findViewById(R.id.tv_ability_from_main_serie)).setText(ability.generation.getName());
     }
 
     private void setAbilityEffectChange() {
