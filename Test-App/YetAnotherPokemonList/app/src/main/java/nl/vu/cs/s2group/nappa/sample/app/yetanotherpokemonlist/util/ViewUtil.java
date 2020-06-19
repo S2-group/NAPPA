@@ -43,7 +43,7 @@ public class ViewUtil {
     }
 
     public static void addNamedAPIResourceListToUI(AppCompatActivity activity, int viewId, List<?> list, String getterMethod, Consumer<View> callback) {
-        List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
+        List<NamedAPIResource> namedAPIResourceList = PokeAPIUtil.parseListToNamedAPOResourceList(list, getterMethod);
         activity.runOnUiThread(() -> {
             LinearLayoutCompat linearLayout = activity.findViewById(viewId);
             if (namedAPIResourceList.isEmpty()) {

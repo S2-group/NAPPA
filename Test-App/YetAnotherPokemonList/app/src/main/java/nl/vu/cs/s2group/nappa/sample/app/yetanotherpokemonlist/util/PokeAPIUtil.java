@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -10,8 +12,10 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
-public class APIResourceUtil {
-    private APIResourceUtil() {
+public class PokeAPIUtil {
+    private static final String LOG_TAG = PokeAPIUtil.class.getSimpleName();
+
+    private PokeAPIUtil() {
         throw new IllegalStateException("APIResourceUtil is an utility class and should be instantiated!");
     }
 
@@ -31,8 +35,28 @@ public class APIResourceUtil {
         try {
             return (NamedAPIResource) wrapper.getClass().getMethod(method).invoke(wrapper);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "Failed to parse object to Named API Resource", e);
             return null;
         }
+    }
+
+    public static <T> T findObjectWithLanguage(List<T> list) {
+        return findObjectWithLanguage(list, "en");
+    }
+
+    @Nullable
+    public static <T> T findObjectWithLanguage(List<T> list, String language) {
+        if (list == null) return null;
+        try {
+            for (T obj : list) {
+                if (obj.getClass().getMethod("getLanguage").invoke(obj) == language) {
+                    return obj;
+                }
+            }
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            Log.e(LOG_TAG, "Failed to find object with language", e);
+            return null;
+        }
+        return null;
     }
 }
