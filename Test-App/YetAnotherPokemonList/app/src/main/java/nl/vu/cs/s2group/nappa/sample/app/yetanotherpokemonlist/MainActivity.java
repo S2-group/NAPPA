@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.ability.AbilityActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationsActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsActivity;

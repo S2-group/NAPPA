@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.ability;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability;
 
 import android.util.Log;
 
