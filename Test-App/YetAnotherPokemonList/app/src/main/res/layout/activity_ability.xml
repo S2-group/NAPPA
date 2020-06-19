@@ -23,6 +23,24 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Effect entries -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ll_ability_effect_entries"
+                    style="@style/LayoutBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_ability_effect_entries" />
+
+                    <!-- Items added here in runtime -->
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
                 <!-- Effect change -->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/ll_ability_effect_change"
@@ -41,9 +59,9 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <!-- Effect entries -->
+                <!-- Flavor -->
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ll_ability_effect_entries"
+                    android:id="@+id/ll_ability_flavor"
                     style="@style/LayoutBlock"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -53,7 +71,7 @@
                         style="@style/TextViewSection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/tv_ability_effect_entries" />
+                        android:text="@string/tv_ability_flavor" />
 
                     <!-- Items added here in runtime -->
 

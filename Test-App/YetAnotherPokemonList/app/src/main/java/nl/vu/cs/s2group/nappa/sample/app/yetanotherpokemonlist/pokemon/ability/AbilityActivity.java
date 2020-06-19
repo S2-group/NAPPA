@@ -31,7 +31,9 @@ public class AbilityActivity extends AppCompatActivity {
         toggleProgressBarVisibility(false);
         setAbilityEffectChange();
 
+
         ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_entries, ability.effect_entries, "getEffect");
+        ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_flavor, ability.flavor_text_entries, "getFlavorText");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_ability_pokemons, ability.pokemon, "getPokemon", (view) -> {
             String url = view.getTag().toString();
             Log.d(LOG_TAG, "Clicked on " + url);
