@@ -2,7 +2,7 @@ package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type;
 
 import androidx.annotation.NonNull;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.NamedAPIResource;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
 /**
  * Representation of https://pokeapi.co/docs/v2#pokemontype

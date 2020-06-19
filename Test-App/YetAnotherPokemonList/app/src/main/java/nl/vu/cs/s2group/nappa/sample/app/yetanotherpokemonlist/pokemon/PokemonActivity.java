@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultAdapter;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.NamedAPIResource;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.PokeApiUtil;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIAdapter;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.APIResourceUtil;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.PokemonAbility;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.type.PokemonType;
 
@@ -21,7 +21,7 @@ public class PokemonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon);
-        PokemonApi.makeRequest(getIntent().getStringExtra("url"), this::handleRequest);
+        PokemonAPI.makeRequest(getIntent().getStringExtra("url"), this::handleRequest);
     }
 
     private void handleRequest(Pokemon pokemon) {
@@ -35,18 +35,18 @@ public class PokemonActivity extends AppCompatActivity {
     }
 
     private void setPokemonTypes(List<PokemonType> wrapper) {
-        List<NamedAPIResource> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getType");
+        List<NamedAPIResource> types = APIResourceUtil.parseListToNamedAPOResourceList(wrapper, "getType");
         runOnUiThread(() -> {
-            DefaultAdapter adapter = new DefaultAdapter(this, R.layout.activity_pokemon, types);
+            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, types);
             ListView listView = findViewById(R.id.lv_types);
             listView.setAdapter(adapter);
         });
     }
 
     private void setPokemonAbilities(List<PokemonAbility> wrapper) {
-        List<NamedAPIResource> types = PokeApiUtil.parseLsitToDefaultApiModel(wrapper, "getAbility");
+        List<NamedAPIResource> types = APIResourceUtil.parseListToNamedAPOResourceList(wrapper, "getAbility");
         runOnUiThread(() -> {
-            DefaultAdapter adapter = new DefaultAdapter(this, R.layout.activity_pokemon, types);
+            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, types);
             ListView listView = findViewById(R.id.lv_abilities);
             listView.setAdapter(adapter);
         });

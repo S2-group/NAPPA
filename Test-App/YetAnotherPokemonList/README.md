@@ -8,3 +8,7 @@ This project contains a sample app to validate the NAPPA Prefetching Library cor
 
 * Consume the [PokeAPI](https://pokeapi.co/) to obtain information about the pokemon world
 * List the pokemons
+
+## App structure
+
+This app was organized following the structure described in the [PokeAPI Documentation](https://pokeapi.co/docs/v2) page.

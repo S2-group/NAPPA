@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,14 +12,14 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
-public abstract class DefaultActivity extends AppCompatActivity {
+public abstract class NamedAPIActivity extends AppCompatActivity {
     private String logTag;
     private String apiUrl;
-    private DefaultAdapter adapter;
-    private DefaultApi api;
+    private NamedAPIAdapter adapter;
+    private NamedAPI api;
     private int contentLayoutId;
 
-    public DefaultActivity(int contentLayoutId, String logTag, String apiUrl) {
+    public NamedAPIActivity(int contentLayoutId, String logTag, String apiUrl) {
         super(contentLayoutId);
         this.contentLayoutId = contentLayoutId;
         this.logTag = logTag;
@@ -30,7 +30,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(contentLayoutId);
-        api = new DefaultApi(apiUrl, logTag);
+        api = new NamedAPI(apiUrl, logTag);
         setHeaderText();
         setOnItemClickListener();
     }
@@ -66,7 +66,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
     private void handleResponse(List<NamedAPIResource> list) {
         runOnUiThread(() -> {
             if (adapter == null)
-                adapter = new DefaultAdapter(this, contentLayoutId, list);
+                adapter = new NamedAPIAdapter(this, contentLayoutId, list);
             else {
                 adapter.clear();
                 adapter.addAll(list);

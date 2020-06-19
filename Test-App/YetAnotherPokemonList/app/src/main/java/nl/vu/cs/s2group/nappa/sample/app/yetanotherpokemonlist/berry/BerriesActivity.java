@@ -1,12 +1,11 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIActivity;
 
-public class BerriesActivity extends DefaultActivity {
+public class BerriesActivity extends NamedAPIActivity {
     private static final String LOG_TAG = BerriesActivity.class.getSimpleName();
     private static final String API_URL = "berry/";
 

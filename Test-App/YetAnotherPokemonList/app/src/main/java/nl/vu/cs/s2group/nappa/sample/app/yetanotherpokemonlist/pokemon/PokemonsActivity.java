@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIActivity;
 
-public class PokemonsActivity extends DefaultActivity {
+public class PokemonsActivity extends NamedAPIActivity {
     private static final String LOG_TAG = PokemonsActivity.class.getSimpleName();
     private static final String API_URL = "pokemon/";
 

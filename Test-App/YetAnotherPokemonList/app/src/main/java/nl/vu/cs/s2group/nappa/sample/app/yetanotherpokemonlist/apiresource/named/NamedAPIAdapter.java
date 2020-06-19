@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,8 +14,8 @@ import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
-public class DefaultAdapter extends ArrayAdapter<NamedAPIResource> {
-    public DefaultAdapter(@NonNull Context context, int resource, @NonNull List<NamedAPIResource> objects) {
+public class NamedAPIAdapter extends ArrayAdapter<NamedAPIResource> {
+    public NamedAPIAdapter(@NonNull Context context, int resource, @NonNull List<NamedAPIResource> objects) {
         super(context, resource, objects);
     }
 

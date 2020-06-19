@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util;
 
 import androidx.annotation.NonNull;
 
@@ -8,15 +8,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PokeApiUtil {
-    private PokeApiUtil() {
-        throw new IllegalStateException("PokeApiUtil is an utility class and should be instantiated!");
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
+
+public class APIResourceUtil {
+    private APIResourceUtil() {
+        throw new IllegalStateException("APIResourceUtil is an utility class and should be instantiated!");
     }
 
-    public static List<NamedAPIResource> parseLsitToDefaultApiModel(List<?> wrapperList, String method) {
+    public static List<NamedAPIResource> parseListToNamedAPOResourceList(List<?> wrapperList, String method) {
         List<NamedAPIResource> types = new ArrayList<>();
         for (Object wrapper : wrapperList) {
-            NamedAPIResource model = parseObjectToDefaultApiModel(wrapper, method);
+            NamedAPIResource model = parseObjectToNamedAPIResource(wrapper, method);
             if (model != null) types.add(model);
         }
 
@@ -24,7 +26,7 @@ public class PokeApiUtil {
     }
 
     @Nullable
-    public static NamedAPIResource parseObjectToDefaultApiModel(@NonNull Object wrapper, String method) {
+    public static NamedAPIResource parseObjectToNamedAPIResource(@NonNull Object wrapper, String method) {
         try {
             return (NamedAPIResource) wrapper.getClass().getMethod(method).invoke(wrapper);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named;
 
 import androidx.annotation.NonNull;
 

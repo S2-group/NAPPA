@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.Config;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -19,18 +19,18 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class DefaultApi {
+public class NamedAPI {
     private String logTag;
     private String baseApiUrl;
     private int currentPage;
     private String lastPageUrl;
     private NamedAPIResourceList wrapper;
 
-    public DefaultApi(String baseApiUrl) {
-        this(baseApiUrl, DefaultApi.class.getSimpleName());
+    public NamedAPI(String baseApiUrl) {
+        this(baseApiUrl, NamedAPI.class.getSimpleName());
     }
 
-    public DefaultApi(String baseApiUrl, String logTag) {
+    public NamedAPI(String baseApiUrl, String logTag) {
         this.logTag = logTag;
         this.baseApiUrl = Config.API_URL + baseApiUrl;
         currentPage = 1;

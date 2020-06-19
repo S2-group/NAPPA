@@ -17,8 +17,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class PokemonApi {
-    private static final String LOG_TAG = PokemonApi.class.getSimpleName();
+public class PokemonAPI {
+    private static final String LOG_TAG = PokemonAPI.class.getSimpleName();
 
     public static void makeRequest(String url, Consumer<Pokemon> callback) {
         Request request = new Request.Builder()

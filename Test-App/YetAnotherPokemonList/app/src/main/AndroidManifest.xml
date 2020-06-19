@@ -15,7 +15,7 @@
         <activity android:name=".pokemon.PokemonActivity"></activity>
         <activity android:name=".location.LocationsActivity" />
         <activity android:name=".berry.BerriesActivity" />
-        <activity android:name=".pokeapi.DefaultActivity" />
+        <activity android:name=".apiresource.named.NamedAPIActivity" />
         <activity android:name=".pokemon.ability.AbilitiesActivity" />
         <activity android:name=".pokemon.PokemonsActivity" />
         <activity android:name=".MainActivity">
