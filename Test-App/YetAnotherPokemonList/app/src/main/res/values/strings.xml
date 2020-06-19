@@ -48,4 +48,7 @@
     <string name="btn_random">Open a random page</string>
     <string name="btn_find">Search</string>
     <string name="btn_search_page">Find a page</string>
+    <string name="tv_page_to_search">Page to search</string>
+    <string name="tv_item_id_to_search">ID of the item</string>
+    <string name="tv_available_id">Available IDs</string>
 </resources>
