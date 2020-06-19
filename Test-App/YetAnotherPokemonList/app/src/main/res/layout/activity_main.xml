@@ -24,6 +24,13 @@
             android:tag="1"
             android:text="@string/btn_abilities" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="navigateToPage"
+            android:tag="2"
+            android:text="@string/btn_berries" />
+
     </LinearLayout>
 
 

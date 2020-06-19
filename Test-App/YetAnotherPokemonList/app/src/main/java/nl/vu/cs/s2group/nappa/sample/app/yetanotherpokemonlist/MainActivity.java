@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.ability.AbilityActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private Class<AppCompatActivity>[] activities = new Class[]{
             PokemonsActivity.class,
             AbilityActivity.class,
+            BerriesActivity.class,
     };
 
     @Override
