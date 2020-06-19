@@ -28,4 +28,7 @@
     <string name="tv_ability_flavor">Flavors</string>
     <string name="tv_ability_from_main_serie">Is from main series</string>
     <string name="tv_ability_generation">Generation</string>
+    <string name="tv_menu_pokemons">Pokemons Data</string>
+    <string name="tv_menu_berries">Berries Data</string>
+    <string name="tv_menu_locations">Locations Data</string>
 </resources>
