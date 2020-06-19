@@ -40,7 +40,8 @@ public class BerryActivity extends AppCompatActivity {
     }
 
     private void setPageTitle() {
-        ((TextView) findViewById(R.id.page_title)).setText(berry.name);
+        String title = getResources().getString(R.string.tv_berry) + ": " + berry.name + " (#" + berry.id + ")";
+        ((TextView) findViewById(R.id.page_title)).setText(title);
     }
 
     private void setAbilityCharacteristics() {

@@ -58,7 +58,8 @@ public class PokemonActivity extends AppCompatActivity {
     }
 
     private void setPageTitle() {
-        ((TextView) findViewById(R.id.page_title)).setText(pokemon.name);
+        String title = getResources().getString(R.string.tv_pokemon) + ": " + pokemon.name + " (#" + pokemon.id + ")";
+        ((TextView) findViewById(R.id.page_title)).setText(title);
     }
 
     private void setPokemonSprites() {

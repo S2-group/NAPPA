@@ -51,7 +51,8 @@ public class AbilityActivity extends AppCompatActivity {
     }
 
     private void setPageTitle() {
-        ((TextView) findViewById(R.id.page_title)).setText(ability.name);
+        String title = getResources().getString(R.string.tv_ability) + ": " + ability.name + " (#" + ability.id + ")";
+        ((TextView) findViewById(R.id.page_title)).setText(title);
     }
 
     private void setAbilityCharacteristics() {

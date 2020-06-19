@@ -7,6 +7,7 @@
     <string name="btn_abilities">Abilities</string>
     <string name="btn_berries">Berries</string>
     <string name="btn_locations">Locations</string>
+    <string name="tv_pokemon">Pokemon</string>
     <string name="tv_pokemon_types">Types</string>
     <string name="tv_pokemon_abilities">Abilities</string>
     <string name="tv_block_characteristics">Characteristics</string>
@@ -22,6 +23,7 @@
     <string name="tv_pokemon_moves">Moves</string>
     <string name="tv_pokemon_held_items">Held Items</string>
     <string name="empty_list">No items found</string>
+    <string name="tv_ability">Ability</string>
     <string name="tv_ability_pokemons">Owned by pokemons</string>
     <string name="tv_ability_effect_change">Previous Effects Across Version Groups </string>
     <string name="tv_ability_effect_entries">Effects</string>
@@ -41,6 +43,7 @@
     <string name="tv_berry_smoothness">Smoothness</string>
     <string name="tv_berry_soil_dryness">Soil Dryness</string>
     <string name="tv_berry_grown_time">Grown Time</string>
+    <string name="tv_berry">Berry</string>
     <string name="tv_menu_misc">Misc</string>
     <string name="btn_random">Open a random page</string>
 </resources>
