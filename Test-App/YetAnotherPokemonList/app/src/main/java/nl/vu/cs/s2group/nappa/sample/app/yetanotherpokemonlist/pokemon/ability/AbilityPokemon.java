@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
 public class AbilityPokemon {
-    boolean isHidden;
+    boolean is_hidden;
     int slot;
     NamedAPIResource pokemon;
 
@@ -13,14 +13,14 @@ public class AbilityPokemon {
     @Override
     public String toString() {
         return "AbilityPokemon{" +
-                "isHidden=" + isHidden +
+                "isHidden=" + is_hidden +
                 ", slot=" + slot +
                 ", pokemon=" + pokemon +
                 '}';
     }
 
     public boolean isHidden() {
-        return isHidden;
+        return is_hidden;
     }
 
     public int getSlot() {

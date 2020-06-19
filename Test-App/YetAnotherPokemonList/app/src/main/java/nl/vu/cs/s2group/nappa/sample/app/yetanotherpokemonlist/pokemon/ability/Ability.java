@@ -14,12 +14,12 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.commonmodels
 public class Ability {
     int id;
     String name;
-    boolean isMainSeries;
+    boolean is_main_series;
     NamedAPIResource generation;
     List<Name> names;
-    List<VerboseEffect> effectEntries;
-    List<AbilityEffectChange> effectChanges;
-    List<AbilityFlavorText> flavorTextEntries;
+    List<VerboseEffect> effect_entries;
+    List<AbilityEffectChange> effect_changes;
+    List<AbilityFlavorText> flavor_text_entries;
     List<AbilityPokemon> pokemon;
 
     @NonNull
@@ -28,12 +28,12 @@ public class Ability {
         return "Ability{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", isMainSeries=" + isMainSeries +
+                ", isMainSeries=" + is_main_series +
                 ", generation=" + generation +
                 ", names=" + names +
-                ", effectEntries=" + effectEntries +
-                ", effectChanges=" + effectChanges +
-                ", flavorTextEntries=" + flavorTextEntries +
+                ", effectEntries=" + effect_entries +
+                ", effectChanges=" + effect_changes +
+                ", flavorTextEntries=" + flavor_text_entries +
                 ", pokemon=" + pokemon +
                 '}';
     }
@@ -46,8 +46,8 @@ public class Ability {
         return name;
     }
 
-    public boolean isMainSeries() {
-        return isMainSeries;
+    public boolean isIsMainSeries() {
+        return is_main_series;
     }
 
     public NamedAPIResource getGeneration() {
@@ -59,15 +59,15 @@ public class Ability {
     }
 
     public List<VerboseEffect> getEffectEntries() {
-        return effectEntries;
+        return effect_entries;
     }
 
     public List<AbilityEffectChange> getEffectChanges() {
-        return effectChanges;
+        return effect_changes;
     }
 
     public List<AbilityFlavorText> getFlavorTextEntries() {
-        return flavorTextEntries;
+        return flavor_text_entries;
     }
 
     public List<AbilityPokemon> getPokemon() {

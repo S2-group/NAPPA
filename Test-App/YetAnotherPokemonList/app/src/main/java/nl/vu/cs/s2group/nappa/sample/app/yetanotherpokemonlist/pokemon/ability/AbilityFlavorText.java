@@ -8,22 +8,22 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named
  * Representation of https://pokeapi.co/docs/v2#abilityflavortext
  */
 public class AbilityFlavorText {
-    String flavorText;
+    String flavor_text;
     NamedAPIResource language;
-    NamedAPIResource versionGroup;
+    NamedAPIResource version_group;
 
     @NonNull
     @Override
     public String toString() {
         return "AbilityFlavorText{" +
-                "flavorText='" + flavorText + '\'' +
+                "flavorText='" + flavor_text + '\'' +
                 ", language=" + language +
-                ", versionGroup=" + versionGroup +
+                ", versionGroup=" + version_group +
                 '}';
     }
 
     public String getFlavorText() {
-        return flavorText;
+        return flavor_text;
     }
 
     public NamedAPIResource getLanguage() {
@@ -31,6 +31,6 @@ public class AbilityFlavorText {
     }
 
     public NamedAPIResource getVersionGroup() {
-        return versionGroup;
+        return version_group;
     }
 }

@@ -11,23 +11,23 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.commonmodels
  * Representation of https://pokeapi.co/docs/v2#abilityeffectchange
  */
 public class AbilityEffectChange {
-    List<Effect> effectEntries;
-    NamedAPIResource versionGroup;
+    List<Effect> effect_entries;
+    NamedAPIResource version_group;
 
     @NonNull
     @Override
     public String toString() {
         return "AbilityEffectChange{" +
-                "effectEntries=" + effectEntries +
-                ", versionGroup=" + versionGroup +
+                "effectEntries=" + effect_entries +
+                ", versionGroup=" + version_group +
                 '}';
     }
 
     public List<Effect> getEffectEntries() {
-        return effectEntries;
+        return effect_entries;
     }
 
     public NamedAPIResource getVersionGroup() {
-        return versionGroup;
+        return version_group;
     }
 }
