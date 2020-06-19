@@ -23,6 +23,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Sprite -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_pokemon_sprite_front"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:contentDescription="@string/iv_pokemon_sprite_front" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_pokemon_sprite_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:contentDescription="@string/iv_pokemon_sprite_back" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
                 <!-- General Data -->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     style="@style/LayoutBlock"

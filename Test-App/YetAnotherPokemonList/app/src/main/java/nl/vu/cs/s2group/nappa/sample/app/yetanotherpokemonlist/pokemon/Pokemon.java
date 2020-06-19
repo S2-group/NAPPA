@@ -13,6 +13,7 @@ public class Pokemon {
     List<PokemonType> types;
     List<PokemonAbility> abilities;
     List<PokemonStat> stats;
+    PokemonSprites sprites;
     boolean is_default;
     int height;
     int weight;
@@ -27,11 +28,16 @@ public class Pokemon {
                 ", types=" + types +
                 ", abilities=" + abilities +
                 ", stats=" + stats +
+                ", sprites=" + sprites +
                 ", is_default=" + is_default +
                 ", height=" + height +
                 ", weight=" + weight +
                 ", base_experience=" + base_experience +
                 '}';
+    }
+
+    public PokemonSprites getSprites() {
+        return sprites;
     }
 
     public String getName() {

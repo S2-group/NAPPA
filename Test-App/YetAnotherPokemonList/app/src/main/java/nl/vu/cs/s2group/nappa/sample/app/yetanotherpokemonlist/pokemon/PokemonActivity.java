@@ -1,11 +1,16 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class PokemonActivity extends AppCompatActivity {
     private void handleRequest(Pokemon pokemon) {
         this.pokemon = pokemon;
         setPageTitle();
+        setPokemonSprites();
         setPokemonCharacteristics();
         setPokemonStats();
         setNamedAPIResourceList(R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
@@ -36,6 +42,17 @@ public class PokemonActivity extends AppCompatActivity {
 
     private void setPageTitle() {
         ((TextView) findViewById(R.id.page_title)).setText(pokemon.name);
+    }
+
+    private void setPokemonSprites() {
+        ImageView ivFront = findViewById(R.id.iv_pokemon_sprite_front);
+        ImageView ivBack = findViewById(R.id.iv_pokemon_sprite_back);
+
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Picasso.with(this).load(pokemon.sprites.front_default).into(ivFront);
+            Picasso.with(this).load(pokemon.sprites.back_default).into(ivBack);
+        });
+
     }
 
     private void setPokemonCharacteristics() {

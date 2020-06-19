@@ -17,4 +17,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="tv_pokemon_stats">Stats</string>
+    <string name="iv_pokemon_sprite_front">Sprint of the front view of the Pokemon</string>
+    <string name="iv_pokemon_sprite_back">Sprint of the back view of the Pokemon</string>
 </resources>

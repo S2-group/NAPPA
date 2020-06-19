@@ -29,6 +29,8 @@ android {
 project.ext {
     okHttpVersion = '3.14.9'
     gsonVersion = '2.8.6'
+    picassoVersion = '2.5.2'
+    jetBrainsAnnotationVersion = '19.0.0'
 }
 
 dependencies {
@@ -38,7 +40,8 @@ dependencies {
     //noinspection GradleDependency -- newer versions are not suported in NAPPA
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
-    implementation 'org.jetbrains:annotations:15.0'
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "org.jetbrains:annotations:$jetBrainsAnnotationVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
