@@ -11,7 +11,7 @@ public class AbilitiesActivity extends NamedAPIActivity {
     private static final String API_URL = "ability/";
 
     public AbilitiesActivity() {
-        super(R.layout.activities_ability, LOG_TAG, API_URL);
+        super(R.layout.activity_abilities, LOG_TAG, API_URL);
     }
 
     @Override
