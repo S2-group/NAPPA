@@ -4,8 +4,6 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
-
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
 public class ViewUtil {
@@ -18,7 +16,11 @@ public class ViewUtil {
     }
 
     public static TextView createTextView(Context context, String text, float weight) {
-        TextView textView = new TextView(context, null, 0, R.style.TextViewItem);
+        return createTextView(context, text, weight, R.style.TextViewItem);
+    }
+
+    public static TextView createTextView(Context context, String text, float weight, int styleId) {
+        TextView textView = new TextView(context, null, 0, styleId);
         textView.setText(text);
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

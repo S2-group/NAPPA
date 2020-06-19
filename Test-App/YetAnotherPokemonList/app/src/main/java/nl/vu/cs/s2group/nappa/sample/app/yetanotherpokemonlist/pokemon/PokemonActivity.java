@@ -1,6 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,12 +57,14 @@ public class PokemonActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             LinearLayoutCompat layout = findViewById(R.id.ll_pokemon_stats);
             for (PokemonStat pokemonStat : pokemon.stats) {
-                TextView tvStatLabel = ViewUtil.createTextView(this, pokemonStat.getStat().getName(), 0.5f);
                 String stateValueStr = String.format(Config.LOCALE, "%d", pokemonStat.getBase_stat()) +
                         " (" + String.format(Config.LOCALE, "%d", pokemonStat.effort) + " EV)";
-                TextView tvStatValue = ViewUtil.createTextView(this, stateValueStr, 0.5f);
 
-                LinearLayoutCompat rowLayout = new LinearLayoutCompat(this, null);
+                TextView tvStatLabel = ViewUtil.createTextView(this, pokemonStat.getStat().getName(), 0.5f, R.style.TextViewLabel);
+                TextView tvStatValue = ViewUtil.createTextView(this, stateValueStr, 0.5f, R.style.TextViewValue);
+
+                LinearLayout rowLayout = new LinearLayout(this);
+                rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                 rowLayout.addView(tvStatLabel);
                 rowLayout.addView(tvStatValue);
 
