@@ -27,9 +27,10 @@ public class PokemonActivity extends AppCompatActivity {
     private void handleRequest(Pokemon pokemon) {
         this.pokemon = pokemon;
         setPageTitle();
-        setPokemonTypes();
-        setPokemonAbilities();
         setPokemonCharacteristics();
+        setDataList(R.id.lv_pokemon_stats, pokemon.stats, "getStat");
+        setDataList(R.id.lv_pokemon_abilities, pokemon.abilities, "getAbility");
+        setDataList(R.id.lv_pokemon_types, pokemon.types, "getType");
     }
 
     private void setPageTitle() {
@@ -51,20 +52,11 @@ public class PokemonActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_pokemon_species_default)).setText(isDefault);
     }
 
-    private void setPokemonTypes() {
-        List<NamedAPIResource> types = APIResourceUtil.parseListToNamedAPOResourceList(pokemon.types, "getType");
+    private void setDataList(int viewId, List<?> list, String getterMethod) {
+        List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         runOnUiThread(() -> {
-            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, types);
-            ListView listView = findViewById(R.id.lv_pokemon_types);
-            listView.setAdapter(adapter);
-        });
-    }
-
-    private void setPokemonAbilities() {
-        List<NamedAPIResource> types = APIResourceUtil.parseListToNamedAPOResourceList(pokemon.abilities, "getAbility");
-        runOnUiThread(() -> {
-            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, types);
-            ListView listView = findViewById(R.id.lv_pokemon_abilities);
+            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, namedAPIResourceList);
+            ListView listView = findViewById(viewId);
             listView.setAdapter(adapter);
         });
     }

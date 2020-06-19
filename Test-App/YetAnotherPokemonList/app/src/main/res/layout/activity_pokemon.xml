@@ -127,6 +127,26 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <!-- Stats -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                style="@style/LayoutBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_pokemon_stats" />
+
+                <ListView
+                    android:id="@+id/lv_pokemon_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <!-- Types -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 style="@style/LayoutBlock"
@@ -138,7 +158,7 @@
                     style="@style/TextViewSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/tv_types" />
+                    android:text="@string/tv_pokemon_types" />
 
                 <ListView
                     android:id="@+id/lv_pokemon_types"
@@ -158,7 +178,7 @@
                     style="@style/TextViewSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/tv_abilities" />
+                    android:text="@string/tv_pokemon_abilities" />
 
                 <ListView
                     android:id="@+id/lv_pokemon_abilities"

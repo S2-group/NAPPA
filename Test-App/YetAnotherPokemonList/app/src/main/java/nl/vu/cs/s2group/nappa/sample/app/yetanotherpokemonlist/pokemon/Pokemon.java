@@ -14,6 +14,7 @@ public class Pokemon {
     String name;
     List<PokemonType> types;
     List<PokemonAbility> abilities;
+    List<PokemonStat> stats;
     boolean is_default;
     int height;
     int weight;
@@ -26,6 +27,7 @@ public class Pokemon {
                 "name='" + name + '\'' +
                 ", types=" + types +
                 ", abilities=" + abilities +
+                ", stats=" + stats +
                 ", is_default=" + is_default +
                 ", height=" + height +
                 ", weight=" + weight +
@@ -59,5 +61,9 @@ public class Pokemon {
 
     public int getBase_experience() {
         return base_experience;
+    }
+
+    public List<PokemonStat> getStats() {
+        return stats;
     }
 }

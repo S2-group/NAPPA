@@ -7,8 +7,8 @@
     <string name="btn_abilities">Abilities</string>
     <string name="btn_berries">Berries</string>
     <string name="btn_locations">Locations</string>
-    <string name="tv_types">Types</string>
-    <string name="tv_abilities">Abilities</string>
+    <string name="tv_pokemon_types">Types</string>
+    <string name="tv_pokemon_abilities">Abilities</string>
     <string name="tv_pokemon_characteristics">Characteristics</string>
     <string name="tv_pokemon_height">Height</string>
     <string name="tv_pokemon_weight">Weight</string>
@@ -16,4 +16,5 @@
     <string name="tv_pokemon_species_default">Species Default</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="tv_pokemon_stats">Stats</string>
 </resources>
