@@ -59,7 +59,7 @@ public class AbilityActivity extends AppCompatActivity {
         String isDefault = getResources().getString(isDefaultTextId);
         ((TextView) findViewById(R.id.tv_ability_from_main_serie)).setText(isDefault);
 
-        ((TextView) findViewById(R.id.tv_ability_from_main_serie)).setText(ability.generation.getName());
+        ((TextView) findViewById(R.id.tv_ability_generation)).setText(ability.generation.getName());
     }
 
     private void setAbilityEffectChange() {
