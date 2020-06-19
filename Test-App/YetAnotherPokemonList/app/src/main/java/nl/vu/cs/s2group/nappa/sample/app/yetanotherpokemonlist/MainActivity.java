@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationsActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
             PokemonsActivity.class,
             AbilityActivity.class,
             BerriesActivity.class,
+            LocationsActivity.class,
     };
 
     @Override

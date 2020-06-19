@@ -6,4 +6,5 @@
     <string name="btn_pokemons">Pokemons</string>
     <string name="btn_abilities">Abilities</string>
     <string name="btn_berries">Berries</string>
+    <string name="btn_locations">Locations</string>
 </resources>
