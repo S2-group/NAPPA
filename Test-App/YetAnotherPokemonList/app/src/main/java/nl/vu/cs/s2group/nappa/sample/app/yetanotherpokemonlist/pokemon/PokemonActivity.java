@@ -1,18 +1,18 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
 import android.os.Bundle;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIAdapter;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.APIResourceUtil;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
 
 public class PokemonActivity extends AppCompatActivity {
     Pokemon pokemon;
@@ -28,9 +28,9 @@ public class PokemonActivity extends AppCompatActivity {
         this.pokemon = pokemon;
         setPageTitle();
         setPokemonCharacteristics();
-        setDataList(R.id.lv_pokemon_stats, pokemon.stats, "getStat");
-        setDataList(R.id.lv_pokemon_abilities, pokemon.abilities, "getAbility");
-        setDataList(R.id.lv_pokemon_types, pokemon.types, "getType");
+        setNamedAPIResourceList(R.id.ll_pokemon_stats, pokemon.stats, "getStat");
+        setNamedAPIResourceList(R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
+        setNamedAPIResourceList(R.id.ll_pokemon_types, pokemon.types, "getType");
     }
 
     private void setPageTitle() {
@@ -52,12 +52,13 @@ public class PokemonActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_pokemon_species_default)).setText(isDefault);
     }
 
-    private void setDataList(int viewId, List<?> list, String getterMethod) {
+    private void setNamedAPIResourceList(int viewId, List<?> list, String getterMethod) {
         List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         runOnUiThread(() -> {
-            NamedAPIAdapter adapter = new NamedAPIAdapter(this, R.layout.activity_pokemon, namedAPIResourceList);
-            ListView listView = findViewById(viewId);
-            listView.setAdapter(adapter);
+            LinearLayoutCompat linearLayout = findViewById(viewId);
+            for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
+                linearLayout.addView(ViewUtil.createTextViewFromNamedAPIResource(this, namedAPIResource));
+            }
         });
     }
 }
