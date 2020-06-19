@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability;
+package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry;
 
 import android.util.Log;
 
@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.Berry;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -19,7 +18,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class BerryAPI {
-    private static final String LOG_TAG = AbilityAPI.class.getSimpleName();
+    private static final String LOG_TAG = BerryAPI.class.getSimpleName();
 
     private BerryAPI() {
         throw new IllegalStateException("BerryAPI is an utility class and should be instantiated!");
