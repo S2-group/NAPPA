@@ -9,7 +9,7 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named
  */
 public class PokemonAbility {
     int slot;
-    boolean isHidden;
+    boolean is_hidden;
     NamedAPIResource ability;
 
     @NonNull
@@ -17,7 +17,7 @@ public class PokemonAbility {
     public String toString() {
         return "AbilitiesResponseWrapper{" +
                 "slot=" + slot +
-                ", is_hidden=" + isHidden +
+                ", is_hidden=" + is_hidden +
                 ", ability=" + ability +
                 '}';
     }
@@ -31,6 +31,6 @@ public class PokemonAbility {
     }
 
     public boolean isHidden() {
-        return isHidden;
+        return is_hidden;
     }
 }

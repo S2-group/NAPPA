@@ -63,8 +63,8 @@ public class PokemonActivity extends AppCompatActivity {
         ImageView ivBack = findViewById(R.id.iv_pokemon_sprite_back);
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            Picasso.with(this).load(pokemon.sprites.frontDefault).into(ivFront);
-            Picasso.with(this).load(pokemon.sprites.backDefault).into(ivBack);
+            Picasso.with(this).load(pokemon.sprites.front_default).into(ivFront);
+            Picasso.with(this).load(pokemon.sprites.back_default).into(ivBack);
         });
 
     }
@@ -79,7 +79,7 @@ public class PokemonActivity extends AppCompatActivity {
         String weight = String.format(Config.LOCALE, "%d", pokemon.weight) + " hg";
         ((TextView) findViewById(R.id.tv_pokemon_weight)).setText(weight);
 
-        int isDefaultTextId = pokemon.isDefault ? R.string.yes : R.string.no;
+        int isDefaultTextId = pokemon.is_default ? R.string.yes : R.string.no;
         String isDefault = getResources().getString(isDefaultTextId);
         ((TextView) findViewById(R.id.tv_pokemon_species_default)).setText(isDefault);
     }
@@ -88,7 +88,7 @@ public class PokemonActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             LinearLayoutCompat layout = findViewById(R.id.ll_pokemon_stats);
             for (PokemonStat pokemonStat : pokemon.stats) {
-                String stateValueStr = String.format(Config.LOCALE, "%d", pokemonStat.getBaseStat()) +
+                String stateValueStr = String.format(Config.LOCALE, "%d", pokemonStat.getBase_stat()) +
                         " (" + String.format(Config.LOCALE, "%d", pokemonStat.effort) + " EV)";
 
                 TextView tvStatLabel = ViewUtil.createTextView(this, pokemonStat.getStat().getName(), 0.5f, R.style.TextViewLabel);
