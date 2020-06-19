@@ -14,7 +14,7 @@ public class Pokemon {
     List<PokemonAbility> abilities;
     List<PokemonStat> stats;
     List<PokemonMove> moves;
-    List<PokemonHeldItem> heldItems;
+    List<PokemonHeldItem> held_items;
     PokemonSprites sprites;
     boolean is_default;
     int height;
@@ -31,7 +31,7 @@ public class Pokemon {
                 ", abilities=" + abilities +
                 ", stats=" + stats +
                 ", moves=" + moves +
-                ", heldItems=" + heldItems +
+                ", heldItems=" + held_items +
                 ", sprites=" + sprites +
                 ", is_default=" + is_default +
                 ", height=" + height +
@@ -40,8 +40,8 @@ public class Pokemon {
                 '}';
     }
 
-    public List<PokemonHeldItem> getHeldItems() {
-        return heldItems;
+    public List<PokemonHeldItem> getHeld_items() {
+        return held_items;
     }
 
     public PokemonSprites getSprites() {
@@ -64,7 +64,7 @@ public class Pokemon {
         return abilities;
     }
 
-    public boolean isIs_default() {
+    public boolean isDefault() {
         return is_default;
     }
 
