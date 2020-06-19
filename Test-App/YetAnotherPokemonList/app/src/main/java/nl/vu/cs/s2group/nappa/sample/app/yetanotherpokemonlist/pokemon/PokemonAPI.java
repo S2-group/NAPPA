@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -19,6 +20,7 @@ import okhttp3.ResponseBody;
 
 public class PokemonAPI {
     private static final String LOG_TAG = PokemonAPI.class.getSimpleName();
+    private static final String URL = Config.API_URL + "pokemon/";
 
     private PokemonAPI() {
         throw new IllegalStateException("PokemonAPI is an utility class and should be instantiated!");
@@ -43,5 +45,10 @@ public class PokemonAPI {
                 callback.accept(pokemon);
             }
         });
+    }
+
+    public static void makeRequest(int id, Consumer<Pokemon> callback) {
+        String url = URL + id;
+        makeRequest(url, callback);
     }
 }

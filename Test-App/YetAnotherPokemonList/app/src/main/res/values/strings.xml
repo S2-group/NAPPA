@@ -41,4 +41,6 @@
     <string name="tv_berry_smoothness">Smoothness</string>
     <string name="tv_berry_soil_dryness">Soil Dryness</string>
     <string name="tv_berry_grown_time">Grown Time</string>
+    <string name="tv_menu_misc">Misc</string>
+    <string name="btn_random">Open a random page</string>
 </resources>

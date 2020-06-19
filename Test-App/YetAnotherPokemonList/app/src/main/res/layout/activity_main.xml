@@ -15,6 +15,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- Pokemons -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 style="@style/LayoutBlock"
                 android:layout_width="match_parent"
@@ -43,6 +44,7 @@
                     android:text="@string/btn_abilities" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <!-- Berries -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 style="@style/LayoutBlock"
                 android:layout_width="match_parent"
@@ -66,6 +68,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+            <!-- Location -->
             <androidx.appcompat.widget.LinearLayoutCompat
                 style="@style/LayoutBlock"
                 android:layout_width="match_parent"
@@ -85,6 +88,28 @@
                     android:onClick="navigateToPage"
                     android:tag="3"
                     android:text="@string/btn_locations" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!-- Misc -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                style="@style/LayoutBlock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/tv_menu_misc" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="navigateToRandomPage"
+                    android:text="@string/btn_random" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

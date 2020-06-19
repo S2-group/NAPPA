@@ -75,7 +75,6 @@ public class ViewUtil {
                         TextView tv = createTextView(activity, text);
                         linearLayout.addView(tv);
                     }
-
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();

@@ -29,7 +29,10 @@ public class PokemonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon);
         toggleProgressBarVisibility(true);
-        PokemonAPI.makeRequest(getIntent().getStringExtra("url"), this::handleResponse);
+        if (getIntent().getStringExtra("url") != null)
+            PokemonAPI.makeRequest(getIntent().getStringExtra("url"), this::handleResponse);
+        else
+            PokemonAPI.makeRequest(getIntent().getIntExtra("id", 1), this::handleResponse);
     }
 
     private void handleResponse(Pokemon pokemon) {

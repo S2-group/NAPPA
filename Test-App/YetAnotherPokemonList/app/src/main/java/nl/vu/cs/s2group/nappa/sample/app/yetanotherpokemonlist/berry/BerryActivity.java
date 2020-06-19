@@ -19,7 +19,10 @@ public class BerryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_berry);
         toggleProgressBarVisibility(true);
-        BerryAPI.makeRequest(getIntent().getStringExtra("url"), this::handleResponse);
+        if (getIntent().getStringExtra("url") != null)
+            BerryAPI.makeRequest(getIntent().getStringExtra("url"), this::handleResponse);
+        else
+            BerryAPI.makeRequest(getIntent().getIntExtra("id", 1), this::handleResponse);
     }
 
     private void handleResponse(Berry berry) {
