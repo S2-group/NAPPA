@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.commonmodels;
 
+import androidx.annotation.NonNull;
+
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
 /**
@@ -9,6 +11,7 @@ public class GenerationGameIndex {
     int game_index;
     NamedAPIResource generation;
 
+    @NonNull
     @Override
     public String toString() {
         return "GenerationGameIndex{" +

@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
@@ -17,6 +19,7 @@ public class Location {
     List<GenerationGameIndex> game_indices;
     List<NamedAPIResource> areas;
 
+    @NonNull
     @Override
     public String toString() {
         return "Location{" +
