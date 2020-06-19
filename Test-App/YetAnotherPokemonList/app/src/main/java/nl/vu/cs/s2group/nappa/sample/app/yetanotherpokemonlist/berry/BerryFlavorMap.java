@@ -27,4 +27,8 @@ public class BerryFlavorMap {
     public NamedAPIResource getFlavor() {
         return flavor;
     }
+
+    public String getFlavorWithPotency() {
+        return flavor.getName() + " (" + potency + " p)";
+    }
 }

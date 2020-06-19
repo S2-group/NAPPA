@@ -36,6 +36,29 @@
                         android:layout_height="wrap_content"
                         android:text="@string/tv_block_characteristics" />
 
+                    <!-- Grown Time -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/TextViewLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="@string/tv_berry_grown_time" />
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_berry_grown_time"
+                            style="@style/TextViewValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
                     <!-- Firmness -->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
@@ -47,11 +70,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_firmness" />
+                            android:text="@string/tv_berry_firmness" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_firmness"
+                            android:id="@+id/tv_berry_firmness"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -70,11 +93,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_item" />
+                            android:text="@string/tv_berry_item" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_item"
+                            android:id="@+id/tv_berry_item"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -93,11 +116,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_max_harvest" />
+                            android:text="@string/tv_berry_max_harvest" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_max_harvest"
+                            android:id="@+id/tv_berry_max_harvest"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -116,11 +139,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_natural_gift_power" />
+                            android:text="@string/tv_berry_natural_gift_power" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_natural_gift_power"
+                            android:id="@+id/tv_berry_natural_gift_power"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -139,11 +162,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_natural_gift_type" />
+                            android:text="@string/tv_berry_natural_gift_type" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_natural_gift_type"
+                            android:id="@+id/tv_berry_natural_gift_type"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -162,11 +185,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_size" />
+                            android:text="@string/tv_berry_size" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_size"
+                            android:id="@+id/tv_berry_size"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -185,11 +208,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_smoothness" />
+                            android:text="@string/tv_berry_smoothness" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_smoothness"
+                            android:id="@+id/tv_berry_smoothness"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -208,11 +231,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.5"
-                            android:text="@string/tv_flavor_soil_dryness" />
+                            android:text="@string/tv_berry_soil_dryness" />
 
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_flavor_soil_dryness"
+                            android:id="@+id/tv_berry_soil_dryness"
                             style="@style/TextViewValue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

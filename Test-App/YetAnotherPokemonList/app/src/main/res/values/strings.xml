@@ -32,12 +32,13 @@
     <string name="tv_menu_berries">Berries Data</string>
     <string name="tv_menu_locations">Locations Data</string>
     <string name="tv_berry_flavors">Flavors</string>
-    <string name="tv_flavor_firmness">Firmness</string>
-    <string name="tv_flavor_item">Provide item</string>
-    <string name="tv_flavor_max_harvest">Max Harvests</string>
-    <string name="tv_flavor_natural_gift_power">Natural Gift Power</string>
-    <string name="tv_flavor_natural_gift_type">Natural Gift Type</string>
-    <string name="tv_flavor_size">Size</string>
-    <string name="tv_flavor_smoothness">Smoothness</string>
-    <string name="tv_flavor_soil_dryness">Soil Dryness</string>
+    <string name="tv_berry_firmness">Firmness</string>
+    <string name="tv_berry_item">Provide item</string>
+    <string name="tv_berry_max_harvest">Max Harvests</string>
+    <string name="tv_berry_natural_gift_power">Natural Gift Power</string>
+    <string name="tv_berry_natural_gift_type">Natural Gift Type</string>
+    <string name="tv_berry_size">Size</string>
+    <string name="tv_berry_smoothness">Smoothness</string>
+    <string name="tv_berry_soil_dryness">Soil Dryness</string>
+    <string name="tv_berry_grown_time">Grown Time</string>
 </resources>
