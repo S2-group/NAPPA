@@ -20,6 +20,10 @@ import okhttp3.ResponseBody;
 public class PokemonAPI {
     private static final String LOG_TAG = PokemonAPI.class.getSimpleName();
 
+    private PokemonAPI() {
+        throw new IllegalStateException("PokemonAPI is an utility class and should be instantiated!");
+    }
+
     public static void makeRequest(String url, Consumer<Pokemon> callback) {
         Request request = new Request.Builder()
                 .url(url)
