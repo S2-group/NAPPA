@@ -1,6 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
@@ -37,6 +39,10 @@ public class ViewUtil {
     }
 
     public static void addNamedAPIResourceListToUI(AppCompatActivity activity, int viewId, List<?> list, String getterMethod) {
+        addNamedAPIResourceListToUI(activity, viewId, list, getterMethod, null);
+    }
+
+    public static void addNamedAPIResourceListToUI(AppCompatActivity activity, int viewId, List<?> list, String getterMethod, Consumer<View> callback) {
         List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
         activity.runOnUiThread(() -> {
             LinearLayoutCompat linearLayout = activity.findViewById(viewId);
@@ -45,7 +51,10 @@ public class ViewUtil {
                 linearLayout.addView(createTextView(activity, emptyListStr));
             } else {
                 for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
-                    linearLayout.addView(createTextView(activity, namedAPIResource.getName()));
+                    TextView tv = createTextView(activity, namedAPIResource.getName());
+                    tv.setTag(namedAPIResource.getUrl());
+                    if (callback != null) tv.setOnClickListener(callback::accept);
+                    linearLayout.addView(tv);
                 }
 
             }

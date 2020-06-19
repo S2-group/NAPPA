@@ -1,8 +1,10 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -14,10 +16,12 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import com.squareup.picasso.Picasso;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
 
 public class PokemonActivity extends AppCompatActivity {
+    private static final String LOG_TAG = PokemonActivity.class.getSimpleName();
     Pokemon pokemon;
 
     @Override
@@ -34,7 +38,12 @@ public class PokemonActivity extends AppCompatActivity {
         setPokemonSprites();
         setPokemonCharacteristics();
         setPokemonStats();
-        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility", (view) -> {
+            String url = view.getTag().toString();
+            Log.d(LOG_TAG, "Clicked on " + url);
+            startActivity(new Intent(this, AbilityActivity.class)
+                    .putExtra("url", url));
+        });
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_moves, pokemon.moves, "getMove");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_held_items, pokemon.heldItems, "getItem");
