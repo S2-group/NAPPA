@@ -6,59 +6,59 @@ import androidx.annotation.NonNull;
  * Representation of https://pokeapi.co/docs/v2#pokemonsprites
  */
 public class PokemonSprites {
-    String front_default;
-    String front_shiny;
-    String front_female;
-    String front_shiny_female;
-    String back_default;
-    String back_shiny;
-    String back_female;
-    String back_shiny_female;
+    String frontDefault;
+    String frontShiny;
+    String frontFemale;
+    String frontShinyFemale;
+    String backDefault;
+    String backShiny;
+    String backFemale;
+    String backShinyFemale;
 
     @NonNull
     @Override
     public String toString() {
         return "PokemonSprites{" +
-                "front_default='" + front_default + '\'' +
-                ", front_shiny='" + front_shiny + '\'' +
-                ", front_female='" + front_female + '\'' +
-                ", front_shiny_female='" + front_shiny_female + '\'' +
-                ", back_default='" + back_default + '\'' +
-                ", back_shiny='" + back_shiny + '\'' +
-                ", back_female='" + back_female + '\'' +
-                ", back_shiny_female='" + back_shiny_female + '\'' +
+                "front_default='" + frontDefault + '\'' +
+                ", front_shiny='" + frontShiny + '\'' +
+                ", front_female='" + frontFemale + '\'' +
+                ", front_shiny_female='" + frontShinyFemale + '\'' +
+                ", back_default='" + backDefault + '\'' +
+                ", back_shiny='" + backShiny + '\'' +
+                ", back_female='" + backFemale + '\'' +
+                ", back_shiny_female='" + backShinyFemale + '\'' +
                 '}';
     }
 
-    public String getFront_shiny() {
-        return front_shiny;
+    public String getFrontShiny() {
+        return frontShiny;
     }
 
-    public String getFront_female() {
-        return front_female;
+    public String getFrontFemale() {
+        return frontFemale;
     }
 
-    public String getFront_shiny_female() {
-        return front_shiny_female;
+    public String getFrontShinyFemale() {
+        return frontShinyFemale;
     }
 
-    public String getBack_default() {
-        return back_default;
+    public String getBackDefault() {
+        return backDefault;
     }
 
-    public String getBack_shiny() {
-        return back_shiny;
+    public String getBackShiny() {
+        return backShiny;
     }
 
-    public String getBack_female() {
-        return back_female;
+    public String getBackFemale() {
+        return backFemale;
     }
 
-    public String getBack_shiny_female() {
-        return back_shiny_female;
+    public String getBackShinyFemale() {
+        return backShinyFemale;
     }
 
-    public String getFront_default() {
-        return front_default;
+    public String getFrontDefault() {
+        return frontDefault;
     }
 }

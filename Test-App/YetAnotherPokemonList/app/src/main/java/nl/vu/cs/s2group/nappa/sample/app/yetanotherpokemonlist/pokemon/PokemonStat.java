@@ -10,7 +10,7 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named
 public class PokemonStat {
     NamedAPIResource stat;
     int effort;
-    int base_stat;
+    int baseStat;
 
     @NonNull
     @Override
@@ -18,7 +18,7 @@ public class PokemonStat {
         return "PokemonStat{" +
                 "stat=" + stat +
                 ", effort=" + effort +
-                ", base_stat=" + base_stat +
+                ", base_stat=" + baseStat +
                 '}';
     }
 
@@ -30,7 +30,7 @@ public class PokemonStat {
         return effort;
     }
 
-    public int getBase_stat() {
-        return base_stat;
+    public int getBaseStat() {
+        return baseStat;
     }
 }

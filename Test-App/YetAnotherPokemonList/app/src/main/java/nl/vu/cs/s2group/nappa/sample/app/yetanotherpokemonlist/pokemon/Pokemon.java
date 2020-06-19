@@ -15,7 +15,7 @@ public class Pokemon {
     List<PokemonStat> stats;
     List<PokemonMove> moves;
     PokemonSprites sprites;
-    boolean is_default;
+    boolean isDefault;
     int height;
     int weight;
     int base_experience;
@@ -31,7 +31,7 @@ public class Pokemon {
                 ", stats=" + stats +
                 ", moves=" + moves +
                 ", sprites=" + sprites +
-                ", is_default=" + is_default +
+                ", is_default=" + isDefault +
                 ", height=" + height +
                 ", weight=" + weight +
                 ", base_experience=" + base_experience +
@@ -58,8 +58,8 @@ public class Pokemon {
         return abilities;
     }
 
-    public boolean isIs_default() {
-        return is_default;
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public int getHeight() {
