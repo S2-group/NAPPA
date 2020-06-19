@@ -14,7 +14,7 @@ public class Location {
     String name;
     NamedAPIResource region;
     List<Name> names;
-    GenerationGameIndex game_indices;
+    List<GenerationGameIndex> game_indices;
     List<NamedAPIResource> areas;
 
     @Override
@@ -45,7 +45,7 @@ public class Location {
         return names;
     }
 
-    public GenerationGameIndex getGameIndices() {
+    public List<GenerationGameIndex> getGameIndices() {
         return game_indices;
     }
 

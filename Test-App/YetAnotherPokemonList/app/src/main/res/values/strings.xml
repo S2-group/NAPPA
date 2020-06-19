@@ -51,4 +51,8 @@
     <string name="tv_page_to_search">Page to search</string>
     <string name="tv_item_id_to_search">ID of the item</string>
     <string name="tv_available_id">Available IDs</string>
+    <string name="tv_location_game_indices">Game Indices</string>
+    <string name="tv_location_region">Region</string>
+    <string name="tv_location_area">Area</string>
+    <string name="tv_location">Location</string>
 </resources>
