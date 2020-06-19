@@ -14,13 +14,122 @@
 
         <!-- Page body -->
         <androidx.appcompat.widget.LinearLayoutCompat
-            style="@style/pageBody"
+            style="@style/LayoutPageBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- General Data -->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                style="@style/LayoutBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/TextViewSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_pokemon_characteristics" />
+
+                <!-- Height -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/tv_pokemon_height" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_pokemon_height"
+                        style="@style/TextViewValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <!-- Weight -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/tv_pokemon_weight" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_pokemon_weight"
+                        style="@style/TextViewValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <!-- Base Experience -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/tv_pokemon_base_experience" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_pokemon_base_experience"
+                        style="@style/TextViewValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="test"
+                        android:layout_weight="0.5" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <!-- Species default -->
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/TextViewLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:text="@string/tv_pokemon_species_default" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_pokemon_species_default"
+                        style="@style/TextViewValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <!-- Types -->
             <androidx.appcompat.widget.LinearLayoutCompat
+                style="@style/LayoutBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -32,7 +141,7 @@
                     android:text="@string/tv_types" />
 
                 <ListView
-                    android:id="@+id/lv_types"
+                    android:id="@+id/lv_pokemon_types"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -40,6 +149,7 @@
 
             <!-- Abilities -->
             <androidx.appcompat.widget.LinearLayoutCompat
+                style="@style/LayoutBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -51,7 +161,7 @@
                     android:text="@string/tv_abilities" />
 
                 <ListView
-                    android:id="@+id/lv_abilities"
+                    android:id="@+id/lv_pokemon_abilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

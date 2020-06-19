@@ -7,9 +7,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="pageBody">
+    <style name="LayoutPageBody">
         <item name="android:layout_marginLeft">10dip</item>
         <item name="android:layout_marginRight">10dip</item>
+    </style>
+
+    <style name="LayoutBlock">
+        <item name="android:layout_marginTop">10dip</item>
     </style>
 
     <style name="TextViewHeader">
@@ -19,7 +23,7 @@
     </style>
 
     <style name="TextViewSection">
-        <item name="android:layout_marginTop">10dip</item>
+        <item name="android:layout_marginBottom">5dip</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -27,6 +31,15 @@
     <style name="TextViewItem">
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dip</item>
+    </style>
+
+    <style name="TextViewLabel">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextViewValue">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>
