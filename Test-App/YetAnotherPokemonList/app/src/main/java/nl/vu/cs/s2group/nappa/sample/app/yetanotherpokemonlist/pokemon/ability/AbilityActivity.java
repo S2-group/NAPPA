@@ -21,10 +21,10 @@ public class AbilityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ability);
         toggleProgressBarVisibility(true);
-        AbilityAPI.makeRequest(getIntent().getStringExtra("url"), this::handleRequest);
+        AbilityAPI.makeRequest(getIntent().getStringExtra("url"), this::handleResponse);
     }
 
-    private void handleRequest(Ability ability) {
+    private void handleResponse(Ability ability) {
         this.ability = ability;
 
         setPageTitle();
