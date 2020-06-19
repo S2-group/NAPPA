@@ -27,6 +27,8 @@ public class PokemonsActivity extends DefaultActivity {
     @Override
     protected void onItemClickListener(String url) {
         Log.d(LOG_TAG, "Clicked on " + url);
-        startActivity(new Intent(this, PokemonActivity.class));
+        Intent intent = new Intent(this, PokemonActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 }
