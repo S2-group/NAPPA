@@ -20,7 +20,7 @@ import okhttp3.ResponseBody;
 
 public class LocationAPI {
     private static final String LOG_TAG = LocationAPI.class.getSimpleName();
-    private static final String URL = Config.API_URL + "pokemon/";
+    private static final String URL = Config.API_URL + "location/";
 
     private LocationAPI() {
         throw new IllegalStateException("LocationAPI is an utility class and should be instantiated!");
