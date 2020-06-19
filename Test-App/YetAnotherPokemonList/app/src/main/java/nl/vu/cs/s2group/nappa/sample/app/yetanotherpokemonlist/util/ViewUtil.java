@@ -8,12 +8,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.commonmodels.Effect;
 
 public class ViewUtil {
     private ViewUtil() {
@@ -58,6 +58,25 @@ public class ViewUtil {
                     linearLayout.addView(tv);
                 }
 
+            }
+        });
+    }
+
+    public static <T> void addNamedAPIResourceListWithLanguageToUI(AppCompatActivity activity, int viewId, List<T> list, String getterMethod) {
+        activity.runOnUiThread(() -> {
+            LinearLayoutCompat layout = activity.findViewById(viewId);
+            List<T> filteredList = PokeAPIUtil.filterListByLanguage(list);
+            try {
+                if (filteredList.isEmpty()) {
+                    layout.addView(ViewUtil.createTextView(activity, activity.getResources().getString(R.string.empty_list)));
+                } else {
+                    for (T obj : filteredList) {
+                        String text = (String) obj.getClass().getMethod(getterMethod).invoke(obj);
+                        layout.addView(ViewUtil.createTextView(activity, text));
+                    }
+                }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
             }
         });
     }
