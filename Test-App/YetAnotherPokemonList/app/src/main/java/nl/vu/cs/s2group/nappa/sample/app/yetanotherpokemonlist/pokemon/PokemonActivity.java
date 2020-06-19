@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class PokemonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon);
+        toggleProgressBarVisibility(true);
         PokemonAPI.makeRequest(getIntent().getStringExtra("url"), this::handleRequest);
     }
 
@@ -36,6 +38,11 @@ public class PokemonActivity extends AppCompatActivity {
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_moves, pokemon.moves, "getMove");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_held_items, pokemon.heldItems, "getItem");
+        toggleProgressBarVisibility(false);
+    }
+
+    private void toggleProgressBarVisibility(boolean isVisible) {
+        runOnUiThread(() -> findViewById(R.id.indeterminateBar).setVisibility(isVisible ? ProgressBar.VISIBLE : ProgressBar.GONE));
     }
 
     private void setPageTitle() {
