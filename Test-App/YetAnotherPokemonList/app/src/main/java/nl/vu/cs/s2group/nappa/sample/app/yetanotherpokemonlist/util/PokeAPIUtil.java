@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
@@ -49,7 +50,9 @@ public class PokeAPIUtil {
         if (list == null) return null;
         try {
             for (T obj : list) {
-                if (obj.getClass().getMethod("getLanguage").invoke(obj) == language) {
+                NamedAPIResource namedAPIResource = (NamedAPIResource) obj.getClass().getMethod("getLanguage").invoke(obj);
+                Objects.requireNonNull(namedAPIResource);
+                if (namedAPIResource.getName().equals(language)) {
                     return obj;
                 }
             }
