@@ -11,6 +11,7 @@ import java.util.Random;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationsActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonsActivity;
@@ -29,11 +30,13 @@ public class MainActivity extends AppCompatActivity {
             PokemonActivity.class,
             AbilityActivity.class,
             BerryActivity.class,
+            LocationActivity.class
     };
     private int[] maxItems = new int[]{
             964,
             293,
             64,
+            781,
     };
 
     @Override

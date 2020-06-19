@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Arrays;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilityActivity;
 
@@ -25,17 +26,20 @@ public class FindItemActivity extends AppCompatActivity {
             PokemonActivity.class,
             AbilityActivity.class,
             BerryActivity.class,
+            LocationActivity.class
     };
     private int[] maxItems = new int[]{
             807,
             233,
             64,
+            781,
     };
 
     private int[] maxItemsGap = new int[]{
             10143,
             10060,
             -1,
+            -1
     };
 
     private int[] indexesWithGap = new int[]{
@@ -84,6 +88,7 @@ public class FindItemActivity extends AppCompatActivity {
                 getResources().getString(R.string.tv_pokemon),
                 getResources().getString(R.string.tv_ability),
                 getResources().getString(R.string.tv_berry),
+                getResources().getString(R.string.tv_location),
         };
         Spinner sp = findViewById(R.id.sp_page_type);
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
