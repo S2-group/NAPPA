@@ -22,4 +22,5 @@
     <string name="tv_pokemon_moves">Moves</string>
     <string name="tv_pokemon_held_items">Held Items</string>
     <string name="empty_list">No items found</string>
+    <string name="tv_ability_pokemons">Onwed by pokemons</string>
 </resources>
