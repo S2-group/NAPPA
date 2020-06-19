@@ -53,9 +53,13 @@ public class AbilityActivity extends AppCompatActivity {
     private void setAbilityEffectChange() {
         runOnUiThread(() -> {
             LinearLayoutCompat layout = findViewById(R.id.ll_ability_effect_change);
-            for (AbilityEffectChange effectChange : ability.effect_changes) {
-                Effect effect = PokeAPIUtil.findObjectWithLanguage(effectChange.effect_entries);
-                layout.addView(ViewUtil.createTextView(this, effect.getEffect(), 0.5f));
+            if (ability.effect_changes.isEmpty()) {
+                layout.addView(ViewUtil.createTextView(this, getResources().getString(R.string.empty_list)));
+            } else {
+                for (AbilityEffectChange effectChange : ability.effect_changes) {
+                    Effect effect = PokeAPIUtil.findObjectWithLanguage(effectChange.effect_entries);
+                    layout.addView(ViewUtil.createTextView(this, effect.getEffect()));
+                }
             }
         });
     }
