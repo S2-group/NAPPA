@@ -8,6 +8,7 @@ import java.util.List;
  * Representation of https://pokeapi.co/docs/v2#pokemon
  */
 public class Pokemon {
+    int id;
     String name;
     List<PokemonType> types;
     List<PokemonAbility> abilities;
@@ -21,7 +22,8 @@ public class Pokemon {
     @Override
     public String toString() {
         return "Pokemon{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", types=" + types +
                 ", abilities=" + abilities +
                 ", stats=" + stats +
@@ -62,5 +64,9 @@ public class Pokemon {
 
     public List<PokemonStat> getStats() {
         return stats;
+    }
+
+    public int getId() {
+        return id;
     }
 }
