@@ -14,10 +14,9 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/page_title"
+                style="@style/TextViewHeader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/toolbarText"
-                android:textSize="24sp" />
+                android:layout_height="match_parent" />
         </androidx.appcompat.widget.Toolbar>
 
         <ProgressBar
