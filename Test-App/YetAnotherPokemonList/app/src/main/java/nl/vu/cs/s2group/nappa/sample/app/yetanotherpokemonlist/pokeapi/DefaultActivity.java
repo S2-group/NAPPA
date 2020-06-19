@@ -86,7 +86,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
     }
 
     private void setProgressBarState(boolean state) {
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
+        ProgressBar progressBar = findViewById(R.id.indeterminateBar);
         progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
     }
 
