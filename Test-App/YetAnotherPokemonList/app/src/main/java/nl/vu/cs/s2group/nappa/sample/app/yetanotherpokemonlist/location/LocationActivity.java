@@ -32,7 +32,7 @@ public class LocationActivity extends AppCompatActivity {
         setAbilityCharacteristics();
 
         ViewUtil.addListToUI(this, R.id.ll_location_areas, location.areas, "getName");
-        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_location_areas, location.game_indices, "getGeneration");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_location_game_indices, location.game_indices, "getGeneration");
     }
 
     private void toggleProgressBarVisibility(boolean isVisible) {
