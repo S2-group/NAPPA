@@ -16,7 +16,7 @@
         <activity android:name=".location.LocationsActivity" />
         <activity android:name=".berry.BerriesActivity" />
         <activity android:name=".pokeapi.DefaultActivity" />
-        <activity android:name=".pokemon.ability.AbilityActivity" />
+        <activity android:name=".pokemon.ability.AbilitiesActivity" />
         <activity android:name=".pokemon.PokemonsActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
