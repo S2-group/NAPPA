@@ -33,4 +33,8 @@ public class AbilityFlavorText {
     public NamedAPIResource getVersionGroup() {
         return version_group;
     }
+
+    public String getFlavorTextWithVersionGroup() {
+        return flavor_text + " (" + version_group.getName() + ")";
+    }
 }
