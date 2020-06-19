@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
+import android.content.Intent;
 import android.util.Log;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
@@ -26,5 +27,6 @@ public class PokemonsActivity extends DefaultActivity {
     @Override
     protected void onItemClickListener(String url) {
         Log.d(LOG_TAG, "Clicked on " + url);
+        startActivity(new Intent(this, PokemonActivity.class));
     }
 }
