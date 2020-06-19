@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".berry.BerryActivity"></activity>
+        <activity android:name=".FindItemActivity"></activity>
+        <activity android:name=".berry.BerryActivity" />
         <activity android:name=".pokemon.ability.AbilityActivity" />
         <activity android:name=".pokemon.PokemonActivity" />
         <activity android:name=".location.LocationsActivity" />

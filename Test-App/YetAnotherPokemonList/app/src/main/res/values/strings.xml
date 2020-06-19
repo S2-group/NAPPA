@@ -46,4 +46,6 @@
     <string name="tv_berry">Berry</string>
     <string name="tv_menu_misc">Misc</string>
     <string name="btn_random">Open a random page</string>
+    <string name="btn_find">Search</string>
+    <string name="btn_search_page">Find a page</string>
 </resources>

@@ -111,6 +111,12 @@
                     android:onClick="navigateToRandomPage"
                     android:text="@string/btn_random" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="navigateToFindPage"
+                    android:text="@string/btn_search_page" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

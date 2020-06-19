@@ -65,4 +65,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void navigateToFindPage(View view) {
+        Log.d(LOG_TAG, "Navigating to find page");
+        startActivity(new Intent(this, FindItemActivity.class));
+    }
+
 }
