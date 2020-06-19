@@ -19,7 +19,7 @@ public class Pokemon {
     boolean isDefault;
     int height;
     int weight;
-    int baseExperience;
+    int base_experience;
 
     @NonNull
     @Override
@@ -36,7 +36,7 @@ public class Pokemon {
                 ", isDefault=" + isDefault +
                 ", height=" + height +
                 ", weight=" + weight +
-                ", base_experience=" + baseExperience +
+                ", base_experience=" + base_experience +
                 '}';
     }
 
@@ -76,8 +76,8 @@ public class Pokemon {
         return weight;
     }
 
-    public int getBaseExperience() {
-        return baseExperience;
+    public int getBase_experience() {
+        return base_experience;
     }
 
     public List<PokemonStat> getStats() {

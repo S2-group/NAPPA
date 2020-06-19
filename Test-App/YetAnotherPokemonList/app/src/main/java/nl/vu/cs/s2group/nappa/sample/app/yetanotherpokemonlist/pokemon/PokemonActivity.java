@@ -70,7 +70,7 @@ public class PokemonActivity extends AppCompatActivity {
     }
 
     private void setPokemonCharacteristics() {
-        String baseXp = String.format(Config.LOCALE, "%d", pokemon.baseExperience) + " xp";
+        String baseXp = String.format(Config.LOCALE, "%d", pokemon.base_experience) + " xp";
         ((TextView) findViewById(R.id.tv_pokemon_base_experience)).setText(baseXp);
 
         String height = String.format(Config.LOCALE, "%d", pokemon.height) + " dm";
