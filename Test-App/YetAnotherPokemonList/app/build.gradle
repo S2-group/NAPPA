@@ -31,6 +31,7 @@ project.ext {
     gsonVersion = '2.8.6'
     picassoVersion = '2.5.2'
     jetBrainsAnnotationVersion = '19.0.0'
+    diffMatchPatch = '1.1'
 }
 
 dependencies {
@@ -42,6 +43,9 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "org.jetbrains:annotations:$jetBrainsAnnotationVersion"
+
+    implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
+    implementation name: 'nappa-prefetching-library', ext: 'aar'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
