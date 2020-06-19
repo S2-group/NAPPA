@@ -4,7 +4,13 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+
+import java.util.List;
+
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
 
 public class ViewUtil {
     private ViewUtil() {
@@ -28,5 +34,15 @@ public class ViewUtil {
                 weight));
 
         return textView;
+    }
+
+    public static void addNamedAPIResourceListToUI(AppCompatActivity activity, int viewId, List<?> list, String getterMethod) {
+        List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
+        activity.runOnUiThread(() -> {
+            LinearLayoutCompat linearLayout = activity.findViewById(viewId);
+            for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
+                linearLayout.addView(createTextView(activity, namedAPIResource.getName()));
+            }
+        });
     }
 }

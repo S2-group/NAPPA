@@ -12,11 +12,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIResource;
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.APIResourceUtil;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
 
@@ -36,9 +32,9 @@ public class PokemonActivity extends AppCompatActivity {
         setPokemonSprites();
         setPokemonCharacteristics();
         setPokemonStats();
-        setNamedAPIResourceList(R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
-        setNamedAPIResourceList(R.id.ll_pokemon_types, pokemon.types, "getType");
-        setNamedAPIResourceList(R.id.ll_pokemon_moves, pokemon.moves, "getMove");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
+        ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_moves, pokemon.moves, "getMove");
     }
 
     private void setPageTitle() {
@@ -87,16 +83,6 @@ public class PokemonActivity extends AppCompatActivity {
                 rowLayout.addView(tvStatValue);
 
                 layout.addView(rowLayout);
-            }
-        });
-    }
-
-    private void setNamedAPIResourceList(int viewId, List<?> list, String getterMethod) {
-        List<NamedAPIResource> namedAPIResourceList = APIResourceUtil.parseListToNamedAPOResourceList(list, getterMethod);
-        runOnUiThread(() -> {
-            LinearLayoutCompat linearLayout = findViewById(viewId);
-            for (NamedAPIResource namedAPIResource : namedAPIResourceList) {
-                linearLayout.addView(ViewUtil.createTextView(this, namedAPIResource.getName()));
             }
         });
     }
