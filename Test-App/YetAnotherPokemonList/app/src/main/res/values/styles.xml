@@ -7,6 +7,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="pageBody">
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">10dip</item>
+    </style>
+
     <style name="TextViewHeader">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
