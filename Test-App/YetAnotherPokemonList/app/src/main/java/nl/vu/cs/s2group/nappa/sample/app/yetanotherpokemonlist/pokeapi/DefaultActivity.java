@@ -32,6 +32,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
         setContentView(contentLayoutId);
         api = new DefaultApi(apiUrl, logTag);
         setHeaderText();
+        setOnItemClickListener();
     }
 
     @Override
@@ -121,4 +122,11 @@ public abstract class DefaultActivity extends AppCompatActivity {
                 " of " + api.getTotalPages();
         ((TextView) findViewById(R.id.tv_current_page)).setText(str);
     }
+
+    private void setOnItemClickListener() {
+        ListView list = findViewById(R.id.default_list);
+        list.setOnItemClickListener((adapterView, view, i, l) -> onItemClickListener((String) view.getTag()));
+    }
+
+    protected abstract void onItemClickListener(String url);
 }

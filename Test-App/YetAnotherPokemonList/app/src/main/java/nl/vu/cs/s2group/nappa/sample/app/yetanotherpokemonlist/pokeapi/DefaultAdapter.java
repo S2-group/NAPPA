@@ -31,7 +31,9 @@ public class DefaultAdapter extends ArrayAdapter<DefaultApiModel> {
         // Lookup view for data population
         TextView name = convertView.findViewById(R.id.defaultItemName);
         // Populate the data into the template view using the data object
-        name.setText(Objects.requireNonNull(model).getName());
+        Objects.requireNonNull(model);
+        convertView.setTag(model.url);
+        name.setText(model.getName());
         // Return the completed view to render on screen
         return convertView;
     }

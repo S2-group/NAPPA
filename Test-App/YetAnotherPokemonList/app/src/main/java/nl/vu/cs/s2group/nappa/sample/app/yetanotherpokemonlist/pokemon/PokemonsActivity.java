@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon;
 
+import android.util.Log;
+
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokeapi.DefaultActivity;
 
@@ -19,5 +21,10 @@ public class PokemonsActivity extends DefaultActivity {
     @Override
     protected void setHeaderText() {
         setHeaderText("Pokemons");
+    }
+
+    @Override
+    protected void onItemClickListener(String url) {
+        Log.d(LOG_TAG, "Clicked on " + url);
     }
 }
