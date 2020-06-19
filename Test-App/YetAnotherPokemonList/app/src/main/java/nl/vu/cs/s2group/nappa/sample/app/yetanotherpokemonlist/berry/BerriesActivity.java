@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry;
 
+import android.content.Intent;
 import android.util.Log;
 
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
@@ -26,5 +27,8 @@ public class BerriesActivity extends NamedAPIActivity {
     @Override
     protected void onItemClickListener(String url) {
         Log.d(LOG_TAG, "Clicked on " + url);
+        Intent intent = new Intent(this, BerryActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 }
