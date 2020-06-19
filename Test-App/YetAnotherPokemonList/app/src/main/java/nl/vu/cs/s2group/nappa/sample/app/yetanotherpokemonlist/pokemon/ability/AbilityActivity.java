@@ -22,7 +22,6 @@ public class AbilityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ability);
         toggleProgressBarVisibility(true);
         AbilityAPI.makeRequest(getIntent().getStringExtra("url"), this::handleRequest);
-        ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_entries, ability.effect_entries, "getEffect");
     }
 
     private void handleRequest(Ability ability) {
@@ -32,6 +31,7 @@ public class AbilityActivity extends AppCompatActivity {
         toggleProgressBarVisibility(false);
         setAbilityEffectChange();
 
+        ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_entries, ability.effect_entries, "getEffect");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_ability_pokemons, ability.pokemon, "getPokemon", (view) -> {
             String url = view.getTag().toString();
             Log.d(LOG_TAG, "Clicked on " + url);
