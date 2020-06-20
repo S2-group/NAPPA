@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import nl.vu.cs.s2group.nappa.*;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
 
@@ -46,5 +47,11 @@ public class LocationActivity extends AppCompatActivity {
 
     private void setAbilityCharacteristics() {
         ((TextView) findViewById(R.id.tv_location_region)).setText(location.region.getName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PrefetchingLib.setCurrentActivity(this);
     }
 }

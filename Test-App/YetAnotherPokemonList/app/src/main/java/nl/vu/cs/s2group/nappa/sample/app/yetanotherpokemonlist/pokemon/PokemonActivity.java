@@ -15,6 +15,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.squareup.picasso.Picasso;
 
+import nl.vu.cs.s2group.nappa.*;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
@@ -44,8 +45,10 @@ public class PokemonActivity extends AppCompatActivity {
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_abilities, pokemon.abilities, "getAbility", (view) -> {
             String url = view.getTag().toString();
             Log.d(LOG_TAG, "Clicked on " + url);
-            startActivity(new Intent(this, AbilityActivity.class)
-                    .putExtra("url", url));
+            Intent intent = new Intent(this, AbilityActivity.class)
+                    .putExtra("url", url);
+            PrefetchingLib.notifyExtras(intent.getExtras());
+            startActivity(intent);
         });
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_moves, pokemon.moves, "getMove");
@@ -106,5 +109,11 @@ public class PokemonActivity extends AppCompatActivity {
                 layout.addView(rowLayout);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PrefetchingLib.setCurrentActivity(this);
     }
 }

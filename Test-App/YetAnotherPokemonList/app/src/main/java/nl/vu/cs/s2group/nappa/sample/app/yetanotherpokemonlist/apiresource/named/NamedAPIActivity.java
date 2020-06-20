@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 
+import nl.vu.cs.s2group.nappa.*;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 
 public abstract class NamedAPIActivity extends AppCompatActivity {
@@ -38,6 +39,7 @@ public abstract class NamedAPIActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        PrefetchingLib.setCurrentActivity(this);
         beforeRequest();
         api.getInitialContent(this::handleResponse);
     }

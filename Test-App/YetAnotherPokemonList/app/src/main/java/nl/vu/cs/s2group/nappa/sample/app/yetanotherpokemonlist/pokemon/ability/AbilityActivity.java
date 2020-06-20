@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import nl.vu.cs.s2group.nappa.*;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
@@ -41,8 +42,10 @@ public class AbilityActivity extends AppCompatActivity {
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_ability_pokemons, ability.pokemon, "getPokemon", (view) -> {
             String url = view.getTag().toString();
             Log.d(LOG_TAG, "Clicked on " + url);
-            startActivity(new Intent(this, PokemonActivity.class)
-                    .putExtra("url", url));
+            Intent intent = new Intent(this, PokemonActivity.class)
+                    .putExtra("url", url);
+            PrefetchingLib.notifyExtras(intent.getExtras());
+            startActivity(intent);
         });
     }
 
@@ -67,5 +70,11 @@ public class AbilityActivity extends AppCompatActivity {
         for (AbilityEffectChange effectChange : ability.effect_changes) {
             ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_change, effectChange.effect_entries, "getEffect");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PrefetchingLib.setCurrentActivity(this);
     }
 }
