@@ -22,7 +22,7 @@ If so, an association between an extra and its corresponding static URL componen
 
 This repository holds all NAPPA related projects, each project is in a subdirectory.
 Currently, there is the core [Prefetching Library](Prefetching-Library) and a [Plugin for Android Studio](Android-Studio-Plugin). 
-In addition to these, there is a [Weather and News](Test-App/Weather-and-News-app) test app to demonstrate the usage of NAPPA as a prefetching approach.
+In addition to these, there is are [Test Apps](Test-App/README.md) to demonstrate the usage of NAPPA as a prefetching approach.
 
 ### NAPPA Prefetching Library  
 
