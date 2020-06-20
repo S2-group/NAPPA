@@ -27,11 +27,13 @@ android {
 }
 
 project.ext {
-    okHttpVersion = '3.14.9'
+    okHttpVersion = '3.14.8'
     gsonVersion = '2.8.6'
     picassoVersion = '2.5.2'
     jetBrainsAnnotationVersion = '19.0.0'
     diffMatchPatch = '1.1'
+    roomVersion = '2.2.5'
+    lifecycleExtensionsVersion = '2.2.0'
 }
 
 dependencies {
@@ -45,6 +47,8 @@ dependencies {
     implementation "org.jetbrains:annotations:$jetBrainsAnnotationVersion"
 
     implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionsVersion"
     implementation name: 'nappa-prefetching-library', ext: 'aar'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
