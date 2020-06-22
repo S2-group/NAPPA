@@ -352,11 +352,13 @@ public class PrefetchingLib {
      */
     public static void leavingCurrentActivity() {
         poolExecutor.schedule(() -> {
+            long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
+            Log.d(LOG_TAG, "leaving activity " + currentActivityName + " after " + duration + " ms");
             PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(new ActivityVisitTime(
                     activityMap.get(currentActivityName),
                     session.id,
                     visitedCurrentActivityDate,
-                    new Date().getTime() - visitedCurrentActivityDate.getTime()
+                    duration
             ));
         }, 0, TimeUnit.SECONDS);
 
