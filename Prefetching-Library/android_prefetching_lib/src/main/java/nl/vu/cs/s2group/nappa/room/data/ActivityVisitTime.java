@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 /**
  * Represents the database table that register the time a user spends visiting activities
  */
@@ -19,9 +21,9 @@ public class ActivityVisitTime {
     public Long idSession;
 
     /**
-     * The access date in milliseconds
+     * The date this activity was accessed
      */
-    public Long timestamp;
+    public Date timestamp;
 
     /**
      * The visit duration in millisecond
