@@ -10,10 +10,12 @@ import androidx.room.TypeConverters;
 
 import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
+import nl.vu.cs.s2group.nappa.room.dao.ActivityVisitTimeDao;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
+import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
@@ -29,7 +31,8 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
                 ActivityExtraData.class,
                 UrlCandidate.class,
                 UrlCandidateParts.class,
-                LARData.class
+                LARData.class,
+                ActivityVisitTime.class,
         },
         version = 10)
 @TypeConverters({DateConverters.class})
@@ -67,4 +70,6 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
     public abstract ActivityExtraDao activityExtraDao();
 
     public abstract UrlCandidateDao urlCandidateDao();
+
+    public abstract ActivityVisitTimeDao activityVisitTimeDao();
 }

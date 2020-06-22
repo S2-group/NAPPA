@@ -11,14 +11,14 @@ import java.util.Date;
  */
 @Entity(tableName = "pf_activity_visit_time")
 public class ActivityVisitTime {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public Long id;
 
     @ColumnInfo(name = "id_activity")
-    public Long idActivity;
+    public Long activityId;
 
     @ColumnInfo(name = "id_session")
-    public Long idSession;
+    public Long sessionId;
 
     /**
      * The date this activity was accessed
@@ -29,4 +29,11 @@ public class ActivityVisitTime {
      * The visit duration in millisecond
      */
     public Long duration;
+
+    public ActivityVisitTime(Long activityId, Long sessionId, Date timestamp, Long duration) {
+        this.activityId = activityId;
+        this.sessionId = sessionId;
+        this.timestamp = timestamp;
+        this.duration = duration;
+    }
 }
