@@ -13,7 +13,7 @@ public class SingletonOkHttpClient {
     private static OkHttpClient okHttpClient;
 
     private SingletonOkHttpClient() {
-        throw new IllegalStateException("SingletonOkHttpClient is a singleton class and should be instantiated via constructor");
+        throw new IllegalStateException("SingletonOkHttpClient is a singleton class and should not be instantiated via constructor");
     }
 
     /**

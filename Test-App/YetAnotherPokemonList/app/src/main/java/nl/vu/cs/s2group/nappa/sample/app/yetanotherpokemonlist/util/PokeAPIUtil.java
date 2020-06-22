@@ -17,7 +17,7 @@ public class PokeAPIUtil {
     private static final String LOG_TAG = PokeAPIUtil.class.getSimpleName();
 
     private PokeAPIUtil() {
-        throw new IllegalStateException("APIResourceUtil is an utility class and should be instantiated!");
+        throw new IllegalStateException("APIResourceUtil is an utility class and should not be instantiated!");
     }
 
     public static List<NamedAPIResource> parseListToNamedAPOResourceList(List<?> wrapperList, String method) {

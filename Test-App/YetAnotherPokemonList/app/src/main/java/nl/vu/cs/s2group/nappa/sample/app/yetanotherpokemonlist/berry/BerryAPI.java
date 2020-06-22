@@ -23,7 +23,7 @@ public class BerryAPI {
     private static final String URL = Config.API_URL + "berry/";
 
     private BerryAPI() {
-        throw new IllegalStateException("BerryAPI is an utility class and should be instantiated!");
+        throw new IllegalStateException("BerryAPI is an utility class and should not be instantiated!");
     }
 
     public static void makeRequest(String url, Consumer<Berry> callback) {

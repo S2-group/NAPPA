@@ -23,7 +23,7 @@ public class PokemonAPI {
     private static final String URL = Config.API_URL + "pokemon/";
 
     private PokemonAPI() {
-        throw new IllegalStateException("PokemonAPI is an utility class and should be instantiated!");
+        throw new IllegalStateException("PokemonAPI is an utility class and should not be instantiated!");
     }
 
     public static void makeRequest(String url, Consumer<Pokemon> callback) {

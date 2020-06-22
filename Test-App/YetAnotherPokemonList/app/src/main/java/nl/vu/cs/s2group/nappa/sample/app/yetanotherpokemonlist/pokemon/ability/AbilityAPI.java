@@ -23,7 +23,7 @@ public class AbilityAPI {
     private static final String URL = Config.API_URL + "ability/";
 
     private AbilityAPI() {
-        throw new IllegalStateException("AbilityAPI is an utility class and should be instantiated!");
+        throw new IllegalStateException("AbilityAPI is an utility class and should not be instantiated!");
     }
 
     public static void makeRequest(String url, Consumer<Ability> callback) {

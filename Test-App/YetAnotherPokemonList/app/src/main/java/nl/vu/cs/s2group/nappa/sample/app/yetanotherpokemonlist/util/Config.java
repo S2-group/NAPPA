@@ -8,6 +8,6 @@ public abstract class Config {
     public static final Locale LOCALE = Locale.US;
 
     private Config() {
-        throw new IllegalStateException("Config is a class with constants and should be instantiated!");
+        throw new IllegalStateException("Config is a class with constants and should not be instantiated!");
     }
 }

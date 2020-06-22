@@ -23,7 +23,7 @@ public class LocationAPI {
     private static final String URL = Config.API_URL + "location/";
 
     private LocationAPI() {
-        throw new IllegalStateException("LocationAPI is an utility class and should be instantiated!");
+        throw new IllegalStateException("LocationAPI is an utility class and should not be instantiated!");
     }
 
     public static void makeRequest(String url, Consumer<Location> callback) {

@@ -17,7 +17,7 @@ import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named
 
 public class ViewUtil {
     private ViewUtil() {
-        throw new IllegalStateException("ViewUtil is an utility class and should be instantiated!");
+        throw new IllegalStateException("ViewUtil is an utility class and should not be instantiated!");
     }
 
     public static TextView createTextView(Context context, String text) {
