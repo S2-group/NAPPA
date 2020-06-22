@@ -34,7 +34,7 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
                 LARData.class,
                 ActivityVisitTime.class,
         },
-        version = 10)
+        version = 11)
 @TypeConverters({DateConverters.class})
 public abstract class PrefetchingDatabase extends RoomDatabase {
 
