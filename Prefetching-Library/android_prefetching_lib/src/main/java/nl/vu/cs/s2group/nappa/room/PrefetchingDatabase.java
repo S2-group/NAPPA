@@ -1,12 +1,12 @@
 package nl.vu.cs.s2group.nappa.room;
 
 
+import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-
-import android.content.Context;
 
 import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
@@ -20,16 +20,25 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 
-@Database(entities = {
-        RequestData.class, ActivityData.class, Session.class, SessionData.class, ActivityExtraData.class,
-        UrlCandidate.class, UrlCandidateParts.class, LARData.class},
+@Database(
+        entities = {
+                RequestData.class,
+                ActivityData.class,
+                Session.class,
+                SessionData.class,
+                ActivityExtraData.class,
+                UrlCandidate.class,
+                UrlCandidateParts.class,
+                LARData.class
+        },
         version = 10)
 @TypeConverters({DateConverters.class})
-
 public abstract class PrefetchingDatabase extends RoomDatabase {
 
     private static PrefetchingDatabase instance = null;
-    PrefetchingDatabase(){}
+
+    PrefetchingDatabase() {
+    }
 
     public static PrefetchingDatabase getInstance(Context context) {
         if (instance == null)
@@ -48,9 +57,14 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
     }
 
     public abstract AggregateUrlDao urlDao();
+
     public abstract ActivityTableDao activityDao();
+
     public abstract SessionDao sessionDao();
+
     public abstract GraphEdgeDao graphEdgeDao();
+
     public abstract ActivityExtraDao activityExtraDao();
+
     public abstract UrlCandidateDao urlCandidateDao();
 }
