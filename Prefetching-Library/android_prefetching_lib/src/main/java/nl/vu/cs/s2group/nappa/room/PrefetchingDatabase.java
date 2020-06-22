@@ -4,8 +4,11 @@ package nl.vu.cs.s2group.nappa.room;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+
 import android.content.Context;
 
+import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
@@ -21,6 +24,8 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
         RequestData.class, ActivityData.class, Session.class, SessionData.class, ActivityExtraData.class,
         UrlCandidate.class, UrlCandidateParts.class, LARData.class},
         version = 10)
+@TypeConverters({DateConverters.class})
+
 public abstract class PrefetchingDatabase extends RoomDatabase {
 
     private static PrefetchingDatabase instance = null;
