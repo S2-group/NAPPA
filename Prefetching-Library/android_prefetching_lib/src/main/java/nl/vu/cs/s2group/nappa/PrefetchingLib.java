@@ -351,12 +351,15 @@ public class PrefetchingLib {
      * `onPause`
      */
     public static void leavingCurrentActivity() {
-        PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(new ActivityVisitTime(
-                activityMap.get(currentActivityName),
-                session.id,
-                visitedCurrentActivityDate,
-                new Date().getTime() - visitedCurrentActivityDate.getTime()
-        ));
+        poolExecutor.schedule(() -> {
+            PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(new ActivityVisitTime(
+                    activityMap.get(currentActivityName),
+                    session.id,
+                    visitedCurrentActivityDate,
+                    new Date().getTime() - visitedCurrentActivityDate.getTime()
+            ));
+        }, 0, TimeUnit.SECONDS);
+
     }
 
     public static ActivityGraph getActivityGraph() {
