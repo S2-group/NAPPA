@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -35,13 +36,22 @@ public class ActivityVisitTimeDaoTest {
         activityList = TestUtil.createActivityList(4);
         timeList = new ArrayList<>();
 
-        for (int i = 0; i < sessionList.size(); i++) {
-            Session session = sessionList.get(i);
+        for (Session session : sessionList) {
             db.sessionDao().insertSession(session);
+        }
+
+        for (ActivityData activityData : activityList) {
+            db.activityDao().insert(activityData);
+        }
+
+        for (int i = 0; i < sessionList.size(); i++) {
             for (int j = 0; j < activityList.size(); j++) {
-                ActivityData activityData = activityList.get(j);
-                timeList.addAll(TestUtil.createActivityVisitTimeList(10, (long) i, (long) j));
+                timeList.addAll(TestUtil.createActivityVisitTimeList(10, (long) i + 1, (long) j + 1));
             }
+        }
+
+        for (ActivityVisitTime activityVisitTime : timeList) {
+            db.activityVisitTimeDao().insert(activityVisitTime);
         }
     }
 
@@ -51,20 +61,27 @@ public class ActivityVisitTimeDaoTest {
     }
 
     @Test
-    public void insert() {
-        ActivityVisitTime data = TestUtil.createActivityVisitTime(1L, 2L);
-        db.activityVisitTimeDao().insert(data);
-        List<ActivityVisitTime> byActivity = db.activityVisitTimeDao().getActivityVisitTime(1L);
-        assertThat(byActivity.get(0).duration, equalTo(data.duration));
-        assertThat(byActivity.get(0).sessionId, equalTo(data.sessionId));
-        assertThat(byActivity.get(0).timestamp, equalTo(data.timestamp));
+    public void testGetActivityVisitTimeByActivity() {
+        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L);
+        assertThat(result.size(), equalTo(activityList.size() * 10));
+        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
+        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
     }
 
     @Test
-    public void testGetActivityVisitTime() {
+    public void testGetActivityVisitTimeByActivityAndSession() {
+        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 1L);
+        assertThat(result.size(), equalTo(10));
+        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
+        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
     }
 
     @Test
-    public void testGetActivityVisitTime1() {
+    public void testGetActivityVisitTimeByActivityAndLastSession() {
+        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 2);
+        List<ActivityVisitTime> test = db.activityVisitTimeDao().getActivityVisitTime(1L).stream().filter(obj -> obj.sessionId >= 3).collect(Collectors.toList());
+        assertThat(result.size(), equalTo(20));
+        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
+        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
     }
 }
