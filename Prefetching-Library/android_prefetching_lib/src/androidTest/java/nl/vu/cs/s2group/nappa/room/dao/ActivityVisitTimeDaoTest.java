@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -78,10 +77,13 @@ public class ActivityVisitTimeDaoTest {
 
     @Test
     public void testGetActivityVisitTimeByActivityAndLastSession() {
-        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 2);
-        List<ActivityVisitTime> test = db.activityVisitTimeDao().getActivityVisitTime(1L).stream().filter(obj -> obj.sessionId >= 3).collect(Collectors.toList());
+        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 3);
+        assertThat(result.size(), equalTo(30));
+
+        result = db.activityVisitTimeDao().getActivityVisitTime(1L, 2);
         assertThat(result.size(), equalTo(20));
-        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
-        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
+
+        result = db.activityVisitTimeDao().getActivityVisitTime(1L, 1);
+        assertThat(result.size(), equalTo(10));
     }
 }

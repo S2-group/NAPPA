@@ -24,10 +24,9 @@ public interface ActivityVisitTimeDao {
             "AND id_session = :sessionId")
     List<ActivityVisitTime> getActivityVisitTime(Long activityId, Long sessionId);
 
-    @Query("SELECT id_session, timestamp, duration  " +
+    @Query("SELECT * " +
             "FROM pf_activity_visit_time " +
             "WHERE id_activity = :activityId " +
-            "GROUP BY id_session " +
-            "HAVING id_session >= :lastNSessions")
+            "AND id_session > (SELECT MAX(id_session) - :lastNSessions FROM pf_activity_visit_time) ")
     List<ActivityVisitTime> getActivityVisitTime(Long activityId, int lastNSessions);
 }
