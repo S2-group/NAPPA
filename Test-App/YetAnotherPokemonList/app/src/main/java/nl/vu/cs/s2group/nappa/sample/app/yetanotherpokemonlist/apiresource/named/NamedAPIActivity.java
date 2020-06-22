@@ -20,6 +20,10 @@ public abstract class NamedAPIActivity extends AppCompatActivity {
     private NamedAPI api;
     private int contentLayoutId;
 
+    public NamedAPIActivity() {
+        throw new IllegalStateException("NamedAPIActivity should not be instantiated via default constructor!");
+    }
+
     public NamedAPIActivity(int contentLayoutId, String logTag, String apiUrl) {
         super(contentLayoutId);
         this.contentLayoutId = contentLayoutId;
