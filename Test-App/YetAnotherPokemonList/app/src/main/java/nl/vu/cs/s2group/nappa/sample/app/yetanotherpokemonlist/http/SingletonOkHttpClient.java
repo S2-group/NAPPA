@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
-import nl.vu.cs.s2group.nappa.*;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import okhttp3.OkHttpClient;
 
 /**

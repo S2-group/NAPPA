@@ -1,33 +1,29 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
+import androidx.appcompat.app.AppCompatActivity;
+
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.ListActivityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.SessionDataActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.StatsActivity;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        PrefetchingLib.init(this,9);
+        PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         OkHttpProvider.getInstance();
 
         setContentView(R.layout.activity_main);

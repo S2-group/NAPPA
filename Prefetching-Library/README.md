@@ -123,3 +123,41 @@ After implementing a strategy, please consider sharing it by creating a PR to th
 To create a new build with the modifications implemented in the library, click on `Build > Make Project`.
 Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
 To use this build, repeat the `Import Library` instructions in the `Installation` section.
+
+### Debug the database data
+
+#### Using DB Browser for SQLite
+
+This is an external client for reading database files.
+Download it at [sqlitebrowser](https://sqlitebrowser.org/dl/).
+
+In Android Studio, go to:
+
+```
+View > Tool Windows > Device File Explorer
+```
+
+This will open a panel with the emulator files. 
+To access this panel the emulator must be first launched. 
+In this panel, go to:
+
+```
+data > data > [application package name] > databases 
+```
+
+You should see 3 files:
+
+* pf_db
+* pf_db-shm
+* pf_db-wal
+
+Select all 3, right click and `save as`.
+Rename `pf_db` to `pf_db.db`
+Open DB Browser for SQLite.
+Click on `Open Database`, go to the directory you saved the files and select `pf_db.db`.
+Click in the `Browser Data` tab.
+You can now verify the data saved by the NAPPA Library. 
+
+#### Using Room
+
+You can use the defined DAO Room classes or create your own functions

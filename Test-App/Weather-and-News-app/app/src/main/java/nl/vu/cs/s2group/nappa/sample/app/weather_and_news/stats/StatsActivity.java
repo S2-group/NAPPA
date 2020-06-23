@@ -1,17 +1,19 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats;
 
-import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
+import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -20,13 +22,14 @@ public class StatsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_stats);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         TextView textView = findViewById(R.id.text_stats);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,15 +45,9 @@ public class StatsActivity extends AppCompatActivity {
 
         viewModel.getLiveData().observe(this, datas -> {
             for (AggregateUrlDao.AggregateURL data : datas) {
-                textView.append(data.toString()+"\n\n\n");
+                textView.append(data.toString() + "\n\n\n");
             }
         });
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 }
