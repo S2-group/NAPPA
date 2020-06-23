@@ -351,7 +351,7 @@ public class PrefetchingLib {
      */
     public static void leavingCurrentActivity() {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
-        Log.d(LOG_TAG, "leaving activity " + currentActivityName + " after " + duration + " ms");
+        Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
                 activityMap.get(currentActivityName),
                 session.id,
