@@ -14,6 +14,7 @@ public class InterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_inter);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,11 +40,6 @@ public class InterActivity extends AppCompatActivity {
             Intent intent = new Intent(this, NewsActivity.class);
             startActivity(intent);
         });
-    }
-    @Override
-    protected void onResume(){
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 
 }

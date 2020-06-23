@@ -34,14 +34,9 @@ public class NewsActivity extends AppCompatActivity {
     private NewsCardViewAdapter cardViewAdapter;
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
 
         setContentView(R.layout.activity_news);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

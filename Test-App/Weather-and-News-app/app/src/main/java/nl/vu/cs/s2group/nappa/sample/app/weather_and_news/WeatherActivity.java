@@ -34,14 +34,9 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView temp;
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
 
         setContentView(R.layout.activity_weather);
         Toolbar toolbar = findViewById(R.id.toolbar);

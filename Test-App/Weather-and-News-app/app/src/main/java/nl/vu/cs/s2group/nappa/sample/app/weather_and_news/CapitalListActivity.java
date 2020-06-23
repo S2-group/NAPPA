@@ -30,14 +30,9 @@ import nl.vu.cs.s2group.nappa.PrefetchingLib;
 public class CapitalListActivity extends AppCompatActivity {
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
 
         setContentView(R.layout.activity_capital_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

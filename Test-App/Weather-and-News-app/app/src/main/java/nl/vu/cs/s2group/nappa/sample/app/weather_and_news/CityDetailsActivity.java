@@ -15,6 +15,7 @@ public class CityDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_city_details);
 
         if (getIntent() != null && getIntent().hasExtra("capital")) {
@@ -30,11 +31,5 @@ public class CityDetailsActivity extends AppCompatActivity {
             PrefetchingLib.notifyExtra("capital", city);
             startActivity(intent);
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 }

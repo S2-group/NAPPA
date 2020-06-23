@@ -18,16 +18,10 @@ import nl.vu.cs.s2group.nappa.PrefetchingLib;
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         PrefetchingLib.init(this,9);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         OkHttpProvider.getInstance();
 
         setContentView(R.layout.activity_main);
