@@ -2,13 +2,13 @@ package nl.vu.cs.s2group.nappa.sample.app.weather_and_news;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.widget.Button;
 
 import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 
 public class InterActivity extends AppCompatActivity {
 
@@ -24,8 +24,8 @@ public class InterActivity extends AppCompatActivity {
 
         kabulButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, WeatherActivity.class);
-            intent.putExtra("capital","Kabul");
-            PrefetchingLib.notifyExtra("capital","Kabul");
+            intent.putExtra("capital", "Kabul");
+            PrefetchingLib.notifyExtra("capital", "Kabul");
             startActivity(intent);
         });
         Button sessionButton = findViewById(R.id.button_session);

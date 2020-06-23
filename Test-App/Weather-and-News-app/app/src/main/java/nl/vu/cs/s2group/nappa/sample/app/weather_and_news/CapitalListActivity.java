@@ -1,17 +1,18 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news;
 
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,11 +23,9 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.CapitalCardViewAdapter;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.CapitalCardViewAdapterObservable;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.Capital;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
 
 public class CapitalListActivity extends AppCompatActivity {
 
@@ -36,10 +35,10 @@ public class CapitalListActivity extends AppCompatActivity {
         getLifecycle().addObserver(new NAPPALifecycleObserver(this));
 
         setContentView(R.layout.activity_capital_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +48,8 @@ public class CapitalListActivity extends AppCompatActivity {
         });
 
 
-        Type type = new TypeToken<ArrayList<Capital>>() {}.getType();
+        Type type = new TypeToken<ArrayList<Capital>>() {
+        }.getType();
 
         List<Capital> capitalList = new Gson().fromJson(
                 new InputStreamReader(getResources().openRawResource(R.raw.capitals)),

@@ -8,7 +8,7 @@ public class Weather {
         public Float temp;
 
         public Float getTemp() {
-            return temp-273;
+            return temp - 273;
         }
     }
 

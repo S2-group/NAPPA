@@ -1,18 +1,19 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview;
 
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import io.reactivex.Observable;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.CityDetailsActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.Capital;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
 
 public class CapitalCardViewAdapterObservable extends RecyclerView.Adapter<CapitalCardViewAdapterObservable.NewsViewHolder> {
 
@@ -41,7 +42,7 @@ public class CapitalCardViewAdapterObservable extends RecyclerView.Adapter<Capit
 
     @Override
     public int getItemCount() {
-        if (capitalList!=null) {
+        if (capitalList != null) {
             return capitalList.count().blockingGet().intValue();
         }
         return 0;

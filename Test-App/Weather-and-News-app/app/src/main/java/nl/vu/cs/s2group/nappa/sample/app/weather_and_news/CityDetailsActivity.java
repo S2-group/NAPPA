@@ -1,13 +1,13 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news;
 
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 
 public class CityDetailsActivity extends AppCompatActivity {
 
