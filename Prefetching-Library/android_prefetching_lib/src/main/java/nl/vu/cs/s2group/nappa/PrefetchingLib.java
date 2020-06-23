@@ -329,7 +329,6 @@ public class PrefetchingLib {
             }
 
             poolExecutor.schedule(() -> {
-                //List<String> topNUrls = strategyHistory.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 1);
                 List<String> topNUrls = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                 for (String url : topNUrls) {
                     Log.d(LOG_TAG, "TO_BE_PREF " + url);
