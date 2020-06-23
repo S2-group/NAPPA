@@ -29,8 +29,7 @@ public class InstrumentActivityAction extends AnAction {
 
     /**
      * This Action is responsible for initializing the Prefetching Library in the main launcher
-     * {@link android.app.Activity} and to inject navigation probes in all {@link android.app.Activity}.
-     * <br/><br/>
+     * {@link android.app.Activity} and to inject lifecycle observer in all {@link android.app.Activity}.
      *
      * @param e {@inheritDoc}
      */
@@ -46,56 +45,56 @@ public class InstrumentActivityAction extends AnAction {
                     resultMessage.incrementPossibleInstrumentationCount();
                     PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
                     InstrumentUtil.addLibraryImport(project, psiJavaFile);
-                    injectNavigationProbes(psiJavaFile);
+                    injectLifecycleObserver(psiJavaFile);
                     if (Boolean.TRUE.equals(isMainLauncherActivity)) {
                         resultMessage.incrementPossibleInstrumentationCount();
                         addLibraryInitializationStatement(psiJavaFile);
                     }
                 }
             });
-            resultMessage.showResultDialog(project, "Navigation Probes Instrumentation Result");
+            resultMessage.showResultDialog(project, "Lifecycle Observer Instrumentation Result");
         } catch (Exception exception) {
-            resultMessage.showErrorDialog(project, exception, "Failed to Instrument Navigation Probes");
+            resultMessage.showErrorDialog(project, exception, "Failed to Instrument Lifecycle Observer");
         }
     }
 
     /**
-     * This method finds the {@code onResume()} method implemented in an {@link android.app.Activity} and
-     * insert an instrumented text to add the navigation probes.There are three instrumentation cases for
-     * injecting the navigation probes.
+     * This method finds the {@code onCreate()} method implemented in an {@link android.app.Activity} and
+     * insert an instrumented text to add the lifecycle observer.There are three instrumentation cases for
+     * injecting the lifecycle observer.
      * <br/><br/>git che
      *
-     * <p> Case 1. The {@link android.app.Activity} don't have the method {@code onResume()}. In this case,
-     * the method is injected containing the super constructor and the navigation probe. The injected code
+     * <p> Case 1. The {@link android.app.Activity} don't have the method {@code onCreate()}. In this case,
+     * the method is injected containing the super constructor and the lifecycle observer. The injected code
      * is as follows:
      *
      * <pre>{@code
      * @Override
-     * protected void onResume() {
-     *     super.onResume();
-     *     PrefetchingLib.setCurrentActivity(this);
+     * protected void onCreate(Bundle savedInstanceState) {
+     *     super.onCreate(savedInstanceState);
+     *     getLifecycle().addObserver(new NAPPALifecycleObserver(this));
      * }
      * }</pre>
      *
-     * <p> Case 2. The {@link android.app.Activity} has a method {@code onResume()} with existing source
-     * code. In this case, the navigation probe is inserted at the top of the method {@code onResume()},
+     * <p> Case 2. The {@link android.app.Activity} has a method {@code onCreate()} with existing source
+     * code. In this case, the lifecycle observer is inserted at the top of the method {@code onCreate()},
      * after invoking the super constructor, if it present, or before the first statement in the method.
      * The injected code is as follows:
      *
-     * <pre>{@code PrefetchingLib.setCurrentActivity(this);}</pre>
+     * <pre>{@code getLifecycle().addObserver(new NAPPALifecycleObserver(this));}</pre>
      *
-     * <p> Case 3. The {@link android.app.Activity} has an empty method {@code onResume()}. In this case,
-     * the super constructor is injected together with the navigation probe. The injected code is as follows:
+     * <p> Case 3. The {@link android.app.Activity} has an empty method {@code onCreate()}. In this case,
+     * the super constructor is injected together with the lifecycle observer. The injected code is as follows:
      *
      * <pre>{@code
-     * super.onResume();
-     * PrefetchingLib.setCurrentActivity(this);
+     * super.onCreate();
+     * getLifecycle().addObserver(new NAPPALifecycleObserver(this));
      * }</pre>
      *
      * @param javaFile The Java file containing the an {@link android.app.Activity}
      */
-    private void injectNavigationProbes(@NotNull PsiJavaFile javaFile) {
-        String instrumentedText = "PrefetchingLib.setCurrentActivity(this);";
+    private void injectLifecycleObserver(@NotNull PsiJavaFile javaFile) {
+        String instrumentedText = "getLifecycle().addObserver(new NAPPALifecycleObserver(this));";
         PsiClass[] psiClasses = javaFile.getClasses();
         for (PsiClass psiClass : psiClasses) {
             // There is only one initialization per app
@@ -107,21 +106,21 @@ public class InstrumentActivityAction extends AnAction {
             // The library must be initialized only in the file main class
             if (!InstrumentUtil.isMainPublicClass(psiClass)) continue;
 
-            // There are three cases to inject a navigation probe
-            PsiMethod[] psiMethods = psiClass.findMethodsByName("onResume", false);
-            // Case 1. There is no method "onResume"
-            if (psiMethods.length == 0) injectNavigationProbesWithoutOnResumeMethod(psiClass, instrumentedText);
+            // There are three cases to inject a lifecycle observer 
+            PsiMethod[] psiMethods = psiClass.findMethodsByName("onCreate", false);
+            // Case 1. There is no method "onCreate"
+            if (psiMethods.length == 0) injectLifecycleObserverWithoutOnCreateMethod(psiClass, instrumentedText);
             else {
                 PsiCodeBlock psiBody = psiMethods[0].getBody();
-                // Case 2. There is a method "onResume" and it an empty body
+                // Case 2. There is a method "onCreate" and it an empty body
                 // Only interfaces and abstracts methods don't have a body.
-                // The method "onResume" will always have a body.
+                // The method "onCreate" will always have a body.
                 // noinspection ConstantConditions
                 if (psiBody.getStatements().length == 0)
-                    injectNavigationProbesWithEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
-                    // Case 3. There is a method "onResume" and it has a non-empty body
+                    injectLifecycleObserverWithEmptyOnCreateMethod(psiClass, psiBody, instrumentedText);
+                    // Case 3. There is a method "onCreate" and it has a non-empty body
                 else
-                    injectNavigationProbesWithNonEmptyOnResumeMethod(psiClass, psiBody, instrumentedText);
+                    injectLifecycleObserverWithNonEmptyOnCreateMethod(psiClass, psiBody, instrumentedText);
 
                 resultMessage.incrementInstrumentationCount()
                         .appendPsiClass(psiClass)
@@ -133,17 +132,17 @@ public class InstrumentActivityAction extends AnAction {
     }
 
     /**
-     * Inject the navigation probe to the method {@code onResume} with empty body to the class
+     * Inject the lifecycle observer to the method {@code onCreate} with empty body to the class
      *
      * @param psiClass         Represents a Java class.
-     * @param psiBody          Represents the body of the method {@code onResume} found in the class
+     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithEmptyOnResumeMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
+    private void injectLifecycleObserverWithEmptyOnCreateMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText("" +
-                        "super.onResume();\n" +
+                        "super.onCreate(savedInstanceState);\n" +
                         instrumentedText, psiClass);
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
@@ -152,40 +151,40 @@ public class InstrumentActivityAction extends AnAction {
     }
 
     /**
-     * Inject the navigation probe to the method {@code onResume} containing existing code to the class
+     * Inject the lifecycle observer to the method {@code onCreate} containing existing code to the class
      *
      * @param psiClass         Represents a Java class.
-     * @param psiBody          Represents the body of the method {@code onResume} found in the class
+     * @param psiBody          Represents the body of the method {@code onCreate} found in the class
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithNonEmptyOnResumeMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
+    private void injectLifecycleObserverWithNonEmptyOnCreateMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
         // If there is a super constructor invocation, is must be in the first line of the method
         PsiStatement firstStatement = psiBody.getStatements()[0];
-        boolean isSuperOnResume = firstStatement.getText().contains("super.onResume(");
+        boolean isSuperOnCreate = firstStatement.getText().contains("super.onCreate(");
 
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentedText, psiClass);
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            if (isSuperOnResume) psiBody.addAfter(instrumentedElement, firstStatement);
+            if (isSuperOnCreate) psiBody.addAfter(instrumentedElement, firstStatement);
             else psiBody.addBefore(instrumentedElement, firstStatement);
         });
     }
 
     /**
-     * Inject a {@code onResume} method with the navigation probes to the class
+     * Inject a {@code onCreate} method with the lifecycle observer to the class
      *
      * @param psiClass         Represents a Java class.
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithoutOnResumeMethod(PsiClass psiClass, String instrumentedText) {
+    private void injectLifecycleObserverWithoutOnCreateMethod(PsiClass psiClass, String instrumentedText) {
         PsiMethod instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createMethodFromText("" +
                         "@Override\n" +
-                        "protected void onResume() {\n" +
-                        "super.onResume();\n" +
+                        "protected void onCreate(Bundle savedInstanceState) {\n" +
+                        "super.onCreate(savedInstanceState);\n" +
                         instrumentedText + "\n" +
                         "}", psiClass);
 
