@@ -1,20 +1,18 @@
-package nl.vu.cs.s2group.nappa.sample.app.weather_and_news;
+package nl.vu.cs.s2group.nappa;
 
+import android.app.Activity;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
-
 public class NAPPALifecycleObserver implements LifecycleObserver {
     private static final String LOG_TAG = NAPPALifecycleObserver.class.getSimpleName();
 
-    private AppCompatActivity activity;
+    private Activity activity;
 
-    public NAPPALifecycleObserver(AppCompatActivity activity) {
+    public NAPPALifecycleObserver(Activity activity) {
         this.activity = activity;
     }
 
