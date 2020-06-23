@@ -46,9 +46,4 @@ public class InterActivity extends AppCompatActivity {
         PrefetchingLib.setCurrentActivity(this);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PrefetchingLib.leavingCurrentActivity();
-    }
 }

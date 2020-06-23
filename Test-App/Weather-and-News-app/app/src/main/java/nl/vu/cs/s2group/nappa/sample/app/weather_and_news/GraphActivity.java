@@ -24,10 +24,4 @@ public class GraphActivity extends Activity {
         super.onResume();
         PrefetchingLib.setCurrentActivity(this);
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PrefetchingLib.leavingCurrentActivity();
-    }
 }

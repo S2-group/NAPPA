@@ -37,10 +37,4 @@ public class CityDetailsActivity extends AppCompatActivity {
         super.onResume();
         PrefetchingLib.setCurrentActivity(this);
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        PrefetchingLib.leavingCurrentActivity();
-    }
 }
