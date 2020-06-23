@@ -65,7 +65,7 @@ public class InstrumentActivityAction extends AnAction {
      * <br/><br/>git che
      *
      * <p> Case 1. The {@link android.app.Activity} don't have the method {@code onCreate()}. In this case,
-     * the method is injected containing the super constructor and the lifecycle observer . The injected code
+     * the method is injected containing the super constructor and the lifecycle observer. The injected code
      * is as follows:
      *
      * <pre>{@code
@@ -84,7 +84,7 @@ public class InstrumentActivityAction extends AnAction {
      * <pre>{@code getLifecycle().addObserver(new NAPPALifecycleObserver(this));}</pre>
      *
      * <p> Case 3. The {@link android.app.Activity} has an empty method {@code onCreate()}. In this case,
-     * the super constructor is injected together with the lifecycle observer . The injected code is as follows:
+     * the super constructor is injected together with the lifecycle observer. The injected code is as follows:
      *
      * <pre>{@code
      * super.onCreate();
