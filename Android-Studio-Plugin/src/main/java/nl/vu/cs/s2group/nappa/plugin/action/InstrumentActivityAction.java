@@ -110,7 +110,7 @@ public class InstrumentActivityAction extends AnAction {
             // There are three cases to inject a navigation probe
             PsiMethod[] psiMethods = psiClass.findMethodsByName("onCreate", false);
             // Case 1. There is no method "onCreate"
-            if (psiMethods.length == 0) injectNavigationProbesWithoutonCreateMethod(psiClass, instrumentedText);
+            if (psiMethods.length == 0) injectNavigationProbesWithoutOnCreateMethod(psiClass, instrumentedText);
             else {
                 PsiCodeBlock psiBody = psiMethods[0].getBody();
                 // Case 2. There is a method "onCreate" and it an empty body
@@ -118,10 +118,10 @@ public class InstrumentActivityAction extends AnAction {
                 // The method "onCreate" will always have a body.
                 // noinspection ConstantConditions
                 if (psiBody.getStatements().length == 0)
-                    injectNavigationProbesWithEmptyonCreateMethod(psiClass, psiBody, instrumentedText);
+                    injectNavigationProbesWithEmptyOnCreateMethod(psiClass, psiBody, instrumentedText);
                     // Case 3. There is a method "onCreate" and it has a non-empty body
                 else
-                    injectNavigationProbesWithNonEmptyonCreateMethod(psiClass, psiBody, instrumentedText);
+                    injectNavigationProbesWithNonEmptyOnCreateMethod(psiClass, psiBody, instrumentedText);
 
                 resultMessage.incrementInstrumentationCount()
                         .appendPsiClass(psiClass)
@@ -139,7 +139,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param psiBody          Represents the body of the method {@code onCreate} found in the class
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithEmptyonCreateMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
+    private void injectNavigationProbesWithEmptyOnCreateMethod(PsiClass psiClass, PsiCodeBlock psiBody, String instrumentedText) {
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText("" +
@@ -158,17 +158,17 @@ public class InstrumentActivityAction extends AnAction {
      * @param psiBody          Represents the body of the method {@code onCreate} found in the class
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithNonEmptyonCreateMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
+    private void injectNavigationProbesWithNonEmptyOnCreateMethod(PsiClass psiClass, @NotNull PsiCodeBlock psiBody, String instrumentedText) {
         // If there is a super constructor invocation, is must be in the first line of the method
         PsiStatement firstStatement = psiBody.getStatements()[0];
-        boolean isSuperonCreate = firstStatement.getText().contains("super.onCreate(");
+        boolean isSuperOnCreate = firstStatement.getText().contains("super.onCreate(");
 
         PsiElement instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createStatementFromText(instrumentedText, psiClass);
 
         WriteCommandAction.runWriteCommandAction(project, () -> {
-            if (isSuperonCreate) psiBody.addAfter(instrumentedElement, firstStatement);
+            if (isSuperOnCreate) psiBody.addAfter(instrumentedElement, firstStatement);
             else psiBody.addBefore(instrumentedElement, firstStatement);
         });
     }
@@ -179,7 +179,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param psiClass         Represents a Java class.
      * @param instrumentedText Represents the source code to inject
      */
-    private void injectNavigationProbesWithoutonCreateMethod(PsiClass psiClass, String instrumentedText) {
+    private void injectNavigationProbesWithoutOnCreateMethod(PsiClass psiClass, String instrumentedText) {
         PsiMethod instrumentedElement = PsiElementFactory
                 .getInstance(project)
                 .createMethodFromText("" +
