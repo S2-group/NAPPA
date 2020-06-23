@@ -2,9 +2,10 @@
 
 This directory contains a list fo simple sample apps developed with the purpose to test the [Prefetching Library](Prefetching-Library) and [Plugin for Android Studio](Android-Studio-Plugin).
 
-Currently, there is a total of 1 sample app:
+Currently, there is a total of 2 sample apps:
 
 * [Weather and News](Test-App/Weather-and-News-app): Consume two REST APIs about the weather and news and display the content
+* [Yet Another Pokemon List](YetAnotherPokemonList): List informations about the Pokemon world
 
 ## Testing the Prefetching Library
 
