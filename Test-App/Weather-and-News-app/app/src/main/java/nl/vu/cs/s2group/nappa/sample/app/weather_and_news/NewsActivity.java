@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.NewsCardViewAdapter;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.NewsWrapper;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
