@@ -52,7 +52,7 @@ public class InstrumentActivityAction extends AnAction {
                     }
                 }
             });
-            resultMessage.showResultDialog(project, "lifecycle observer Instrumentation Result");
+            resultMessage.showResultDialog(project, "Lifecycle Observer Instrumentation Result");
         } catch (Exception exception) {
             resultMessage.showErrorDialog(project, exception, "Failed to Instrument lifecycle observer");
         }
