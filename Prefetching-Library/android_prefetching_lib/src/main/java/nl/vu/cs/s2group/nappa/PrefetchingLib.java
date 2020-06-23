@@ -351,17 +351,15 @@ public class PrefetchingLib {
      * `onPause`
      */
     public static void leavingCurrentActivity() {
-        poolExecutor.schedule(() -> {
-            long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
-            Log.d(LOG_TAG, "leaving activity " + currentActivityName + " after " + duration + " ms");
-            PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(new ActivityVisitTime(
-                    activityMap.get(currentActivityName),
-                    session.id,
-                    visitedCurrentActivityDate,
-                    duration
-            ));
-        }, 0, TimeUnit.SECONDS);
-
+        long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
+        Log.d(LOG_TAG, "leaving activity " + currentActivityName + " after " + duration + " ms");
+        ActivityVisitTime visitTime = new ActivityVisitTime(
+                activityMap.get(currentActivityName),
+                session.id,
+                visitedCurrentActivityDate,
+                duration
+        );
+        poolExecutor.schedule(() -> PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(visitTime), 0, TimeUnit.SECONDS);
     }
 
     public static ActivityGraph getActivityGraph() {
