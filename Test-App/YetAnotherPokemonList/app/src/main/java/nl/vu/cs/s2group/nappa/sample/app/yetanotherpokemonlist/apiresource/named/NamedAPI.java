@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http.SingletonOkHttpClient;
+import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;

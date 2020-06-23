@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
-import nl.vu.cs.s2group.nappa.*;
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
@@ -45,9 +46,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_main);
-
-
     }
 
     public void navigateToPage(View view) {
@@ -78,11 +78,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FindItemActivity.class);
         PrefetchingLib.notifyExtras(intent.getExtras());
         startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 }

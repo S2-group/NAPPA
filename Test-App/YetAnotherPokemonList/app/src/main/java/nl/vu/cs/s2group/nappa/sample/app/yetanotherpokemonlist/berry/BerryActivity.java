@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.*;
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
@@ -18,6 +18,7 @@ public class BerryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_berry);
         toggleProgressBarVisibility(true);
         if (getIntent().getStringExtra("url") != null)
@@ -67,11 +68,5 @@ public class BerryActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tv_berry_natural_gift_power)).setText(berry.getNaturalGiftType().getName());
         ((TextView) findViewById(R.id.tv_berry_item)).setText(berry.item.getName());
         ((TextView) findViewById(R.id.tv_berry_firmness)).setText(berry.firmness.getName());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 }

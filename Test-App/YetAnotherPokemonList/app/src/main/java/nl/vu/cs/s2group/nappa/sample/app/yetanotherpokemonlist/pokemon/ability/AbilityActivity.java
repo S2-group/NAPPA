@@ -8,7 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.*;
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
@@ -20,6 +21,7 @@ public class AbilityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_ability);
         toggleProgressBarVisibility(true);
         if (getIntent().getStringExtra("url") != null)
@@ -70,11 +72,5 @@ public class AbilityActivity extends AppCompatActivity {
         for (AbilityEffectChange effectChange : ability.effect_changes) {
             ViewUtil.addNamedAPIResourceListWithLanguageToUI(this, R.id.ll_ability_effect_change, effectChange.effect_entries, "getEffect");
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PrefetchingLib.setCurrentActivity(this);
     }
 }
