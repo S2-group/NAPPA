@@ -24,6 +24,7 @@ import java.util.function.Consumer;
  */
 public final class InstrumentUtil {
     private static final String NAPPA_PACKAGE_NAME = "nl.vu.cs.s2group.nappa";
+    private static final String NAPPA_SAMPLE_APP_PACKAGE_NAME = "nl.vu.cs.s2group.nappa.sample.app";
 
     private InstrumentUtil() {
         throw new IllegalStateException("InstrumentUtil is a utility class and should be instantiated!");
@@ -48,7 +49,10 @@ public final class InstrumentUtil {
             PsiFile[] psiJavaFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project));
             // Remove the files from the NAPPA library from the list to process
             psiJavaFiles = Arrays.stream(psiJavaFiles)
-                    .filter(psiJavaFile -> !((PsiJavaFile) psiJavaFile).getPackageName().contains(NAPPA_PACKAGE_NAME))
+                    .filter(psiJavaFile -> {
+                        String packageName = ((PsiJavaFile) psiJavaFile).getPackageName();
+                        return !packageName.contains(NAPPA_PACKAGE_NAME) || packageName.contains(NAPPA_SAMPLE_APP_PACKAGE_NAME);
+                    })
                     .toArray(PsiFile[]::new);
 
             psiFiles.addAll(Arrays.asList(psiJavaFiles));
