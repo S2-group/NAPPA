@@ -27,24 +27,4 @@ public class NAPPALifecycleObserver implements LifecycleObserver {
         Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onPause");
         PrefetchingLib.leavingCurrentActivity();
     }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void onCreate() {
-        Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onCreate");
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void onStart() {
-        Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onStart");
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void onStop() {
-        Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onStop");
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy() {
-        Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onDestroy");
-    }
 }
