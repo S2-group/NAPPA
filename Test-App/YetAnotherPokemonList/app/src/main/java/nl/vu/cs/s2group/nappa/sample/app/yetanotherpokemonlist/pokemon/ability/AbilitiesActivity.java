@@ -1,8 +1,10 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.apiresource.named.NamedAPIActivity;
@@ -32,5 +34,11 @@ public class AbilitiesActivity extends NamedAPIActivity {
         intent.putExtra("url", url);
         PrefetchingLib.notifyExtras(intent.getExtras());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
     }
 }
