@@ -2,6 +2,8 @@ package nl.vu.cs.s2group.nappa.graph;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -138,6 +140,7 @@ public class ActivityGraph {
         return shouldPrefetch;
     }
 
+    @NonNull
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("ActivityGraph beginning\n\n");
