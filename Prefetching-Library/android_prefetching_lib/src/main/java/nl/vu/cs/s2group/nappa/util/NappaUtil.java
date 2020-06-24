@@ -16,7 +16,7 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 public class NappaUtil {
 
     private NappaUtil() {
-        throw new IllegalStateException("NappaUtil is a utility class and should be instantiated!");
+        throw new IllegalStateException("NappaUtil is a utility class and should not be instantiated!");
     }
 
     /**

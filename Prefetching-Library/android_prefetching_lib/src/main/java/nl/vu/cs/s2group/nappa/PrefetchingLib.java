@@ -32,6 +32,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
@@ -74,7 +75,7 @@ public class PrefetchingLib {
     //  for the given activity.
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
-    public static int prefetchStrategyNum;
+    public static PrefetchingStrategyType prefetchingStrategyType;
     private static boolean prefetchEnabled = true;
     private static int candidatePrefetchableUrlThreshold = 2;
     private static int requestP = 0, requestNP = 0;
@@ -85,17 +86,23 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib(int prefetchStrategyNum) {
-        this.prefetchStrategyNum = prefetchStrategyNum;
-        strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
+    private PrefetchingLib() {
+    }
+
+    private static PrefetchingLib getInstance() {
+        if (instance == null)
+            instance = new PrefetchingLib();
+        return instance;
     }
 
 
-    public static void init(Context context, int prefetchStrategyNum) {
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType) {
         if (instance == null) {
-            final Long start = new Date().getTime();
-            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + prefetchStrategyNum);
-            instance = new PrefetchingLib(prefetchStrategyNum);
+            final long start = new Date().getTime();
+            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + prefetchingStrategyType);
+            instance = PrefetchingLib.getInstance();
+            PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
