@@ -102,7 +102,7 @@ public class PrefetchingLib {
     public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<String, ?> config) {
         if (instance == null) {
             final long start = new Date().getTime();
-            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + prefetchingStrategyType);
+            Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
             instance = PrefetchingLib.getInstance();
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
