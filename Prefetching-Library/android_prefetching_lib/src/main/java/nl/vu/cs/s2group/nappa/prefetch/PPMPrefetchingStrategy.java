@@ -42,7 +42,7 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
 
-        Map<String, Long> activityMap = PrefetchingLib.activityMap;
+        Map<String, Long> activityMap = PrefetchingLib.activities;
         for (String key : activityMap.keySet()){
             reversedHashMap.put(activityMap.get(key), key);
         }
