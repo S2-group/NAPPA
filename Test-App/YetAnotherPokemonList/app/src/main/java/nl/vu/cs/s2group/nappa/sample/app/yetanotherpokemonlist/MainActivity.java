@@ -11,7 +11,7 @@ import java.util.Random;
 
 import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationActivity;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
+        PrefetchingLib.init(this, PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY);
         getLifecycle().addObserver(new NAPPALifecycleObserver(this));
         setContentView(R.layout.activity_main);
     }
