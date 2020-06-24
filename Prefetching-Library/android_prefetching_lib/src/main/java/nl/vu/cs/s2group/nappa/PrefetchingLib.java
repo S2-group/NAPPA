@@ -98,7 +98,7 @@ public class PrefetchingLib {
         return instance;
     }
 
-
+    @SuppressWarnings("unused")
     public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<String, ?> config) {
         if (instance == null) {
             final long start = new Date().getTime();
@@ -394,6 +394,7 @@ public class PrefetchingLib {
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
      */
+    @SuppressWarnings("unused")
     public static void notifyExtras(Bundle allExtras) {
         // Note:  if the currentActivityName has not been set (Activity Transition before
         // setCurrentActivity() is called), then notification is ignored
@@ -449,6 +450,7 @@ public class PrefetchingLib {
      * @param key   The key provided to the original putExtra method call.
      * @param value The value provided to the original putExtra method call.
      */
+    @SuppressWarnings("unused")
     public static void notifyExtra(String key, String value) {
         //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
         final Long idAct = activityMap.get(currentActivityName);
