@@ -47,7 +47,7 @@ public interface PrefetchingStrategy {
     int STRATEGY_2 = 2;
 
     /**
-     * ID for strategy implemented at {@link GreedyPrefetchingStrategy}
+     * ID for strategy implemented at {@link GreedyPrefetchingStrategyOnVisitFrequency}
      */
     int STRATEGY_GREEDY = 3;
 
@@ -100,7 +100,7 @@ public interface PrefetchingStrategy {
     /**
      * Instantiate the prefetching strategy corresponding to the provided ID.
      * If the ID is unknown, instantiate the default Greedy-based strategy implemented by
-     * {@link GreedyPrefetchingStrategy}
+     * {@link GreedyPrefetchingStrategyOnVisitFrequency}
      *
      * @param strategyId The identification number of the prefetching strategy.
      * @return A implemented prefetching strategy.
@@ -115,7 +115,7 @@ public interface PrefetchingStrategy {
             case STRATEGY_2:
                 return new PrefetchingStrategyImpl2();
             case STRATEGY_GREEDY:
-                return new GreedyPrefetchingStrategy(0.6f);
+                return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
             case STRATEGY_PPM:
                 return new PPMPrefetchingStrategy(0.6f);
             case STRATEGY_PAGERANK:
@@ -129,7 +129,7 @@ public interface PrefetchingStrategy {
             case STRATEGY_PPM_WITH_HITS_SCORES:
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             default:
-                return new GreedyPrefetchingStrategy(0.6f);
+                return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }
     }
 }

@@ -33,13 +33,13 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  * then the scores corresponding to all subsequent nodes decreases. To limit the number
  * of node candidates generated, a threshold value is inserted.
  */
-public class GreedyPrefetchingStrategy implements PrefetchingStrategy {
-    private static final String LOG_TAG = GreedyPrefetchingStrategy.class.getSimpleName();
+public class GreedyPrefetchingStrategyOnVisitFrequency implements PrefetchingStrategy {
+    private static final String LOG_TAG = GreedyPrefetchingStrategyOnVisitFrequency.class.getSimpleName();
 
     private float threshold;
     private HashMap<Long, String> reversedHashMap = new HashMap<>();
 
-    public GreedyPrefetchingStrategy(float threshold) {
+    public GreedyPrefetchingStrategyOnVisitFrequency(float threshold) {
         this.threshold = threshold;
     }
 
