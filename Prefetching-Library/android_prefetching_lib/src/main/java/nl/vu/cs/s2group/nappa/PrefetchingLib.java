@@ -63,21 +63,24 @@ public class PrefetchingLib {
     private static String currentActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
-    public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
+    /**
+     * Map of ActivityNodes containing Key: ActivityName Value: ID,
+     */
+    public static HashMap<String, Long> activityMap = new HashMap<>();
     private static Session session;
     private static PrefetchingStrategy strategyIntent;
-    //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
     private static LruCache<String, SimpleResponse> responseLruCache = new LruCache<>(100);
-    // Corresponds to a Map whose key is the Activity ID and the value is list of extras (key-value pairs)
-    //  for the given activity.
+    /**
+     * Corresponds to a Map whose key is the Activity ID and the value is list of extras
+     * (key-value pairs) for the given activity.
+     */
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
     public static PrefetchingStrategyType prefetchingStrategyType;
     private static boolean prefetchEnabled = true;
-    private static int candidatePrefetchableUrlThreshold = 2;
     private static int requestP = 0, requestNP = 0;
     private static float timeSaved = 0f;
     private static Date visitedCurrentActivityDate;
