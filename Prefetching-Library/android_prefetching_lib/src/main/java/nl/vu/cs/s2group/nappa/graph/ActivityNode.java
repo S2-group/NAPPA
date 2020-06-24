@@ -17,7 +17,7 @@ import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 
 public class ActivityNode {
-    private final static String LOG_TAG = ActivityNode.class.getSimpleName();
+    private static final String LOG_TAG = ActivityNode.class.getSimpleName();
 
     public String activityName;
 

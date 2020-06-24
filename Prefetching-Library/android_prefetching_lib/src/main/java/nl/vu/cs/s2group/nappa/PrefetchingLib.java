@@ -57,7 +57,7 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
-    private final static String LOG_TAG = PrefetchingLib.class.getSimpleName();
+    private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
     private static PrefetchingLib instance;
     private static boolean libGet = false;

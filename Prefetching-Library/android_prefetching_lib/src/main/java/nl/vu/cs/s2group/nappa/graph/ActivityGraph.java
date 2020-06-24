@@ -14,7 +14,7 @@ import nl.vu.cs.s2group.nappa.room.data.LARData;
 
 
 public class ActivityGraph {
-    private final static String LOG_TAG = ActivityGraph.class.getSimpleName();
+    private static final String LOG_TAG = ActivityGraph.class.getSimpleName();
 
     List<ActivityNode> nodeList;
     ActivityNode current = null;
