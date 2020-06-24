@@ -44,9 +44,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         if the number of URLs found is smaller than the maximum allowed, prepare to visit the next
         child
 
-        normalize the frequency and time for a 0 - 1 range using:
-        zi = (xi - min(xi)) / (max(xi) - min(x1))
-        OR, simply divide the current value by the sum
+        normalize the frequency and time by dividing the current value by the sum
         the child score will be the previous score multiplied by the 0.5 time + 0.5 frequency
         Unless the current node has a single child, the child score will be lower than the current
         allow to pass the weight as confiuration
