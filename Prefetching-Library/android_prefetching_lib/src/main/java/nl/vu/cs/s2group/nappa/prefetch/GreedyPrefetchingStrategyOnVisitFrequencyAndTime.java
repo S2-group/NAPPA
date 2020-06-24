@@ -20,7 +20,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         super(config);
         Object data;
 
-        data = config.get(PrefetchingStrategyConfigKeys.SCORE_THRESHOLD);
+        data = config.get(PrefetchingStrategyConfigKeys.SCORE_LOWER_THRESHOLD);
         scoreLowerThreshold = data != null ? Float.parseFloat(data.toString()) : 0.6f;
     }
 

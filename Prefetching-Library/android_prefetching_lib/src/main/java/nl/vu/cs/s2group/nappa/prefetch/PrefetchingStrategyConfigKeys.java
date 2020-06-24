@@ -11,5 +11,5 @@ public enum PrefetchingStrategyConfigKeys {
      * Maps a {@link Float} representing the lower threshold used when deciding weather to
      * select a node as candidate or not.
      */
-    SCORE_THRESHOLD,
+    SCORE_LOWER_THRESHOLD,
 }
