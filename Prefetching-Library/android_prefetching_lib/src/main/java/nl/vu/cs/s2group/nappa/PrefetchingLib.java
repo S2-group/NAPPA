@@ -100,6 +100,11 @@ public class PrefetchingLib {
     }
 
     @SuppressWarnings("unused")
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType) {
+        init(context, prefetchingStrategyType, new HashMap<>());
+    }
+
+    @SuppressWarnings("unused")
     public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (instance == null) {
             final long start = new Date().getTime();
