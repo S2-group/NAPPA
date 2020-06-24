@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.room;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -13,6 +14,7 @@ public class ActivityData {
      * the Java Language Specification
      */
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "activity_name")
     public String activityName;
 
