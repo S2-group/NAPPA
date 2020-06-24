@@ -3,7 +3,6 @@ package nl.vu.cs.s2group.nappa;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -14,8 +13,6 @@ import androidx.lifecycle.LiveData;
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,34 +93,9 @@ public class PrefetchingLib {
 
     public static void init(Context context, int prefetchStrategyNum) {
         if (instance == null) {
-            //configuration file for
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, "config.txt");
-            String psn = Integer.toString(prefetchStrategyNum);
-            int size;
-            FileInputStream stream = null;
-            try {
-                stream = new FileInputStream(file);
-                try {
-                    psn = "";
-                    while ((size = stream.read()) != -1) {
-                        psn += Character.toString((char) size);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
             final Long start = new Date().getTime();
-            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + psn);
-            instance = new PrefetchingLib(Integer.parseInt(psn));
+            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + prefetchStrategyNum);
+            instance = new PrefetchingLib(prefetchStrategyNum);
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
