@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,9 +65,9 @@ public class PrefetchingLib {
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
     /**
-     * List of ActivityNodes containing the activity name,
+     * Map of ActivityNodes containing Key: ActivityName Value: ID,
      */
-    public static List<String> activities = new ArrayList<>();
+    public static HashMap<String, Long> activityMap = new HashMap<>();
     private static Session session;
     private static PrefetchingStrategy strategyIntent;
     private static OkHttpClient okHttpClient;
@@ -131,12 +130,12 @@ public class PrefetchingLib {
                 updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
 
                 // Iterate through the activity table which contains the activity name and its id
-                for (String actName : activities.keySet()) {
+                for (String actName : activityMap.keySet()) {
                     Log.d(LOG_TAG, "Init nodes");
                     activityGraph.initNodes(actName);
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
-                    Long actId = activities.get(actName);
+                    Long actId = activityMap.get(actName);
 
                     // Instantiate the static aggregated data for the count of Source --> Destination
                     // edge visits.  Set up the observers to ensure consistency with the database
@@ -200,8 +199,8 @@ public class PrefetchingLib {
      */
     private static void updateActivityMap(List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
-            activities.remove(activityData.activityName);
-            activities.put(activityData.activityName, activityData.id);
+            activityMap.remove(activityData.activityName);
+            activityMap.put(activityData.activityName, activityData.id);
             Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
         }
     }
@@ -217,7 +216,7 @@ public class PrefetchingLib {
      * @param activityName
      */
     public static void registerActivity(String activityName) {
-        if (!activities.containsKey(activityName)) {
+        if (!activityMap.containsKey(activityName)) {
             ActivityData activityData = new ActivityData(activityName);
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().insert(activityData);
@@ -292,10 +291,10 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "loading data for " + currentActivityName);
             activityGraph.getCurrent().setListSessionAggregateLiveData(
                     PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                            activities.get(currentActivityName)
+                            activityMap.get(currentActivityName)
                     )
             );
-            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activities.get(currentActivityName), PPMPrefetchingStrategy.lastN));
+            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PPMPrefetchingStrategy.lastN));
 
         }
 
@@ -303,7 +302,7 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "loading extras for " + currentActivityName);
             activityGraph.getCurrent().setListActivityExtraLiveData(
                     PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                            activities.get(currentActivityName)
+                            activityMap.get(currentActivityName)
                     )
             );
         }
@@ -345,7 +344,7 @@ public class PrefetchingLib {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
-                activities.get(currentActivityName),
+                activityMap.get(currentActivityName),
                 session.id,
                 visitedCurrentActivityDate,
                 duration
@@ -367,8 +366,8 @@ public class PrefetchingLib {
      */
     public static void addSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-            SessionData data = new SessionData(session.id, activities.get(actSource), activities.get(actDest), count);
-            Log.d(LOG_TAG, activities.toString());
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
+            Log.d(LOG_TAG, activityMap.toString());
             PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
@@ -382,7 +381,7 @@ public class PrefetchingLib {
      */
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
-            SessionData data = new SessionData(session.id, activities.get(actSource), activities.get(actDest), count);
+            SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
             PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
@@ -407,7 +406,7 @@ public class PrefetchingLib {
         // setCurrentActivity() is called), then notification is ignored
         if (currentActivityName != null) {
             //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
-            final Long idAct = activities.get(currentActivityName);
+            final Long idAct = activityMap.get(currentActivityName);
             // Duplicate map containing key value pairs corresponding to android intent extras
             Map<String, String> extras = extrasMap.get(idAct, new HashMap<>());
 
@@ -460,7 +459,7 @@ public class PrefetchingLib {
     @SuppressWarnings("unused")
     public static void notifyExtra(String key, String value) {
         //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
-        final Long idAct = activities.get(currentActivityName);
+        final Long idAct = activityMap.get(currentActivityName);
         // Duplicate map containing key value pairs corresponding to android intent extras
         Map<String, String> extras = extrasMap.get(idAct, new HashMap<>());
         // Put on this extras tracker for this activity the new key-value pair
@@ -485,7 +484,7 @@ public class PrefetchingLib {
     }
 
     public static Long getActivityIdFromName(String activityName) {
-        return activities.get(activityName);
+        return activityMap.get(activityName);
     }
 
     private static void prefetchUrls(List<String> requests) {
@@ -511,7 +510,7 @@ public class PrefetchingLib {
 
         poolExecutor.schedule(() -> {
             Log.d(LOG_TAG, "serializeAndSavePar " + "start adding");
-            UrlCandidate urlCandidate = new UrlCandidate(activities.get(currentActivityName), 1);
+            UrlCandidate urlCandidate = new UrlCandidate(activityMap.get(currentActivityName), 1);
             // Save the URL candidate as a
             Long id = PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
             List<UrlCandidateParts> urlCandidateParts = ParameteredUrl.toUrlCandidateParts(url, id);
@@ -542,7 +541,7 @@ public class PrefetchingLib {
             for (ActivityNode parent : parents) {
                 Log.d(LOG_TAG, "PARENTS " + parent.activityName);
                 // For a given parent of the current Activity, fetch all extras (key-value pairs) for this activity
-                Map<String, String> extrasMap_ = extrasMap.get(activities.get(parent.activityName), new HashMap<>());
+                Map<String, String> extrasMap_ = extrasMap.get(activityMap.get(parent.activityName), new HashMap<>());
                 // Iterate through all extras for a given parent
                 if (extrasMap_.size() > 0) {
                     for (String key : extrasMap_.keySet()) {
@@ -686,7 +685,7 @@ public class PrefetchingLib {
 
                             null,
                             //1L,
-                            activities.get(currentActivityName),
+                            activityMap.get(currentActivityName),
                             request.url().url().toString(),
                             response.body().contentType().type(),
                             response.body().contentLength(),
@@ -699,7 +698,7 @@ public class PrefetchingLib {
                     req = new RequestData(
                             null,
                             //1L,
-                            activities.get(currentActivityName),
+                            activityMap.get(currentActivityName),
                             request.url().url().toString(),
                             "",
                             response.body().contentLength(),
