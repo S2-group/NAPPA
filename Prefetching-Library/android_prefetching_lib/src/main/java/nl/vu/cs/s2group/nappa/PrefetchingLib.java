@@ -3,6 +3,8 @@ package nl.vu.cs.s2group.nappa;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +41,8 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.RequestData;
+import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.Session;
@@ -137,42 +142,9 @@ public class PrefetchingLib {
                     ActivityNode byName = activityGraph.getByName(actName);
                     Long actId = activityMap.get(actName);
 
-                    // Instantiate the static aggregated data for the count of Source --> Destination
-                    // edge visits.  Set up the observers to ensure consistency with the database
-                    if (byName.shouldSetSessionAggregateLiveData()) {
-                        Log.d(LOG_TAG, "loading data for " + actName);
-                        byName.setListSessionAggregateLiveData(
-                                PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                                        actId
-                                )
-                        );
-
-                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId, PPMPrefetchingStrategy.lastN));
-
-                    }
-
-                    // Instantiate all extras data for this activity AND set up all the observers to
-                    // ensure consistency with the database
-                    if (byName.shouldSetActivityExtraLiveData()) {
-                        Log.d(LOG_TAG, "loading extras for " + actName);
-                        byName.setListActivityExtraLiveData(
-                                PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                                        actId
-                                )
-                        );
-                    }
-
-                    // Instantiate the static UrlCandidate
-                    if (byName.shouldSetUrlCandidateDbLiveDataLiveData()) {
-                        Log.d(LOG_TAG, "loading urlcandidate for " + actName);
-                        // Build
-                        byName.setUrlCandidateDbLiveData(
-                                // Fetch the URL candidates stored in the database
-                                PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(
-                                        actId
-                                )
-                        );
-                    }
+                    addAUrlCandidateObserver(byName, actId);
+                    addActivityExtraObserver(byName, actId);
+                    addSessionAggregateObserver(byName, actId);
                 }
 
 
@@ -185,6 +157,70 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
+    }
+
+    /**
+     * Instantiate the static UrlCandidate
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addAUrlCandidateObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetUrlCandidateDbLiveDataLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add URL candidates observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> liveData;
+            liveData = PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
+            new Handler(Looper.getMainLooper()).post(() -> activity.setUrlCandidateDbLiveData(liveData));
+        }, 0, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Instantiate all extras data for this activity AND set up all the observers to
+     * ensure consistency with the database
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addActivityExtraObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetActivityExtraLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add extras observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<ActivityExtraData>> liveData;
+            liveData = PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
+            new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
+        }, 0, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Instantiate the static aggregated data for the count of Source --> Destination
+     * edge visits.  Set up the observers to ensure consistency with the database
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetSessionAggregateLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<SessionDao.SessionAggregate>> liveData;
+
+            if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM) {
+                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, PPMPrefetchingStrategy.lastN);
+                new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
+            } else {
+                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId);
+                new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));
+            }
+
+
+        }, 0, TimeUnit.SECONDS);
     }
 
     public static LiveData<List<ActivityData>> getActivityLiveData() {
