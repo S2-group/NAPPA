@@ -99,13 +99,13 @@ public class PrefetchingLib {
     }
 
 
-    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType) {
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<String, ?> config) {
         if (instance == null) {
             final long start = new Date().getTime();
             Log.d(LOG_TAG, "PREFSTRATEGYNUM " + prefetchingStrategyType);
             instance = PrefetchingLib.getInstance();
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
-            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
             PrefetchingDatabase.getInstance(context);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
