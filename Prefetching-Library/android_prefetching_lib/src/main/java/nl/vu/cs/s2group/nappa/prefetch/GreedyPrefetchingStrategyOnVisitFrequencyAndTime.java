@@ -33,6 +33,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     public List<ActivityNode> getMostProbableNodes(ActivityNode node, float parentScore, List<ActivityNode> candidateNodes) {
 //        instead of returning a list of nodes, it might be more useful to pass a list of URLs
 //        OR we define the array of URLs as this class property?
+//        add live data observer to the select query
 //
 //        BEFORE THE METHOD
 //        mantain frequency and time data in memory
