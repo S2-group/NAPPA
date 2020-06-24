@@ -16,10 +16,10 @@ public interface ActivityTableDao {
     @Insert
     void insert(ActivityData activityData);
 
-    @Query("SELECT activity_name FROM pf_activity")
+    @Query("SELECT id, activity_name FROM pf_activity")
     List<ActivityData> getListActivity();
 
-    @Query("SELECT activity_name FROM pf_activity")
+    @Query("SELECT id, activity_name FROM pf_activity")
     LiveData<List<ActivityData>> getListActivityLiveData();
 
     @Insert
