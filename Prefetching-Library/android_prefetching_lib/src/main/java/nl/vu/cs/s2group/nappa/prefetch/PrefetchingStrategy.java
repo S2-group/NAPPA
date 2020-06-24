@@ -63,6 +63,8 @@ public interface PrefetchingStrategy {
                 return new GreedyWithPageRankScoresPrefetchingStrategy(0.6f);
             case STRATEGY_PPM_WITH_HITS_SCORES:
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
+            case STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME:
+                return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime();
             default:
                 return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }

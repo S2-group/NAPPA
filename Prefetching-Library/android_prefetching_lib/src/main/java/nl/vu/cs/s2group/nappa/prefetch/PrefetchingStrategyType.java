@@ -30,6 +30,13 @@ public enum PrefetchingStrategyType {
     STRATEGY_GREEDY_VISIT_FREQUENCY,
 
     /**
+     * ID for strategy implemented at {@link GreedyPrefetchingStrategyOnVisitFrequencyAndTime}.
+     * This strategy select the top N most probable nodes using a Greedy approach and using the
+     * user visit time and frequency per node as measurements of weight
+     */
+    STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME,
+
+    /**
      * ID for strategy implemented at {@link PPMPrefetchingStrategy}
      */
     STRATEGY_PPM,
