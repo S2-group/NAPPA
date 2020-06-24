@@ -32,6 +32,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
@@ -99,7 +100,7 @@ public class PrefetchingLib {
     }
 
     @SuppressWarnings("unused")
-    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<String, ?> config) {
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (instance == null) {
             final long start = new Date().getTime();
 

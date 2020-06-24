@@ -46,7 +46,7 @@ public interface PrefetchingStrategy {
     @SuppressWarnings("DuplicateBranchesInSwitch")
     @NotNull
     @Contract("_ -> new")
-    static PrefetchingStrategy getStrategy(PrefetchingStrategyType strategyId, Map<String, ?> config) {
+    static PrefetchingStrategy getStrategy(PrefetchingStrategyType strategyId, Map<PrefetchingStrategyConfigKeys, Object> config) {
         switch (strategyId) {
             case STRATEGY_MOST_VISITED_SUCCESSOR:
                 return new MostVisitedSuccessorPrefetchingStrategy();
