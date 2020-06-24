@@ -64,5 +64,5 @@ public enum PrefetchingStrategyType {
     /**
      * ID for strategy implemented at {@link PPMWithHITSScoresPrefetchingStrategy}
      */
-    STRATEGY_PPM_WITH_HITS_SCORES
+    STRATEGY_PPM_WITH_HITS_SCORES,
 }
