@@ -11,6 +11,6 @@ public abstract class AbstractPrefetchingStrategy {
         Object data;
 
         data = config.get(PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH);
-        if (data != null) maxNumberOfUrlToPrefetch = Integer.parseInt(data.toString());
+        maxNumberOfUrlToPrefetch = data != null ? Integer.parseInt(data.toString()) : 2;
     }
 }
