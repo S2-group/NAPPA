@@ -24,7 +24,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT activityId, totalDuration " +
             "FROM AggregateVisitTimeBySession " +
             "WHERE activityId = :activityId " +
-            "AND sessionId > (SELECT MAX(id_session) - :lastNSessions FROM pf_activity_visit_time) " +
+            "AND sessionId > (SELECT MAX(id) - :lastNSessions FROM pf_session) " +
             "GROUP BY activityId")
     List<AggregateVisitTimeByActivity> getTotalAggregatedActivityVisitTime(Long activityId, int lastNSessions);
 }
