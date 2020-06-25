@@ -93,10 +93,22 @@ public class NappaUtil {
     public static int getSuccessorsAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
         int total = 0;
         for (ActivityNode node : activityNode.successors.keySet()) {
-            List<SessionDao.SessionAggregate> list = lastNSessions == -1 ? node.getSessionAggregateList() : node.getSessionAggregateList(1);
-            for (SessionDao.SessionAggregate sessionAggregate : list) {
-                total += sessionAggregate.countSource2Dest;
-            }
+            total += getSuccessorAggregateVisitFrequency(node, lastNSessions);
+        }
+        return total;
+    }
+
+    /**
+     * Calculate the total aggregate sum of the visit frequency of this node
+     *
+     * @param activityNode The current node
+     * @return Return the total aggregate visit frequency
+     */
+    public static int getSuccessorAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
+        int total = 0;
+        List<SessionDao.SessionAggregate> list = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
+        for (SessionDao.SessionAggregate sessionAggregate : list) {
+            total += sessionAggregate.countSource2Dest;
         }
         return total;
     }
