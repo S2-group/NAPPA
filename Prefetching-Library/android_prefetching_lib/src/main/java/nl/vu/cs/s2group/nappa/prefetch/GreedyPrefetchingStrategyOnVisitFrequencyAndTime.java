@@ -127,8 +127,5 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         // Verifies if there is any URL budget left
         if (urlList.size() >= maxNumberOfUrlToPrefetch) return urlList;
         return getTopNUrlToPrefetchForNode(bestSuccessor, bestSuccessorScore, bestSuccessorUrls);
-//        IN THIS METHOD
-//        Unless the current node has a single child, the child score will be lower than the current
-//        allow to pass the weight as confiuration
     }
 }
