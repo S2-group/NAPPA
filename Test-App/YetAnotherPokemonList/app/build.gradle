@@ -34,8 +34,6 @@ project.ext {
     diffMatchPatch = '1.1'
     roomVersion = '2.2.5'
     lifecycleExtensionsVersion = '2.2.0'
-    // Tool for debugging purposes
-    sthethoVersion = '1.5.1'
 }
 
 dependencies {
@@ -47,8 +45,6 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
     implementation "org.jetbrains:annotations:$jetBrainsAnnotationVersion"
-    implementation "com.facebook.stetho:stetho:$sthethoVersion"
-    implementation "com.facebook.stetho:stetho-okhttp3:$sthethoVersion"
 
     implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
     implementation "androidx.room:room-runtime:$roomVersion"
