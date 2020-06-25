@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
@@ -41,10 +42,11 @@ import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.RequestData;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
@@ -145,6 +147,11 @@ public class PrefetchingLib {
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
+                    if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME) {
+                        Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+                        int lastNSessions = lastNSessionsObj != null ? Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+                        addVisitTimePerActivityObserver(byName, actId, lastNSessions);
+                    }
                 }
 
 
@@ -157,6 +164,29 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
+    }
+
+    /**
+     * Query the database for the aggregate visit time and add an observer to the result
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId, int lastNSessions) {
+        if (activity.isAggregateVisitTimeInstantiated()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
+
+        poolExecutor.execute(() -> {
+            LiveData<AggregateVisitTimeByActivity> liveData;
+            if (lastNSessions == -1) {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activityId);
+            } else {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activityId, lastNSessions);
+            }
+
+            new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
+        });
     }
 
     /**

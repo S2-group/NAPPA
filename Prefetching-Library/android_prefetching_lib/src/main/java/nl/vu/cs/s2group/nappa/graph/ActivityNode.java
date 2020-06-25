@@ -1,7 +1,8 @@
 package nl.vu.cs.s2group.nappa.graph;
 
-import androidx.lifecycle.LiveData;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
@@ -30,6 +32,9 @@ public class ActivityNode {
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
     public float pageRank,authority,hub,authorityS,hubS,prob;
+    LiveData<AggregateVisitTimeByActivity> aggregateVisitTimeLiveData;
+    AggregateVisitTimeByActivity aggregateVisitTime;
+
     /**
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
@@ -50,6 +55,15 @@ public class ActivityNode {
         return successors;
     }
 
+    /**
+     * Verifies whether the {@link LiveData} object for the aggregate visit time is instantiated
+     * or not
+     *
+     * @return {@code True} if the object is instantiated or {@code False} otherwise
+     */
+    public boolean isAggregateVisitTimeInstantiated() {
+        return aggregateVisitTimeLiveData != null;
+    }
 
     public boolean shouldSetSessionAggregateLiveData() {
         return listSessionAggregateLiveData == null;
@@ -74,6 +88,22 @@ public class ActivityNode {
 
     public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
         return listActivityExtraLiveData;
+    }
+
+    /**
+     * Set the {@link LiveData} object containing the aggregate visit time per activity
+     * and attach an observer to it to update the actual aggregate visit time object when there
+     * are changes in the database
+     *
+     * @param aggregateVisitTimeLiveData A valid instance of the {@link LiveData} object
+     */
+    public void setAggregateVisitTimeLiveData(LiveData<AggregateVisitTimeByActivity> aggregateVisitTimeLiveData) {
+        this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
+
+        this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
+            Log.d(LOG_TAG, "New aggregate visit time found for activity " + newAggregateVisitTime.activityId + " is " + newAggregateVisitTime.totalDuration);
+            aggregateVisitTime = newAggregateVisitTime;
+        });
     }
 
     /**
