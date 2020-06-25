@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room.data;
+package nl.vu.cs.s2group.nappa.room.activity.visittime;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

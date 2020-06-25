@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.room.view;
+package nl.vu.cs.s2group.nappa.room.activity.visittime;
 
 import androidx.room.DatabaseView;
 

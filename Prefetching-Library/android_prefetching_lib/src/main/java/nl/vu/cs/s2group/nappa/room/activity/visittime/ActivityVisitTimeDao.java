@@ -1,13 +1,10 @@
-package nl.vu.cs.s2group.nappa.room.dao;
+package nl.vu.cs.s2group.nappa.room.activity.visittime;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
-
-import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
-import nl.vu.cs.s2group.nappa.room.view.ActivityAggregateVisitTime;
 
 @Dao
 public interface ActivityVisitTimeDao {

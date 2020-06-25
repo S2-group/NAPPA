@@ -10,18 +10,18 @@ import androidx.room.TypeConverters;
 
 import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
-import nl.vu.cs.s2group.nappa.room.dao.ActivityVisitTimeDao;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTimeDao;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.room.view.ActivityAggregateVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityAggregateVisitTime;
 
 @Database(
         entities = {

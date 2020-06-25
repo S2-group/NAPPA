@@ -13,7 +13,7 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
-import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.util.TestUtil;
 
