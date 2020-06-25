@@ -14,7 +14,8 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
 /**
  * This strategy employs a Greedy approach using the time a user spends in the activities
  * and the how frequent the user access the activities to decide which nodes to select.
- * This strategy runs recursively on the children of the current  most probable node.
+ * This strategy runs recursively on the children of the current most probable node.
+ * Only a single child is select per recursion.
  * <p>
  * This strategy accepts the following configurations:
  * <ul>
