@@ -10,6 +10,7 @@ import java.util.Map;
  *
  * <ul>
  *     <li> {@link PrefetchingStrategyConfigKeys#MAX_URL_TO_PREFETCH} </li>
+ *     <li> {@link PrefetchingStrategyConfigKeys#LAST_N_SESSIONS} </li>
  * </ul>
  */
 public abstract class AbstractPrefetchingStrategy {

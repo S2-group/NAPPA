@@ -4,8 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,11 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  * This strategy employs a Greedy approach using the time a user spends in the activities
  * and the how frequent the user access the activities to decide which nodes to select.
  * This strategy runs recursively on the children of the current  most probable node.
+ * <p>
+ * This strategy accepts the following configurations:
+ * <ul>
+ *     <li>{@link PrefetchingStrategyConfigKeys#SCORE_LOWER_THRESHOLD}</li>
+ * </ul>
  */
 public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy implements PrefetchingStrategy {
     private static final String LOG_TAG = GreedyPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
@@ -32,11 +35,35 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
 
     @NonNull
     @Override
-    public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
+    public List<String> getTopNUrlToPrefetchForNode(@NonNull ActivityNode node, Integer maxNumber) {
         Log.d(LOG_TAG, node.activityName + " searching best successors");
         return getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
     }
 
+    /**
+     * Auxiliary method to recursively find the best successor. This method works in three stages.
+     * <p>
+     * The first stage is to find the successor of the current node with the best score.
+     * If no successor is found or if the score of the best successor is insufficient
+     * (i.e., the calculated score is lower than the lower bound threshold), then the recursion
+     * stops and the current list of URLs is returned.
+     * <p>
+     * If the score is higher, then the second stage starts. In this stage the method verifies
+     * if there is sufficient budget (i.e., number of URLs) to add all URLs of the best successor.
+     * In the case there isn't, only a subset of the URLs of the best successor is added to the URL
+     * list.
+     * <p>
+     * In the third stage the method verifies whether to continue the recursion or return the
+     * current URL list. If the URL budget is completely filled, then the URL list is returned,
+     * otherwise, the recursion continues by invoking this method with the best sucessor object,
+     * score and current URL list
+     *
+     * @param node        The current node in the recursion. Either the node that started the
+     *                    recursion or of of its descendant
+     * @param parentScore The score of the parent node.
+     * @param urlList     The list of URLs to prefetch
+     * @return The {@code urlList} after completing all recursions
+     */
     private List<String> getTopNUrlToPrefetchForNode(@NonNull ActivityNode node, float parentScore, List<String> urlList) {
         // Fetches the data to start the calculations - Aggregate visit time and frequency
         float totalAggregateTime = NappaUtil.getSuccessorsAggregateVisitTime(node);
