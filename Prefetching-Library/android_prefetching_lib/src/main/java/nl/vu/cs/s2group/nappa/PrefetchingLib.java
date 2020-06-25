@@ -146,10 +146,10 @@ public class PrefetchingLib {
 
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
-                    addSessionAggregateObserver(byName, actId);
+                    Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+                    int lastNSessions = lastNSessionsObj != null ? Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+                    addSessionAggregateObserver(byName, actId, lastNSessions);
                     if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME) {
-                        Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-                        int lastNSessions = lastNSessionsObj != null ? Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
                         addVisitTimePerActivityObserver(byName, lastNSessions);
                     }
                 }
@@ -232,7 +232,7 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
+    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId, int lastNSessions) {
         if (!activity.shouldSetSessionAggregateLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
@@ -240,7 +240,7 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
-            if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM) {
+            if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
                 liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, PPMPrefetchingStrategy.lastN);
                 new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
             } else {
