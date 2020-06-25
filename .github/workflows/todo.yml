@@ -1,12 +1,25 @@
 name: TODO Parser
 
-on: [push, pull_request]
+on: [push]
  
 jobs:
   todo:
     name: Search TODO comments
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
-      - name: todo-actions
-        uses: dtinth/todo-actions@v0.2.0
+    - name: TODO to Issue
+      uses: alstr/todo-to-issue-action@v1.2-beta
+      with:
+        # The path to the repository where the action will be used, e.g. 'alstr/my-repo' (automatically set)
+        REPO: ${{ github.repository }}
+        # The SHA of the last pushed commit (automatically set)
+        BEFORE: ${{ github.event.before }}
+        # The SHA of the latest commit (automatically set)
+        SHA: ${{ github.sha }}
+        # The GitHub access token to allow us to retrieve, create and update issues (automatically set)
+        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # The label that will be used to identify TODO comments (by default this is # TODO for Python)
+        LABEL: "// TODO"
+        # The marker used to signify a line comment in your code (by default this is # for Python)
+        COMMENT_MARKER: "//"
+      id: "todo"
