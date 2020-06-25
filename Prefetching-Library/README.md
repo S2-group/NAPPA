@@ -124,7 +124,7 @@ To create a new build with the modifications implemented in the library, click o
 Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
 To use this build, repeat the `Import Library` instructions in the `Installation` section.
 
-### Debug the application
+### Debug the library
 
 #### Debug unhandled exceptions outside the main thread
 
