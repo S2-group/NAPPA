@@ -3,6 +3,7 @@ package nl.vu.cs.s2group.nappa.room.activity.visittime;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -10,7 +11,11 @@ import java.util.Date;
 /**
  * Represents the database table that register the time a user spends visiting activities
  */
-@Entity(tableName = "pf_activity_visit_time")
+@Entity(tableName = "pf_activity_visit_time",
+        indices = {
+                @Index("activity_name"),
+                @Index("id_session"),
+        })
 public class ActivityVisitTime {
     @PrimaryKey(autoGenerate = true)
     public long id;
