@@ -241,7 +241,7 @@ public class PrefetchingLib {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
-                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, PPMPrefetchingStrategy.lastN);
+                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
                 new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
             } else {
                 liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId);
