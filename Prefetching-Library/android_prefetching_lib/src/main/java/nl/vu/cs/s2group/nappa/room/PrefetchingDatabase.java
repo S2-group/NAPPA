@@ -21,6 +21,7 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.room.view.ActivityAggregateVisitTime;
 
 @Database(
         entities = {
@@ -34,7 +35,10 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
                 LARData.class,
                 ActivityVisitTime.class,
         },
-        version = 11)
+        views = {
+                ActivityAggregateVisitTime.class
+        },
+        version = 12)
 @TypeConverters({DateConverters.class})
 public abstract class PrefetchingDatabase extends RoomDatabase {
 

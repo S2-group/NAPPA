@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,6 @@ import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.util.TestUtil;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class ActivityVisitTimeDaoTest {
     private PrefetchingDatabase db;
@@ -59,31 +55,4 @@ public class ActivityVisitTimeDaoTest {
         db.close();
     }
 
-    @Test
-    public void testGetActivityVisitTimeByActivity() {
-        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L);
-        assertThat(result.size(), equalTo(activityList.size() * 10));
-        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
-        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
-    }
-
-    @Test
-    public void testGetActivityVisitTimeByActivityAndSession() {
-        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 1L);
-        assertThat(result.size(), equalTo(10));
-        assertThat(result.get(0).timestamp, equalTo(timeList.get(0).timestamp));
-        assertThat(result.get(0).duration, equalTo(timeList.get(0).duration));
-    }
-
-    @Test
-    public void testGetActivityVisitTimeByActivityAndLastSession() {
-        List<ActivityVisitTime> result = db.activityVisitTimeDao().getActivityVisitTime(1L, 3);
-        assertThat(result.size(), equalTo(30));
-
-        result = db.activityVisitTimeDao().getActivityVisitTime(1L, 2);
-        assertThat(result.size(), equalTo(20));
-
-        result = db.activityVisitTimeDao().getActivityVisitTime(1L, 1);
-        assertThat(result.size(), equalTo(10));
-    }
 }

@@ -1,8 +1,11 @@
 package nl.vu.cs.s2group.nappa.room.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
@@ -12,25 +15,26 @@ import java.util.Date;
 @Entity(tableName = "pf_activity_visit_time")
 public class ActivityVisitTime {
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    public long id;
 
     @ColumnInfo(name = "id_activity")
-    public Long activityId;
+    public long activityId;
 
     @ColumnInfo(name = "id_session")
-    public Long sessionId;
+    public long sessionId;
 
     /**
      * The date this activity was accessed
      */
+    @NonNull
     public Date timestamp;
 
     /**
      * The visit duration in millisecond
      */
-    public Long duration;
+    public long duration;
 
-    public ActivityVisitTime(Long activityId, Long sessionId, Date timestamp, Long duration) {
+    public ActivityVisitTime(long activityId, long sessionId, @NotNull Date timestamp, long duration) {
         this.activityId = activityId;
         this.sessionId = sessionId;
         this.timestamp = timestamp;
