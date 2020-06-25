@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.room.activity.visittime;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public class AggregateVisitTimeByActivity {
@@ -18,5 +20,14 @@ public class AggregateVisitTimeByActivity {
     @Override
     public int hashCode() {
         return Objects.hash(activityName, totalDuration);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "AggregateVisitTimeByActivity{" +
+                activityName + " : " +
+                totalDuration + " ms" +
+                '}';
     }
 }
