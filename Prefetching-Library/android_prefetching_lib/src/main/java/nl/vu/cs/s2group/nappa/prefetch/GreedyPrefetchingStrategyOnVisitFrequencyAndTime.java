@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,8 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
 
     @NonNull
     @Override
-    public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
+    public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
+        Log.d(LOG_TAG, node.activityName + " searching best successors");
         return getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
     }
 
