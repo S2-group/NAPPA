@@ -13,9 +13,9 @@ import java.util.Map;
  * </ul>
  */
 public abstract class AbstractPrefetchingStrategy {
-    protected static final float DEFAULT_SCORE_LOWER_THRESHOLD = 0.6f;
-    protected static final int DEFAULT_LAST_N_SESSIONS = 5;
-    protected static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
+    public static final float DEFAULT_SCORE_LOWER_THRESHOLD = 0.6f;
+    public static final int DEFAULT_LAST_N_SESSIONS = 5;
+    public static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
 
     protected final int maxNumberOfUrlToPrefetch;
 
