@@ -5,8 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 
 /**
@@ -17,8 +15,9 @@ public class ActivityVisitTime {
     @PrimaryKey(autoGenerate = true)
     public long id;
 
-    @ColumnInfo(name = "id_activity")
-    public long activityId;
+    @NonNull
+    @ColumnInfo(name = "activity_name")
+    public String activityName;
 
     @ColumnInfo(name = "id_session")
     public long sessionId;
@@ -34,8 +33,8 @@ public class ActivityVisitTime {
      */
     public long duration;
 
-    public ActivityVisitTime(long activityId, long sessionId, @NotNull Date timestamp, long duration) {
-        this.activityId = activityId;
+    public ActivityVisitTime(@NonNull String activityName, long sessionId, @NonNull Date timestamp, long duration) {
+        this.activityName = activityName;
         this.sessionId = sessionId;
         this.timestamp = timestamp;
         this.duration = duration;

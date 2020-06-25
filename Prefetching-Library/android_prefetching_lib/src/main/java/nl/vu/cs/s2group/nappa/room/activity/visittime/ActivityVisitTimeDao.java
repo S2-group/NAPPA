@@ -20,23 +20,23 @@ public interface ActivityVisitTimeDao {
      * @param lastNSessions The number of sessions to take, starting from the current session and before
      * @return The total aggregate time spend in a given activity for the last N sessions
      */
-    @Query("SELECT activityId, totalDuration " +
+    @Query("SELECT activityName, totalDuration " +
             "FROM AggregateVisitTimeBySession " +
-            "WHERE activityId = :activityId " +
+            "WHERE activityName = :activityId " +
             "AND sessionId > (SELECT MAX(id) - :lastNSessions FROM pf_session) " +
-            "GROUP BY activityId")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(long activityId, int lastNSessions);
+            "GROUP BY activityName")
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityId, int lastNSessions);
 
     /**
-     * Same as {@link ActivityVisitTimeDao#getAggregateVisitTimeByActivity(long, int)} but taking
+     * Same as {@link ActivityVisitTimeDao#getAggregateVisitTimeByActivity(String, int)} but taking
      * data from all recorded sessions instead of the last N sessions
      *
      * @param activityId The activity to search for
      * @return The total aggregate time spend in a given activity for the all recorded sessions
      */
-    @Query("SELECT activityId, totalDuration " +
+    @Query("SELECT activityName, totalDuration " +
             "FROM AggregateVisitTimeBySession " +
-            "WHERE activityId = :activityId " +
-            "GROUP BY activityId")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(long activityId);
+            "WHERE activityName = :activityId " +
+            "GROUP BY activityName")
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityId);
 }

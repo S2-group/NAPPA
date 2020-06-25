@@ -150,7 +150,7 @@ public class PrefetchingLib {
                     if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME) {
                         Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
                         int lastNSessions = lastNSessionsObj != null ? Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
-                        addVisitTimePerActivityObserver(byName, actId, lastNSessions);
+                        addVisitTimePerActivityObserver(byName, lastNSessions);
                     }
                 }
 
@@ -169,10 +169,9 @@ public class PrefetchingLib {
     /**
      * Query the database for the aggregate visit time and add an observer to the result
      *
-     * @param activity
-     * @param activityId
+     * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId, int lastNSessions) {
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, int lastNSessions) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
@@ -180,9 +179,9 @@ public class PrefetchingLib {
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
             if (lastNSessions == -1) {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activityId);
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
             } else {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activityId, lastNSessions);
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName, lastNSessions);
             }
 
             new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
@@ -410,7 +409,7 @@ public class PrefetchingLib {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
-                activityMap.get(currentActivityName),
+                currentActivityName,
                 session.id,
                 visitedCurrentActivityDate,
                 duration

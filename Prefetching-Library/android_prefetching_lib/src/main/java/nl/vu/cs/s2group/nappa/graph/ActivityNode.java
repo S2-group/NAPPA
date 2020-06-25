@@ -101,7 +101,7 @@ public class ActivityNode {
         this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
-            Log.d(LOG_TAG, "New aggregate visit time found for activity " + newAggregateVisitTime.activityId + " is " + newAggregateVisitTime.totalDuration);
+            Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
         });
     }
