@@ -13,12 +13,16 @@ import java.util.Map;
  * </ul>
  */
 public abstract class AbstractPrefetchingStrategy {
+    protected static final float DEFAULT_SCORE_LOWER_THRESHOLD = 0.6f;
+    protected static final int DEFAULT_LAST_N_SESSIONS = 5;
+    protected static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
+
     protected final int maxNumberOfUrlToPrefetch;
 
     public AbstractPrefetchingStrategy(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         Object data;
 
         data = config.get(PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH);
-        maxNumberOfUrlToPrefetch = data != null ? Integer.parseInt(data.toString()) : 2;
+        maxNumberOfUrlToPrefetch = data != null ? Integer.parseInt(data.toString()) : DEFAULT_MAX_URL_TO_PREFETCH;
     }
 }
