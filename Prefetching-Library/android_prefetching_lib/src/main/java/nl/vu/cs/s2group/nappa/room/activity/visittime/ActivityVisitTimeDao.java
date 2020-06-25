@@ -4,8 +4,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import java.util.List;
-
 @Dao
 public interface ActivityVisitTimeDao {
     @Insert
@@ -26,5 +24,5 @@ public interface ActivityVisitTimeDao {
             "WHERE activityId = :activityId " +
             "AND sessionId > (SELECT MAX(id) - :lastNSessions FROM pf_session) " +
             "GROUP BY activityId")
-    List<AggregateVisitTimeByActivity> getTotalAggregatedActivityVisitTime(Long activityId, int lastNSessions);
+    AggregateVisitTimeByActivity getTotalAggregatedActivityVisitTime(Long activityId, int lastNSessions);
 }
