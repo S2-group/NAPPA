@@ -57,8 +57,6 @@ import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
-    // TODO Test todo action
-    //  This is a test
     private final static String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
     private static PrefetchingLib instance;
