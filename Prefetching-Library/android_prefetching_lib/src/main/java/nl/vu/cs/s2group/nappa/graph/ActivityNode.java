@@ -29,9 +29,9 @@ public class ActivityNode {
     private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
-    public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>>  urlCandidateDbLiveData;
+    public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> urlCandidateDbLiveData;
     private LiveData<List<ActivityExtraData>> listActivityExtraLiveData;
-    public float pageRank,authority,hub,authorityS,hubS,prob;
+    public float pageRank, authority, hub, authorityS, hubS, prob;
     LiveData<AggregateVisitTimeByActivity> aggregateVisitTimeLiveData;
     AggregateVisitTimeByActivity aggregateVisitTime;
 
@@ -39,7 +39,7 @@ public class ActivityNode {
      * Initializes the current activity node by creating an object of the activity, and also
      * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
      * and the Room database.
-     *
+     * <p>
      * NOTE: Persistence inthe prefetching lib is only performed if the database does not already
      * contain the activityName
      *
@@ -101,7 +101,8 @@ public class ActivityNode {
         this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
-            if (newAggregateVisitTime.equals(aggregateVisitTime)) return;
+            if (aggregateVisitTime != null && newAggregateVisitTime.equals(aggregateVisitTime))
+                return;
             Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
         });
@@ -111,6 +112,7 @@ public class ActivityNode {
      * Statically instantiates a List of UrlCandidateToUrlParameters Object, which compose a full URL
      * along with its parameters.  An observer updates the activity's list of parametered URLS whenever
      * there is an update to the list of {@linkplain UrlCandidateDao.UrlCandidateToUrlParameter}
+     *
      * @param urlCandidateDbLiveData
      */
     public void setUrlCandidateDbLiveData(LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> urlCandidateDbLiveData) {
@@ -119,8 +121,8 @@ public class ActivityNode {
         // This observable updates an activity's list of parametered URLS whenever there is a change in
         // the list of URL Candidates in the database
         this.urlCandidateDbLiveData.observeForever(parameterList -> {
-           // From the UPDATED set of candidate candidates, build a list containing the parameters for all URLS
-            if (parameterList!=null)
+            // From the UPDATED set of candidate candidates, build a list containing the parameters for all URLS
+            if (parameterList != null)
                 this.parameteredUrlList = UrlCandidateDao.UrlCandidateToUrlParameter.getParameteredUrlList(parameterList);
         });
     }
@@ -136,9 +138,9 @@ public class ActivityNode {
     public void setListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData) {
         this.listSessionAggregateLiveData = listSessionAggregateLiveData;
         this.listSessionAggregateLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "UPDATE SESSION " + "source = "+activityName);
+            Log.d(LOG_TAG, "UPDATE SESSION " + "source = " + activityName);
             for (SessionDao.SessionAggregate listElem : list) {
-                Log.d(LOG_TAG, "UPDATE SESSION " + "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+                Log.d(LOG_TAG, "UPDATE SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }
@@ -146,9 +148,9 @@ public class ActivityNode {
     public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
         this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
         this.listLastNSessionAggregateLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "UPDATED LAST N SESSION " + "source = "+activityName);
+            Log.d(LOG_TAG, "UPDATED LAST N SESSION " + "source = " + activityName);
             for (SessionDao.SessionAggregate listElem : list) {
-                Log.d(LOG_TAG, "UPDATED  LAST N SESSION " + "dest: "+listElem.actName + ", count: " + listElem.countSource2Dest);
+                Log.d(LOG_TAG, "UPDATED  LAST N SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }
@@ -166,7 +168,7 @@ public class ActivityNode {
         this.listActivityExtraLiveData.observeForever((list) -> {
             Log.d(LOG_TAG, "PREFSTRAT2 " + activityName);
             for (ActivityExtraData listElem : list) {
-                Log.d(LOG_TAG, "PREFSTRAT2 " + "actid: "+listElem.idActivity+ ", key: " + listElem.key);
+                Log.d(LOG_TAG, "PREFSTRAT2 " + "actid: " + listElem.idActivity + ", key: " + listElem.key);
             }
         });
     }
@@ -181,17 +183,17 @@ public class ActivityNode {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("--------------------------\nNode: "+activityName+"\nPageRank :"+pageRank+"\nHITS-Authority :"+authority+"\nHITS-Hub :"+hub+"\nSALSA-Authority :"+authorityS+"\nSALSA-Hub :"+hubS);
+        StringBuilder builder = new StringBuilder("--------------------------\nNode: " + activityName + "\nPageRank :" + pageRank + "\nHITS-Authority :" + authority + "\nHITS-Hub :" + hub + "\nSALSA-Authority :" + authorityS + "\nSALSA-Hub :" + hubS);
 
         builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
         builder.append("Successors:\n");
-        for (ActivityNode successor: successors.keySet()) {
-            builder.append("\t"+successor.activityName+" - hit: "+successors.get(successor)).append("\n");
+        for (ActivityNode successor : successors.keySet()) {
+            builder.append("\t" + successor.activityName + " - hit: " + successors.get(successor)).append("\n");
         }
         builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
         builder.append("Ancestors:\n");
-        for (ActivityNode ancestor: ancestors.keySet()) {
-            builder.append("\t"+ancestor.activityName+" - hit: "+ancestors.get(ancestor)).append("\n");
+        for (ActivityNode ancestor : ancestors.keySet()) {
+            builder.append("\t" + ancestor.activityName + " - hit: " + ancestors.get(ancestor)).append("\n");
         }
 
         builder.append("\n\n--------------------------\n");
@@ -201,6 +203,7 @@ public class ActivityNode {
     /**
      * For the current ActivityNode, store a successor activity (activityNode).  Also, for the current
      * session, add the current source-Destination relationship to the database
+     *
      * @param activityNode A Successor node which is connected to the Current Activity object
      */
     public void initSuccessor(ActivityNode activityNode) {
@@ -221,7 +224,7 @@ public class ActivityNode {
      *
      * @param activityNode the current node to which the application is transitioning to
      * @return TRUE if prefetching should take place, implying the application is moving from a given node -> successor
-     *         FALSE if otherwise
+     * FALSE if otherwise
      */
     public boolean addSuccessor(ActivityNode activityNode) {
         // Successor cannot be itself
@@ -240,7 +243,7 @@ public class ActivityNode {
             // CASE 2: Activity has already been registered as a successor, thus update the number
             //  of transitions towards this activity
             //  RETURN: TRUE (Prefetch)
-            else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/){
+            else if (successors.containsKey(activityNode) /*&& !ancestors.containsKey(activityNode)*/) {
                 successors.put(activityNode, successors.get(activityNode) + 1);
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
                 Log.d(LOG_TAG, "ACTNODE " + "UPDATING AFTER LOADING FROM DB");
@@ -259,7 +262,8 @@ public class ActivityNode {
 
     /**
      * Recursively traverse through the list of parents until all parents are identified
-     * @param node The node for which the parents will be identified
+     *
+     * @param node    The node for which the parents will be identified
      * @param parents The list of parents to be returned
      * @return a {@code List<ActivityNode>} containing all the parents of the requested {@code node}
      */
