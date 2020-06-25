@@ -124,9 +124,26 @@ To create a new build with the modifications implemented in the library, click o
 Android Studio places new builds in the directory [android_prefetching_lib/build/outputs/aar/](android_prefetching_lib/build/outputs/aar).
 To use this build, repeat the `Import Library` instructions in the `Installation` section.
 
-### Debug the database data
+### Debug the library
 
-#### Using DB Browser for SQLite
+#### Debug unhandled exceptions outside the main thread
+
+Weird behaviour can be caused by running into an exception in the secondary threads.
+By default, these don't seem to be logged in the console, which makes difficult to identify them.
+
+To make sure that all unhandled exceptions outside the main thread are logged do the following steps: 
+
+* Open the Breakpoints dialog (`Run > View Breakpoints` or `Ctrl + Shift + F8`)
+* In the left panel click on `Java Exception Breakpoint > Any Exception`
+* Check the option `Enabled`
+* Uncheck the option `Suspend` (unless you want to debug values there)
+* Uncheck the option `Caught exception` (the launcher and class loader exceptions are caught and handled internally by the JVM.)
+* Run the application in debug mode 
+* Any unhandled exception will be logged in the `Debug` window
+
+#### Debug the database data
+
+##### Using DB Browser for SQLite
 
 This is an external client for reading database files.
 Download it at [sqlitebrowser](https://sqlitebrowser.org/dl/).
@@ -158,6 +175,6 @@ Click on `Open Database`, go to the directory you saved the files and select `pf
 Click in the `Browser Data` tab.
 You can now verify the data saved by the NAPPA Library. 
 
-#### Using Room
+##### Using Room
 
 You can use the defined DAO Room classes or create your own functions
