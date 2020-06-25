@@ -56,6 +56,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
+// TODO test todo in Java file
+//
+//  This is a test
 public class PrefetchingLib {
     private final static String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
