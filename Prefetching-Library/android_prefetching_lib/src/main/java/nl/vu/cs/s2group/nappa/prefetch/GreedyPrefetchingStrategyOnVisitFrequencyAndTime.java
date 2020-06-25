@@ -19,19 +19,31 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  * <p>
  * This strategy accepts the following configurations:
  * <ul>
- *     <li>{@link PrefetchingStrategyConfigKeys#SCORE_LOWER_THRESHOLD}</li>
+ *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_FREQUENCY_SCORE}</li>
+ *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_TIME_SCORE}</li>
  * </ul>
  */
 public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy implements PrefetchingStrategy {
     private static final String LOG_TAG = GreedyPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
-    protected final float scoreLowerThreshold;
+
+    private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
+    private static final float DEFAULT_WEIGHT_TIME_SCORE = 0.5f;
+
+    protected final float weightFrequencyScore;
+    protected final float weightTimeScore;
 
     public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
         Object data;
 
-        data = config.get(PrefetchingStrategyConfigKeys.SCORE_LOWER_THRESHOLD);
-        scoreLowerThreshold = data != null ? Float.parseFloat(data.toString()) : DEFAULT_SCORE_LOWER_THRESHOLD;
+        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE);
+        weightFrequencyScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_FREQUENCY_SCORE;
+
+        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE);
+        weightTimeScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_TIME_SCORE;
+
+        if ((weightFrequencyScore + weightTimeScore) != 1.0)
+            throw new IllegalArgumentException("The sum of the time and frequency weight must be 1!");
     }
 
     @NonNull
@@ -80,8 +92,8 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
             int successorFrequency = NappaUtil.getSuccessorAggregateVisitFrequency(successor, lastNSessions);
             float successorTime = successor.getAggregateVisitTime().totalDuration;
 
-            float successorTimeScore = (successorTime / totalAggregateTime * 0.5f);
-            float successorFrequencyScore = ((float) successorFrequency / totalAggregateFrequency * 0.5f);
+            float successorTimeScore = (successorTime / totalAggregateTime * weightTimeScore);
+            float successorFrequencyScore = ((float) successorFrequency / totalAggregateFrequency * weightFrequencyScore);
 
             float successorScore = parentScore * (successorTimeScore + successorFrequencyScore);
 

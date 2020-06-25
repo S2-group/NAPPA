@@ -11,6 +11,7 @@ import java.util.Map;
  * <ul>
  *     <li> {@link PrefetchingStrategyConfigKeys#MAX_URL_TO_PREFETCH} </li>
  *     <li> {@link PrefetchingStrategyConfigKeys#LAST_N_SESSIONS} </li>
+ *     <li>{@link PrefetchingStrategyConfigKeys#LOWER_THRESHOLD_SCORE}</li>
  * </ul>
  */
 public abstract class AbstractPrefetchingStrategy {
@@ -20,6 +21,7 @@ public abstract class AbstractPrefetchingStrategy {
 
     protected final int maxNumberOfUrlToPrefetch;
     protected final int lastNSessions;
+    protected final float scoreLowerThreshold;
 
     public AbstractPrefetchingStrategy(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         Object data;
@@ -29,5 +31,8 @@ public abstract class AbstractPrefetchingStrategy {
 
         data = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
         lastNSessions = data != null ? Integer.parseInt(data.toString()) : DEFAULT_LAST_N_SESSIONS;
+
+        data = config.get(PrefetchingStrategyConfigKeys.LOWER_THRESHOLD_SCORE);
+        scoreLowerThreshold = data != null ? Float.parseFloat(data.toString()) : DEFAULT_SCORE_LOWER_THRESHOLD;
     }
 }
