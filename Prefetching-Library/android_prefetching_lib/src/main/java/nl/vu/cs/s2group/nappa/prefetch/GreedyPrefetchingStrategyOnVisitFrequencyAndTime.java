@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
  * This strategy employs a Greedy approach using the time a user spends in the activities
@@ -28,10 +31,22 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
+        List<ActivityNode> list = getMostProbableNodes(node, 1, new ArrayList<>());
         return new ArrayList<>();
     }
 
     public List<ActivityNode> getMostProbableNodes(ActivityNode node, float parentScore, List<ActivityNode> candidateNodes) {
+        StringBuilder str = new StringBuilder(node.activityName + " successors : ");
+
+        for (ActivityNode activityNode : node.successors.keySet()) {
+            str.append("\t").append(activityNode.activityName).append("\n");
+        }
+
+        Log.d(LOG_TAG, str.toString());
+
+        float totalAggregateTime = NappaUtil.getSuccessorsAggregateVisitTime(node);
+        int totalAggregateFrequency = NappaUtil.getSuccessorsAggregateVisitFrequency(node, lastNSessions);
+
 //        instead of returning a list of nodes, it might be more useful to pass a list of URLs
 //        OR we define the array of URLs as this class property?
 //        add live data observer to the select query

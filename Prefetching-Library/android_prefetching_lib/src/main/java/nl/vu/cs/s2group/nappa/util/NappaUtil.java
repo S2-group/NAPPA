@@ -9,6 +9,7 @@ import java.util.Map;
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
  * This class containing common utility methods for the NAPPA Prefetching Library
@@ -67,5 +68,36 @@ public class NappaUtil {
         }
 
         return candidateUrls;
+    }
+
+    /**
+     * Calculate the total aggregate sum of the visit time of all subsequent nodes
+     *
+     * @param activityNode The current node
+     * @return Return the total aggregate visit time
+     */
+    public static float getSuccessorsAggregateVisitTime(@NotNull ActivityNode activityNode) {
+        float total = 0;
+        for (ActivityNode node : activityNode.successors.keySet()) {
+            total += node.getAggregateVisitTime().totalDuration;
+        }
+        return total;
+    }
+
+    /**
+     * Calculate the total aggregate sum of the visit frequency of all subsequent nodes
+     *
+     * @param activityNode The current node
+     * @return Return the total aggregate visit frequency
+     */
+    public static int getSuccessorsAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
+        int total = 0;
+        for (ActivityNode node : activityNode.successors.keySet()) {
+            List<SessionDao.SessionAggregate> list = lastNSessions == -1 ? node.getSessionAggregateList() : node.getSessionAggregateList(1);
+            for (SessionDao.SessionAggregate sessionAggregate : list) {
+                total += sessionAggregate.countSource2Dest;
+            }
+        }
+        return total;
     }
 }

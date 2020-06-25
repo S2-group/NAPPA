@@ -18,11 +18,15 @@ public abstract class AbstractPrefetchingStrategy {
     public static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
 
     protected final int maxNumberOfUrlToPrefetch;
+    protected final int lastNSessions;
 
     public AbstractPrefetchingStrategy(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         Object data;
 
         data = config.get(PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH);
         maxNumberOfUrlToPrefetch = data != null ? Integer.parseInt(data.toString()) : DEFAULT_MAX_URL_TO_PREFETCH;
+
+        data = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+        lastNSessions = data != null ? Integer.parseInt(data.toString()) : DEFAULT_LAST_N_SESSIONS;
     }
 }

@@ -23,8 +23,26 @@ public class ActivityNode {
 
     public String activityName;
 
+    // TODO Verify possibility of simplifying successor/ancestors structure
+    //  Both `successors` and `ancestors` are defined as a map of `ActivityNode --> visited count`
+    //  for the current session. However, the value of the map doesn't seems to be used, as the
+    //  LiveData object `listSessionAggregateLiveData` provides the aggregate from the past sessions
+    //  and is used in the strategies. In this case, we can likely simply this map to a list
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
+    // TODO Refactor LiveData management for SessionAggregate
+    //  This class declares 2 LiveData attributes for the SessionAggregate data:
+    //  * `listSessionAggregateLiveData`: All sessions
+    //  * `listLastNSessionAggregateLiveData`: Last N sessions
+    //  In PR S2-group/NAPPA#67 I modified the PrefetchingLib to instantiate only one of them.
+    //  This class should be refactored to keep a single declaration of the LiveData attribute
+    //  and instantiate the LiveData object in the PrefetchingLib either with the all sessions
+    //  query or with the query of the last N sessions.
+    //  Use the `aggregateVisitTimeLiveData` object as reference.
+    //  This change will require updating the following classes:
+    //  * `NappaUtil#getSuccessorsAggregateVisitFrequency`
+    //  * `PPMPrefetchingStrategy#zeroContextNodes`
+    //  * `PPMWithHITSScoresPrefetchingStrategy#zeroContextNodes`
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
     private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
@@ -51,8 +69,14 @@ public class ActivityNode {
         PrefetchingLib.registerActivity(activityName);
     }
 
+    // TODO Implementing getter method on public attribute
+    //  Either remove getter or make attributes non-public
     public Map<ActivityNode, Integer> getSuccessors() {
         return successors;
+    }
+
+    public AggregateVisitTimeByActivity getAggregateVisitTime() {
+        return aggregateVisitTime;
     }
 
     /**
@@ -181,6 +205,10 @@ public class ActivityNode {
                 && this.activityName.compareTo(((ActivityNode) obj).activityName) == 0;
     }
 
+    // TODO Method toString contains lot of noise
+    //  It would simplify the visualization if the printed string was simpler and compact.
+    //  LAR scores are required on specific strategies. There is no need to print them on all
+    //  strategies
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("--------------------------\nNode: " + activityName + "\nPageRank :" + pageRank + "\nHITS-Authority :" + authority + "\nHITS-Hub :" + hub + "\nSALSA-Authority :" + authorityS + "\nSALSA-Hub :" + hubS);
