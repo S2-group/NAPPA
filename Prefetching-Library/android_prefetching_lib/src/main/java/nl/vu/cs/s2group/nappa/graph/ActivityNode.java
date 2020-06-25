@@ -101,7 +101,7 @@ public class ActivityNode {
         this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
-            if (aggregateVisitTime != null && newAggregateVisitTime.equals(aggregateVisitTime))
+            if (newAggregateVisitTime == null || newAggregateVisitTime.equals(aggregateVisitTime))
                 return;
             Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
