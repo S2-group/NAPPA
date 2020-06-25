@@ -12,9 +12,9 @@ public interface ActivityVisitTimeDao {
     void insert(ActivityVisitTime activityVisitTime);
 
     @Query("SELECT activityId, totalDuration " +
-            "FROM ActivityAggregateVisitTime " +
+            "FROM AggregateVisitTimeBySession " +
             "WHERE activityId = :activityId " +
             "AND sessionId > (SELECT MAX(id_session) - :lastNSessions FROM pf_activity_visit_time) " +
             "GROUP BY activityId")
-    List<ActivityAggregateVisitTime> getTotalAggregatedActivityVisitTime(Long activityId, int lastNSessions);
+    List<AggregateVisitTimeByActivity> getTotalAggregatedActivityVisitTime(Long activityId, int lastNSessions);
 }

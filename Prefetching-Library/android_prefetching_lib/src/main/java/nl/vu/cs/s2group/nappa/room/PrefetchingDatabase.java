@@ -21,7 +21,7 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityAggregateVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySession;
 
 @Database(
         entities = {
@@ -36,7 +36,7 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityAggregateVisitTime
                 ActivityVisitTime.class,
         },
         views = {
-                ActivityAggregateVisitTime.class
+                AggregateVisitTimeBySession.class
         },
         version = 12)
 @TypeConverters({DateConverters.class})
