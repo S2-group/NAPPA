@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import okhttp3.OkHttpClient;
 
@@ -24,7 +26,9 @@ public class SingletonOkHttpClient {
      */
     public static OkHttpClient getInstance() {
         if (okHttpClient == null) {
-            okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient());
+            okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient.Builder()
+                    .addNetworkInterceptor(new StethoInterceptor())
+                    .build());
         }
 
         return okHttpClient;
