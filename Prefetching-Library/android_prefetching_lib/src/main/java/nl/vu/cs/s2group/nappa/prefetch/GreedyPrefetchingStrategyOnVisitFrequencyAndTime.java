@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -59,6 +61,11 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         // Fetches the URLs from the bestSuccessor and the remaining URL budget
         List<String> bestSuccessorUrls = NappaUtil.getUrlsFromCandidateNode(node, bestSuccessor);
         int remainingUrlBudget = maxNumberOfUrlToPrefetch - urlList.size();
+
+        Log.d(LOG_TAG, node.activityName +
+                " best successor is " + bestSuccessor.activityName +
+                " with score " + bestSuccessorScore +
+                " containing the URLS " + bestSuccessorUrls);
 
         // Verifies if the URL list of the best successor fits the budget.
         // If not, take only the first N URLs until using all budget
