@@ -2,6 +2,7 @@ package nl.vu.cs.s2group.nappa.prefetch;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
-        return null;
+        return new ArrayList<>();
     }
 
     public List<ActivityNode> getMostProbableNodes(ActivityNode node, float parentScore, List<ActivityNode> candidateNodes) {
