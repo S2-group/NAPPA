@@ -10,10 +10,10 @@ public interface ActivityVisitTimeDao {
     void insert(ActivityVisitTime activityVisitTime);
 
     /**
-     * This query takes a Database View with the aggregate time per activity and session and filters
-     * this View to return only the rows concerning the provided activity and the last N sessions.
-     * The result is aggregated again, returning a single object containing only the activity ID and
-     * the total duration
+     * This query takes the Database View {@link AggregateVisitTimeBySession} with the aggregate
+     * time per activity and session and filters this View to return only the rows concerning the
+     * provided activity and the last N sessions. The result is aggregated again, returning a
+     * single object containing only the activity ID and the total duration
      *
      * @param activityId    The activity to search for
      * @param lastNSessions The number of sessions to take, starting from the current session and before
