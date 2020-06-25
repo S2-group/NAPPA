@@ -24,9 +24,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-// TODO test todo in gradle file
-//
-//  this is a test
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotation
