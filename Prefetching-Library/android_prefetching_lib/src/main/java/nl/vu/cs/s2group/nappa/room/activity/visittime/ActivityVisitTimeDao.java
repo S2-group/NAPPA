@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.room.activity.visittime;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -24,5 +25,5 @@ public interface ActivityVisitTimeDao {
             "WHERE activityId = :activityId " +
             "AND sessionId > (SELECT MAX(id) - :lastNSessions FROM pf_session) " +
             "GROUP BY activityId")
-    AggregateVisitTimeByActivity getAggregateVisitTimeByActivity(long activityId, int lastNSessions);
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(long activityId, int lastNSessions);
 }
