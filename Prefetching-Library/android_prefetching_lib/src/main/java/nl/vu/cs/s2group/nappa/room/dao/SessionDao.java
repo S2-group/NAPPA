@@ -8,9 +8,9 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
-import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
 @Dao
 public interface SessionDao {
@@ -38,7 +38,6 @@ public interface SessionDao {
      * for a given idSource, for all of its destinations
      *
      * @param idSource The source {@link ActivityNode} x containing a successor set Y.
-     *
      * @return Given x, for all y of Y,  a total count of all transitions x --> y  will be returned.
      */
     @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest " +
@@ -46,9 +45,9 @@ public interface SessionDao {
             "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +
             "WHERE id_activity_source = :idSource " +
             "GROUP BY id_activity_destination")
-    public LiveData<List<SessionAggregate>> getCountForActivitySource (Long idSource);
+    public LiveData<List<SessionAggregate>> getCountForActivitySource(Long idSource);
 
-    @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest "+
+    @Query("SELECT id_activity_destination as idActDest, activity_name as actName, SUM(count_source_destination) as countSource2Dest " +
             "FROM (SELECT id_activity_destination , activity_name , count_source_destination, id_session  " +
             "FROM pf_session_data " +
             "LEFT JOIN pf_activity as pfa ON pfa.id = id_activity_destination " +
@@ -56,7 +55,8 @@ public interface SessionDao {
             "ORDER BY id_session DESC) as X " +
             "WHERE X.id_session >= ((SELECT MAX(id_session) FROM pf_session_data) - :lastN) " +
             "GROUP BY id_activity_destination ")
-    public LiveData<List<SessionAggregate>> getCountForActivitySource (Long idSource, int lastN);
+    public LiveData<List<SessionAggregate>> getCountForActivitySource(Long idSource, int lastN);
+
     class SessionAggregate {
         public Long idActDest;
         public String actName;
