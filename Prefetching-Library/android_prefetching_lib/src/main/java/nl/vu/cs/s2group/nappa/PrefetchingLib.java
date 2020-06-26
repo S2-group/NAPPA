@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
@@ -64,6 +63,8 @@ import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
     private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
+
+    private static Map<PrefetchingStrategyConfigKeys, Object> config;
 
     private static PrefetchingLib instance;
     private static boolean libGet = false;
@@ -121,6 +122,7 @@ public class PrefetchingLib {
             instance = PrefetchingLib.getInstance();
             PrefetchingDatabase.getInstance(context);
 
+            PrefetchingLib.config = config;
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
             cacheDir = context.getCacheDir();
@@ -146,8 +148,8 @@ public class PrefetchingLib {
 
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
-                    addSessionAggregateObserver(byName, actId, config);
-                    addVisitTimePerActivityObserver(byName, config);
+                    addSessionAggregateObserver(byName, actId);
+                    addVisitTimePerActivityObserver(byName);
                 }
 
 
@@ -167,7 +169,7 @@ public class PrefetchingLib {
      *
      * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Map<PrefetchingStrategyConfigKeys, Object> config) {
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
         if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
             return;
@@ -241,7 +243,7 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId, Map<PrefetchingStrategyConfigKeys, Object> config) {
+    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
         if (!activity.shouldSetSessionAggregateLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
@@ -358,32 +360,23 @@ public class PrefetchingLib {
     /**
      * Notifies the prefetching library whenever an activity transition takes place
      *
-     * @param activity
+     * @param activity Represents the activity the user navigated to.
      */
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
-        if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
-            Log.d(LOG_TAG, "loading data for " + currentActivityName);
-            activityGraph.getCurrent().setListSessionAggregateLiveData(
-                    PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                            activityMap.get(currentActivityName)
-                    )
-            );
-            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PPMPrefetchingStrategy.lastN));
 
-        }
-
-        if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {
-            Log.d(LOG_TAG, "loading extras for " + currentActivityName);
-            activityGraph.getCurrent().setListActivityExtraLiveData(
-                    PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                            activityMap.get(currentActivityName)
-                    )
-            );
-        }
+        // Add LiveData observers
+        ActivityNode currentNode = activityGraph.getCurrent();
+        Long activityId = activityMap.get(currentActivityName);
+        if (activityId == null)
+            throw new IllegalArgumentException("Unknown activity " + currentActivityName);
+        addSessionAggregateObserver(currentNode, activityId);
+        addActivityExtraObserver(currentNode, activityId);
+        addVisitTimePerActivityObserver(currentNode);
+        addAUrlCandidateObserver(currentNode, activityId);
 
         //TODO prefetching spot here
 
