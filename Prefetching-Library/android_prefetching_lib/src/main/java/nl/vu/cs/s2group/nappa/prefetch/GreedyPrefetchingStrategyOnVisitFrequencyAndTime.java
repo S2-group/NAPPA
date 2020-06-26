@@ -79,9 +79,10 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
      */
     private List<String> getTopNUrlToPrefetchForNode(@NonNull ActivityNode node, float parentScore, List<String> urlList) {
         // TODO Fix these items to complete the strategy implementation:
-        //  Update the query to take the last N session from the visit frequency to consider the last N session
-        //  where the activity was visited where the activity was visited at least once
-        //  ask Ivano about this --> last N session where the activity was visited
+        //  Use approach A (i.e., last N actual sessions)
+        //  Update the visit time to accept empty rows (in the observer?)
+        //  Address division by zero in this method
+
         // Fetches the data to start the calculations - Aggregate visit time and frequency
         float totalAggregateTime = NappaUtil.getSuccessorsAggregateVisitTime(node);
         int totalAggregateFrequency = NappaUtil.getSuccessorsAggregateVisitFrequency(node, lastNSessions);
