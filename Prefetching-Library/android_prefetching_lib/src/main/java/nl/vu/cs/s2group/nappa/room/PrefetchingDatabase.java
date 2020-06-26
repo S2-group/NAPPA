@@ -42,6 +42,7 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySessio
 //  * Using DatabaseView to simplify some queries;
 //  * Extracting `LAR` operations from `ActivityTableDao` --> LAR refers to PageRank, HITS and Salsa scores, but I am not sure what the acronym means;
 //  * Renaming the method `getInstance(Context)` to `init(Context)` since its purpose is to initialize the DB and it must know the Context;
+//  * Resolve warnings listed when building the library;
 //  The model classes extraction is motivated to simplify code reading. It is a lot better to read
 //  `List<SessionAggregate>` than `List<SessionDao.SessionAggregate>` .
 //  There are probably other improvements and considerations to take into account, but this is the
