@@ -97,8 +97,8 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
             int successorFrequency = NappaUtil.getSuccessorAggregateVisitFrequency(successor, lastNSessions);
             float successorTime = successor.getAggregateVisitTime().totalDuration;
 
-            float successorTimeScore = (successorTime / totalAggregateTime * weightTimeScore);
-            float successorFrequencyScore = ((float) successorFrequency / totalAggregateFrequency * weightFrequencyScore);
+            float successorTimeScore = totalAggregateTime == 0 ? 0 : (successorTime / totalAggregateTime * weightTimeScore);
+            float successorFrequencyScore = totalAggregateFrequency == 0 ? 0 : ((float) successorFrequency / totalAggregateFrequency * weightFrequencyScore);
 
             float successorScore = parentScore * (successorTimeScore + successorFrequencyScore);
 
