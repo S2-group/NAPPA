@@ -485,7 +485,10 @@ public class PrefetchingLib {
                 for (String key : allExtras.keySet()) {
                     // Put on this extras tracker for this activity the new key-value pair. If
                     //    No value has been associated with this extra, NULL will be stored
-                    extras.put(key, allExtras.getString(key));
+                    Object value = allExtras.get(key);
+                    if (value == null)
+                        throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
+                    extras.put(key, value.toString());
                 }
 
                 // Update the global extras map after all extras have been stored
@@ -509,8 +512,11 @@ public class PrefetchingLib {
                     // Iterate through All Extras
                     for (String key : allExtras.keySet()) {
                         // Create an Database Object and store it
+                        Object value = allExtras.get(key);
+                        if (value == null)
+                            throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
                         ActivityExtraData activityExtraData =
-                                new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
+                                new ActivityExtraData(session.id, idAct, key, value.toString());
                         Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
                         PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
                     }
