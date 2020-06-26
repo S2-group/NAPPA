@@ -108,7 +108,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
             }
         }
 
-        // Verifies if a best successor wa found and if its score is sufficient
+        // Verifies if this node has any successor. If it has, verifies if the successor with the best score has a score high enough
         if (bestSuccessor == null || bestSuccessorScore < scoreLowerThreshold) return urlList;
 
         // Fetches the URLs from the bestSuccessor and the remaining URL budget
