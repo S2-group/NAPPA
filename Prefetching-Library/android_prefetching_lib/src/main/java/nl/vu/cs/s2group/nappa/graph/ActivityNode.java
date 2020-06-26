@@ -125,7 +125,7 @@ public class ActivityNode {
         this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
-            if (newAggregateVisitTime == null) {
+            if (newAggregateVisitTime == null || newAggregateVisitTime.activityName == null) {
                 Log.d(LOG_TAG, activityName + " - Was not accessed in the last N sessions");
                 aggregateVisitTime = new AggregateVisitTimeByActivity();
                 aggregateVisitTime.totalDuration = 0;
