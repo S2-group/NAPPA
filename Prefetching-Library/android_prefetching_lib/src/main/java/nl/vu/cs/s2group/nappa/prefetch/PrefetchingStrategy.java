@@ -10,6 +10,19 @@ import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
+// TODO Maintaining prefetching strategies
+//  Majority of the implemented strategies are:
+//  * Deprecated;
+//  * Poorly documented;
+//  * Poorly implemented;
+//  * Untested;
+//  * Non parametric
+//  For these, consider whether to put effort in refactoring into a usable and
+//  maintainable state or remove altogether.
+//  Additionally, consider:
+//  * Renaming this package from `prefetch` to `prefetchingstrategies` or simply `strategies`
+//  * Organizing the strategies into family of algorithms
+
 /**
  * The <tt>PrefetchStrategy</tt> interface provides the API to access and initialize
  * the implemented prefetching strategies. The strategy is selected upon initializing the
