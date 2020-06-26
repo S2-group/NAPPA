@@ -68,7 +68,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
      * <p>
      * In the third stage the method verifies whether to continue the recursion or return the
      * current URL list. If the URL budget is completely filled, then the URL list is returned,
-     * otherwise, the recursion continues by invoking this method with the best sucessor object,
+     * otherwise, the recursion continues by invoking this method with the best successor object,
      * score and current URL list
      *
      * @param node        The current node in the recursion. Either the node that started the
