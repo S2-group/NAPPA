@@ -146,12 +146,8 @@ public class PrefetchingLib {
 
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
-                    Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-                    int lastNSessions = lastNSessionsObj != null ? Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
-                    addSessionAggregateObserver(byName, actId, lastNSessions);
-                    if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME) {
-                        addVisitTimePerActivityObserver(byName, lastNSessions);
-                    }
+                    addSessionAggregateObserver(byName, actId, config);
+                    addVisitTimePerActivityObserver(byName, config);
                 }
 
 
@@ -171,17 +167,30 @@ public class PrefetchingLib {
      *
      * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, int lastNSessions) {
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
+        if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
+            return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
 
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
+
+            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+            int lastNSessions = lastNSessionsObj != null ?
+                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+
+            Object useSessionEntityObj = config.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
+            boolean useSessionEntity = useSessionEntityObj != null ?
+                    Boolean.getBoolean(useSessionEntityObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS;
+
             if (lastNSessions == -1) {
                 liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
+            } else if (useSessionEntity) {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
             } else {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntityActivityVisitTime(activity.activityName, lastNSessions);
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
             }
 
             new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
@@ -232,13 +241,17 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId, int lastNSessions) {
+    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId, Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (!activity.shouldSetSessionAggregateLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
 
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
+
+            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+            int lastNSessions = lastNSessionsObj != null ?
+                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
                 liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);

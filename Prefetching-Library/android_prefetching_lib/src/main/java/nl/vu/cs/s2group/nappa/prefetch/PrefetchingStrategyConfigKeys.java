@@ -32,7 +32,8 @@ public enum PrefetchingStrategyConfigKeys {
     /**
      * Maps a {@link Integer} representing the number of sessions to fetch data used to calculate
      * the probability of navigating the a given node. This number includes the current session.
-     * To fetch data from all sessions, set this parameter to -1
+     * To fetch data from all sessions, set this parameter to -1.
+     * <p>
      * This parameter limits the search for the following data:
      * <ul>
      *     <li> Aggregate visit time</li>
@@ -42,6 +43,25 @@ public enum PrefetchingStrategyConfigKeys {
      * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_LAST_N_SESSIONS}.
      */
     LAST_N_SESSIONS,
+
+    /**
+     * Maps a {@link Boolean} flag to determine which Table/Entity to use as source to
+     * determine the minimum session ID to obtain the last N sessions. If {@code True},
+     * then the Entity {@link nl.vu.cs.s2group.nappa.room.data.Session Session} is used
+     * as source, otherwise, the specific table containing a the session ID as foreign
+     * key is used instead.
+     * <p>
+     * This parameter is only used together with the parameter {@link #LAST_N_SESSIONS}.
+     * <p>
+     * This parameter is available for the following data:
+     * <ul>
+     *     <li> Aggregate visit time</li>
+     * </ul>
+     * <p>
+     * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS}.
+     */
+    // We might want to make a shorter name for this
+    USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
 
     /**
      * Maps a {@link Float} representing the weight to give for the aggregate visit time

@@ -29,9 +29,9 @@ public interface ActivityVisitTimeDao {
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityName);
 
     /**
-     * This query extends the query defined at {@link ActivityVisitTimeDao#getAggregateVisitTimeByActivity(String)}
+     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(String)}
      * by further filtering the view by the last N sessions. For this query, the last N sessions
-     * refers to the last N sessions recorded in the Entity {@link nl.vu.cs.s2group.nappa.room.data.Session}.
+     * refers to the last N sessions recorded in the Entity {@link nl.vu.cs.s2group.nappa.room.data.Session Session}.
      * <p>
      * For example, if the current sessions is Session #100 and N = 2, then sessions
      * #99 and #100 are used in this query.
@@ -64,7 +64,7 @@ public interface ActivityVisitTimeDao {
 
 
     /**
-     * This query extends the query defined at {@link ActivityVisitTimeDao#getAggregateVisitTimeByActivity(String)}
+     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(String)}
      * by further filtering the view by the last N sessions. For this query, the last N sessions
      * refers to the last N sessions that the activity with name {@code activityName} was
      * accessed and data was registered in the Entity {@link ActivityVisitTime}.
@@ -73,7 +73,7 @@ public interface ActivityVisitTimeDao {
      * last accessed in Sessions #99 and #90, them sessions #90 and #99 are used in this query.
      * <p>
      * This query differs from
-     * {@link ActivityVisitTimeDao#getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String, int)},
+     * {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String, int)},
      * as it will always return a non null value, unless an exception takes place when
      * first accessing the activity and before leaving it (i.e., a new activity was recorded
      * but the app crashed before recoding the time spent on it).
@@ -95,6 +95,6 @@ public interface ActivityVisitTimeDao {
             "   ORDER BY sessionId " +
             "   DESC LIMIT :lastNSessions" +
             ") ")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInEntityActivityVisitTime(String activityName, int lastNSessions);
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(String activityName, int lastNSessions);
 
 }
