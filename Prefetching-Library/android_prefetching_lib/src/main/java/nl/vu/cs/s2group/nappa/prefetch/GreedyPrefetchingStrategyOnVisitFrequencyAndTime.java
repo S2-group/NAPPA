@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
@@ -94,7 +95,9 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         // Loop all successors and saves the successor with the best score. In case of drawn, the
         //  first current best successor is picked
         for (ActivityNode successor : node.successors.keySet()) {
-            int successorFrequency = successorsAggregateFrequencyMap.get(successor.activityName);
+            Integer successorFrequency = successorsAggregateFrequencyMap.get(successor.activityName);
+            if (successorFrequency == null)
+                throw new NoSuchElementException("Unable to obtain the successor frequency count!");
             float successorTime = successor.getAggregateVisitTime().totalDuration;
 
             float successorTimeScore = totalAggregateTime == 0 ? 0 : (successorTime / totalAggregateTime * weightTimeScore);
