@@ -85,8 +85,8 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
 
         // Fetches the data to start the calculations - Aggregate visit time and frequency
         float totalAggregateTime = NappaUtil.getSuccessorsAggregateVisitTime(node);
-        int totalAggregateFrequency = NappaUtil.getSuccessorsAggregateVisitFrequency(node, lastNSessions);
-
+        int totalAggregateFrequency = NappaUtil.getSuccessorsTotalAggregateVisitFrequency(node, lastNSessions);
+        Map<String, Integer> successorsAggregateFrequencyMap = NappaUtil.mapSuccessorsAggregateVisitFrequency(node, lastNSessions);
         // Temporary variables to find the best successor
         ActivityNode bestSuccessor = null;
         float bestSuccessorScore = 0;
@@ -94,7 +94,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         // Loop all successors and saves the successor with the best score. In case of drawn, the
         //  first current best successor is picked
         for (ActivityNode successor : node.successors.keySet()) {
-            int successorFrequency = NappaUtil.getSuccessorAggregateVisitFrequency(successor, lastNSessions);
+            int successorFrequency = successorsAggregateFrequencyMap.get(successor.activityName);
             float successorTime = successor.getAggregateVisitTime().totalDuration;
 
             float successorTimeScore = totalAggregateTime == 0 ? 0 : (successorTime / totalAggregateTime * weightTimeScore);

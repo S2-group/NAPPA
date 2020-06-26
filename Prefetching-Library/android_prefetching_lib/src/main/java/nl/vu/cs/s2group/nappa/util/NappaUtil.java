@@ -2,6 +2,7 @@ package nl.vu.cs.s2group.nappa.util;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -90,26 +91,33 @@ public class NappaUtil {
      * @param activityNode The current node
      * @return Return the total aggregate visit frequency
      */
-    public static int getSuccessorsAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
+    public static int getSuccessorsTotalAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
         int total = 0;
-        for (ActivityNode node : activityNode.successors.keySet()) {
-            total += getSuccessorAggregateVisitFrequency(node, lastNSessions);
+        List<SessionDao.SessionAggregate> frequencyList = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
+
+        for (SessionDao.SessionAggregate sessionAggregate : frequencyList) {
+            total += sessionAggregate.countSource2Dest;
         }
+
         return total;
     }
 
     /**
-     * Calculate the total aggregate sum of the visit frequency of this node
+     * Maps the successors aggregate visit frequency count using the activity name as key
+     * and the aggregate visit frequency as value
      *
      * @param activityNode The current node
-     * @return Return the total aggregate visit frequency
+     * @return Return the mapped aggregate visit frequency count for this node successors
      */
-    public static int getSuccessorAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
-        int total = 0;
-        List<SessionDao.SessionAggregate> list = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
-        for (SessionDao.SessionAggregate sessionAggregate : list) {
-            total += sessionAggregate.countSource2Dest;
+    @NotNull
+    public static Map<String, Integer> mapSuccessorsAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
+        List<SessionDao.SessionAggregate> frequencyList = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
+        Map<String, Integer> frequencyMap = new HashMap<>(frequencyList.size());
+
+        for (SessionDao.SessionAggregate sessionAggregate : frequencyList) {
+            frequencyMap.put(sessionAggregate.actName, sessionAggregate.countSource2Dest.intValue());
         }
-        return total;
+
+        return frequencyMap;
     }
 }
