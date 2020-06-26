@@ -14,6 +14,9 @@ import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
 
+// TODO Extract LAR operations from class ActivityGraph
+//  LAR operations are about updating scores used by certain strategies. They are not about
+//  managing the graph per si and they add noise into this class.
 
 public class ActivityGraph {
     private static final String LOG_TAG = ActivityGraph.class.getSimpleName();
