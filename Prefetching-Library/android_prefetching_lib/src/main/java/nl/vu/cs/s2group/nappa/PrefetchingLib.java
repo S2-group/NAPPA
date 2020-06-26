@@ -61,6 +61,15 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
+// TODO The workflow of the NAPPA library is a complicated/monolithic
+//  PrefetchingLib has far too many responsibilities (the file has almost 1k lines)
+//  I would suggest refactoring it to contain only a access point to the library
+//  with the minimal logic required and extracting the non essential code to other classes.
+//  Due to Android development nature, network requests and database accesses must be
+//  performed in secondary threads. In NAPPA, this is achieved by using the class
+//  `ScheduledThreadPoolExecutor`. However, its usage was overly abused across the
+//  library, making the workflow even for difficult to understand and debug.
+
 public class PrefetchingLib {
     private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
