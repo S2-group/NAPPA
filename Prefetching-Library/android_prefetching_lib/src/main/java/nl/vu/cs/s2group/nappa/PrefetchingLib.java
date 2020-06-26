@@ -300,6 +300,16 @@ public class PrefetchingLib {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().insert(activityData);
                 updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+
+                // Add LiveData observers
+                ActivityNode currentNode = activityGraph.getCurrent();
+                Long activityId = activityMap.get(currentActivityName);
+                if (activityId == null)
+                    throw new IllegalArgumentException("Unknown activity " + currentActivityName);
+                addSessionAggregateObserver(currentNode, activityId);
+                addActivityExtraObserver(currentNode, activityId);
+                addVisitTimePerActivityObserver(currentNode);
+                addAUrlCandidateObserver(currentNode, activityId);
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -366,16 +376,6 @@ public class PrefetchingLib {
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
-
-        // Add LiveData observers
-        ActivityNode currentNode = activityGraph.getCurrent();
-        Long activityId = activityMap.get(currentActivityName);
-        if (activityId == null)
-            throw new IllegalArgumentException("Unknown activity " + currentActivityName);
-        addSessionAggregateObserver(currentNode, activityId);
-        addActivityExtraObserver(currentNode, activityId);
-        addVisitTimePerActivityObserver(currentNode);
-        addAUrlCandidateObserver(currentNode, activityId);
 
         //TODO prefetching spot here
 
