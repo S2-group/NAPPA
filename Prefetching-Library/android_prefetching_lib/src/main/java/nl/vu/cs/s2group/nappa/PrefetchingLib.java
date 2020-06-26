@@ -279,7 +279,6 @@ public class PrefetchingLib {
      */
     private static void updateActivityMap(List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
-            activityMap.remove(activityData.activityName);
             activityMap.put(activityData.activityName, activityData.id);
             Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
         }
