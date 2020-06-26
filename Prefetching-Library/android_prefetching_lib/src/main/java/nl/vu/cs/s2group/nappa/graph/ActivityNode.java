@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,10 +103,14 @@ public class ActivityNode {
     }
 
     public List<SessionDao.SessionAggregate> getSessionAggregateList() {
+        if (listSessionAggregateLiveData == null || listSessionAggregateLiveData.getValue() == null)
+            return new ArrayList<>();
         return listSessionAggregateLiveData.getValue();
     }
 
     public List<SessionDao.SessionAggregate> getSessionAggregateList(int LastN) {
+        if (listLastNSessionAggregateLiveData == null || listLastNSessionAggregateLiveData.getValue() == null)
+            return new ArrayList<>();
         return listLastNSessionAggregateLiveData.getValue();
 
     }
