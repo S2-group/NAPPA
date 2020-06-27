@@ -3,7 +3,8 @@ package nl.vu.cs.s2group.nappa;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -12,10 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -33,14 +33,19 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.prefetch.PPMPrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.RequestData;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
+import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
+import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.data.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
@@ -56,8 +61,19 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.cache.CacheStrategy;
 
+// TODO The workflow of the NAPPA library is a complicated/monolithic
+//  PrefetchingLib has far too many responsibilities (the file has almost 1k lines)
+//  I would suggest refactoring it to contain only a access point to the library
+//  with the minimal logic required and extracting the non essential code to other classes.
+//  Due to Android development nature, network requests and database accesses must be
+//  performed in secondary threads. In NAPPA, this is achieved by using the class
+//  `ScheduledThreadPoolExecutor`. However, its usage was overly abused across the
+//  library, making the workflow even for difficult to understand and debug.
+
 public class PrefetchingLib {
-    private final static String LOG_TAG = PrefetchingLib.class.getSimpleName();
+    private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
+
+    private static Map<PrefetchingStrategyConfigKeys, Object> config;
 
     private static PrefetchingLib instance;
     private static boolean libGet = false;
@@ -65,21 +81,24 @@ public class PrefetchingLib {
     private static String currentActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
-    public static HashMap<String, Long> activityMap = new HashMap<>();      // Map of ActivityNodes containing Key: ActivityName Value: ID,
+    /**
+     * Map of ActivityNodes containing Key: ActivityName Value: ID,
+     */
+    public static HashMap<String, Long> activityMap = new HashMap<>();
     private static Session session;
     private static PrefetchingStrategy strategyIntent;
-    //private static PrefetchStrategy strategyIntent = new PrefetchStrategyImpl3(0.6f);
     private static OkHttpClient okHttpClient;
     private static ConcurrentHashMap<String, Long> prefetchRequest = new ConcurrentHashMap<>();
     private static ScheduledThreadPoolExecutor poolExecutor = new ScheduledThreadPoolExecutor(1);
     private static LruCache<String, SimpleResponse> responseLruCache = new LruCache<>(100);
-    // Corresponds to a Map whose key is the Activity ID and the value is list of extras (key-value pairs)
-    //  for the given activity.
+    /**
+     * Corresponds to a Map whose key is the Activity ID and the value is list of extras
+     * (key-value pairs) for the given activity.
+     */
     private static LongSparseArray<Map<String, String>> extrasMap = new LongSparseArray<>();
     private static DiffMatchPatch dmp = new DiffMatchPatch();
-    public static int prefetchStrategyNum;
+    public static PrefetchingStrategyType prefetchingStrategyType;
     private static boolean prefetchEnabled = true;
-    private static int candidatePrefetchableUrlThreshold = 2;
     private static int requestP = 0, requestNP = 0;
     private static float timeSaved = 0f;
     private static Date visitedCurrentActivityDate;
@@ -88,43 +107,33 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib(int prefetchStrategyNum) {
-        this.prefetchStrategyNum = prefetchStrategyNum;
-        strategyIntent = PrefetchingStrategy.getStrategy(prefetchStrategyNum);
+    private PrefetchingLib() {
     }
 
+    private static PrefetchingLib getInstance() {
+        if (instance == null)
+            instance = new PrefetchingLib();
+        return instance;
+    }
 
-    public static void init(Context context, int prefetchStrategyNum) {
+    @SuppressWarnings("unused")
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType) {
+        init(context, prefetchingStrategyType, new HashMap<>());
+    }
+
+    @SuppressWarnings("unused")
+    public static void init(Context context, PrefetchingStrategyType prefetchingStrategyType, Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (instance == null) {
-            //configuration file for
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, "config.txt");
-            String psn = Integer.toString(prefetchStrategyNum);
-            int size;
-            FileInputStream stream = null;
-            try {
-                stream = new FileInputStream(file);
-                try {
-                    psn = "";
-                    while ((size = stream.read()) != -1) {
-                        psn += Character.toString((char) size);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            final long start = new Date().getTime();
 
-            final Long start = new Date().getTime();
-            Log.d(LOG_TAG, "PREFSTRATEGYNUM " + psn);
-            instance = new PrefetchingLib(Integer.parseInt(psn));
+            Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
+
+            instance = PrefetchingLib.getInstance();
             PrefetchingDatabase.getInstance(context);
+
+            PrefetchingLib.config = config;
+            PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
 
@@ -146,42 +155,10 @@ public class PrefetchingLib {
                     ActivityNode byName = activityGraph.getByName(actName);
                     Long actId = activityMap.get(actName);
 
-                    // Instantiate the static aggregated data for the count of Source --> Destination
-                    // edge visits.  Set up the observers to ensure consistency with the database
-                    if (byName.shouldSetSessionAggregateLiveData()) {
-                        Log.d(LOG_TAG, "loading data for " + actName);
-                        byName.setListSessionAggregateLiveData(
-                                PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                                        actId
-                                )
-                        );
-
-                        byName.setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(actId, PPMPrefetchingStrategy.lastN));
-
-                    }
-
-                    // Instantiate all extras data for this activity AND set up all the observers to
-                    // ensure consistency with the database
-                    if (byName.shouldSetActivityExtraLiveData()) {
-                        Log.d(LOG_TAG, "loading extras for " + actName);
-                        byName.setListActivityExtraLiveData(
-                                PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                                        actId
-                                )
-                        );
-                    }
-
-                    // Instantiate the static UrlCandidate
-                    if (byName.shouldSetUrlCandidateDbLiveDataLiveData()) {
-                        Log.d(LOG_TAG, "loading urlcandidate for " + actName);
-                        // Build
-                        byName.setUrlCandidateDbLiveData(
-                                // Fetch the URL candidates stored in the database
-                                PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(
-                                        actId
-                                )
-                        );
-                    }
+                    addAUrlCandidateObserver(byName, actId);
+                    addActivityExtraObserver(byName, actId);
+                    addSessionAggregateObserver(byName, actId);
+                    addVisitTimePerActivityObserver(byName);
                 }
 
 
@@ -196,6 +173,109 @@ public class PrefetchingLib {
 
     }
 
+    /**
+     * Query the database for the aggregate visit time and add an observer to the result
+     *
+     * @param activity A {@link ActivityNode} object contaning the activity name
+     */
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
+        if (activity.isAggregateVisitTimeInstantiated()) return;
+        if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
+            return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
+
+        poolExecutor.execute(() -> {
+            LiveData<AggregateVisitTimeByActivity> liveData;
+
+            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+            int lastNSessions = lastNSessionsObj != null ?
+                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+
+            Object useSessionEntityObj = config.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
+            boolean useSessionEntity = useSessionEntityObj != null ?
+                    Boolean.getBoolean(useSessionEntityObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS;
+
+            if (lastNSessions == -1) {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
+            } else if (useSessionEntity) {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+            } else {
+                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+            }
+
+            new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
+        });
+    }
+
+    /**
+     * Instantiate the static UrlCandidate
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addAUrlCandidateObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetUrlCandidateDbLiveDataLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add URL candidates observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> liveData;
+            liveData = PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
+            new Handler(Looper.getMainLooper()).post(() -> activity.setUrlCandidateDbLiveData(liveData));
+        }, 0, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Instantiate all extras data for this activity AND set up all the observers to
+     * ensure consistency with the database
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addActivityExtraObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetActivityExtraLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add extras observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<ActivityExtraData>> liveData;
+            liveData = PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
+            new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
+        }, 0, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Instantiate the static aggregated data for the count of Source --> Destination
+     * edge visits.  Set up the observers to ensure consistency with the database
+     *
+     * @param activity
+     * @param activityId
+     */
+    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
+        if (!activity.shouldSetSessionAggregateLiveData()) return;
+
+        Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
+
+        poolExecutor.schedule(() -> {
+            LiveData<List<SessionDao.SessionAggregate>> liveData;
+
+            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
+            int lastNSessions = lastNSessionsObj != null ?
+                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+
+            if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
+                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
+                new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
+            } else {
+                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId);
+                new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));
+            }
+
+
+        }, 0, TimeUnit.SECONDS);
+    }
+
     public static LiveData<List<ActivityData>> getActivityLiveData() {
         return listLiveData;
     }
@@ -208,7 +288,6 @@ public class PrefetchingLib {
      */
     private static void updateActivityMap(List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
-            activityMap.remove(activityData.activityName);
             activityMap.put(activityData.activityName, activityData.id);
             Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
         }
@@ -230,6 +309,16 @@ public class PrefetchingLib {
             poolExecutor.schedule(() -> {
                 PrefetchingDatabase.getInstance().activityDao().insert(activityData);
                 updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+
+                // Add LiveData observers
+                ActivityNode currentNode = activityGraph.getCurrent();
+                Long activityId = activityMap.get(currentActivityName);
+                if (activityId == null)
+                    throw new IllegalArgumentException("Unknown activity " + currentActivityName);
+                addSessionAggregateObserver(currentNode, activityId);
+                addActivityExtraObserver(currentNode, activityId);
+                addVisitTimePerActivityObserver(currentNode);
+                addAUrlCandidateObserver(currentNode, activityId);
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -289,32 +378,13 @@ public class PrefetchingLib {
     /**
      * Notifies the prefetching library whenever an activity transition takes place
      *
-     * @param activity
+     * @param activity Represents the activity the user navigated to.
      */
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
-        if (activityGraph.getCurrent().shouldSetSessionAggregateLiveData()) {
-            Log.d(LOG_TAG, "loading data for " + currentActivityName);
-            activityGraph.getCurrent().setListSessionAggregateLiveData(
-                    PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(
-                            activityMap.get(currentActivityName)
-                    )
-            );
-            activityGraph.getCurrent().setLastNListSessionAggregateLiveData(PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityMap.get(currentActivityName), PPMPrefetchingStrategy.lastN));
-
-        }
-
-        if (activityGraph.getCurrent().shouldSetActivityExtraLiveData()) {
-            Log.d(LOG_TAG, "loading extras for " + currentActivityName);
-            activityGraph.getCurrent().setListActivityExtraLiveData(
-                    PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(
-                            activityMap.get(currentActivityName)
-                    )
-            );
-        }
 
         //TODO prefetching spot here
 
@@ -353,7 +423,7 @@ public class PrefetchingLib {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
-                activityMap.get(currentActivityName),
+                currentActivityName,
                 session.id,
                 visitedCurrentActivityDate,
                 duration
@@ -409,6 +479,7 @@ public class PrefetchingLib {
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
      */
+    @SuppressWarnings("unused")
     public static void notifyExtras(Bundle allExtras) {
         // Note:  if the currentActivityName has not been set (Activity Transition before
         // setCurrentActivity() is called), then notification is ignored
@@ -423,7 +494,10 @@ public class PrefetchingLib {
                 for (String key : allExtras.keySet()) {
                     // Put on this extras tracker for this activity the new key-value pair. If
                     //    No value has been associated with this extra, NULL will be stored
-                    extras.put(key, allExtras.getString(key));
+                    Object value = allExtras.get(key);
+                    if (value == null)
+                        throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
+                    extras.put(key, value.toString());
                 }
 
                 // Update the global extras map after all extras have been stored
@@ -447,8 +521,11 @@ public class PrefetchingLib {
                     // Iterate through All Extras
                     for (String key : allExtras.keySet()) {
                         // Create an Database Object and store it
+                        Object value = allExtras.get(key);
+                        if (value == null)
+                            throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
                         ActivityExtraData activityExtraData =
-                                new ActivityExtraData(session.id, idAct, key, allExtras.getString(key));
+                                new ActivityExtraData(session.id, idAct, key, value.toString());
                         Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
                         PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
                     }
@@ -464,6 +541,7 @@ public class PrefetchingLib {
      * @param key   The key provided to the original putExtra method call.
      * @param value The value provided to the original putExtra method call.
      */
+    @SuppressWarnings("unused")
     public static void notifyExtra(String key, String value) {
         //PREFETCHING SPOT HERE FOR INTENT-BASED PREFETCHING
         final Long idAct = activityMap.get(currentActivityName);

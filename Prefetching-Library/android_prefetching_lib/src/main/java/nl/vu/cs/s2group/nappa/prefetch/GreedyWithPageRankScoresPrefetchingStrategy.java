@@ -15,7 +15,7 @@ import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
- * This strategy is based in the {@link GreedyPrefetchingStrategy}, where the score
+ * This strategy is based in the {@link GreedyPrefetchingStrategyOnVisitFrequency}, where the score
  * calculation is changed to use the PageRank score used in {@link PageRankPrefetchingStrategy}.
  * This strategy only considers the direct successors of the current node.
  */
