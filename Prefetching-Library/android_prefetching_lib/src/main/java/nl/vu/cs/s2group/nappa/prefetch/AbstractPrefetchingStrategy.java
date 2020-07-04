@@ -21,12 +21,12 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     public static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
     public static final boolean DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS = true;
 
-    private Map<PrefetchingStrategyConfigKeys, Object> config;
-
     protected final int maxNumberOfUrlToPrefetch;
     protected final int lastNSessions;
     protected final float scoreLowerThreshold;
     protected final boolean useAllSessionsAsScoreForLastNSessions;
+
+    private Map<PrefetchingStrategyConfigKeys, Object> config;
 
     public AbstractPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         this.config = config;
@@ -48,6 +48,11 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
                 DEFAULT_SCORE_LOWER_THRESHOLD);
     }
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
+
     protected int getConfig(PrefetchingStrategyConfigKeys key, int defaultValue) {
         Object value = config.get(key);
         return value == null ? defaultValue : Integer.parseInt(value.toString());
@@ -61,10 +66,5 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     protected float getConfig(PrefetchingStrategyConfigKeys key, float defaultValue) {
         Object value = config.get(key);
         return value == null ? defaultValue : Float.parseFloat(value.toString());
-    }
-
-    @Override
-    public boolean needVisitTime() {
-        return false;
     }
 }
