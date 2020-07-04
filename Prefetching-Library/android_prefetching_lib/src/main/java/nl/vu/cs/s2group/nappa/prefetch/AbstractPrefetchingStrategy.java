@@ -15,7 +15,7 @@ import java.util.Map;
  *     <li> {@link PrefetchingStrategyConfigKeys#USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS} </li>
  * </ul>
  */
-public abstract class AbstractPrefetchingStrategy {
+public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy {
     public static final float DEFAULT_SCORE_LOWER_THRESHOLD = 0.6f;
     public static final int DEFAULT_LAST_N_SESSIONS = 5;
     public static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;

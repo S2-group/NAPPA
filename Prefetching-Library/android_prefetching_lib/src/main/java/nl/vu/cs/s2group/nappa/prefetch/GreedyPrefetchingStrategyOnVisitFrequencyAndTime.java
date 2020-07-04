@@ -24,7 +24,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_TIME_SCORE}</li>
  * </ul>
  */
-public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy implements PrefetchingStrategy {
+public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = GreedyPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
 
     private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
