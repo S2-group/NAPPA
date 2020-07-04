@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -7,6 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+
+// TODO Unordered list of tasks to complete issue #52
+//  * Decide which fields to use in the inner class TFPRNode
+//  * Implement subgraph initialization
+//  * Implement the page rank calculation
+//  * Do we need to keep the previous score or the current score only
+//  * Verify if we need the inner class
+//  * Decide how many iterations to run
+//  * Add a configurable parameter for the number of runs
+//  * Decide on which nodes to use for the subgraph --> all successors from current node and all nodes that points to the successors
 
 /**
  * This strategy employs a Link Analysis approach implementing a PageRank-based algorithm
@@ -59,6 +71,21 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
+        Log.d(LOG_TAG, node.activityName + " searching best successors");
         return new ArrayList<>();
+    }
+
+    private List<TFPRNode> runPageRank(List<TFPRNode> graph) {
+        return new ArrayList<>();
+    }
+
+    private List<TFPRNode> getSubgraph(ActivityNode node){
+        return new ArrayList<>();
+    }
+
+    private class TFPRNode {
+        ActivityNode node;
+        float tfprScore;
+
     }
 }
