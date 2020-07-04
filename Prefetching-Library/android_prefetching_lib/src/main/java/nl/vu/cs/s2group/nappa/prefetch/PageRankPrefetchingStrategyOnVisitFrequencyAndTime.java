@@ -18,11 +18,16 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * Only a subgraph of the ENG is considered in the calculations. The score calculations are
  * performed at runtime and are not persisted in the database.
  * <p>
+ * Strategy inspired on the paper Personalized PageRank for Web Page Prediction Based
+ * on Access Time-Length and Frequency from 2007.
+ * <p>
  * This strategy accepts the following configurations:
  * <ul>
  *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_FREQUENCY_SCORE}</li>
  *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_TIME_SCORE}</li>
  * </ul>
+ *
+ * @see <a href="https://dl.acm.org/doi/10.1109/WI.2007.145">Personalized PageRank paper</a>
  */
 public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
     public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
