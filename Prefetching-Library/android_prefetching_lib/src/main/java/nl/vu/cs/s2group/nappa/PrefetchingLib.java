@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -178,7 +177,7 @@ public class PrefetchingLib {
      *
      * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
+    private static void addVisitTimePerActivityObserver(@NonNull ActivityNode activity) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
         if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
             return;
@@ -214,7 +213,7 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addAUrlCandidateObserver(@NotNull ActivityNode activity, Long activityId) {
+    private static void addAUrlCandidateObserver(@NonNull ActivityNode activity, Long activityId) {
         if (!activity.shouldSetUrlCandidateDbLiveDataLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add URL candidates observer");
@@ -233,7 +232,7 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addActivityExtraObserver(@NotNull ActivityNode activity, Long activityId) {
+    private static void addActivityExtraObserver(@NonNull ActivityNode activity, Long activityId) {
         if (!activity.shouldSetActivityExtraLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add extras observer");
@@ -252,7 +251,7 @@ public class PrefetchingLib {
      * @param activity
      * @param activityId
      */
-    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
+    private static void addSessionAggregateObserver(@NonNull ActivityNode activity, Long activityId) {
         if (!activity.shouldSetSessionAggregateLiveData()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
