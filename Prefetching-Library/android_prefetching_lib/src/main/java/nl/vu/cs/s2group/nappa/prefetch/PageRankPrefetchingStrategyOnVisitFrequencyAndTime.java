@@ -30,6 +30,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  * @see <a href="https://dl.acm.org/doi/10.1109/WI.2007.145">Personalized PageRank paper</a>
  */
 public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
+    private static final String LOG_TAG = PageRankPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
     public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
     }
