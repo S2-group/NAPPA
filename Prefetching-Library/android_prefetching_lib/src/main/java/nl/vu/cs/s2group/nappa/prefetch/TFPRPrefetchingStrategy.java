@@ -27,8 +27,8 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  *
  * @see <a href="https://dl.acm.org/doi/10.1109/WI.2007.145">Personalized PageRank paper</a>
  */
-public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
-    private static final String LOG_TAG = PageRankPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
+public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
+    private static final String LOG_TAG = TFPRPrefetchingStrategy.class.getSimpleName();
 
     private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
     private static final float DEFAULT_WEIGHT_TIME_SCORE = 0.5f;
@@ -41,7 +41,7 @@ public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends Abstract
         return true;
     }
 
-    public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
+    public TFPRPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
 
         weightFrequencyScore = getConfig(

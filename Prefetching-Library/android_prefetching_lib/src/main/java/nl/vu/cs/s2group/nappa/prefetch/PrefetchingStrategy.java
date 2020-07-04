@@ -88,8 +88,8 @@ public interface PrefetchingStrategy {
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             case STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME:
                 return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime(config);
-            case STRATEGY_PAGERANK_VISIT_FREQUENCY_AND_TIME:
-                return new PageRankPrefetchingStrategyOnVisitFrequencyAndTime(config);
+            case STRATEGY_TFPR:
+                return new TFPRPrefetchingStrategy(config);
             default:
                 return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }
