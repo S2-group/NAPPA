@@ -29,8 +29,26 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  */
 public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = PageRankPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
+
+    private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
+    private static final float DEFAULT_WEIGHT_TIME_SCORE = 0.5f;
+
+    protected final float weightFrequencyScore;
+    protected final float weightTimeScore;
+
     public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
+
+        weightFrequencyScore = getConfig(
+                PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
+                DEFAULT_WEIGHT_FREQUENCY_SCORE);
+
+        weightTimeScore = getConfig(
+                PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
+                DEFAULT_WEIGHT_TIME_SCORE);
+
+        if ((weightFrequencyScore + weightTimeScore) != 1.0)
+            throw new IllegalArgumentException("The sum of the time and frequency weight must be 1!");
     }
 
     @NonNull
