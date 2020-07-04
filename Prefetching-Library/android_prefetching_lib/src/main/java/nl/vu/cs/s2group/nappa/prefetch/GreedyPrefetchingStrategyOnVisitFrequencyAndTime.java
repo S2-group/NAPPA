@@ -35,13 +35,14 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
 
     public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
-        Object data;
 
-        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE);
-        weightFrequencyScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_FREQUENCY_SCORE;
+        weightFrequencyScore = getConfig(
+                PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
+                DEFAULT_WEIGHT_FREQUENCY_SCORE);
 
-        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE);
-        weightTimeScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_TIME_SCORE;
+        weightTimeScore = getConfig(
+                PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
+                DEFAULT_WEIGHT_TIME_SCORE);
 
         if ((weightFrequencyScore + weightTimeScore) != 1.0)
             throw new IllegalArgumentException("The sum of the time and frequency weight must be 1!");

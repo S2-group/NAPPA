@@ -21,24 +21,45 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     public static final int DEFAULT_MAX_URL_TO_PREFETCH = 2;
     public static final boolean DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS = true;
 
+    private Map<PrefetchingStrategyConfigKeys, Object> config;
+
     protected final int maxNumberOfUrlToPrefetch;
     protected final int lastNSessions;
     protected final float scoreLowerThreshold;
     protected final boolean useAllSessionsAsScoreForLastNSessions;
 
     public AbstractPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
-        Object data;
+        this.config = config;
 
-        data = config.get(PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH);
-        maxNumberOfUrlToPrefetch = data != null ? Integer.parseInt(data.toString()) : DEFAULT_MAX_URL_TO_PREFETCH;
+        maxNumberOfUrlToPrefetch = getConfig(
+                PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH,
+                DEFAULT_MAX_URL_TO_PREFETCH);
 
-        data = config.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
-        useAllSessionsAsScoreForLastNSessions = data != null ? Boolean.getBoolean(data.toString()) : DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS;
+        useAllSessionsAsScoreForLastNSessions = getConfig(
+                PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+                DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
-        data = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-        lastNSessions = data != null ? Integer.parseInt(data.toString()) : DEFAULT_LAST_N_SESSIONS;
+        lastNSessions = getConfig(
+                PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                DEFAULT_LAST_N_SESSIONS);
 
-        data = config.get(PrefetchingStrategyConfigKeys.LOWER_THRESHOLD_SCORE);
-        scoreLowerThreshold = data != null ? Float.parseFloat(data.toString()) : DEFAULT_SCORE_LOWER_THRESHOLD;
+        scoreLowerThreshold = getConfig(
+                PrefetchingStrategyConfigKeys.LOWER_THRESHOLD_SCORE,
+                DEFAULT_SCORE_LOWER_THRESHOLD);
+    }
+
+    protected int getConfig(PrefetchingStrategyConfigKeys key, int defaultValue) {
+        Object value = config.get(key);
+        return value == null ? defaultValue : Integer.parseInt(value.toString());
+    }
+
+    protected boolean getConfig(PrefetchingStrategyConfigKeys key, boolean defaultValue) {
+        Object value = config.get(key);
+        return value == null ? defaultValue : Boolean.parseBoolean(value.toString());
+    }
+
+    protected float getConfig(PrefetchingStrategyConfigKeys key, float defaultValue) {
+        Object value = config.get(key);
+        return value == null ? defaultValue : Float.parseFloat(value.toString());
     }
 }
