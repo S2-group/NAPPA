@@ -2,8 +2,6 @@ package nl.vu.cs.s2group.nappa.prefetch;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
  */
 public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = PageRankPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
-    public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
+    public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
     }
 

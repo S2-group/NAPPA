@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     protected final float scoreLowerThreshold;
     protected final boolean useAllSessionsAsScoreForLastNSessions;
 
-    public AbstractPrefetchingStrategy(@NotNull Map<PrefetchingStrategyConfigKeys, Object> config) {
+    public AbstractPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         Object data;
 
         data = config.get(PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH);
