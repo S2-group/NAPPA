@@ -32,6 +32,10 @@ public class PPMWithHITSScoresPrefetchingStrategy implements PrefetchingStrategy
     }
     public static int lastN = 2;
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
 
     @NonNull
     @Override

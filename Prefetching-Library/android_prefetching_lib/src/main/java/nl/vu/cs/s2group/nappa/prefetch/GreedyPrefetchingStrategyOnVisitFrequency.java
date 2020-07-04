@@ -57,6 +57,11 @@ public class GreedyPrefetchingStrategyOnVisitFrequency implements PrefetchingStr
         return NappaUtil.getUrlsFromCandidateNodes(node, probableNodes);
     }
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
+
     /**
      * Will calculate the probabilities of access for each individual successor for a {@code node}.
      * Will then recursively calculate the probability for the successor of each successor:

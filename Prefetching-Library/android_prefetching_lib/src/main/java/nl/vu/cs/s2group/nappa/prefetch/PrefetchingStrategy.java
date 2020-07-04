@@ -46,6 +46,14 @@ public interface PrefetchingStrategy {
     List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber);
 
     /**
+     * Verifies if {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
+     * data is used for calculating the probabilities in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     *
+     * @return {@code True} if the data is used, {@code False} otherwise.
+     */
+    boolean needVisitTime();
+
+    /**
      * Instantiate the prefetching strategy corresponding to the provided ID.
      * If the ID is unknown, instantiate the default Greedy-based strategy implemented by
      * {@link GreedyPrefetchingStrategyOnVisitFrequency}

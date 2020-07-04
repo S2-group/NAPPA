@@ -27,6 +27,10 @@ public class PageRankPrefetchingStrategy implements PrefetchingStrategy {
     float threshold;
     public PageRankPrefetchingStrategy(float threshold) {this.threshold=threshold;}
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
 
 
     @NonNull

@@ -179,8 +179,7 @@ public class PrefetchingLib {
      */
     private static void addVisitTimePerActivityObserver(@NonNull ActivityNode activity) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
-        if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
-            return;
+        if (!strategyIntent.needVisitTime()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
 

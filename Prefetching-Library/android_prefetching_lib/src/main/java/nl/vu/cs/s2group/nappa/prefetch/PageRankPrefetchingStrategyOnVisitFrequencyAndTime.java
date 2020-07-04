@@ -36,6 +36,11 @@ public class PageRankPrefetchingStrategyOnVisitFrequencyAndTime extends Abstract
     protected final float weightFrequencyScore;
     protected final float weightTimeScore;
 
+    @Override
+    public boolean needVisitTime() {
+        return true;
+    }
+
     public PageRankPrefetchingStrategyOnVisitFrequencyAndTime(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
 

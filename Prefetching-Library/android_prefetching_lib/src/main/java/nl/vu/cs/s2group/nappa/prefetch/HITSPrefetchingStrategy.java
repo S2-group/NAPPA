@@ -32,6 +32,10 @@ public class HITSPrefetchingStrategy implements PrefetchingStrategy {
 
     public HITSPrefetchingStrategy(float threshold) {this.threshold=threshold;}
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
 
 
     @NonNull

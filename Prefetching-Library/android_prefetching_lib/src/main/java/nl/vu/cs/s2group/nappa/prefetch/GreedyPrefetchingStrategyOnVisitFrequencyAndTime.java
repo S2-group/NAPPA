@@ -33,6 +33,11 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     protected final float weightFrequencyScore;
     protected final float weightTimeScore;
 
+    @Override
+    public boolean needVisitTime() {
+        return true;
+    }
+
     public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
 

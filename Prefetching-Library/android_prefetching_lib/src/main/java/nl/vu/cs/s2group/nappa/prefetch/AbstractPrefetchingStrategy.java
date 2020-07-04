@@ -62,4 +62,9 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
         Object value = config.get(key);
         return value == null ? defaultValue : Float.parseFloat(value.toString());
     }
+
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
 }

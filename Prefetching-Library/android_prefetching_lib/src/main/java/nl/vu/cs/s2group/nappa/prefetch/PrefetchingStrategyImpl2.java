@@ -24,6 +24,11 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
 
     private DiffMatchPatch dmp = new DiffMatchPatch();
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
+
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
