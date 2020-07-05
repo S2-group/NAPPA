@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +73,7 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
     @NonNull
     @Override
-    public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
+    public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
         long startTime = new Date().getTime();
         List<String> urlsToPrefetch = new ArrayList<>();
 
