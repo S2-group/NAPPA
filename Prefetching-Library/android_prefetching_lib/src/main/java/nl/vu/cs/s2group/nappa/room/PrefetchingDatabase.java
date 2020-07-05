@@ -8,6 +8,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import nl.vu.cs.s2group.nappa.room.activity.visittime.SuccessorsAggregateVisitTimeBySession;
 import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTimeDao;
@@ -62,7 +63,8 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySessio
                 ActivityVisitTime.class,
         },
         views = {
-                AggregateVisitTimeBySession.class
+                AggregateVisitTimeBySession.class,
+                SuccessorsAggregateVisitTimeBySession.class,
         },
         version = 13)
 @TypeConverters({DateConverters.class})
