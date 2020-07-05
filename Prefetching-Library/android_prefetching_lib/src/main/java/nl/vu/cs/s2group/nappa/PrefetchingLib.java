@@ -78,6 +78,7 @@ public class PrefetchingLib {
     private static boolean libGet = false;
     private static File cacheDir;
     private static String currentActivityName;
+    private static String previousActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
     /**
@@ -380,6 +381,7 @@ public class PrefetchingLib {
      */
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
+        previousActivityName = currentActivityName;
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
@@ -422,6 +424,7 @@ public class PrefetchingLib {
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
                 currentActivityName,
+                previousActivityName,
                 session.id,
                 visitedCurrentActivityDate,
                 duration
