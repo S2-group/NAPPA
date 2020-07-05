@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -71,15 +72,18 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
-        Log.d(LOG_TAG, node.activityName + " searching best successors");
-        return new ArrayList<>();
+        long startTime = new Date().getTime();
+        List<String> urlsToPrefetch = new ArrayList<>();
+
+        Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
+        return urlsToPrefetch;
     }
 
     private List<TFPRNode> runPageRank(List<TFPRNode> graph) {
         return new ArrayList<>();
     }
 
-    private List<TFPRNode> getSubgraph(ActivityNode node){
+    private List<TFPRNode> getSubgraph(ActivityNode node) {
         return new ArrayList<>();
     }
 
