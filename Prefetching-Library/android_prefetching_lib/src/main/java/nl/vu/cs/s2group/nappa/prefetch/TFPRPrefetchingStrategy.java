@@ -22,6 +22,9 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 //  * Decide how many iterations to run
 //  * Add a configurable parameter for the number of runs
 //  * Decide on which nodes to use for the subgraph --> all successors from current node and all nodes that points to the successors
+//  * Add a LiveData list in ActivityNode with the successors aggregate time
+//  * Test the Handler idea to initialize this LiveData object
+//  * Create utility method to get the total time given the LiveData list
 
 /**
  * This strategy employs a Link Analysis approach implementing a PageRank-based algorithm
