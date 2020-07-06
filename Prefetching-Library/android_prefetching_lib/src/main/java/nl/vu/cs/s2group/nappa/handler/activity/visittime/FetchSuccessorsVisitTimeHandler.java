@@ -24,8 +24,8 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
  * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
  * for the provided node.
  */
-public class FetchSuccessorsVisitTime {
-    private static final String LOG_TAG = FetchSuccessorsVisitTime.class.getSimpleName();
+public class FetchSuccessorsVisitTimeHandler {
+    private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
 
     public static void run(ActivityNode activity) {
         if (Looper.getMainLooper().isCurrentThread())
