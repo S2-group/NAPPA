@@ -88,11 +88,24 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return new ArrayList<>();
     }
 
-    private List<TFPRNode> getSubgraph(ActivityNode node) {
-        return new ArrayList<>();
+    @NotNull
+    private TfprGraph getSubgraph(@NotNull ActivityNode currentNode) {
+        List<String> nodesInGraph = new ArrayList<>();
+        TfprGraph graph = new TfprGraph();
+
+        for (ActivityNode successor : currentNode.successors.keySet()) {
+            for (ActivityNode successorParent : successor.ancestors.keySet()) {
+                if (nodesInGraph.contains(successorParent.activityName)) continue;
+                nodesInGraph.add(successorParent.activityName);
+                TFPRNode tfprNode = new TFPRNode();
+                tfprNode.node = successorParent;
+            }
+        }
+
+        return graph;
     }
 
-    private class TfprTree {
+    private class TfprGraph {
         /**
          * Represents G, the subgraph used to compute the TFPR score
          */
