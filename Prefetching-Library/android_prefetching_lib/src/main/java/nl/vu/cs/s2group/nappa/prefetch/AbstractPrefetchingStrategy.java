@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import java.util.Map;
 
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
+
 /**
  * This class defines common configuration shared among all prefetching strategies.
  * The accepted configurations are:
@@ -26,24 +28,21 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     protected final float scoreLowerThreshold;
     protected final boolean useAllSessionsAsScoreForLastNSessions;
 
-    private Map<PrefetchingStrategyConfigKeys, Object> config;
-
     public AbstractPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
-        this.config = config;
 
-        maxNumberOfUrlToPrefetch = getConfig(
+        maxNumberOfUrlToPrefetch = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH,
                 DEFAULT_MAX_URL_TO_PREFETCH);
 
-        useAllSessionsAsScoreForLastNSessions = getConfig(
+        useAllSessionsAsScoreForLastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
                 DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
-        lastNSessions = getConfig(
+        lastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                 DEFAULT_LAST_N_SESSIONS);
 
-        scoreLowerThreshold = getConfig(
+        scoreLowerThreshold = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LOWER_THRESHOLD_SCORE,
                 DEFAULT_SCORE_LOWER_THRESHOLD);
     }
@@ -51,20 +50,5 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     @Override
     public boolean needVisitTime() {
         return false;
-    }
-
-    protected int getConfig(PrefetchingStrategyConfigKeys key, int defaultValue) {
-        Object value = config.get(key);
-        return value == null ? defaultValue : Integer.parseInt(value.toString());
-    }
-
-    protected boolean getConfig(PrefetchingStrategyConfigKeys key, boolean defaultValue) {
-        Object value = config.get(key);
-        return value == null ? defaultValue : Boolean.parseBoolean(value.toString());
-    }
-
-    protected float getConfig(PrefetchingStrategyConfigKeys key, float defaultValue) {
-        Object value = config.get(key);
-        return value == null ? defaultValue : Float.parseFloat(value.toString());
     }
 }

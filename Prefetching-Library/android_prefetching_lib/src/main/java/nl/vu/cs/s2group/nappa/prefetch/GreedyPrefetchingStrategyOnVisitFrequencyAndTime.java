@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
@@ -41,11 +42,11 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
 
-        weightFrequencyScore = getConfig(
+        weightFrequencyScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
                 DEFAULT_WEIGHT_FREQUENCY_SCORE);
 
-        weightTimeScore = getConfig(
+        weightTimeScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
                 DEFAULT_WEIGHT_TIME_SCORE);
 

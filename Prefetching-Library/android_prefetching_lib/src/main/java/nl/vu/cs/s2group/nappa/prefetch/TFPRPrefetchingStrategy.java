@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 
 // TODO Unordered list of tasks to complete issue #52
 //  * Decide which fields to use in the inner class TFPRNode
@@ -62,11 +63,11 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
     public TFPRPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
         super(config);
 
-        weightFrequencyScore = getConfig(
+        weightFrequencyScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
                 DEFAULT_WEIGHT_FREQUENCY_SCORE);
 
-        weightTimeScore = getConfig(
+        weightTimeScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
                 DEFAULT_WEIGHT_TIME_SCORE);
 

@@ -185,9 +185,11 @@ public class PrefetchingLib {
 
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
-            int lastNSessions = NappaConfigMap.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+            int lastNSessions = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
-            boolean useSessionEntity = NappaConfigMap.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+            boolean useSessionEntity = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
@@ -254,7 +256,8 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
-            int lastNSessions = NappaConfigMap.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+            int lastNSessions = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
