@@ -14,6 +14,7 @@ import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
+import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 // TODO Unordered list of tasks to complete issue #52
 //  * Decide which fields to use in the inner class TFPRNode
@@ -80,16 +81,32 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @Override
     public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
         long startTime = new Date().getTime();
-        List<String> urlsToPrefetch = new ArrayList<>();
+        TfprGraph graph = makeSubgraph(node);
 
         Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
-        return urlsToPrefetch;
+        return new ArrayList<>();
     }
 
     private List<TfprNode> runPageRank(List<TfprNode> graph) {
         return new ArrayList<>();
     }
 
+    /**
+     * Create an instance of {@link TfprGraph} with a subgraph G of all nodes to consider
+     * in this calculation. The subgraph includes the following nodes:
+     *
+     * <ul>
+     *     <li> The current node </li>
+     *     <li> All successors of the current node </li>
+     *     <li> All parents of all successors of the current node </li>
+     * </ul>
+     * <p>
+     * All the {@link TfprNode} created here contains the links to their respective {@link
+     * ActivityNode} object and their parents and successors present in the subgraph.
+     *
+     * @param currentNode Represents the {@link android.app.Activity} the user navigated to
+     * @return A instance of {@link TfprGraph} without the aggregate visit time weights.
+     */
     @NotNull
     private TfprGraph makeSubgraph(@NotNull ActivityNode currentNode) {
         TfprGraph tfprGraph = new TfprGraph();
@@ -137,6 +154,28 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return newNode;
     }
 
+    private TfprGraph calculateVisitTimeScores(TfprGraph tfprGraph) {
+        for (TfprNode tfprNode : tfprGraph.graph.values()) {
+            // Obtain t(u)
+            tfprNode.aggregateVisitTime = tfprNode.node.getAggregateVisitTime().totalDuration;
+
+            // Obtain partial SUM(t(w)) | w e G
+            tfprGraph.aggregateVisitTime += tfprNode.aggregateVisitTime;
+
+            // Obtain SUM(t(v, w)) | w e F_v
+            tfprNode.totalAggregateVisitTimeFromSuccessors = NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNode(tfprNode.node);
+
+            // Obtain all
+            for (TfprNode successor : tfprNode.successors) {
+                successor.aggregateVisitTimeFromSuccessors.put(
+                        successor.node.activityName,
+                        NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNode(tfprNode.node, successor.node));
+            }
+        }
+
+        return tfprGraph;
+    }
+
     private class TfprGraph {
         /**
          * Represents G, the subgraph used to compute the TFPR score. This subgraph is
@@ -145,7 +184,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         Map<String, TfprNode> graph;
 
         /**
-         * Represents SUM(Tw) | w e G, the total time spent on all pages of the tree.
+         * Represents SUM(t(w)) | w e G, the total time spent on all pages of the tree.
          */
         long aggregateVisitTime;
 
@@ -161,12 +200,13 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
     private class TfprNode {
         /**
-         * Represents Bu, the set of pages that link to page u.
+         * Represents B_u, the set of pages that link to page u.
          */
         List<TfprNode> parents;
 
         /**
-         * Represents Fv, the set of pages that page v links to.
+         * Represents F_v, the set of pages that page v links to.
+         * From the point of view of each parent
          */
         List<TfprNode> successors;
 
@@ -176,19 +216,29 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         ActivityNode node;
 
         /**
+         * Represents Tvu, the  sum  of  the  time–lengths  spent  on  visiting  page  u
+         * when  page  v  and  u  were  visited consecutively. if more occurrences of the
+         * path v→u  occurs and the user stay on page u for a longer  time, the  value
+         * of t(v, u) will be larger, thus t(v,u) covers both information of access
+         * time-length and access frequency of a page u.
+         */
+        Map<String, Long> aggregateVisitTimeFromSuccessors;
+
+        /**
          * Represents TFPR(u)
          */
         float tfprScore;
 
         /**
-         * Represent Tu, the total time spent on page u.
+         * Represent t(u), the total time spent on page u.
          */
         long aggregateVisitTime;
 
         /**
-         * Represents SUM(Tvw) | w e Fv, the total time spent on all pages when accessed from a page v.
+         * Represents SUM(t(v, w)) | w e F_v, the total time spent on all pages when accessed from
+         * a page v.
          */
-        long aggregateVisitTimeFromSuccessors;
+        long totalAggregateVisitTimeFromSuccessors;
 
         public TfprNode(ActivityNode node) {
             parents = new ArrayList<>();
