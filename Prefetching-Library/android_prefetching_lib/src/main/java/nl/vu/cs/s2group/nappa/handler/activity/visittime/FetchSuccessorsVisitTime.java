@@ -14,6 +14,13 @@ import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaScheduler;
 
+/**
+ * Defines a handler to fetch in the database a list containing the aggregate
+ * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
+ * for each successor of the provided node. After fetching the data, this handler will
+ * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
+ * for the provided node.
+ */
 public class FetchSuccessorsVisitTime {
     private static final String LOG_TAG = FetchSuccessorsVisitTime.class.getSimpleName();
 

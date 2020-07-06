@@ -145,6 +145,10 @@ public class ActivityNode {
         });
     }
 
+    public void setSuccessorsAggregateVisitTimeLiveData(LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTime) {
+
+    }
+
     /**
      * Statically instantiates a List of UrlCandidateToUrlParameters Object, which compose a full URL
      * along with its parameters.  An observer updates the activity's list of parametered URLS whenever
