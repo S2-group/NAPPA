@@ -12,8 +12,11 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
+import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
@@ -26,18 +29,18 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 public class FetchSuccessorsVisitTime {
     private static final String LOG_TAG = FetchSuccessorsVisitTime.class.getSimpleName();
 
-    public static void run(ActivityNode activity, SessionBasedSelectQueryType queryType) {
-        run(activity, queryType, 0);
-    }
-
-    public static void run(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
+    public static void run(ActivityNode activity) {
         if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.scheduler.execute(() -> runQuery(activity, queryType, lastNSessions));
-        else runQuery(activity, queryType, lastNSessions);
+            NappaThreadPool.scheduler.execute(() -> runQuery(activity));
+        else runQuery(activity);
     }
 
-    private static void runQuery(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
+    private static void runQuery(ActivityNode activity) {
         LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
+        SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
+        int lastNSessions = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
         Log.d(LOG_TAG, "Fetching successors visit time for " + queryType);
 

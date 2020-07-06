@@ -2,6 +2,8 @@ package nl.vu.cs.s2group.nappa.util;
 
 import java.util.Map;
 
+import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
+import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 
 /**
@@ -56,5 +58,26 @@ public class NappaConfigMap {
     public static float get(PrefetchingStrategyConfigKeys key, float defaultValue) {
         Object value = config.get(key);
         return value == null ? defaultValue : Float.parseFloat(value.toString());
+    }
+
+    /**
+     * Some entities specify select queries based a certain number of sessions to take
+     * and which entity to use as a source to identify which are these sessions. This
+     * getter provides a flag based on the existent configurations.
+     *
+     * @return A flag defining the which select query to run.
+     */
+    public static SessionBasedSelectQueryType getSessionBasedSelectQueryType() {
+        int lastNSessions = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
+        boolean useSessionEntity = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+                AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
+
+        if (lastNSessions == -1) return SessionBasedSelectQueryType.ALL_SESSIONS;
+        else if (useSessionEntity)
+            return SessionBasedSelectQueryType.LAST_N_SESSIONS_FROM_ENTITY_SESSION;
+        else return SessionBasedSelectQueryType.LAST_N_SESSIONS_FROM_QUERIED_ENTITY;
     }
 }
