@@ -49,7 +49,7 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.util.NappaConfig;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -130,7 +130,7 @@ public class PrefetchingLib {
             instance = PrefetchingLib.getInstance();
             PrefetchingDatabase.getInstance(context);
 
-            NappaConfig.init(config);
+            NappaConfigMap.init(config);
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
             cacheDir = context.getCacheDir();
@@ -185,9 +185,9 @@ public class PrefetchingLib {
 
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
-            int lastNSessions = NappaConfig.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+            int lastNSessions = NappaConfigMap.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
-            boolean useSessionEntity = NappaConfig.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+            boolean useSessionEntity = NappaConfigMap.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
@@ -254,7 +254,7 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
-            int lastNSessions = NappaConfig.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+            int lastNSessions = NappaConfigMap.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                     AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {

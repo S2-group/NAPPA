@@ -7,10 +7,10 @@ import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 /**
  * Centralize a single and shared instance of the user defined NAPPA configuration map.
  */
-public class NappaConfig {
+public class NappaConfigMap {
     private static Map<PrefetchingStrategyConfigKeys, Object> config;
 
-    private NappaConfig() {
+    private NappaConfigMap() {
         throw new IllegalStateException("NappaConfig is a utility class and should not be instantiated!");
     }
 
@@ -21,9 +21,9 @@ public class NappaConfig {
      * @throws RuntimeException If the configuration map was already previously initialized.
      */
     public static void init(Map<PrefetchingStrategyConfigKeys, Object> config) {
-        if (NappaConfig.config != null)
+        if (NappaConfigMap.config != null)
             throw new RuntimeException("The NAPPA configuration should be initialized only once.");
-        NappaConfig.config = config;
+        NappaConfigMap.config = config;
     }
 
     /**
