@@ -2,11 +2,16 @@ package nl.vu.cs.s2group.nappa.handler.activity.visittime;
 
 import android.os.Looper;
 
+import androidx.lifecycle.LiveData;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaScheduler;
 
 public class FetchSuccessorsVisitTime {
@@ -23,19 +28,21 @@ public class FetchSuccessorsVisitTime {
     }
 
     private static void runQuery(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
+        LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
+
         switch (queryType) {
             case ALL_SESSIONS:
-                PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = PrefetchingDatabase.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTime(activity.activityName);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
-                PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = PrefetchingDatabase.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
-                PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = PrefetchingDatabase.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
                 break;
