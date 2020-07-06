@@ -8,7 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
@@ -84,32 +86,63 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return urlsToPrefetch;
     }
 
-    private List<TFPRNode> runPageRank(List<TFPRNode> graph) {
+    private List<TfprNode> runPageRank(List<TfprNode> graph) {
         return new ArrayList<>();
     }
 
     @NotNull
-    private TfprGraph getSubgraph(@NotNull ActivityNode currentNode) {
-        List<String> nodesInGraph = new ArrayList<>();
-        TfprGraph graph = new TfprGraph();
+    private TfprGraph makeSubgraph(@NotNull ActivityNode currentNode) {
+        TfprGraph tfprGraph = new TfprGraph();
 
+        tfprGraph.dampingFactor = 0.85f;
+
+        // Creates a TFPR node for the current node
+        TfprNode currentNodeTfprNode = new TfprNode(currentNode);
+        tfprGraph.graph.put(currentNode.activityName, currentNodeTfprNode);
+
+        // Create TFPR nodes for all successors of the current node and add parent-successor links
         for (ActivityNode successor : currentNode.successors.keySet()) {
+            TfprNode successorTfprNode = getOrCreateTfprNode(tfprGraph, successor);
+            successorTfprNode.parents.add(currentNodeTfprNode);
+            currentNodeTfprNode.successors.add(successorTfprNode);
+
+            // Create TFPR nodes for all the parents of this successor and add parent-successor links
             for (ActivityNode successorParent : successor.ancestors.keySet()) {
-                if (nodesInGraph.contains(successorParent.activityName)) continue;
-                nodesInGraph.add(successorParent.activityName);
-                TFPRNode tfprNode = new TFPRNode();
-                tfprNode.node = successorParent;
+                TfprNode successorParentTfprNode = getOrCreateTfprNode(tfprGraph, successorParent);
+                successorParentTfprNode.parents.add(successorTfprNode);
+                successorTfprNode.successors.add(successorParentTfprNode);
             }
         }
 
-        return graph;
+        return tfprGraph;
+    }
+
+    /**
+     * Verifies if the provided node exists in the graph. If so, return it, otherwise
+     * create a new node and add it to the graph
+     *
+     * @param tfprGraph The graph to add a new {@link TfprNode} if it doesn't contain
+     *                  the provided node
+     * @param node      The node used as reference to get an existent or create a new
+     *                  {@link TfprNode}
+     * @return Either an existent or a new node
+     */
+    private TfprNode getOrCreateTfprNode(@NotNull TfprGraph tfprGraph, @NotNull ActivityNode node) {
+        if (tfprGraph.graph.containsKey(node.activityName))
+            return tfprGraph.graph.get(node.activityName);
+
+        TfprNode newNode = new TfprNode(node);
+        tfprGraph.graph.put(node.activityName, newNode);
+
+        return newNode;
     }
 
     private class TfprGraph {
         /**
-         * Represents G, the subgraph used to compute the TFPR score
+         * Represents G, the subgraph used to compute the TFPR score. This subgraph is
+         * stored as a hash map that maps the name of the activity to its TFPR node.
          */
-        List<TFPRNode> graph;
+        Map<String, TfprNode> graph;
 
         /**
          * Represents SUM(Tw) | w e G, the total time spent on all pages of the tree.
@@ -120,9 +153,23 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
          * Represents alpha
          */
         float dampingFactor;
+
+        public TfprGraph() {
+            this.graph = new HashMap<>();
+        }
     }
 
-    private class TFPRNode {
+    private class TfprNode {
+        /**
+         * Represents Bu, the set of pages that link to page u.
+         */
+        List<TfprNode> parents;
+
+        /**
+         * Represents Fv, the set of pages that page v links to.
+         */
+        List<TfprNode> successors;
+
         /**
          * A reference to the default node representation. Needed to obtain the URLs
          */
@@ -139,20 +186,14 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         long aggregateVisitTime;
 
         /**
-         * Represents Bu, the set of pages that link to page u.
-         */
-        List<TFPRNode> parents;
-
-        /**
-         * Represents Fv, the set of pages that page v links to.
-         */
-        List<TFPRNode> successors;
-
-        /**
          * Represents SUM(Tvw) | w e Fv, the total time spent on all pages when accessed from a page v.
          */
         long aggregateVisitTimeFromSuccessors;
 
-
+        public TfprNode(ActivityNode node) {
+            parents = new ArrayList<>();
+            successors = new ArrayList<>();
+            this.node = node;
+        }
     }
 }
