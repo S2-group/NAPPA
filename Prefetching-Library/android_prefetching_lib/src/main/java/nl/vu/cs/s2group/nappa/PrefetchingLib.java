@@ -49,6 +49,7 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.util.NappaConfig;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -71,8 +72,6 @@ import okhttp3.internal.cache.CacheStrategy;
 
 public class PrefetchingLib {
     private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
-
-    private static Map<PrefetchingStrategyConfigKeys, Object> config;
 
     private static PrefetchingLib instance;
     private static boolean libGet = false;
@@ -131,7 +130,7 @@ public class PrefetchingLib {
             instance = PrefetchingLib.getInstance();
             PrefetchingDatabase.getInstance(context);
 
-            PrefetchingLib.config = config;
+            NappaConfig.init(config);
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
             cacheDir = context.getCacheDir();
@@ -186,14 +185,10 @@ public class PrefetchingLib {
 
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
-
-            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-            int lastNSessions = lastNSessionsObj != null ?
-                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
-
-            Object useSessionEntityObj = config.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
-            boolean useSessionEntity = useSessionEntityObj != null ?
-                    Boolean.getBoolean(useSessionEntityObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS;
+            int lastNSessions = NappaConfig.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
+            boolean useSessionEntity = NappaConfig.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
                 liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
@@ -259,9 +254,8 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
-            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-            int lastNSessions = lastNSessionsObj != null ?
-                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+            int lastNSessions = NappaConfig.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
                 liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
