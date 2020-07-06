@@ -25,11 +25,19 @@ public class FetchSuccessorsVisitTime {
     private static void runQuery(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
         switch (queryType) {
             case ALL_SESSIONS:
-                PrefetchingDatabase.getInstance().activityVisitTimeDao().getSuccessorAggregateVisitTime(activity.activityName);
+                PrefetchingDatabase.getInstance()
+                        .activityVisitTimeDao()
+                        .getSuccessorAggregateVisitTime(activity.activityName);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
+                PrefetchingDatabase.getInstance()
+                        .activityVisitTimeDao()
+                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
+                PrefetchingDatabase.getInstance()
+                        .activityVisitTimeDao()
+                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
