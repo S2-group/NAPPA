@@ -35,7 +35,7 @@ public class NappaConfig {
      * @throws IllegalArgumentException If the configuration key was already previously initialized.
      * @throws RuntimeException         If the configuration map is not initialized
      */
-    public static void addConfig(PrefetchingStrategyConfigKeys key, Object value) {
+    public static void put(PrefetchingStrategyConfigKeys key, Object value) {
         if (config == null)
             throw new RuntimeException("The NAPPA configuration is not initialized.");
         if (config.containsKey(key))
