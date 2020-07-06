@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
@@ -158,6 +159,7 @@ public class PrefetchingLib {
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
                     addVisitTimePerActivityObserver(byName);
+                    FetchSuccessorsVisitTimeHandler.run(byName);
                 }
 
 
@@ -315,6 +317,7 @@ public class PrefetchingLib {
                 addActivityExtraObserver(currentNode, activityId);
                 addVisitTimePerActivityObserver(currentNode);
                 addAUrlCandidateObserver(currentNode, activityId);
+                FetchSuccessorsVisitTimeHandler.run(currentNode);
             }, 0, TimeUnit.SECONDS);
         }
     }
