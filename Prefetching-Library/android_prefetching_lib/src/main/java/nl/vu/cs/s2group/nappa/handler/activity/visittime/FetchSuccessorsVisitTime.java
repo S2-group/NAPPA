@@ -2,6 +2,7 @@ package nl.vu.cs.s2group.nappa.handler.activity.visittime;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -37,6 +38,8 @@ public class FetchSuccessorsVisitTime {
 
     private static void runQuery(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
         LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
+
+        Log.d(LOG_TAG, "Fetching successors visit time for " + queryType);
 
         switch (queryType) {
             case ALL_SESSIONS:
