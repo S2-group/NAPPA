@@ -66,7 +66,7 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySessio
                 AggregateVisitTimeBySession.class,
                 SuccessorsAggregateVisitTimeBySession.class,
         },
-        version = 13)
+        version = 14)
 @TypeConverters({DateConverters.class})
 public abstract class PrefetchingDatabase extends RoomDatabase {
 
