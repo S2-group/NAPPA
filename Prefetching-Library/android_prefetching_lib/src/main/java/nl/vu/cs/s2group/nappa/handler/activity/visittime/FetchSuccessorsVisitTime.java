@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.handler.activity.visittime;
 
+import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
@@ -56,5 +57,7 @@ public class FetchSuccessorsVisitTime {
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
         }
+
+        new Handler(Looper.getMainLooper()).post(() -> activity.setSuccessorsAggregateVisitTimeLiveData(successorsVisitTimeList));
     }
 }
