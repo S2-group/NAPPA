@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
-import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
@@ -87,7 +86,7 @@ public interface PrefetchingStrategy {
             case STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME:
                 return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime();
             case STRATEGY_TFPR:
-                return new TFPRPrefetchingStrategy();
+                return new TfprPrefetchingStrategy();
             default:
                 return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }

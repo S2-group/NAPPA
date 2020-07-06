@@ -45,8 +45,8 @@ import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
  *
  * @see <a href="https://dl.acm.org/doi/10.1109/WI.2007.145">Personalized PageRank paper</a>
  */
-public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
-    private static final String LOG_TAG = TFPRPrefetchingStrategy.class.getSimpleName();
+public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
+    private static final String LOG_TAG = TfprPrefetchingStrategy.class.getSimpleName();
 
     private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
     private static final float DEFAULT_WEIGHT_TIME_SCORE = 0.5f;
@@ -59,7 +59,7 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return true;
     }
 
-    public TFPRPrefetchingStrategy() {
+    public TfprPrefetchingStrategy() {
         super();
 
         weightFrequencyScore = NappaConfigMap.get(
