@@ -53,6 +53,8 @@ public class ActivityNode {
     public float pageRank, authority, hub, authorityS, hubS, prob;
     LiveData<AggregateVisitTimeByActivity> aggregateVisitTimeLiveData;
     AggregateVisitTimeByActivity aggregateVisitTime;
+    LiveData<List<AggregateVisitTimeByActivity>> successorVisitTimeLiveData;
+    List<AggregateVisitTimeByActivity> successorVisitTimeList;
 
     /**
      * Initializes the current activity node by creating an object of the activity, and also
@@ -119,6 +121,11 @@ public class ActivityNode {
         return listActivityExtraLiveData;
     }
 
+    public List<AggregateVisitTimeByActivity> getSuccessorsVisitTimeList() {
+        if (successorVisitTimeList == null) return new ArrayList<>();
+        return successorVisitTimeList;
+    }
+
     /**
      * Set the {@link LiveData} object containing the aggregate visit time per activity
      * and attach an observer to it to update the actual aggregate visit time object when there
@@ -145,8 +152,22 @@ public class ActivityNode {
         });
     }
 
-    public void setSuccessorsAggregateVisitTimeLiveData(LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTime) {
-
+    /**
+     * Set the {@link LiveData} object containing the successors aggregate visit time per
+     * activity and attach an observer to it to update the successors visit time list when
+     * there are changes in the database
+     *
+     * @param successorVisitTimeLiveData A valid instance of the {@link LiveData} object.
+     */
+    public void setSuccessorsAggregateVisitTimeLiveData(LiveData<List<AggregateVisitTimeByActivity>> successorVisitTimeLiveData) {
+        this.successorVisitTimeLiveData = successorVisitTimeLiveData;
+        this.successorVisitTimeLiveData.observeForever((newSuccessorVisitTime) -> {
+            if (newSuccessorVisitTime == null || newSuccessorVisitTime.size() == 0) return;
+            successorVisitTimeList = newSuccessorVisitTime;
+            Log.d(LOG_TAG, activityName +
+                    " - Updating the visit time from the successors list:\n" +
+                    successorVisitTimeList.toString());
+        });
     }
 
     /**
