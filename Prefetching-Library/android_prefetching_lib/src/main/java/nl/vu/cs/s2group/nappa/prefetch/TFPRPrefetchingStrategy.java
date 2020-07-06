@@ -92,9 +92,54 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return new ArrayList<>();
     }
 
+    private class TfprTree {
+        /**
+         * Represents G, the subgraph used to compute the TFPR score
+         */
+        List<TFPRNode> graph;
+
+        /**
+         * Represents SUM(Tw) | w e G, the total time spent on all pages of the tree.
+         */
+        long aggregateVisitTime;
+
+        /**
+         * Represents alpha
+         */
+        float dampingFactor;
+    }
+
     private class TFPRNode {
+        /**
+         * A reference to the default node representation. Needed to obtain the URLs
+         */
         ActivityNode node;
+
+        /**
+         * Represents TFPR(u)
+         */
         float tfprScore;
+
+        /**
+         * Represent Tu, the total time spent on page u.
+         */
+        long aggregateVisitTime;
+
+        /**
+         * Represents Bu, the set of pages that link to page u.
+         */
+        List<TFPRNode> parents;
+
+        /**
+         * Represents Fv, the set of pages that page v links to.
+         */
+        List<TFPRNode> successors;
+
+        /**
+         * Represents SUM(Tvw) | w e Fv, the total time spent on all pages when accessed from a page v.
+         */
+        long aggregateVisitTimeFromSuccessors;
+
 
     }
 }
