@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
