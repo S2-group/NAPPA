@@ -1,9 +1,5 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
-import androidx.annotation.NonNull;
-
-import java.util.Map;
-
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 
 /**
@@ -28,8 +24,7 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     protected final float scoreLowerThreshold;
     protected final boolean useAllSessionsAsScoreForLastNSessions;
 
-    public AbstractPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
-
+    public AbstractPrefetchingStrategy() {
         maxNumberOfUrlToPrefetch = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH,
                 DEFAULT_MAX_URL_TO_PREFETCH);

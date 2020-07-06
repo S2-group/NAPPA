@@ -132,7 +132,7 @@ public class PrefetchingLib {
 
             NappaConfigMap.init(config);
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
-            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
 

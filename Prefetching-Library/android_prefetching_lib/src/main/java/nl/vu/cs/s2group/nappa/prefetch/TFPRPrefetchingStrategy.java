@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
@@ -60,8 +59,8 @@ public class TFPRPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return true;
     }
 
-    public TFPRPrefetchingStrategy(@NonNull Map<PrefetchingStrategyConfigKeys, Object> config) {
-        super(config);
+    public TFPRPrefetchingStrategy() {
+        super();
 
         weightFrequencyScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,

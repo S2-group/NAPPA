@@ -59,14 +59,12 @@ public interface PrefetchingStrategy {
      * {@link GreedyPrefetchingStrategyOnVisitFrequency}
      *
      * @param strategyId The identification number of the prefetching strategy.
-     * @param config     Represents a configuration map for the strategies. See the specific
-     *                   strategy for the available configurations it accepts
      * @return A implemented prefetching strategy.
      */
     @SuppressWarnings("DuplicateBranchesInSwitch")
     @NonNull
-    @Contract("_ , _-> new")
-    static PrefetchingStrategy getStrategy(@NonNull PrefetchingStrategyType strategyId, Map<PrefetchingStrategyConfigKeys, Object> config) {
+    @Contract("_-> new")
+    static PrefetchingStrategy getStrategy(@NonNull PrefetchingStrategyType strategyId) {
         switch (strategyId) {
             case STRATEGY_MOST_VISITED_SUCCESSOR:
                 return new MostVisitedSuccessorPrefetchingStrategy();
@@ -87,9 +85,9 @@ public interface PrefetchingStrategy {
             case STRATEGY_PPM_WITH_HITS_SCORES:
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             case STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME:
-                return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime(config);
+                return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime();
             case STRATEGY_TFPR:
-                return new TFPRPrefetchingStrategy(config);
+                return new TFPRPrefetchingStrategy();
             default:
                 return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }

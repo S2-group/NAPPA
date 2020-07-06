@@ -39,8 +39,8 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         return true;
     }
 
-    public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
-        super(config);
+    public GreedyPrefetchingStrategyOnVisitFrequencyAndTime() {
+        super();
 
         weightFrequencyScore = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
