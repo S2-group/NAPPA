@@ -120,4 +120,33 @@ public class NappaUtil {
 
         return frequencyMap;
     }
+
+    /**
+     * Return the total time spent on all successor activities when accessing the
+     * succeeding activity from the {@code sourceNode} activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The total aggregate time.
+     */
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NonNull ActivityNode sourceNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .mapToLong(visitTime -> visitTime.totalDuration)
+                .sum();
+    }
+
+    /**
+     * Return the total time spent on the successor {@code destinationNode} activity
+     * when accessing it from the {@code sourceNode} activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The total aggregate time.
+     */
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NonNull ActivityNode sourceNode, ActivityNode destinationNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
+                .mapToLong(visitTime -> visitTime.totalDuration)
+                .sum();
+    }
 }
