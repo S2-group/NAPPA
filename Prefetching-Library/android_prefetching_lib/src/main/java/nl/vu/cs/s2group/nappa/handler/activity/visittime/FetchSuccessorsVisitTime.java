@@ -14,7 +14,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
-import nl.vu.cs.s2group.nappa.util.NappaScheduler;
+import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
  * Defines a handler to fetch in the database a list containing the aggregate
@@ -32,7 +32,7 @@ public class FetchSuccessorsVisitTime {
 
     public static void run(ActivityNode activity, @NotNull SessionBasedSelectQueryType queryType, int lastNSessions) {
         if (Looper.getMainLooper().isCurrentThread())
-            NappaScheduler.scheduler.execute(() -> runQuery(activity, queryType, lastNSessions));
+            NappaThreadPool.scheduler.execute(() -> runQuery(activity, queryType, lastNSessions));
         else runQuery(activity, queryType, lastNSessions);
     }
 
