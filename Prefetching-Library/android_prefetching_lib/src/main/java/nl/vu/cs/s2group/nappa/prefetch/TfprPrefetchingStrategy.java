@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
@@ -205,6 +206,17 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         public TfprGraph() {
             this.graph = new HashMap<>();
         }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "TfprGraph{" +
+                    graph.values()
+                            .stream()
+                            .map(TfprNode::toString)
+                            .collect(Collectors.joining("\n")) +
+                    '}';
+        }
     }
 
     private class TfprNode {
@@ -253,6 +265,15 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
             parents = new ArrayList<>();
             successors = new ArrayList<>();
             this.node = node;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "TfprNode{" +
+                    node.activityName + " : " +
+                    "TFPR = " + tfprScore +
+                    '}';
         }
     }
 }
