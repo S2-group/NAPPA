@@ -45,13 +45,13 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
 public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = TfprPrefetchingStrategy.class.getSimpleName();
 
+    public TfprPrefetchingStrategy() {
+        super();
+    }
+
     @Override
     public boolean needVisitTime() {
         return true;
-    }
-
-    public TfprPrefetchingStrategy() {
-        super();
     }
 
     @NonNull
