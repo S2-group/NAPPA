@@ -72,6 +72,13 @@ public class ActivityNode {
         PrefetchingLib.registerActivity(activityName);
     }
 
+    /**
+     * Return the same as invoking {@code MyActivity.class.getSimpleName()}. Currently, only
+     * the activity canonical name is store, however, we can easily obtain the activity simple
+     * name from the canonical name.
+     *
+     * @return The activity class simple name.
+     */
     public String getActivitySimpleName() {
         String[] activityNamespace = activityName.split(".");
         return activityNamespace[activityNamespace.length - 1];
