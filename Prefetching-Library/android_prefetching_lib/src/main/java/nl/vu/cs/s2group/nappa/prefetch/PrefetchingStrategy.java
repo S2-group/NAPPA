@@ -47,6 +47,7 @@ public interface PrefetchingStrategy {
     /**
      * Verifies if the time spent visiting an activity is used for calculating the
      * probabilities in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     * Namely, the data from {@link ActivityNode#getAggregateVisitTime()}.
      *
      * @return {@code True} if the data is used, {@code False} otherwise.
      */
@@ -56,6 +57,7 @@ public interface PrefetchingStrategy {
      * Verifies if the time spent visiting a successor activity when navigated from the current
      * activity is used for calculating the probabilities in
      * {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     * Namely, the data from {@link ActivityNode#getSuccessorsVisitTimeList()}.
      *
      * @return {@code True} if the data is used, {@code False} otherwise.
      */
