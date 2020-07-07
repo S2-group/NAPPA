@@ -39,6 +39,9 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
         maxNumberOfUrlToPrefetch = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.MAX_URL_TO_PREFETCH,
                 DEFAULT_MAX_URL_TO_PREFETCH);
+        if (maxNumberOfUrlToPrefetch < 1)
+            throw new IllegalArgumentException("The number of URLs to prefetch must be greater than 0. "
+                    + maxNumberOfUrlToPrefetch + " provided.");
 
         useAllSessionsAsScoreForLastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
@@ -47,18 +50,30 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
         lastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                 DEFAULT_LAST_N_SESSIONS);
+        if (lastNSessions < -1 || lastNSessions == 0)
+            throw new IllegalArgumentException("The number N of the N last sessions must be greater than 0 or -1. "
+                    + lastNSessions + " provided.");
 
         scoreLowerThreshold = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LOWER_THRESHOLD_SCORE,
                 DEFAULT_SCORE_LOWER_THRESHOLD);
+        if (scoreLowerThreshold < 0 || scoreLowerThreshold > 1)
+            throw new IllegalArgumentException("The lower threshold score must be a number between 0 and 1. "
+                    + scoreLowerThreshold + " provided.");
 
         numberOfIterations = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.NUMBER_OF_ITERATIONS,
                 DEFAULT_NUMBER_OF_ITERATIONS);
+        if (numberOfIterations < 1)
+            throw new IllegalArgumentException("The number of iterations must be greater than 0. "
+                    + numberOfIterations + " provided.");
 
         dampingFactor = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.PAGE_RANK_DAMPING_FACTOR,
                 DEFAULT_DAMPING_FACTOR);
+        if (dampingFactor < 0 || dampingFactor > 1)
+            throw new IllegalArgumentException("The damping factor must be a number between 0 and 1. "
+                    + dampingFactor + " provided.");
     }
 
     @Override

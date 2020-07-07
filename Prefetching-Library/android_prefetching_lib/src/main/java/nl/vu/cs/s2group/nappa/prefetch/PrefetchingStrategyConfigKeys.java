@@ -17,6 +17,8 @@ public enum PrefetchingStrategyConfigKeys {
      * Maps an {@link Integer} representing the maximum number of URLs that will be prefetched
      * in a run of {@link PrefetchingStrategy#getTopNUrlToPrefetchForNode}.
      * <p>
+     * Must be a number greater than 0.
+     * <p>
      * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_MAX_URL_TO_PREFETCH}.
      */
     MAX_URL_TO_PREFETCH,
@@ -96,6 +98,8 @@ public enum PrefetchingStrategyConfigKeys {
     /**
      * Maps a {@link Integer} representing the number of iterations to run for calculating
      * the strategy algorithm score.
+     * <p>
+     * Must be a number greater than 0.
      * <p>
      * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_NUMBER_OF_ITERATIONS}.
      */
