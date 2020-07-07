@@ -210,7 +210,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         @NonNull
         @Override
         public String toString() {
-            return "TfprGraph{" +
+            return "TfprGraph{\n" +
                     graph.values()
                             .stream()
                             .map(TfprNode::toString)
