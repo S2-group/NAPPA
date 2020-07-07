@@ -4,10 +4,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,14 +84,59 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @Override
     public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
         long startTime = new Date().getTime();
+
+        // Prepare the graph
         TfprGraph graph = makeSubgraph(node);
+        calculateVisitTimeScores(graph);
+
+        // Run page rank
+        runTfprAlgorithm(graph);
+
+        // Select all nodes with score above the threshold
+        List<ActivityNode> selectedNodes = getSuccessorListSortByTfprScore(graph, node);
+
+        // Select all URLs that fits the budget
+        List<String> selectedUrls = getUrls(selectedNodes);
 
         Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
-        return new ArrayList<>();
+        return selectedUrls;
     }
 
-    private List<TfprNode> runPageRank(List<TfprNode> graph) {
-        return new ArrayList<>();
+    @NotNull
+    private List<String> getUrls(List<ActivityNode> nodes) {
+        List<String> urls = new ArrayList<>();
+
+        return urls;
+    }
+
+    /**
+     * Take the successors of the current node, sort by their TFPR score and return an array
+     * with all the successors that have a TFPR score higher than the lower threshold score.
+     *
+     * @param graph       The subgraph after running the TFPR algorithm
+     * @param currentNode The {@link android.app.Activity} the user navigated to
+     * @return An array of successors sorted by TFPR score
+     */
+    @NotNull
+    private List<ActivityNode> getSuccessorListSortByTfprScore(@NotNull TfprGraph graph, @NotNull ActivityNode currentNode) {
+        //noinspection ConstantConditions We do not add null values to the map
+        List<TfprNode> sortedNodes = graph.graph.get(currentNode.activityName).successors;
+        sortedNodes.sort(Comparator.comparing(node -> node.tfprScore));
+
+        return Arrays.asList(sortedNodes
+                .stream()
+                .filter(node -> node.tfprScore >= scoreLowerThreshold)
+                .map(successor -> successor.node)
+                .toArray(ActivityNode[]::new));
+    }
+
+    /**
+     * Run the TFPR algorithm to calculate the TFPR score
+     *
+     * @param graph A subgraph with parents/successors linked and visit time weights
+     *              calculated
+     */
+    private void runTfprAlgorithm(TfprGraph graph) {
     }
 
     /**
@@ -170,10 +216,8 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
      * calculations to obtain the visit time weight required to run the TFPR algorithm.
      *
      * @param tfprGraph The subgraph to run the TFPR algorithm
-     * @return The same subgraph with calculated visit time weights
      */
-    @Contract("_ -> param1")
-    private TfprGraph calculateVisitTimeScores(@NotNull TfprGraph tfprGraph) {
+    private void calculateVisitTimeScores(@NotNull TfprGraph tfprGraph) {
         for (TfprNode tfprNode : tfprGraph.graph.values()) {
             // Obtain t(u)
             tfprNode.aggregateVisitTime = tfprNode.node.getAggregateVisitTime().totalDuration;
@@ -192,7 +236,6 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
             }
         }
 
-        return tfprGraph;
     }
 
     private static class TfprGraph {
