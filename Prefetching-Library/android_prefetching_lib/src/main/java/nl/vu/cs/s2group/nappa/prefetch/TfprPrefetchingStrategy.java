@@ -135,8 +135,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
                             parent.totalAggregateVisitTimeFromSuccessors;
                 }
 
-                node.tfprScore = graph.dampingFactor * node.aggregateVisitTime / graph.aggregateVisitTime +
-                        (1 - graph.dampingFactor) * sumBu;
+                node.tfprScore = dampingFactor * node.aggregateVisitTime / graph.aggregateVisitTime + (1 - dampingFactor) * sumBu;
             }
         }
     }
@@ -160,8 +159,6 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @NotNull
     private TfprGraph makeSubgraph(@NotNull ActivityNode currentNode) {
         TfprGraph tfprGraph = new TfprGraph();
-
-        tfprGraph.dampingFactor = 0.85f;
 
         // Creates a TFPR node for the current node
         TfprNode currentNodeTfprNode = new TfprNode(currentNode);
@@ -248,13 +245,8 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
          */
         long aggregateVisitTime;
 
-        /**
-         * Represents alpha
-         */
-        float dampingFactor;
-
         public TfprGraph() {
-            this.graph = new HashMap<>();
+            graph = new HashMap<>();
         }
 
         @NonNull

@@ -25,6 +25,8 @@ public enum PrefetchingStrategyConfigKeys {
      * Maps a {@link Float} representing the lower threshold used when deciding weather to
      * select a node as candidate or not.
      * <p>
+     * Must be a number between 0 and 1 inclusive.
+     * <p>
      * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_SCORE_LOWER_THRESHOLD}.
      */
     LOWER_THRESHOLD_SCORE,
@@ -98,4 +100,15 @@ public enum PrefetchingStrategyConfigKeys {
      * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_NUMBER_OF_ITERATIONS}.
      */
     NUMBER_OF_ITERATIONS,
+
+    /**
+     * Maps a {@link Float} representing the damping factor used in Page Rank strategies to
+     * represent the probability at each page the "random surfer" will get bored and request
+     * another random page.
+     * <p>
+     * Must be a number between 0 and 1 inclusive.
+     * <p>
+     * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_DAMPING_FACTOR}.
+     */
+    PAGE_RANK_DAMPING_FACTOR,
 }
