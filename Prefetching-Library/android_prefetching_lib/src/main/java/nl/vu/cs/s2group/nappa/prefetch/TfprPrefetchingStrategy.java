@@ -75,15 +75,24 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         List<ActivityNode> selectedNodes = getSuccessorListSortByTfprScore(graph, node);
 
         // Select all URLs that fits the budget
-        List<String> selectedUrls = getUrls(selectedNodes);
+        List<String> selectedUrls = getUrls(node, selectedNodes);
 
         Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
         return selectedUrls;
     }
 
     @NotNull
-    private List<String> getUrls(List<ActivityNode> nodes) {
+    private List<String> getUrls(ActivityNode currentNode, List<ActivityNode> nodes) {
         List<String> urls = new ArrayList<>();
+
+        for (ActivityNode node : nodes) {
+            int remainingUrlBudget = maxNumberOfUrlToPrefetch - urls.size();
+            List<String> nodUrls = NappaUtil.getUrlsFromCandidateNode(currentNode, node, remainingUrlBudget);
+            urls.addAll(nodUrls);
+
+            Log.d(LOG_TAG, "Selected node " + node.getActivitySimpleName() +
+                    " containing the URLS " + nodUrls);
+        }
 
         return urls;
     }
