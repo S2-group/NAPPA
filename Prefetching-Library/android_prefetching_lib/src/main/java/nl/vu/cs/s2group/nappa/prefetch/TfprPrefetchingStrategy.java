@@ -92,6 +92,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
             Log.d(LOG_TAG, "Selected node " + node.getActivitySimpleName() +
                     " containing the URLS " + nodUrls);
+            if (urls.size() >= maxNumberOfUrlToPrefetch) break;
         }
 
         return urls;
