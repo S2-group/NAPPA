@@ -72,6 +72,11 @@ public class ActivityNode {
         PrefetchingLib.registerActivity(activityName);
     }
 
+    public String getActivitySimpleName() {
+        String[] activityNamespace = activityName.split(".");
+        return activityNamespace[activityNamespace.length - 1];
+    }
+
     // TODO Implementing getter method on public attribute
     //  Either remove getter or make attributes non-public
     public Map<ActivityNode, Integer> getSuccessors() {

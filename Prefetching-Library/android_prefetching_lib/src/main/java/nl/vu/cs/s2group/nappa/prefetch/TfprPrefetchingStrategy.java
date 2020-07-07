@@ -271,7 +271,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         @Override
         public String toString() {
             return "TfprNode{" +
-                    node.activityName + " : " +
+                    node.getActivitySimpleName() + " : " +
                     "TFPR = " + tfprScore +
                     '}';
         }
