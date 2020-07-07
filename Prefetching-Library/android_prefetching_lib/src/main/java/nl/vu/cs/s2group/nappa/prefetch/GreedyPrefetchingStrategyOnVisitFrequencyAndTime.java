@@ -117,25 +117,19 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         if (bestSuccessor == null || bestSuccessorScore < scoreLowerThreshold) return urlList;
 
         // Fetches the URLs from the bestSuccessor and the remaining URL budget
-        List<String> bestSuccessorUrls = NappaUtil.getUrlsFromCandidateNode(node, bestSuccessor);
         int remainingUrlBudget = maxNumberOfUrlToPrefetch - urlList.size();
+        List<String> bestSuccessorUrls = NappaUtil.getUrlsFromCandidateNode(node, bestSuccessor, remainingUrlBudget);
 
         Log.d(LOG_TAG, node.activityName +
                 " best successor is " + bestSuccessor.activityName +
                 " with score " + bestSuccessorScore +
                 " containing the URLS " + bestSuccessorUrls);
 
-        // Verifies if the URL list of the best successor fits the budget.
-        // If not, take only the first N URLs until using all budget
-        if (bestSuccessorUrls.size() > remainingUrlBudget) {
-            bestSuccessorUrls = bestSuccessorUrls.subList(0, remainingUrlBudget);
-        }
-
         // Add the remaining URLs to the list of URLs to prefetch
         urlList.addAll(bestSuccessorUrls);
 
         // Verifies if there is any URL budget left
         if (urlList.size() >= maxNumberOfUrlToPrefetch) return urlList;
-        return getTopNUrlToPrefetchForNode(bestSuccessor, bestSuccessorScore, bestSuccessorUrls);
+        return getTopNUrlToPrefetchForNode(bestSuccessor, bestSuccessorScore, urlList);
     }
 }
