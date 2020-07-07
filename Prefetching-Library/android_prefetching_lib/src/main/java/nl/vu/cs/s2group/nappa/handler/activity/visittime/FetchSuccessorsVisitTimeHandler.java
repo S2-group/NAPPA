@@ -26,8 +26,12 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
  * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
  * for the provided node.
  */
-public class FetchSuccessorsVisitTimeHandler {
+public final class FetchSuccessorsVisitTimeHandler {
     private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
+
+    private FetchSuccessorsVisitTimeHandler() {
+        throw new IllegalStateException("FetchSuccessorsVisitTimeHandler is a handler class and should not be instantiated!");
+    }
 
     public static void run(@NotNull ActivityNode activity) {
         if (activity.isSuccessorVisitTimeInstantiated()) return;
