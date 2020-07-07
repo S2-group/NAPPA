@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -164,7 +165,15 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return newNode;
     }
 
-    private TfprGraph calculateVisitTimeScores(TfprGraph tfprGraph) {
+    /**
+     * Take an instance of {@link TfprGraph} with liked parents and successors and run the
+     * calculations to obtain the visit time weight required to run the TFPR algorithm.
+     *
+     * @param tfprGraph The subgraph to run the TFPR algorithm
+     * @return The same subgraph with calculated visit time weights
+     */
+    @Contract("_ -> param1")
+    private TfprGraph calculateVisitTimeScores(@NotNull TfprGraph tfprGraph) {
         for (TfprNode tfprNode : tfprGraph.graph.values()) {
             // Obtain t(u)
             tfprNode.aggregateVisitTime = tfprNode.node.getAggregateVisitTime().totalDuration;
