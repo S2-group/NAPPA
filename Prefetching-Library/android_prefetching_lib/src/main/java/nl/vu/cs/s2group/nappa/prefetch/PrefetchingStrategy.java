@@ -3,6 +3,7 @@ package nl.vu.cs.s2group.nappa.prefetch;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -72,9 +73,9 @@ public interface PrefetchingStrategy {
      * @return A implemented prefetching strategy.
      */
     @SuppressWarnings("DuplicateBranchesInSwitch")
-    @NonNull
+    @NotNull
     @Contract("_-> new")
-    static PrefetchingStrategy getStrategy(@NonNull PrefetchingStrategyType strategyId) {
+    static PrefetchingStrategy getStrategy(@NotNull PrefetchingStrategyType strategyId) {
         switch (strategyId) {
             case STRATEGY_MOST_VISITED_SUCCESSOR:
                 return new MostVisitedSuccessorPrefetchingStrategy();
