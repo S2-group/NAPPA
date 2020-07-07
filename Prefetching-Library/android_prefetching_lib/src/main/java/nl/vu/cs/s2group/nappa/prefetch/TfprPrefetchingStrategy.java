@@ -19,9 +19,6 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 // TODO Unordered list of tasks to complete issue #52
-//  * Implement the page rank calculation
-//  * Decide how many iterations to run
-//  * Add a configurable parameter for the number of runs
 //  * Verify if handler for successor visit time is working
 
 /**
@@ -126,7 +123,19 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
      */
     private void runTfprAlgorithm(TfprGraph graph) {
         for (int i = 0; i < numberOfIterations; i++) {
+            for (TfprNode node : graph.graph.values()) {
+                // This variable needs a better name
+                float sumBu = 0;
 
+                for (TfprNode parent : node.parents) {
+                    //noinspection ConstantConditions The hash should never return null
+                    sumBu += parent.tfprScore * parent.aggregateVisitTimeFromSuccessors.get(node.node.activityName) /
+                            parent.totalAggregateVisitTimeFromSuccessors;
+                }
+
+                node.tfprScore = graph.dampingFactor * node.aggregateVisitTime / graph.aggregateVisitTime +
+                        (1 - graph.dampingFactor) * sumBu;
+            }
         }
     }
 
