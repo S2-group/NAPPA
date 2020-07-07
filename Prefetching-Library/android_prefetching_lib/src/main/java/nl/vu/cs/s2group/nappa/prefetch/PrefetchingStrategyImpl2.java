@@ -29,6 +29,11 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
         return false;
     }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
+
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {

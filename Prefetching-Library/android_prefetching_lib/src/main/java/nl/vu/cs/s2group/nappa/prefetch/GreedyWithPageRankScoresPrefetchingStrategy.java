@@ -34,6 +34,10 @@ public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchingS
         return false;
     }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
 
     @NonNull
     @Override

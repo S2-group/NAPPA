@@ -24,7 +24,6 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
 //  * Add a configurable parameter for the number of runs
 //  * Verify if handler for successor visit time is working
 //  * Select the URLs of the top nodes within the budget
-//  * Add a method to flag whether this strategy requires the successor visit time
 //  * Add a validation in the main prefetching lib to call the handler only when the data is needed
 
 /**
@@ -53,6 +52,11 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
     @Override
     public boolean needVisitTime() {
+        return true;
+    }
+
+    @Override
+    public boolean needSuccessorsVisitTime() {
         return true;
     }
 

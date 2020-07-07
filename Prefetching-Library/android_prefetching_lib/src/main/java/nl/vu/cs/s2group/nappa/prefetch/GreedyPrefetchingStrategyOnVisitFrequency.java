@@ -62,6 +62,11 @@ public class GreedyPrefetchingStrategyOnVisitFrequency implements PrefetchingStr
         return false;
     }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
+
     /**
      * Will calculate the probabilities of access for each individual successor for a {@code node}.
      * Will then recursively calculate the probability for the successor of each successor:

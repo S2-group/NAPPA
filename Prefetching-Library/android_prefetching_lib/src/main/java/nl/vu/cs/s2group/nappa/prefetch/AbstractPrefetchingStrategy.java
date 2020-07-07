@@ -46,4 +46,9 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     public boolean needVisitTime() {
         return false;
     }
+
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
 }

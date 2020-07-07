@@ -37,6 +37,10 @@ public class HITSPrefetchingStrategy implements PrefetchingStrategy {
         return false;
     }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
 
     @NonNull
     @Override

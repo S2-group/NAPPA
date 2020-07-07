@@ -37,6 +37,10 @@ public class SALSAPrefetchingStrategy implements PrefetchingStrategy {
         return false;
     }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
 
     @NonNull
     @Override

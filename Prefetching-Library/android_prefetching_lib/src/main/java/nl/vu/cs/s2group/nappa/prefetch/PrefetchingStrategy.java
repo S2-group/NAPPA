@@ -45,12 +45,21 @@ public interface PrefetchingStrategy {
     List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber);
 
     /**
-     * Verifies if {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
-     * data is used for calculating the probabilities in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     * Verifies if the time spent visiting an activity is used for calculating the
+     * probabilities in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
      *
      * @return {@code True} if the data is used, {@code False} otherwise.
      */
     boolean needVisitTime();
+
+    /**
+     * Verifies if the time spent visiting a successor activity when navigated from the current
+     * activity is used for calculating the probabilities in
+     * {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     *
+     * @return {@code True} if the data is used, {@code False} otherwise.
+     */
+    boolean needSuccessorsVisitTime();
 
     /**
      * Instantiate the prefetching strategy corresponding to the provided ID.
