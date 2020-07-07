@@ -82,7 +82,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     }
 
     @NotNull
-    private List<String> getUrls(ActivityNode currentNode, List<ActivityNode> nodes) {
+    private List<String> getUrls(ActivityNode currentNode, @NotNull List<ActivityNode> nodes) {
         List<String> urls = new ArrayList<>();
 
         for (ActivityNode node : nodes) {
