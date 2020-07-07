@@ -186,7 +186,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         return tfprGraph;
     }
 
-    private class TfprGraph {
+    private static class TfprGraph {
         /**
          * Represents G, the subgraph used to compute the TFPR score. This subgraph is
          * stored as a hash map that maps the name of the activity to its TFPR node.
@@ -219,7 +219,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         }
     }
 
-    private class TfprNode {
+    private static class TfprNode {
         /**
          * Represents B_u, the set of pages that link to page u.
          */
