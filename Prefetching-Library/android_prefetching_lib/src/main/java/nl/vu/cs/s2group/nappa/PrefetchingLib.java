@@ -159,7 +159,8 @@ public class PrefetchingLib {
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
                     addVisitTimePerActivityObserver(byName);
-                    FetchSuccessorsVisitTimeHandler.run(byName);
+                    if (strategyIntent.needSuccessorsVisitTime())
+                        FetchSuccessorsVisitTimeHandler.run(byName);
                 }
 
 
@@ -317,7 +318,8 @@ public class PrefetchingLib {
                 addActivityExtraObserver(currentNode, activityId);
                 addVisitTimePerActivityObserver(currentNode);
                 addAUrlCandidateObserver(currentNode, activityId);
-                FetchSuccessorsVisitTimeHandler.run(currentNode);
+                if (strategyIntent.needSuccessorsVisitTime())
+                    FetchSuccessorsVisitTimeHandler.run(currentNode);
             }, 0, TimeUnit.SECONDS);
         }
     }
