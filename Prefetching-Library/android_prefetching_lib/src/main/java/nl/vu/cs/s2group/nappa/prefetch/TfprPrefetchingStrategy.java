@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 // TODO Unordered list of tasks to complete issue #52
@@ -39,20 +38,12 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  * <p>
  * This strategy accepts the following configurations:
  * <ul>
- *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_FREQUENCY_SCORE}</li>
- *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_TIME_SCORE}</li>
  * </ul>
  *
  * @see <a href="https://dl.acm.org/doi/10.1109/WI.2007.145">Personalized PageRank paper</a>
  */
 public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = TfprPrefetchingStrategy.class.getSimpleName();
-
-    private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
-    private static final float DEFAULT_WEIGHT_TIME_SCORE = 0.5f;
-
-    protected final float weightFrequencyScore;
-    protected final float weightTimeScore;
 
     @Override
     public boolean needVisitTime() {
@@ -61,17 +52,6 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
     public TfprPrefetchingStrategy() {
         super();
-
-        weightFrequencyScore = NappaConfigMap.get(
-                PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
-                DEFAULT_WEIGHT_FREQUENCY_SCORE);
-
-        weightTimeScore = NappaConfigMap.get(
-                PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
-                DEFAULT_WEIGHT_TIME_SCORE);
-
-        if ((weightFrequencyScore + weightTimeScore) != 1.0)
-            throw new IllegalArgumentException("The sum of the time and frequency weight must be 1!");
     }
 
     @NonNull
