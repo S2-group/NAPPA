@@ -90,4 +90,12 @@ public enum PrefetchingStrategyConfigKeys {
      * more measures of weight are used, then de default value is 0.333, etc.)
      */
     WEIGHT_FREQUENCY_SCORE,
+
+    /**
+     * Maps a {@link Integer} representing the number of iterations to run for calculating
+     * the strategy algorithm score.
+     * <p>
+     * The default value is {@link AbstractPrefetchingStrategy#DEFAULT_NUMBER_OF_ITERATIONS}.
+     */
+    NUMBER_OF_ITERATIONS,
 }

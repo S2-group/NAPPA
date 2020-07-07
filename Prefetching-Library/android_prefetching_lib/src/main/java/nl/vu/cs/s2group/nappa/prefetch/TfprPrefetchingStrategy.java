@@ -125,6 +125,9 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
      *              calculated
      */
     private void runTfprAlgorithm(TfprGraph graph) {
+        for (int i = 0; i < numberOfIterations; i++) {
+
+        }
     }
 
     /**
