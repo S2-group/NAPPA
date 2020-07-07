@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
@@ -27,7 +29,8 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 public class FetchSuccessorsVisitTimeHandler {
     private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
 
-    public static void run(ActivityNode activity) {
+    public static void run(@NotNull ActivityNode activity) {
+        if (activity.isSuccessorVisitTimeInstantiated()) return;
         if (Looper.getMainLooper().isCurrentThread())
             NappaThreadPool.scheduler.execute(() -> runQuery(activity));
         else runQuery(activity);
