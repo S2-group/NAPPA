@@ -19,7 +19,9 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 // TODO Unordered list of tasks to complete issue #52
-//  * Verify if handler for successor visit time is working
+//  * Test handler for successor visit time
+//  * Test visit time weight calculation
+//  * Test TFPR calculation
 
 /**
  * This strategy employs a Link Analysis approach implementing a PageRank-based algorithm
