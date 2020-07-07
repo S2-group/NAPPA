@@ -20,11 +20,11 @@ public class NappaConfigMap {
      * Initialize the configuration map. Should be invoked only once.
      *
      * @param config A configuration map defined by the user.
-     * @throws RuntimeException If the configuration map was already previously initialized.
+     * @throws IllegalStateException If the configuration map was already previously initialized.
      */
     public static void init(Map<PrefetchingStrategyConfigKeys, Object> config) {
         if (NappaConfigMap.config != null)
-            throw new RuntimeException("The NAPPA configuration should be initialized only once.");
+            throw new IllegalStateException("The NAPPA configuration should be initialized only once.");
         NappaConfigMap.config = config;
     }
 
@@ -35,11 +35,11 @@ public class NappaConfigMap {
      * @param key   The configuration key
      * @param value The configuration value
      * @throws IllegalArgumentException If the configuration key was already previously initialized.
-     * @throws RuntimeException         If the configuration map is not initialized
+     * @throws IllegalStateException         If the configuration map is not initialized
      */
     public static void put(PrefetchingStrategyConfigKeys key, Object value) {
         if (config == null)
-            throw new RuntimeException("The NAPPA configuration is not initialized.");
+            throw new IllegalStateException("The NAPPA configuration is not initialized.");
         if (config.containsKey(key))
             throw new IllegalArgumentException("There is already an configuration defined by the key " + key + ".");
         config.put(key, value);
