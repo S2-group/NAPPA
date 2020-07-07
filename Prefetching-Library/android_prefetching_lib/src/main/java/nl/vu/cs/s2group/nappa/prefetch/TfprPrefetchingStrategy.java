@@ -120,18 +120,27 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         // Create TFPR nodes for all successors of the current node and add parent-successor links
         for (ActivityNode successor : currentNode.successors.keySet()) {
             TfprNode successorTfprNode = getOrCreateTfprNode(tfprGraph, successor);
-            successorTfprNode.parents.add(currentNodeTfprNode);
-            currentNodeTfprNode.successors.add(successorTfprNode);
+            linkNodesAsSuccessorParent(successorTfprNode, currentNodeTfprNode);
 
             // Create TFPR nodes for all the parents of this successor and add parent-successor links
             for (ActivityNode successorParent : successor.ancestors.keySet()) {
                 TfprNode successorParentTfprNode = getOrCreateTfprNode(tfprGraph, successorParent);
-                successorParentTfprNode.successors.add(successorTfprNode);
-                successorTfprNode.parents.add(successorParentTfprNode);
+                linkNodesAsSuccessorParent(successorTfprNode, successorParentTfprNode);
             }
         }
 
         return tfprGraph;
+    }
+
+    /**
+     * Link the nodes {@code successor} and {@code parent} if they are not linked yet
+     *
+     * @param successor The successor node.
+     * @param parent    The parent node.
+     */
+    private void linkNodesAsSuccessorParent(@NotNull TfprNode successor, @NotNull TfprNode parent) {
+        if (!parent.successors.contains(successor)) parent.successors.add(successor);
+        if (!successor.parents.contains(parent)) successor.parents.add(parent);
     }
 
     /**
