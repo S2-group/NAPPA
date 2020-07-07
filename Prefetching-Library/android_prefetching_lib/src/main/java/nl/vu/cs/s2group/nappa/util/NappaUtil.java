@@ -53,9 +53,9 @@ public class NappaUtil {
      * @return All URLs requested in the candidate node that can be requested with the information
      * present in the currently visited node
      */
-    @NonNull
-    public static List<String> getUrlsFromCandidateNode(@NonNull ActivityNode visitedNode,
-                                                        @NonNull ActivityNode candidateNode) {
+    @NotNull
+    public static List<String> getUrlsFromCandidateNode(@NotNull ActivityNode visitedNode,
+                                                        @NotNull ActivityNode candidateNode) {
         return getUrlsFromCandidateNode(visitedNode, candidateNode, -1);
     }
 
@@ -71,9 +71,9 @@ public class NappaUtil {
      * @return All URLs requested in the candidate node that can be requested with the information
      * present in the currently visited node and fits the remaining URL budget.
      */
-    @NonNull
-    public static List<String> getUrlsFromCandidateNode(@NonNull ActivityNode visitedNode,
-                                                        @NonNull ActivityNode candidateNode,
+    @NotNull
+    public static List<String> getUrlsFromCandidateNode(@NotNull ActivityNode visitedNode,
+                                                        @NotNull ActivityNode candidateNode,
                                                         int remainingBudget) {
         List<String> candidateUrls = new LinkedList<>();
         long activityId = PrefetchingLib.getActivityIdFromName(visitedNode.activityName);
@@ -155,7 +155,7 @@ public class NappaUtil {
      * @param sourceNode The activity to use as source.
      * @return The total aggregate time.
      */
-    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NonNull ActivityNode sourceNode) {
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode) {
         return sourceNode.getSuccessorsVisitTimeList()
                 .stream()
                 .mapToLong(visitTime -> visitTime.totalDuration)
@@ -169,7 +169,7 @@ public class NappaUtil {
      * @param sourceNode The activity to use as source.
      * @return The total aggregate time.
      */
-    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NonNull ActivityNode sourceNode, ActivityNode destinationNode) {
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode, ActivityNode destinationNode) {
         return sourceNode.getSuccessorsVisitTimeList()
                 .stream()
                 .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
@@ -184,7 +184,7 @@ public class NappaUtil {
      * @param sourceNode The activity to use as source.
      * @return The activity name -> duration map.
      */
-    public static Map<String, Long> getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(@NonNull ActivityNode sourceNode) {
+    public static Map<String, Long> getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(@NotNull ActivityNode sourceNode) {
         return sourceNode.getSuccessorsVisitTimeList()
                 .stream()
                 .collect(Collectors.toMap(
