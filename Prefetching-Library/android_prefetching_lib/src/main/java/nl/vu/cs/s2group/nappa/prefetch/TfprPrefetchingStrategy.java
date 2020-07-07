@@ -207,12 +207,8 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
             // Obtain SUM(t(v, w)) | w e F_v
             tfprNode.totalAggregateVisitTimeFromSuccessors = NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNode(tfprNode.node);
 
-            // Obtain all
-            for (TfprNode successor : tfprNode.successors) {
-                successor.aggregateVisitTimeFromSuccessors.put(
-                        successor.node.activityName,
-                        NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNode(tfprNode.node, successor.node));
-            }
+            // Obtain t(v, u) for all pairs of v -> u where v is the current node
+            tfprNode.aggregateVisitTimeFromSuccessors = NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(tfprNode.node);
         }
 
     }

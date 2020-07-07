@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
@@ -148,5 +149,20 @@ public class NappaUtil {
                 .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
                 .mapToLong(visitTime -> visitTime.totalDuration)
                 .sum();
+    }
+
+    /**
+     * Maps the successor activities to the duration spent in these activities when
+     * accessed from the source activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The activity name -> duration map.
+     */
+    public static Map<String, Long> getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(@NonNull ActivityNode sourceNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .collect(Collectors.toMap(
+                        visitTime -> visitTime.activityName,
+                        visitTime -> visitTime.totalDuration));
     }
 }
