@@ -24,6 +24,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
 //  * Decide how many iterations to run
 //  * Add a configurable parameter for the number of runs
 //  * Verify if handler for successor visit time is working
+//  * Select the URLs of the top nodes within the budget
 
 /**
  * This strategy employs a Link Analysis approach implementing a PageRank-based algorithm
