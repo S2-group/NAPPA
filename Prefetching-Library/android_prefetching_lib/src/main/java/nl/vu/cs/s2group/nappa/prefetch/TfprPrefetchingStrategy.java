@@ -20,17 +20,10 @@ import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 // TODO Unordered list of tasks to complete issue #52
-//  * Decide which fields to use in the inner class TFPRNode
-//  * Implement subgraph initialization
 //  * Implement the page rank calculation
-//  * Do we need to keep the previous score or the current score only
-//  * Verify if we need the inner class
 //  * Decide how many iterations to run
 //  * Add a configurable parameter for the number of runs
-//  * Decide on which nodes to use for the subgraph --> all successors from current node and all nodes that points to the successors
-//  * Add a LiveData list in ActivityNode with the successors aggregate time
-//  * Test the Handler idea to initialize this LiveData object
-//  * Create utility method to get the total time given the LiveData list
+//  * Verify if handler for successor visit time is working
 
 /**
  * This strategy employs a Link Analysis approach implementing a PageRank-based algorithm
