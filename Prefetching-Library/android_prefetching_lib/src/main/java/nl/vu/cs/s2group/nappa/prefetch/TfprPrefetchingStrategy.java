@@ -68,7 +68,10 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         calculateVisitTimeScores(graph);
 
         // Verifies if we have any data in our subgraph.
-        if (graph.aggregateVisitTime == 0) return new ArrayList<>();
+        if (graph.aggregateVisitTime == 0) {
+            logStrategyExecutionDuration(LOG_TAG, node, startTime);
+            return new ArrayList<>();
+        }
 
         // Run page rank
         runTfprAlgorithm(graph);
@@ -79,7 +82,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         // Select all URLs that fits the budget
         List<String> selectedUrls = getUrls(node, selectedNodes);
 
-        Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
+        logStrategyExecutionDuration(LOG_TAG, node, startTime);
 
         return selectedUrls;
     }

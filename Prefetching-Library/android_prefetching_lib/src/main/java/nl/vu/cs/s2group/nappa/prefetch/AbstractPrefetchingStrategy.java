@@ -1,5 +1,12 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
+import android.util.Log;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
+
+import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 
 /**
@@ -84,5 +91,19 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     @Override
     public boolean needSuccessorsVisitTime() {
         return false;
+    }
+
+    /**
+     * Log how long it took to run the strategy
+     *
+     * @param tag       The tag to be used in the logging statement
+     * @param activity  The current activity received in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}
+     * @param startTime A timestamp on when the calculations stared.
+     */
+    protected void logStrategyExecutionDuration(String tag, @NotNull ActivityNode activity, long startTime) {
+        Log.d(tag, "Prefetching strategy calculations for " +
+                activity.getSuccessorsVisitTimeList() +
+                " was finished in " +
+                (new Date().getTime() - startTime) + " ms");
     }
 }
