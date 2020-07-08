@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -57,8 +58,12 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(@NonNull ActivityNode node, Integer maxNumber) {
-        Log.d(LOG_TAG, node.activityName + " searching best successors");
-        return getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
+        long startTime = new Date().getTime();
+
+        List<String> urls = getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
+        logStrategyExecutionDuration(node, startTime);
+
+        return urls;
     }
 
     /**
