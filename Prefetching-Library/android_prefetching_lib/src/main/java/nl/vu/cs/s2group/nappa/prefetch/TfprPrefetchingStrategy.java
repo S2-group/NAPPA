@@ -69,7 +69,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
         // Verifies if we have any data in our subgraph.
         if (graph.aggregateVisitTime == 0) {
-            logStrategyExecutionDuration(LOG_TAG, node, startTime);
+            logStrategyExecutionDuration(node, startTime);
             return new ArrayList<>();
         }
 
@@ -82,7 +82,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         // Select all URLs that fits the budget
         List<String> selectedUrls = getUrls(node, selectedNodes);
 
-        logStrategyExecutionDuration(LOG_TAG, node, startTime);
+        logStrategyExecutionDuration(node, startTime);
 
         return selectedUrls;
     }
