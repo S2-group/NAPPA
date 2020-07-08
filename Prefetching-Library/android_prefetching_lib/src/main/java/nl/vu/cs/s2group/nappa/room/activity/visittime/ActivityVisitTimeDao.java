@@ -115,6 +115,10 @@ public interface ActivityVisitTimeDao {
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
             "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
             "WHERE fromActivity = :fromActivity " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTime(String fromActivity);
@@ -140,12 +144,16 @@ public interface ActivityVisitTimeDao {
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
             "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
             "WHERE " +
-            "	fromActivity = :fromActivity " +
-            "AND sessionId > ( " +
-            "   SELECT MAX(id) - :lastNSessions " +
-            "   FROM pf_session " +
-            ") " +
+            "	fromActivity = :fromActivity AND" +
+            "   sessionId > ( " +
+            "       SELECT MAX(id) - :lastNSessions " +
+            "       FROM pf_session " +
+            "   ) " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(
             String fromActivity,
@@ -171,12 +179,16 @@ public interface ActivityVisitTimeDao {
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
             "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
             "WHERE " +
-            "	fromActivity = :fromActivity " +
-            "AND sessionId > ( " +
-            "   SELECT MAX(sessionId) - :lastNSessions " +
-            "   FROM pf_view_successors_aggregate_visit_time_by_session " +
-            ") " +
+            "	fromActivity = :fromActivity AND " +
+            "   sessionId > ( " +
+            "       SELECT MAX(sessionId) - :lastNSessions " +
+            "       FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "   ) " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(
             String fromActivity,
