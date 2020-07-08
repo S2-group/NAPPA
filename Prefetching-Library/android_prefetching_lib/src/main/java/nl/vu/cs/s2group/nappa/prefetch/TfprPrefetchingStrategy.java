@@ -46,6 +46,26 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
     public TfprPrefetchingStrategy() {
         super();
+
+        /*
+          On the testing phase, the TFPR score was rather low.
+          The TFPR score was higher for pages with longer time (e.g. 30+ seconds) and
+          lower for pages with short time (e.g., 5- seconds).
+          Low TFPR scores were always below 10%, often below 5%.
+          High TFPR scores were always between 40% to 50~55%.
+          While testing, there was only 2 occasions where a page obtained a TFPR score equal
+          or higher than 60%, which is the default lower threshold for the weight score:
+
+          * The long time was increased to a few minutes;
+          * The current node had a single child only;
+
+          In both cases the TFPR score was between 60% and 75%.
+
+          Since this is not always the case, it seems reasonable to reduce the lower threshold.
+          The value is only overridden if it was not already overridden using the user-defined
+          configurations.
+         */
+        if (scoreLowerThreshold == DEFAULT_SCORE_LOWER_THRESHOLD) scoreLowerThreshold = 0.4f;
     }
 
     @Override
