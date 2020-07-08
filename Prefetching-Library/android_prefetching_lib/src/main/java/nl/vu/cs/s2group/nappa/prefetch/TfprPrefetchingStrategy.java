@@ -137,6 +137,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
                 }
 
                 node.tfprScore = dampingFactor * node.aggregateVisitTime / graph.aggregateVisitTime + (1 - dampingFactor) * sumBu;
+                if (Float.valueOf(node.tfprScore).isNaN()) node.tfprScore = 0;
             }
         }
     }
