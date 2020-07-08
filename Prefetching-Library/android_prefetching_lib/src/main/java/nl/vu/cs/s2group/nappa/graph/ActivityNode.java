@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -185,7 +186,13 @@ public class ActivityNode {
         this.successorVisitTimeLiveData = successorVisitTimeLiveData;
         this.successorVisitTimeLiveData.observeForever((newSuccessorVisitTime) -> {
             if (newSuccessorVisitTime == null || newSuccessorVisitTime.size() == 0) return;
-            successorVisitTimeList = newSuccessorVisitTime;
+            // This filter ensures that we only use forward navigation
+            successorVisitTimeList = Arrays.asList(
+                    newSuccessorVisitTime
+                            .stream()
+                            .filter(node -> successors.containsKey(node.activityName))
+                            .toArray(AggregateVisitTimeByActivity[]::new)
+            );
             Log.d(LOG_TAG, activityName +
                     " - Updating the visit time from the successors list:\n" +
                     successorVisitTimeList.toString());
