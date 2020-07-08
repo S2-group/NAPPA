@@ -67,6 +67,9 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         TfprGraph graph = makeSubgraph(node);
         calculateVisitTimeScores(graph);
 
+        // Verifies if we have any data in our subgraph.
+        if (graph.aggregateVisitTime == 0) return new ArrayList<>();
+
         // Run page rank
         runTfprAlgorithm(graph);
 
@@ -137,7 +140,6 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
                 }
 
                 node.tfprScore = dampingFactor * node.aggregateVisitTime / graph.aggregateVisitTime + (1 - dampingFactor) * sumBu;
-                if (Float.valueOf(node.tfprScore).isNaN()) node.tfprScore = 0;
             }
         }
     }
