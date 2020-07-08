@@ -35,12 +35,12 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
     public static final int DEFAULT_NUMBER_OF_ITERATIONS = 10;
     public static final boolean DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS = true;
 
-    protected final int maxNumberOfUrlToPrefetch;
-    protected final int lastNSessions;
-    protected final int numberOfIterations;
-    protected final float scoreLowerThreshold;
-    protected final float dampingFactor;
-    protected final boolean useAllSessionsAsScoreForLastNSessions;
+    protected int maxNumberOfUrlToPrefetch;
+    protected int lastNSessions;
+    protected int numberOfIterations;
+    protected float scoreLowerThreshold;
+    protected float dampingFactor;
+    protected boolean useAllSessionsAsScoreForLastNSessions;
 
     public AbstractPrefetchingStrategy() {
         maxNumberOfUrlToPrefetch = NappaConfigMap.get(
