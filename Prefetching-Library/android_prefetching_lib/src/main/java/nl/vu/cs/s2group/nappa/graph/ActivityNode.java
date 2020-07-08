@@ -80,7 +80,7 @@ public class ActivityNode {
      * @return The activity class simple name.
      */
     public String getActivitySimpleName() {
-        String[] activityNamespace = activityName.split(".");
+        String[] activityNamespace = activityName.split("\\.");
         return activityNamespace[activityNamespace.length - 1];
     }
 
