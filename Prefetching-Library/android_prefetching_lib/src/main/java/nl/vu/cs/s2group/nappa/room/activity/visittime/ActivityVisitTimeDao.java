@@ -26,7 +26,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM AggregateVisitTimeBySession " +
+            "FROM pf_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityName);
 
@@ -56,7 +56,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM AggregateVisitTimeBySession " +
+            "FROM pf_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName " +
             "AND sessionId > ( " +
             "   SELECT MAX(id) - :lastNSessions " +
@@ -91,7 +91,7 @@ public interface ActivityVisitTimeDao {
             "   SUM(totalDuration) as totalDuration " +
             "FROM (" +
             "   SELECT * " +
-            "   FROM AggregateVisitTimeBySession " +
+            "   FROM pf_view_aggregate_visit_time_by_session " +
             "   WHERE activityName = :activityName " +
             "   GROUP BY sessionId " +
             "   ORDER BY sessionId " +
