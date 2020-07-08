@@ -73,13 +73,14 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         // Run page rank
         runTfprAlgorithm(graph);
 
-        // Select all nodes with score above the threshold
+        // Select all successors nodes with score above the threshold
         List<ActivityNode> selectedNodes = getSuccessorListSortByTfprScore(graph, node);
 
         // Select all URLs that fits the budget
         List<String> selectedUrls = getUrls(node, selectedNodes);
 
         Log.d(LOG_TAG, node.activityName + " found successors in " + (new Date().getTime() - startTime) + " ms");
+
         return selectedUrls;
     }
 
