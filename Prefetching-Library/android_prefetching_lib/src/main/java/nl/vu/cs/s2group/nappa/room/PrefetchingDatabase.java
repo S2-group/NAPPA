@@ -8,21 +8,22 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import nl.vu.cs.s2group.nappa.room.activity.ActivitySourceDestination;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTimeDao;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySession;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.SuccessorsAggregateVisitTimeBySession;
 import nl.vu.cs.s2group.nappa.room.converter.DateConverters;
 import nl.vu.cs.s2group.nappa.room.dao.ActivityExtraDao;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTimeDao;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySession;
 
 // TODO Refactor the Room classes organization
 //  The current structure is messy and falling apart. The Dao/Entity/View model could be
@@ -65,6 +66,7 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeBySessio
         views = {
                 AggregateVisitTimeBySession.class,
                 SuccessorsAggregateVisitTimeBySession.class,
+                ActivitySourceDestination.class,
         },
         version = 14)
 @TypeConverters({DateConverters.class})
