@@ -32,6 +32,7 @@ public class ActivityNode {
     //  and is used in the strategies. In this case, we can likely simply this map to a list
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
+    private List<String> successorsStr = new ArrayList<>();
     // TODO Refactor LiveData management for SessionAggregate
     //  This class declares 2 LiveData attributes for the SessionAggregate data:
     //  * `listSessionAggregateLiveData`: All sessions
@@ -190,7 +191,7 @@ public class ActivityNode {
             successorVisitTimeList = Arrays.asList(
                     newSuccessorVisitTime
                             .stream()
-                            .filter(node -> successors.containsKey(node.activityName))
+                            .filter(node -> successorsStr.contains(node.activityName))
                             .toArray(AggregateVisitTimeByActivity[]::new)
             );
             Log.d(LOG_TAG, activityName +
@@ -304,6 +305,7 @@ public class ActivityNode {
     public void initSuccessor(ActivityNode activityNode) {
         //TODO fix here
         successors.put(activityNode, 0);
+        successorsStr.add(activityNode.activityName);
         activityNode.ancestors.put(this, 0);
         // Store the relation between source-destination in the database with a count of 0
         PrefetchingLib.addSessionData(activityName, activityNode.activityName, 0L);
@@ -329,6 +331,7 @@ public class ActivityNode {
             //  RETURN:  TRUE (Prefetch)
             if (!successors.containsKey(activityNode) && !ancestors.containsKey(activityNode)) {
                 successors.put(activityNode, 1);
+                successorsStr.add(activityNode.activityName);
                 activityNode.ancestors.put(this, 1);
                 //CREATE NEW SESSIONDATA - THIS IS THE FIRST TIME
                 Log.d(LOG_TAG, "ACTNODE " + "CREATING, NOT IN DB");
