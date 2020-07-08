@@ -1,5 +1,6 @@
 package nl.vu.cs.s2group.nappa.prefetch;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -101,14 +102,14 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
      * with all the successors that have a TFPR score higher than the lower threshold score.
      *
      * @param graph       The subgraph after running the TFPR algorithm
-     * @param currentNode The {@link android.app.Activity} the user navigated to
+     * @param currentNode The {@link Activity} the user navigated to
      * @return An array of successors sorted by TFPR score
      */
     @NotNull
     private List<ActivityNode> getSuccessorListSortByTfprScore(@NotNull TfprGraph graph, @NotNull ActivityNode currentNode) {
         //noinspection ConstantConditions We do not add null values to the map
         List<TfprNode> sortedNodes = graph.graph.get(currentNode.activityName).successors;
-        sortedNodes.sort(Comparator.comparing(node -> node.tfprScore));
+        sortedNodes.sort(Comparator.comparing(node -> -node.tfprScore));
 
         return Arrays.asList(sortedNodes
                 .stream()
