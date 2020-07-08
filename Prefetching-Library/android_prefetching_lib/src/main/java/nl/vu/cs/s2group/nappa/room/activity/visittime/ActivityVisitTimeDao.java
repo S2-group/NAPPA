@@ -114,7 +114,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM SuccessorsAggregateVisitTimeBySession " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
             "WHERE fromActivity = :fromActivity " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTime(String fromActivity);
@@ -139,7 +139,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM SuccessorsAggregateVisitTimeBySession " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
             "WHERE " +
             "	fromActivity = :fromActivity " +
             "AND sessionId > ( " +
@@ -170,12 +170,12 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM SuccessorsAggregateVisitTimeBySession " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
             "WHERE " +
             "	fromActivity = :fromActivity " +
             "AND sessionId > ( " +
             "   SELECT MAX(sessionId) - :lastNSessions " +
-            "   FROM SuccessorsAggregateVisitTimeBySession " +
+            "   FROM pf_view_successors_aggregate_visit_time_by_session " +
             ") " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(
