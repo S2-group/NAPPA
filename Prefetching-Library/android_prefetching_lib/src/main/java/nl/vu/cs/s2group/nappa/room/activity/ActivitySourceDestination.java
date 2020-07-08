@@ -7,8 +7,8 @@ import androidx.room.DatabaseView;
  */
 @DatabaseView(viewName = "pf_view_activity_source_destination",
         value = "SELECT DISTINCT " +
-                "	pf_activity_a.activity_name AS source_activity, " +
-                "	pf_activity_b.activity_name AS destination_activity, " +
+                "	pf_activity_a.activity_name AS sourceActivityName, " +
+                "	pf_activity_b.activity_name AS destinationActivityName, " +
                 "	id_activity_source AS sourceActivityID, " +
                 "	id_activity_destination AS destinationActivityID " +
                 "FROM pf_session_data " +
