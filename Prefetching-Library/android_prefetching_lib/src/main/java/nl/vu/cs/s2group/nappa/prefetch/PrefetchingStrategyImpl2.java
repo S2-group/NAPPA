@@ -14,7 +14,7 @@ import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
 // TODO: Read the strategy, provide a JavaDoc with basic description and update class name
@@ -43,7 +43,7 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                 List<ParameteredUrl> parameteredUrls = new LinkedList<>();
 
                 for (ActivityNode successor : successors.keySet()) {
-                    List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance()
+                    List<AggregateUrlDao.AggregateURL> list = NappaDB.getInstance()
                             .urlDao()
                             .getAggregateForIdActivity(Nappa.getActivityIdFromName(successor.activityName), 10);
                     for (AggregateUrlDao.AggregateURL aggregateURL : list) {

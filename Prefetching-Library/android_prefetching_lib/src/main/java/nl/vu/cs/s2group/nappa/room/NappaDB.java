@@ -70,18 +70,18 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
         },
         version = 14)
 @TypeConverters({DateConverters.class})
-public abstract class PrefetchingDatabase extends RoomDatabase {
+public abstract class NappaDB extends RoomDatabase {
 
-    private static PrefetchingDatabase instance = null;
+    private static NappaDB instance = null;
 
-    PrefetchingDatabase() {
+    NappaDB() {
     }
 
-    public static PrefetchingDatabase getInstance(Context context) {
+    public static NappaDB getInstance(Context context) {
         if (instance == null)
-            synchronized (PrefetchingDatabase.class) {
+            synchronized (NappaDB.class) {
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        PrefetchingDatabase.class, "pf_db")
+                        NappaDB.class, "pf_db")
                         //TODO remove and provide migrations in production
                         .fallbackToDestructiveMigration()
                         .build();
@@ -89,7 +89,7 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
         return instance;
     }
 
-    public static PrefetchingDatabase getInstance() {
+    public static NappaDB getInstance() {
         return instance;
     }
 
