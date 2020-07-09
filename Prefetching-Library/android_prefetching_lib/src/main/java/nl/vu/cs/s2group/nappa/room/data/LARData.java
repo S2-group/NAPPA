@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.annotation.NonNull;
 
-@Entity(tableName = "pf_LAR", primaryKeys = {"activity_name"}, indices = @Index(value = {"activity_name"}, unique = true))
+@Entity(tableName = "nappa_LAR", primaryKeys = {"activity_name"}, indices = @Index(value = {"activity_name"}, unique = true))
 public class LARData {
     @NonNull @ColumnInfo(name = "activity_name") public String activity_name;
     @NonNull @ColumnInfo(name = "PR") public float PR;

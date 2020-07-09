@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
@@ -76,8 +76,8 @@ public class NappaUtil {
                                                         @NotNull ActivityNode candidateNode,
                                                         int remainingBudget) {
         List<String> candidateUrls = new LinkedList<>();
-        long activityId = PrefetchingLib.getActivityIdFromName(visitedNode.activityName);
-        Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(activityId);
+        long activityId = Nappa.getActivityIdFromName(visitedNode.activityName);
+        Map<String, String> extrasMap = Nappa.getExtrasMap().get(activityId);
 
         // Verifies if the current activity contain any registered extras in the current session
         if (extrasMap == null || extrasMap.isEmpty()) return candidateUrls;

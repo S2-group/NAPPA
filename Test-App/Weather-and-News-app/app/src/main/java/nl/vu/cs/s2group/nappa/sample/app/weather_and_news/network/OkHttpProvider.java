@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import okhttp3.OkHttpClient;
 
 public class OkHttpProvider {
@@ -10,7 +10,7 @@ public class OkHttpProvider {
 
     private OkHttpProvider() {
         okHttpClient = new OkHttpClient();
-        okHttpClient = PrefetchingLib.getOkHttp(okHttpClient);
+        okHttpClient = Nappa.getOkHttp(okHttpClient);
     }
 
     public static OkHttpProvider getInstance() {

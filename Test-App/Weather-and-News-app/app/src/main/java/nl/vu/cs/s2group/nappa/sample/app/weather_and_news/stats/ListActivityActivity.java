@@ -6,7 +6,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.viewmodel.ViewModelActivityList;
@@ -16,7 +16,7 @@ public class ListActivityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_list_activity);
 
         ViewModelActivityList model = ViewModelProviders.of(this).get(ViewModelActivityList.class);

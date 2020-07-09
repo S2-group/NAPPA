@@ -134,7 +134,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 // not been instrumented yet. Furthermore, the previous statement of a inline block might contain
                 // a instrumented statement referent to another startActivity method.
                 PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
-                if (previousStatement != null && !requiresToEncapsulateInCodeBlock && previousStatement.getText().contains("Nappa")) {
+                if (previousStatement != null && !requiresToEncapsulateInCodeBlock && previousStatement.getText().contains("Nappa.notifyExtras")) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }

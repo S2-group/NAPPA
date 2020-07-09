@@ -7,15 +7,15 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 
 public class InterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_inter);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -25,7 +25,7 @@ public class InterActivity extends AppCompatActivity {
         kabulButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.putExtra("capital", "Kabul");
-            PrefetchingLib.notifyExtra("capital", "Kabul");
+            Nappa.notifyExtra("capital", "Kabul");
             startActivity(intent);
         });
         Button sessionButton = findViewById(R.id.button_session);

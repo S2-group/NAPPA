@@ -31,11 +31,8 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 //  This organization allows to keep together classes that are related to each other, making
 //  maintenance simpler.
 //  While we are at it, consider renaming:
-//  * The class `PrefetchingDatabase` to `NappaDB`;
 //  * The class `SessionData` to `ActivityVisitFrequency` or simply `VisitFrequency`;
 //  * The entity classes `MyEntityData` to just `MyEntity`;
-//  * The database schema `pf_*` to `nappa_*`;
-//  * The database file `pf_db` to `nappa_db.db` --> Verify if it is possible to add the extension;
 //  Other considerations:
 //  * Enforcing required data by either making entities attributes type primitive or annotating object types with @NonNull;
 //  * Enforcing foreign keys at the database level --> currently only enforced in the application levels. Adding invalid FK is currently allowed;
@@ -68,20 +65,20 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
                 SuccessorsAggregateVisitTimeBySession.class,
                 ActivitySourceDestination.class,
         },
-        version = 14)
+        version = 1)
 @TypeConverters({DateConverters.class})
-public abstract class PrefetchingDatabase extends RoomDatabase {
+public abstract class NappaDB extends RoomDatabase {
 
-    private static PrefetchingDatabase instance = null;
+    private static NappaDB instance = null;
 
-    PrefetchingDatabase() {
+    NappaDB() {
     }
 
-    public static PrefetchingDatabase getInstance(Context context) {
+    public static NappaDB getInstance(Context context) {
         if (instance == null)
-            synchronized (PrefetchingDatabase.class) {
+            synchronized (NappaDB.class) {
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        PrefetchingDatabase.class, "pf_db")
+                        NappaDB.class, "nappa.db")
                         //TODO remove and provide migrations in production
                         .fallbackToDestructiveMigration()
                         .build();
@@ -89,7 +86,7 @@ public abstract class PrefetchingDatabase extends RoomDatabase {
         return instance;
     }
 
-    public static PrefetchingDatabase getInstance() {
+    public static NappaDB getInstance() {
         return instance;
     }
 

@@ -16,8 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.location.LocationActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
@@ -54,7 +54,7 @@ public class FindItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_find_item);
         setActivityList();
         setTextListener();
@@ -65,7 +65,7 @@ public class FindItemActivity extends AppCompatActivity {
         int id = Integer.parseInt(et.getText().toString());
         Intent intent = new Intent(this, activitiesItem[selectedIndex])
                 .putExtra("id", id);
-        PrefetchingLib.notifyExtras(intent.getExtras());
+        Nappa.notifyExtras(intent.getExtras());
         startActivity(intent);
     }
 

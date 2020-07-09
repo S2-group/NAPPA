@@ -26,7 +26,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM pf_view_aggregate_visit_time_by_session " +
+            "FROM nappa_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityName);
 
@@ -56,11 +56,11 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM pf_view_aggregate_visit_time_by_session " +
+            "FROM nappa_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName " +
             "AND sessionId > ( " +
             "   SELECT MAX(id) - :lastNSessions " +
-            "   FROM pf_session " +
+            "   FROM nappa_session " +
             ") ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String activityName, int lastNSessions);
 
@@ -91,7 +91,7 @@ public interface ActivityVisitTimeDao {
             "   SUM(totalDuration) as totalDuration " +
             "FROM (" +
             "   SELECT * " +
-            "   FROM pf_view_aggregate_visit_time_by_session " +
+            "   FROM nappa_view_aggregate_visit_time_by_session " +
             "   WHERE activityName = :activityName " +
             "   GROUP BY sessionId " +
             "   ORDER BY sessionId " +
@@ -114,8 +114,8 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM pf_view_successors_aggregate_visit_time_by_session " +
-            "INNER JOIN pf_view_activity_source_destination " +
+            "FROM nappa_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
             "   activityName == destinationActivityName AND " +
             "   fromActivity = sourceActivityName " +
@@ -143,8 +143,8 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM pf_view_successors_aggregate_visit_time_by_session " +
-            "INNER JOIN pf_view_activity_source_destination " +
+            "FROM nappa_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
             "   activityName == destinationActivityName AND " +
             "   fromActivity = sourceActivityName " +
@@ -152,7 +152,7 @@ public interface ActivityVisitTimeDao {
             "	fromActivity = :fromActivity AND" +
             "   sessionId > ( " +
             "       SELECT MAX(id) - :lastNSessions " +
-            "       FROM pf_session " +
+            "       FROM nappa_session " +
             "   ) " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(
@@ -178,8 +178,8 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "	activityName, " +
             "	SUM(totalDuration) as totalDuration " +
-            "FROM pf_view_successors_aggregate_visit_time_by_session " +
-            "INNER JOIN pf_view_activity_source_destination " +
+            "FROM nappa_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
             "   activityName == destinationActivityName AND " +
             "   fromActivity = sourceActivityName " +
@@ -187,7 +187,7 @@ public interface ActivityVisitTimeDao {
             "	fromActivity = :fromActivity AND " +
             "   sessionId > ( " +
             "       SELECT MAX(sessionId) - :lastNSessions " +
-            "       FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "       FROM nappa_view_successors_aggregate_visit_time_by_session " +
             "   ) " +
             "GROUP BY activityName ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(

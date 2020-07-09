@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.NewsCardViewAdapter;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.NewsWrapper;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
@@ -37,7 +37,7 @@ public class NewsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
 
         setContentView(R.layout.activity_news);
         Toolbar toolbar = findViewById(R.id.toolbar);

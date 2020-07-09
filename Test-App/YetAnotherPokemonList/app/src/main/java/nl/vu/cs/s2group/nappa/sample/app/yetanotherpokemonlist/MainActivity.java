@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerriesActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.berry.BerryActivity;
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PrefetchingLib.init(this, PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        Nappa.init(this, PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME);
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_main);
     }
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Class<AppCompatActivity> activity = activitiesList[index];
         Log.d(LOG_TAG, "Navigating to page " + activity.getCanonicalName());
         Intent intent = new Intent(this, activity);
-        PrefetchingLib.notifyExtras(intent.getExtras());
+        Nappa.notifyExtras(intent.getExtras());
         startActivity(intent);
     }
 
@@ -69,14 +69,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Navigating to page " + activity.getCanonicalName() + " with ID " + itemId + " of " + maxItems[pageIndex]);
         Intent intent = new Intent(this, activity);
         intent.putExtra("id", itemId);
-        PrefetchingLib.notifyExtras(intent.getExtras());
+        Nappa.notifyExtras(intent.getExtras());
         startActivity(intent);
     }
 
     public void navigateToFindPage(View view) {
         Log.d(LOG_TAG, "Navigating to find page");
         Intent intent = new Intent(this, FindItemActivity.class);
-        PrefetchingLib.notifyExtras(intent.getExtras());
+        Nappa.notifyExtras(intent.getExtras());
         startActivity(intent);
     }
 }

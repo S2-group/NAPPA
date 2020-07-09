@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 
 public class ViewModelSessionDataList extends ViewModel {
@@ -13,7 +13,7 @@ public class ViewModelSessionDataList extends ViewModel {
     public LiveData<List<SessionData>> listLiveData;
 
     public ViewModelSessionDataList() {
-        listLiveData = PrefetchingLib.getSessionDataListLiveData();
+        listLiveData = Nappa.getSessionDataListLiveData();
     }
 
 }

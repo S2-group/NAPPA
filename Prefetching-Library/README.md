@@ -51,7 +51,7 @@ implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 Import the library:
 
 ```java
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 ``` 
 
 Encapsulate the creation of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) instances:
@@ -164,14 +164,13 @@ data > data > [application package name] > databases
 
 You should see 3 files:
 
-* pf_db
-* pf_db-shm
-* pf_db-wal
+* nappa.db
+* nappa.db-shm
+* nappa.db-wal
 
 Select all 3, right click and `save as`.
-Rename `pf_db` to `pf_db.db`
 Open DB Browser for SQLite.
-Click on `Open Database`, go to the directory you saved the files and select `pf_db.db`.
+Click on `Open Database`, go to the directory you saved the files and select `nappa.db`.
 Click in the `Browser Data` tab.
 You can now verify the data saved by the NAPPA Library. 
 
