@@ -275,11 +275,12 @@ public class ActivityNode {
     public String toString() {
         return getActivitySimpleName() +
                 getNodeScore() +
-                "\n\n" +
-                "Successors:\n" +
+                "\n" +
+                "\tSuccessors:\n" +
                 reduceNodesAndHitsMap(successors) +
-                "Ancestors:\n" +
-                reduceNodesAndHitsMap(ancestors);
+                "\tAncestors:\n" +
+                reduceNodesAndHitsMap(ancestors) +
+                "\n";
     }
 
     /**
@@ -295,7 +296,7 @@ public class ActivityNode {
         switch (PrefetchingLib.prefetchingStrategyType) {
             case STRATEGY_PAGERANK:
             case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
-                score = String.format(Locale.getDefault(), "(%.4f)", pageRank);
+                score = String.format(Locale.getDefault(), "(PR = %.4f)", pageRank);
                 break;
             case STRATEGY_HITS:
             case STRATEGY_PPM_WITH_HITS_SCORES:
@@ -311,7 +312,7 @@ public class ActivityNode {
 
     /**
      * Reduce the {@link #successors} or {@link #ancestors} map to a {@link StringBuilder}
-     * in the format "nodeName (hits)".
+     * in the format "nodeName (# hits)".
      *
      * @param nodes The map of node -> hit to reduce.
      * @return A formatted string with rows of "nodeName (hits)".
@@ -321,15 +322,15 @@ public class ActivityNode {
         StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<ActivityNode, Integer> successor : nodes.entrySet()) {
-            builder.append("\t")
+            builder.append("\t\t")
                     .append(successor.getKey().getActivitySimpleName())
                     .append(" (")
                     .append(successor.getValue())
-                    .append(")")
+                    .append(" hits)")
                     .append("\n");
         }
 
-        return builder.toString();
+        return builder.length() == 0 ? "\n" : builder.toString();
     }
 
     /**
