@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "pf_activity", indices = @Index(value = {"activity_name"}, unique = true))
+@Entity(tableName = "nappa_activity", indices = @Index(value = {"activity_name"}, unique = true))
 public class ActivityData {
     @PrimaryKey(autoGenerate = true)
     public Long id;

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "pf_activity_extra")
+@Entity(tableName = "nappa_activity_extra")
 public class ActivityExtraData {
 
     @PrimaryKey(autoGenerate = true) public Long id;

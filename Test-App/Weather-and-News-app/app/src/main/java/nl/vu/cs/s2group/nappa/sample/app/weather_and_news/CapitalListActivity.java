@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.CapitalCardViewAdapter;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.cardview.CapitalCardViewAdapterObservable;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.Capital;
@@ -32,7 +32,7 @@ public class CapitalListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
 
         setContentView(R.layout.activity_capital_list);
         Toolbar toolbar = findViewById(R.id.toolbar);

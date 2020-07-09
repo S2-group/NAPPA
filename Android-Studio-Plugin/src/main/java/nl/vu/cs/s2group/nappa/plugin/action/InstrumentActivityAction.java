@@ -72,7 +72,7 @@ public class InstrumentActivityAction extends AnAction {
      * @Override
      * protected void onCreate(Bundle savedInstanceState) {
      *     super.onCreate(savedInstanceState);
-     *     getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+     *     getLifecycle().addObserver(new NappaLifecycleObserver(this));
      * }
      * }</pre>
      *
@@ -81,20 +81,20 @@ public class InstrumentActivityAction extends AnAction {
      * after invoking the super constructor, if it present, or before the first statement in the method.
      * The injected code is as follows:
      *
-     * <pre>{@code getLifecycle().addObserver(new NAPPALifecycleObserver(this));}</pre>
+     * <pre>{@code getLifecycle().addObserver(new NappaLifecycleObserver(this));}</pre>
      *
      * <p> Case 3. The {@link android.app.Activity} has an empty method {@code onCreate()}. In this case,
      * the super constructor is injected together with the lifecycle observer. The injected code is as follows:
      *
      * <pre>{@code
      * super.onCreate();
-     * getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+     * getLifecycle().addObserver(new NappaLifecycleObserver(this));
      * }</pre>
      *
      * @param javaFile The Java file containing the an {@link android.app.Activity}
      */
     private void injectLifecycleObserver(@NotNull PsiJavaFile javaFile) {
-        String instrumentedText = "getLifecycle().addObserver(new NAPPALifecycleObserver(this));";
+        String instrumentedText = "getLifecycle().addObserver(new NappaLifecycleObserver(this));";
         PsiClass[] psiClasses = javaFile.getClasses();
         for (PsiClass psiClass : psiClasses) {
             // There is only one initialization per app
@@ -216,7 +216,7 @@ public class InstrumentActivityAction extends AnAction {
      * @param javaFile The Java file containing the main launcher {@link android.app.Activity}
      */
     private void addLibraryInitializationStatement(@NotNull PsiJavaFile javaFile) {
-        String instrumentedText = "PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
+        String instrumentedText = "Nappa.init(this, PrefetchingStrategy.STRATEGY_GREEDY);";
         PsiClass[] psiClasses = javaFile.getClasses();
 
         for (PsiClass psiClass : psiClasses) {

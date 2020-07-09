@@ -40,7 +40,7 @@ import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.RequestData;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
@@ -72,10 +72,10 @@ import okhttp3.internal.cache.CacheStrategy;
 //  `ScheduledThreadPoolExecutor`. However, its usage was overly abused across the
 //  library, making the workflow even for difficult to understand and debug.
 
-public class PrefetchingLib {
-    private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
+public class Nappa {
+    private static final String LOG_TAG = Nappa.class.getSimpleName();
 
-    private static PrefetchingLib instance;
+    private static Nappa instance;
     private static boolean libGet = false;
     private static File cacheDir;
     private static String currentActivityName;
@@ -108,12 +108,12 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib() {
+    private Nappa() {
     }
 
-    private static PrefetchingLib getInstance() {
+    private static Nappa getInstance() {
         if (instance == null)
-            instance = new PrefetchingLib();
+            instance = new Nappa();
         return instance;
     }
 
@@ -129,11 +129,11 @@ public class PrefetchingLib {
 
             Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
 
-            instance = PrefetchingLib.getInstance();
-            PrefetchingDatabase.getInstance(context);
+            instance = Nappa.getInstance();
+            NappaDB.getInstance(context);
 
             NappaConfigMap.init(config);
-            PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
+            Nappa.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
@@ -142,11 +142,11 @@ public class PrefetchingLib {
 
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
                 Session session = new Session(new Date().getTime());
-                PrefetchingDatabase.getInstance().sessionDao().insertSession(session);
-                PrefetchingLib.session = PrefetchingDatabase.getInstance().sessionDao().getSession(session.date);
+                NappaDB.getInstance().sessionDao().insertSession(session);
+                Nappa.session = NappaDB.getInstance().sessionDao().getSession(session.date);
 
                 // This fetches the activities stored in the DB and their ID into the activitymap
-                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
 
                 // Iterate through the activity table which contains the activity name and its id
                 for (String actName : activityMap.keySet()) {
@@ -165,7 +165,7 @@ public class PrefetchingLib {
                 }
 
 
-                listLiveData = PrefetchingDatabase.getInstance().activityDao().getListActivityLiveData();
+                listLiveData = NappaDB.getInstance().activityDao().getListActivityLiveData();
 
                 Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
 
@@ -197,11 +197,11 @@ public class PrefetchingLib {
                     AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
+                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
             } else if (useSessionEntity) {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
             } else {
-                liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
             }
 
             new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
@@ -221,7 +221,7 @@ public class PrefetchingLib {
 
         poolExecutor.schedule(() -> {
             LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> liveData;
-            liveData = PrefetchingDatabase.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
+            liveData = NappaDB.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
             new Handler(Looper.getMainLooper()).post(() -> activity.setUrlCandidateDbLiveData(liveData));
         }, 0, TimeUnit.SECONDS);
     }
@@ -240,7 +240,7 @@ public class PrefetchingLib {
 
         poolExecutor.schedule(() -> {
             LiveData<List<ActivityExtraData>> liveData;
-            liveData = PrefetchingDatabase.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
+            liveData = NappaDB.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
             new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
         }, 0, TimeUnit.SECONDS);
     }
@@ -265,10 +265,10 @@ public class PrefetchingLib {
                     AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
-                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
+                liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
                 new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
             } else {
-                liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId);
+                liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId);
                 new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));
             }
 
@@ -307,8 +307,8 @@ public class PrefetchingLib {
         if (!activityMap.containsKey(activityName)) {
             ActivityData activityData = new ActivityData(activityName);
             poolExecutor.schedule(() -> {
-                PrefetchingDatabase.getInstance().activityDao().insert(activityData);
-                updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
+                NappaDB.getInstance().activityDao().insert(activityData);
+                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
 
                 // Add LiveData observers
                 ActivityNode currentNode = activityGraph.getCurrent();
@@ -338,7 +338,7 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp(OkHttpClient okHttpClient) {
         synchronized (okHttpClient) {
-            PrefetchingLib.okHttpClient = okHttpClient
+            Nappa.okHttpClient = okHttpClient
                     .newBuilder()
                     .addInterceptor(new CustomInterceptor())
                     .cache(new Cache(cacheDir, (10 * 10 * 1024)))
@@ -346,7 +346,7 @@ public class PrefetchingLib {
 
             Log.d(LOG_TAG, "TAG " + "okHttpClient initialized");
         }
-        return PrefetchingLib.okHttpClient;
+        return Nappa.okHttpClient;
     }
 
     /**
@@ -363,16 +363,16 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp() {
 
-        synchronized (PrefetchingLib.okHttpClient) {
+        synchronized (Nappa.okHttpClient) {
 
             if (okHttpClient == null) {
-                PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
+                Nappa.okHttpClient = okHttpClient.newBuilder()
                         .addInterceptor(new CustomInterceptor())
                         .cache(new Cache(cacheDir, (10 * 10 * 1024)))
                         .build();
             }
 
-            return PrefetchingLib.okHttpClient;
+            return Nappa.okHttpClient;
         }
 
     }
@@ -432,7 +432,7 @@ public class PrefetchingLib {
                 visitedCurrentActivityDate,
                 duration
         );
-        poolExecutor.schedule(() -> PrefetchingDatabase.getInstance().activityVisitTimeDao().insert(visitTime), 0, TimeUnit.SECONDS);
+        poolExecutor.schedule(() -> NappaDB.getInstance().activityVisitTimeDao().insert(visitTime), 0, TimeUnit.SECONDS);
     }
 
     public static ActivityGraph getActivityGraph() {
@@ -451,7 +451,7 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
             Log.d(LOG_TAG, activityMap.toString());
-            PrefetchingDatabase.getInstance().sessionDao().insertSessionData(data);
+            NappaDB.getInstance().sessionDao().insertSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -465,12 +465,12 @@ public class PrefetchingLib {
     public static void updateSessionData(String actSource, String actDest, Long count) {
         poolExecutor.schedule(() -> {
             SessionData data = new SessionData(session.id, activityMap.get(actSource), activityMap.get(actDest), count);
-            PrefetchingDatabase.getInstance().sessionDao().updateSessionData(data);
+            NappaDB.getInstance().sessionDao().updateSessionData(data);
         }, 0, TimeUnit.SECONDS);
     }
 
     public static LiveData<List<SessionData>> getSessionDataListLiveData() {
-        return PrefetchingDatabase.getInstance().sessionDao().getSessionDataListLiveData();
+        return NappaDB.getInstance().sessionDao().getSessionDataListLiveData();
     }
 
 
@@ -478,7 +478,7 @@ public class PrefetchingLib {
      * Method instrumenting the set of all extras stored in a given intent. This method instruments
      * all extras in a single batch call rather than one by one.
      * <p>
-     * NOTE:  This method should take place befpre {@link PrefetchingLib::setCurrentActivity}
+     * NOTE:  This method should take place befpre {@link Nappa ::setCurrentActivity}
      *
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
@@ -531,7 +531,7 @@ public class PrefetchingLib {
                         ActivityExtraData activityExtraData =
                                 new ActivityExtraData(session.id, idAct, key, value.toString());
                         Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
-                        PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
+                        NappaDB.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
                     }
                 }, 0, TimeUnit.SECONDS);
 
@@ -568,7 +568,7 @@ public class PrefetchingLib {
             ActivityExtraData activityExtraData =
                     new ActivityExtraData(session.id, idAct, key, value);
             Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
-            PrefetchingDatabase.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
+            NappaDB.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
         }, 0, TimeUnit.SECONDS);
     }
 
@@ -601,10 +601,10 @@ public class PrefetchingLib {
             Log.d(LOG_TAG, "serializeAndSavePar " + "start adding");
             UrlCandidate urlCandidate = new UrlCandidate(activityMap.get(currentActivityName), 1);
             // Save the URL candidate as a
-            Long id = PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
+            Long id = NappaDB.getInstance().urlCandidateDao().insertUrlCandidate(urlCandidate);
             List<UrlCandidateParts> urlCandidateParts = ParameteredUrl.toUrlCandidateParts(url, id);
 
-            PrefetchingDatabase.getInstance().urlCandidateDao().insertUrlCandidateParts(urlCandidateParts);
+            NappaDB.getInstance().urlCandidateDao().insertUrlCandidateParts(urlCandidateParts);
             Log.d(LOG_TAG, "serializeAndSavePar " + "end adding");
         }, 0, TimeUnit.SECONDS);
     }
@@ -695,7 +695,7 @@ public class PrefetchingLib {
             // Focus on Get requests only and not posts to avoid side effects
             if (isGet) {
                 // Perform candidate generation
-                PrefetchingLib.checkUrlWithExtras(request.url().toString());
+                Nappa.checkUrlWithExtras(request.url().toString());
             }
 
             if (request.header("X-PREF") != null) {
@@ -794,7 +794,7 @@ public class PrefetchingLib {
                             Calendar.getInstance().getTimeInMillis());
                 }
 
-                PrefetchingDatabase.getInstance().urlDao().insert(req);
+                NappaDB.getInstance().urlDao().insert(req);
 
                 // Instrument the response to include new cache control aspects
                 if (response.cacheControl().maxAgeSeconds() < 300) {

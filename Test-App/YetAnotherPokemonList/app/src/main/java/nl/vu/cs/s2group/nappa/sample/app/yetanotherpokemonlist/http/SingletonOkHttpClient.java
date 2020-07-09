@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.http;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import okhttp3.OkHttpClient;
 
 /**
@@ -24,7 +24,7 @@ public class SingletonOkHttpClient {
      */
     public static OkHttpClient getInstance() {
         if (okHttpClient == null) {
-            okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient());
+            okHttpClient = Nappa.getOkHttp(new OkHttpClient());
         }
 
         return okHttpClient;

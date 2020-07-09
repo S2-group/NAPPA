@@ -9,9 +9,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.ListActivityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.stats.SessionDataActivity;
@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PrefetchingLib.init(this, PrefetchingStrategy.STRATEGY_GREEDY);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        Nappa.init(this, PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY);
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         OkHttpProvider.getInstance();
 
         setContentView(R.layout.activity_main);
