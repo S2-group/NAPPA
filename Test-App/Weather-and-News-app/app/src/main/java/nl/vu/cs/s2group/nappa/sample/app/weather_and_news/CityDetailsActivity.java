@@ -6,8 +6,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 
 public class CityDetailsActivity extends AppCompatActivity {
 
@@ -16,7 +16,7 @@ public class CityDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_city_details);
 
         if (getIntent() != null && getIntent().hasExtra("capital")) {
@@ -29,7 +29,7 @@ public class CityDetailsActivity extends AppCompatActivity {
         weatherButton.setOnClickListener((view) -> {
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.putExtra("capital", city);
-            PrefetchingLib.notifyExtra("capital", city);
+            Nappa.notifyExtra("capital", city);
             startActivity(intent);
         });
     }

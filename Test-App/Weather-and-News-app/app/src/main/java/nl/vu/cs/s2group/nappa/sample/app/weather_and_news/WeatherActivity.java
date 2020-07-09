@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Date;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.Weather;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.network.OkHttpProvider;
 import okhttp3.Call;
@@ -36,7 +36,7 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
 
         setContentView(R.layout.activity_weather);
         Toolbar toolbar = findViewById(R.id.toolbar);
