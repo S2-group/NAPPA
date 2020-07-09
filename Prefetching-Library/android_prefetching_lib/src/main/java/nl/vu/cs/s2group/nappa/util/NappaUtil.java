@@ -172,7 +172,7 @@ public class NappaUtil {
     public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode, ActivityNode destinationNode) {
         return sourceNode.getSuccessorsVisitTimeList()
                 .stream()
-                .filter(visitTime -> visitTime.activityId.equals(destinationNode.activityName))
+                .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
                 .mapToLong(visitTime -> visitTime.totalDuration)
                 .sum();
     }
@@ -188,7 +188,7 @@ public class NappaUtil {
         return sourceNode.getSuccessorsVisitTimeList()
                 .stream()
                 .collect(Collectors.toMap(
-                        visitTime -> visitTime.activityId,
+                        visitTime -> visitTime.activityName,
                         visitTime -> visitTime.totalDuration));
     }
 }
