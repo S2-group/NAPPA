@@ -20,6 +20,12 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivi
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
+/**
+ * Defines a handler to fetch in the database a object containing the aggregate
+ * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
+ * for the provided node. After fetching the data, this handler will register the fetched
+ * LiveData object in the provided node.
+ */
 public class FetchVisitTimeHandler {
     private static final String LOG_TAG = FetchVisitTimeHandler.class.getSimpleName();
 
