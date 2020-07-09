@@ -44,7 +44,7 @@ Injected source-code:
 @Override
 protected void onResume() {
     super.onResume();
-    PrefetchingLib.setCurrentActivity(this);
+    Nappa.setCurrentActivity(this);
 }
 ```
 
@@ -56,7 +56,7 @@ Injected source-code:
 
 ```java
 /* Source-code inject before the original source code */
-PrefetchingLib.notifyExtras(intent.getExtras());
+Nappa.notifyExtras(intent.getExtras());
 
 /* Original source-code */
 startActivity(intent); 
@@ -76,8 +76,8 @@ okHttpClient = new OkHttpClient();
 okHttpClient = new OkHttpClient.Builder().build;
 
 /* New source-code */
-okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient());
-okHttpClient = PrefetchingLib.getOkHttp(new OkHttpClient.Builder().build);
+okHttpClient = Nappa.getOkHttp(new OkHttpClient());
+okHttpClient = Nappa.getOkHttp(new OkHttpClient.Builder().build);
 ```
 
 #### Instrument Retrofit
@@ -91,7 +91,7 @@ Injected source-code:
 retrofitClient = new Retrofit.Builder().client(new OkHttpClient())
 
 /* New source-code */
-retrofitClient = new Retrofit.Builder().client(PrefetchingLib.getOkHttp())
+retrofitClient = new Retrofit.Builder().client(Nappa.getOkHttp())
 ```
 
 ## Running the plugin in a local environment for development
