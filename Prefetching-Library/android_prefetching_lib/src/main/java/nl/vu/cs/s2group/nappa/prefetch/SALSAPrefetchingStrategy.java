@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
@@ -46,7 +46,7 @@ public class SALSAPrefetchingStrategy implements PrefetchingStrategy {
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
 
-        Map<String, Long> activityMap = PrefetchingLib.activityMap;
+        Map<String, Long> activityMap = Nappa.activityMap;
         for (String key : activityMap.keySet()){
             reversedHashMap.put(activityMap.get(key), key);
         }
@@ -99,12 +99,12 @@ public class SALSAPrefetchingStrategy implements PrefetchingStrategy {
 
         int total = 0;
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap.put(succ.idActDest, PrefetchingLib.getActivityGraph().getByName(succ.actName).authorityS);
+            successorCountMap.put(succ.idActDest, Nappa.getActivityGraph().getByName(succ.actName).authorityS);
         }
 
         for (Long succ : successorCountMap.keySet()) {
 
-            ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
+            ActivityNode node1 = Nappa.getActivityGraph().getByName(reversedHashMap.get(succ));
 
             if (!probableNodes.contains(node1)) {
                 probableNodes.add(node1);

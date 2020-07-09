@@ -20,7 +20,7 @@ public interface ActivityExtraDao {
      * @param idAct The id of the Activity
      * @return A list contatining all extra's key value pairs
      */
-    @Query("SELECT * FROM pf_activity_extra WHERE id_activity = :idAct")
+    @Query("SELECT * FROM nappa_activity_extra WHERE id_activity = :idAct")
     LiveData<List<ActivityExtraData>> getActivityExtraLiveData(Long idAct);
 
 }

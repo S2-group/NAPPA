@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.PokemonActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.ViewUtil;
@@ -21,7 +21,7 @@ public class AbilityActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_ability);
         toggleProgressBarVisibility(true);
         if (getIntent().getStringExtra("url") != null)
@@ -46,7 +46,7 @@ public class AbilityActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Clicked on " + url);
             Intent intent = new Intent(this, PokemonActivity.class)
                     .putExtra("url", url);
-            PrefetchingLib.notifyExtras(intent.getExtras());
+            Nappa.notifyExtras(intent.getExtras());
             startActivity(intent);
         });
     }

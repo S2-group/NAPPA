@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.Observable;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.CityDetailsActivity;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.R;
 import nl.vu.cs.s2group.nappa.sample.app.weather_and_news.data.Capital;
@@ -35,7 +35,7 @@ public class CapitalCardViewAdapterObservable extends RecyclerView.Adapter<Capit
         holder.view.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(), CityDetailsActivity.class);
             intent.putExtra("capital", capital.city);
-            PrefetchingLib.notifyExtra("capital", capital.city);
+            Nappa.notifyExtra("capital", capital.city);
             view.getContext().startActivity(intent);
         });
     }

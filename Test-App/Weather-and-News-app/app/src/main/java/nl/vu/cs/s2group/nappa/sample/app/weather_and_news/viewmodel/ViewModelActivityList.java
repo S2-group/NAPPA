@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 
 public class ViewModelActivityList extends ViewModel {
@@ -13,7 +13,7 @@ public class ViewModelActivityList extends ViewModel {
     public LiveData<List<ActivityData>> liveData;
 
     public ViewModelActivityList() {
-        liveData = PrefetchingLib.getActivityLiveData();
+        liveData = Nappa.getActivityLiveData();
     }
 
 }

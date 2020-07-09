@@ -9,7 +9,7 @@ import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
@@ -50,7 +50,7 @@ public class MostVisitedSuccessorPrefetchingStrategy implements PrefetchingStrat
             }
             if (best != null) {
                 Log.d(LOG_TAG, "Chosen successor: " + best.actName);
-                List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
+                List<AggregateUrlDao.AggregateURL> list = NappaDB.getInstance().urlDao().getAggregateForIdActivity(best.idActDest, maxNumber);
                 LinkedList<String> toBeReturned = new LinkedList<String>();
                 for (AggregateUrlDao.AggregateURL elem : list) {
                     toBeReturned.add(elem.getUrl());

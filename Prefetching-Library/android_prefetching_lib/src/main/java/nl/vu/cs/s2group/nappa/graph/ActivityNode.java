@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
@@ -69,7 +69,7 @@ public class ActivityNode {
     public ActivityNode(String activityName) {
         this.activityName = activityName;
         // Register activity to the prefetching LIB
-        PrefetchingLib.registerActivity(activityName);
+        Nappa.registerActivity(activityName);
     }
 
     /**
@@ -299,7 +299,7 @@ public class ActivityNode {
         successors.put(activityNode, 0);
         activityNode.ancestors.put(this, 0);
         // Store the relation between source-destination in the database with a count of 0
-        PrefetchingLib.addSessionData(activityName, activityNode.activityName, 0L);
+        Nappa.addSessionData(activityName, activityNode.activityName, 0L);
     }
 
     /**
@@ -325,7 +325,7 @@ public class ActivityNode {
                 activityNode.ancestors.put(this, 1);
                 //CREATE NEW SESSIONDATA - THIS IS THE FIRST TIME
                 Log.d(LOG_TAG, "ACTNODE " + "CREATING, NOT IN DB");
-                PrefetchingLib.addSessionData(activityName, activityNode.activityName, 1L);
+                Nappa.addSessionData(activityName, activityNode.activityName, 1L);
                 return true;
             }
             // CASE 2: Activity has already been registered as a successor, thus update the number
@@ -335,7 +335,7 @@ public class ActivityNode {
                 successors.put(activityNode, successors.get(activityNode) + 1);
                 //UPDATE SESSIONDATA - THE SESSIONDATA ALREADY EXISTS
                 Log.d(LOG_TAG, "ACTNODE " + "UPDATING AFTER LOADING FROM DB");
-                PrefetchingLib.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
+                Nappa.updateSessionData(activityName, activityNode.activityName, successors.get(activityNode).longValue());
                 return true;
             }
             // CASE 3: Activity is moving from successor to ancestor, thus do not prefetch

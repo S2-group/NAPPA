@@ -14,7 +14,7 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
-import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
+import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
@@ -51,17 +51,17 @@ public final class FetchSuccessorsVisitTimeHandler {
 
         switch (queryType) {
             case ALL_SESSIONS:
-                successorsVisitTimeList = PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTime(activity.activityName);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
-                successorsVisitTimeList = PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
-                successorsVisitTimeList = PrefetchingDatabase.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
                         .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
                 break;

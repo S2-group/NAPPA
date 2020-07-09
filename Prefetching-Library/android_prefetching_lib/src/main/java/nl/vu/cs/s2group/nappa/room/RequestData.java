@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 // TODO Observed a record containing id_activity = null in the database
 //  Upon analyzing the database data after running tests, it was observed a record
-//  in the table `pf_url` containing a null `id_activity`.
+//  in the table `nappa_url` containing a null `id_activity`.
 //  The id_activity should always be present, otherwise the record will become a
 //  orphan record since this Entity is always filtered based on the activity ID.
 //  This Entity records are created in the CustomInterceptor class. Try to replicate
@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey;
 /**
  * Represents all data corresponding to an http request
  */
-@Entity(tableName = "pf_url")
+@Entity(tableName = "nappa_url")
 public class RequestData {
 
     @PrimaryKey(autoGenerate = true) public Long id;
