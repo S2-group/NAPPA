@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class AggregateVisitTimeByActivity {
     public String activityName;
+    public long activityId;
     public long totalDuration;
 
     @Override
@@ -13,13 +14,13 @@ public class AggregateVisitTimeByActivity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AggregateVisitTimeByActivity that = (AggregateVisitTimeByActivity) o;
-        return totalDuration == that.totalDuration &&
-                activityName.equals(that.activityName);
+        return activityId == that.activityId &&
+                totalDuration == that.totalDuration;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(activityName, totalDuration);
+        return Objects.hash(activityId, totalDuration);
     }
 
     @NonNull

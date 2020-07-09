@@ -159,17 +159,17 @@ public class ActivityNode {
         this.aggregateVisitTimeLiveData = aggregateVisitTimeLiveData;
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
-            if (newAggregateVisitTime == null || newAggregateVisitTime.activityName == null) {
+            if (newAggregateVisitTime == null || newAggregateVisitTime.activityId == null) {
                 Log.d(LOG_TAG, activityName + " - Was not accessed in the last N sessions");
                 aggregateVisitTime = new AggregateVisitTimeByActivity();
                 aggregateVisitTime.totalDuration = 0;
-                aggregateVisitTime.activityName = activityName;
+                aggregateVisitTime.activityId = activityName;
                 return;
             }
 
             if (newAggregateVisitTime.equals(aggregateVisitTime)) return;
 
-            Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
+            Log.d(LOG_TAG, newAggregateVisitTime.activityId + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
         });
     }
