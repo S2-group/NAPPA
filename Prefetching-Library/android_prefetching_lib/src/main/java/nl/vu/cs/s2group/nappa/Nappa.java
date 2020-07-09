@@ -159,7 +159,7 @@ public class Nappa {
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
-                    addVisitTimePerActivityObserver(byName);
+                    addVisitTimePerActivityObserver(byName, actId);
                     if (strategyIntent.needSuccessorsVisitTime())
                         FetchSuccessorsVisitTimeHandler.run(byName);
                 }
@@ -181,7 +181,7 @@ public class Nappa {
      *
      * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
         if (!strategyIntent.needVisitTime()) return;
 
@@ -197,11 +197,17 @@ public class Nappa {
                     AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivity(activityId);
             } else if (useSessionEntity) {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
             } else {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
             }
 
             new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
@@ -317,7 +323,7 @@ public class Nappa {
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
                 addSessionAggregateObserver(currentNode, activityId);
                 addActivityExtraObserver(currentNode, activityId);
-                addVisitTimePerActivityObserver(currentNode);
+                addVisitTimePerActivityObserver(currentNode, activityId);
                 addAUrlCandidateObserver(currentNode, activityId);
                 if (strategyIntent.needSuccessorsVisitTime())
                     FetchSuccessorsVisitTimeHandler.run(currentNode);
