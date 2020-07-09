@@ -20,18 +20,20 @@ public interface ActivityVisitTimeDao {
      * provided activity. The result is aggregated again, returning a single object containing only
      * the activity name and the total duration.
      *
-     * @param activityName The activity to search for.
+     * @param activityId The ID of the activity to search for.
      * @return The total aggregate time spend in a given activity for the all recorded sessions.
      */
     @Query("SELECT " +
-            "   activityName, " +
+            "   activity_name AS activityName, " +
             "   SUM(totalDuration) as totalDuration " +
             "FROM nappa_view_aggregate_visit_time_by_session " +
-            "WHERE activityName = :activityName ")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityName);
+            "LEFT JOIN nappa_activity " +
+            "   ON nappa_activity.id = nappa_view_aggregate_visit_time_by_session.activityId " +
+            "WHERE nappa_activity.id = :activityId ")
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(long activityId);
 
     /**
-     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(String)}
+     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(long)}
      * by further filtering the view by the last N sessions. For this query, the last N sessions
      * refers to the last N sessions recorded in the Entity {@link nl.vu.cs.s2group.nappa.room.data.Session Session}.
      * <p>
@@ -47,26 +49,29 @@ public interface ActivityVisitTimeDao {
      * <p>
      * Overall, this query sacrifice data availability in favor of data freshness.
      *
-     * @param activityName  The activity to search for.
+     * @param activityId    The ID of the activity to search for.
      * @param lastNSessions The number N of sessions to take.
      * @return The total aggregate time spend in a given activity for the last N sessions or
      * {@code Null} if the activity was not accessed in the last N sessions.
      */
     @Nullable
     @Query("SELECT " +
-            "   activityName, " +
+            "   activity_name AS activityName, " +
             "   SUM(totalDuration) as totalDuration " +
             "FROM nappa_view_aggregate_visit_time_by_session " +
-            "WHERE activityName = :activityName " +
-            "AND sessionId > ( " +
-            "   SELECT MAX(id) - :lastNSessions " +
-            "   FROM nappa_session " +
-            ") ")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String activityName, int lastNSessions);
+            "LEFT JOIN nappa_activity " +
+            "   ON nappa_activity.id = nappa_view_aggregate_visit_time_by_session.activityId " +
+            "WHERE " +
+            "   activityName = :activityId AND " +
+            "   sessionId > ( " +
+            "       SELECT MAX(id) - :lastNSessions " +
+            "       FROM nappa_session " +
+            "   ) ")
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(long activityId, int lastNSessions);
 
 
     /**
-     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(String)}
+     * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(long)}
      * by further filtering the view by the last N sessions. For this query, the last N sessions
      * refers to the last N sessions that the activity with name {@code activityName} was
      * accessed and data was registered in the Entity {@link ActivityVisitTime}.
@@ -75,29 +80,31 @@ public interface ActivityVisitTimeDao {
      * last accessed in Sessions #99 and #90, them sessions #90 and #99 are used in this query.
      * <p>
      * This query differs from
-     * {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String, int)},
+     * {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(long, int)},
      * as it will always return a non null value, unless an exception takes place when
      * first accessing the activity and before leaving it (i.e., a new activity was recorded
      * but the app crashed before recoding the time spent on it).
      * <p>
      * Overall, this query sacrifice data freshness in favor data availability.
      *
-     * @param activityName  The activity to search for.
+     * @param activityId    The ID of the activity to search for.
      * @param lastNSessions The number N of sessions to take.
      * @return The total aggregate time spend in a given activity for the last N sessions
      */
     @Query("SELECT " +
-            "   activityName, " +
+            "   activity_name AS activityName, " +
             "   SUM(totalDuration) as totalDuration " +
             "FROM (" +
             "   SELECT * " +
             "   FROM nappa_view_aggregate_visit_time_by_session " +
-            "   WHERE activityName = :activityName " +
+            "   WHERE activityId = :activityId " +
             "   GROUP BY sessionId " +
             "   ORDER BY sessionId " +
             "   DESC LIMIT :lastNSessions" +
-            ") ")
-    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(String activityName, int lastNSessions);
+            ") " +
+            "LEFT JOIN nappa_activity " +
+            "   ON nappa_activity.id = activityId ")
+    LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(long activityId, int lastNSessions);
 
 
     /**
