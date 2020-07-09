@@ -169,8 +169,8 @@ public class ActivityNode {
 
             if (newAggregateVisitTime.equals(aggregateVisitTime)) return;
 
-            Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
+            Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
         });
     }
 

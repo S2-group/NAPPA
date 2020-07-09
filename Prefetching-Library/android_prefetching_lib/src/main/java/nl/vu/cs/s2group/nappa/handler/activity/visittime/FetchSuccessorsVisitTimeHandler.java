@@ -8,6 +8,10 @@ import androidx.lifecycle.LiveData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
@@ -18,10 +22,11 @@ import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
- * Defines a handler to fetch in the database a the object containing the aggregate
+ * Defines a handler to fetch in the database a list containing the aggregate
  * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
- * for the provided node. After fetching the data, this handler will register the LiveData
- * object in the provided node.
+ * for each successor of the provided node. After fetching the data, this handler will
+ * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
+ * for the provided node.
  */
 public final class FetchSuccessorsVisitTimeHandler {
     private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
@@ -31,14 +36,14 @@ public final class FetchSuccessorsVisitTimeHandler {
     }
 
     public static void run(@NotNull ActivityNode activity) {
-        if (activity.isAggregateVisitTimeInstantiated()) return;
+        if (activity.isSuccessorVisitTimeInstantiated()) return;
         if (Looper.getMainLooper().isCurrentThread())
             NappaThreadPool.scheduler.execute(() -> runQuery(activity));
         else runQuery(activity);
     }
 
-    private static void runQuery(ActivityNode activity) {
-        LiveData<AggregateVisitTimeByActivity> visitTime;
+    private static void runQuery(@NotNull ActivityNode activity) {
+        LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
         int lastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
@@ -46,26 +51,30 @@ public final class FetchSuccessorsVisitTimeHandler {
 
         Log.d(LOG_TAG, "Fetching successors visit time for " + queryType);
 
+        Long activityId = Nappa.getActivityIdFromName(activity.activityName);
+        if (activityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + activity.activityName);
+
         switch (queryType) {
             case ALL_SESSIONS:
-                visitTime = NappaDB.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivity(activity.activityName);
+                        .getSuccessorAggregateVisitTime(activityId);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
-                visitTime = NappaDB.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activityId, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
-                visitTime = NappaDB.getInstance()
+                successorsVisitTimeList = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activityId, lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
         }
 
-        new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(visitTime));
+        new Handler(Looper.getMainLooper()).post(() -> activity.setSuccessorsAggregateVisitTimeLiveData(successorsVisitTimeList));
     }
 }
