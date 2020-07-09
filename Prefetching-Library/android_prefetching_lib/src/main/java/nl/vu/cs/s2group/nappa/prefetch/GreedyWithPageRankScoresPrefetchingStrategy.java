@@ -29,7 +29,15 @@ public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchingS
         this.threshold = threshold;
     }
 
+    @Override
+    public boolean needVisitTime() {
+        return false;
+    }
 
+    @Override
+    public boolean needSuccessorsVisitTime() {
+        return false;
+    }
 
     @NonNull
     @Override

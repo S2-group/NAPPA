@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
@@ -50,6 +51,7 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -73,12 +75,11 @@ import okhttp3.internal.cache.CacheStrategy;
 public class PrefetchingLib {
     private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
 
-    private static Map<PrefetchingStrategyConfigKeys, Object> config;
-
     private static PrefetchingLib instance;
     private static boolean libGet = false;
     private static File cacheDir;
     private static String currentActivityName;
+    private static String previousActivityName;
     private static ActivityGraph activityGraph;
     private static LiveData<List<ActivityData>> listLiveData;
     /**
@@ -131,9 +132,9 @@ public class PrefetchingLib {
             instance = PrefetchingLib.getInstance();
             PrefetchingDatabase.getInstance(context);
 
-            PrefetchingLib.config = config;
+            NappaConfigMap.init(config);
             PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
-            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType, config);
+            strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
 
@@ -159,6 +160,8 @@ public class PrefetchingLib {
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
                     addVisitTimePerActivityObserver(byName);
+                    if (strategyIntent.needSuccessorsVisitTime())
+                        FetchSuccessorsVisitTimeHandler.run(byName);
                 }
 
 
@@ -180,21 +183,18 @@ public class PrefetchingLib {
      */
     private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
-        if (prefetchingStrategyType != PrefetchingStrategyType.STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME)
-            return;
+        if (!strategyIntent.needVisitTime()) return;
 
         Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
 
         poolExecutor.execute(() -> {
             LiveData<AggregateVisitTimeByActivity> liveData;
-
-            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-            int lastNSessions = lastNSessionsObj != null ?
-                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
-
-            Object useSessionEntityObj = config.get(PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
-            boolean useSessionEntity = useSessionEntityObj != null ?
-                    Boolean.getBoolean(useSessionEntityObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS;
+            int lastNSessions = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
+            boolean useSessionEntity = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
                 liveData = PrefetchingDatabase.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
@@ -260,9 +260,9 @@ public class PrefetchingLib {
         poolExecutor.schedule(() -> {
             LiveData<List<SessionDao.SessionAggregate>> liveData;
 
-            Object lastNSessionsObj = config.get(PrefetchingStrategyConfigKeys.LAST_N_SESSIONS);
-            int lastNSessions = lastNSessionsObj != null ?
-                    Integer.parseInt(lastNSessionsObj.toString()) : AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS;
+            int lastNSessions = NappaConfigMap.get(
+                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
                 liveData = PrefetchingDatabase.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
@@ -319,6 +319,8 @@ public class PrefetchingLib {
                 addActivityExtraObserver(currentNode, activityId);
                 addVisitTimePerActivityObserver(currentNode);
                 addAUrlCandidateObserver(currentNode, activityId);
+                if (strategyIntent.needSuccessorsVisitTime())
+                    FetchSuccessorsVisitTimeHandler.run(currentNode);
             }, 0, TimeUnit.SECONDS);
         }
     }
@@ -382,6 +384,7 @@ public class PrefetchingLib {
      */
     public static void setCurrentActivity(@NonNull Activity activity) {
         boolean shouldPrefetch;
+        previousActivityName = currentActivityName;
         currentActivityName = activity.getClass().getCanonicalName();
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
@@ -424,6 +427,7 @@ public class PrefetchingLib {
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
         ActivityVisitTime visitTime = new ActivityVisitTime(
                 currentActivityName,
+                previousActivityName,
                 session.id,
                 visitedCurrentActivityDate,
                 duration

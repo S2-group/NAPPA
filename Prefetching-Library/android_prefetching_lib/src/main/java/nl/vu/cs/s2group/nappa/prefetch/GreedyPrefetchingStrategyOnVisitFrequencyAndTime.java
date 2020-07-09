@@ -5,11 +5,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
 
 /**
@@ -24,7 +26,7 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
  *     <li>{@link PrefetchingStrategyConfigKeys#WEIGHT_TIME_SCORE}</li>
  * </ul>
  */
-public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy implements PrefetchingStrategy {
+public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = GreedyPrefetchingStrategyOnVisitFrequencyAndTime.class.getSimpleName();
 
     private static final float DEFAULT_WEIGHT_FREQUENCY_SCORE = 0.5f;
@@ -33,15 +35,21 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     protected final float weightFrequencyScore;
     protected final float weightTimeScore;
 
-    public GreedyPrefetchingStrategyOnVisitFrequencyAndTime(Map<PrefetchingStrategyConfigKeys, Object> config) {
-        super(config);
-        Object data;
+    @Override
+    public boolean needVisitTime() {
+        return true;
+    }
 
-        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE);
-        weightFrequencyScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_FREQUENCY_SCORE;
+    public GreedyPrefetchingStrategyOnVisitFrequencyAndTime() {
+        super();
 
-        data = config.get(PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE);
-        weightTimeScore = data != null ? Float.parseFloat(data.toString()) : DEFAULT_WEIGHT_TIME_SCORE;
+        weightFrequencyScore = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.WEIGHT_FREQUENCY_SCORE,
+                DEFAULT_WEIGHT_FREQUENCY_SCORE);
+
+        weightTimeScore = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.WEIGHT_TIME_SCORE,
+                DEFAULT_WEIGHT_TIME_SCORE);
 
         if ((weightFrequencyScore + weightTimeScore) != 1.0)
             throw new IllegalArgumentException("The sum of the time and frequency weight must be 1!");
@@ -50,8 +58,12 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(@NonNull ActivityNode node, Integer maxNumber) {
-        Log.d(LOG_TAG, node.activityName + " searching best successors");
-        return getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
+        long startTime = new Date().getTime();
+
+        List<String> urls = getTopNUrlToPrefetchForNode(node, 1, new ArrayList<>());
+        logStrategyExecutionDuration(node, startTime);
+
+        return urls;
     }
 
     /**
@@ -110,25 +122,19 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
         if (bestSuccessor == null || bestSuccessorScore < scoreLowerThreshold) return urlList;
 
         // Fetches the URLs from the bestSuccessor and the remaining URL budget
-        List<String> bestSuccessorUrls = NappaUtil.getUrlsFromCandidateNode(node, bestSuccessor);
         int remainingUrlBudget = maxNumberOfUrlToPrefetch - urlList.size();
+        List<String> bestSuccessorUrls = NappaUtil.getUrlsFromCandidateNode(node, bestSuccessor, remainingUrlBudget);
 
         Log.d(LOG_TAG, node.activityName +
                 " best successor is " + bestSuccessor.activityName +
                 " with score " + bestSuccessorScore +
                 " containing the URLS " + bestSuccessorUrls);
 
-        // Verifies if the URL list of the best successor fits the budget.
-        // If not, take only the first N URLs until using all budget
-        if (bestSuccessorUrls.size() > remainingUrlBudget) {
-            bestSuccessorUrls = bestSuccessorUrls.subList(0, remainingUrlBudget);
-        }
-
         // Add the remaining URLs to the list of URLs to prefetch
         urlList.addAll(bestSuccessorUrls);
 
         // Verifies if there is any URL budget left
         if (urlList.size() >= maxNumberOfUrlToPrefetch) return urlList;
-        return getTopNUrlToPrefetchForNode(bestSuccessor, bestSuccessorScore, bestSuccessorUrls);
+        return getTopNUrlToPrefetchForNode(bestSuccessor, bestSuccessorScore, urlList);
     }
 }

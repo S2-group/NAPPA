@@ -53,6 +53,8 @@ public class ActivityNode {
     public float pageRank, authority, hub, authorityS, hubS, prob;
     LiveData<AggregateVisitTimeByActivity> aggregateVisitTimeLiveData;
     AggregateVisitTimeByActivity aggregateVisitTime;
+    LiveData<List<AggregateVisitTimeByActivity>> successorVisitTimeLiveData;
+    List<AggregateVisitTimeByActivity> successorVisitTimeList;
 
     /**
      * Initializes the current activity node by creating an object of the activity, and also
@@ -68,6 +70,18 @@ public class ActivityNode {
         this.activityName = activityName;
         // Register activity to the prefetching LIB
         PrefetchingLib.registerActivity(activityName);
+    }
+
+    /**
+     * Return the same as invoking {@code MyActivity.class.getSimpleName()}. Currently, only
+     * the activity canonical name is store, however, we can easily obtain the activity simple
+     * name from the canonical name.
+     *
+     * @return The activity class simple name.
+     */
+    public String getActivitySimpleName() {
+        String[] activityNamespace = activityName.split("\\.");
+        return activityNamespace[activityNamespace.length - 1];
     }
 
     // TODO Implementing getter method on public attribute
@@ -88,6 +102,16 @@ public class ActivityNode {
      */
     public boolean isAggregateVisitTimeInstantiated() {
         return aggregateVisitTimeLiveData != null;
+    }
+
+    /**
+     * Verifies whether the {@link LiveData} object for the successors aggregate visit time
+     * is instantiated or not
+     *
+     * @return {@code True} if the object is instantiated or {@code False} otherwise
+     */
+    public boolean isSuccessorVisitTimeInstantiated() {
+        return successorVisitTimeLiveData != null;
     }
 
     public boolean shouldSetSessionAggregateLiveData() {
@@ -119,6 +143,11 @@ public class ActivityNode {
         return listActivityExtraLiveData;
     }
 
+    public List<AggregateVisitTimeByActivity> getSuccessorsVisitTimeList() {
+        if (successorVisitTimeList == null) return new ArrayList<>();
+        return successorVisitTimeList;
+    }
+
     /**
      * Set the {@link LiveData} object containing the aggregate visit time per activity
      * and attach an observer to it to update the actual aggregate visit time object when there
@@ -142,6 +171,24 @@ public class ActivityNode {
 
             Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
             aggregateVisitTime = newAggregateVisitTime;
+        });
+    }
+
+    /**
+     * Set the {@link LiveData} object containing the successors aggregate visit time per
+     * activity and attach an observer to it to update the successors visit time list when
+     * there are changes in the database
+     *
+     * @param successorVisitTimeLiveData A valid instance of the {@link LiveData} object.
+     */
+    public void setSuccessorsAggregateVisitTimeLiveData(LiveData<List<AggregateVisitTimeByActivity>> successorVisitTimeLiveData) {
+        this.successorVisitTimeLiveData = successorVisitTimeLiveData;
+        this.successorVisitTimeLiveData.observeForever((newSuccessorVisitTime) -> {
+            if (newSuccessorVisitTime == null || newSuccessorVisitTime.size() == 0) return;
+            successorVisitTimeList = newSuccessorVisitTime;
+            Log.d(LOG_TAG, activityName +
+                    " - Updating the visit time from the successors list:\n" +
+                    successorVisitTimeList.toString());
         });
     }
 

@@ -47,6 +47,11 @@ public enum PrefetchingStrategyType {
     STRATEGY_PAGERANK,
 
     /**
+     * ID for strategy implemented at {@link TfprPrefetchingStrategy}
+     */
+    STRATEGY_TFPR,
+
+    /**
      * ID for strategy implemented at {@link HITSPrefetchingStrategy}
      */
     STRATEGY_HITS,

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 
@@ -47,19 +46,36 @@ public interface PrefetchingStrategy {
     List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber);
 
     /**
+     * Verifies if the time spent visiting an activity is used for calculating the
+     * probabilities in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     * Namely, the data from {@link ActivityNode#getAggregateVisitTime()}.
+     *
+     * @return {@code True} if the data is used, {@code False} otherwise.
+     */
+    boolean needVisitTime();
+
+    /**
+     * Verifies if the time spent visiting a successor activity when navigated from the current
+     * activity is used for calculating the probabilities in
+     * {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}.
+     * Namely, the data from {@link ActivityNode#getSuccessorsVisitTimeList()}.
+     *
+     * @return {@code True} if the data is used, {@code False} otherwise.
+     */
+    boolean needSuccessorsVisitTime();
+
+    /**
      * Instantiate the prefetching strategy corresponding to the provided ID.
      * If the ID is unknown, instantiate the default Greedy-based strategy implemented by
      * {@link GreedyPrefetchingStrategyOnVisitFrequency}
      *
      * @param strategyId The identification number of the prefetching strategy.
-     * @param config     Represents a configuration map for the strategies. See the specific
-     *                   strategy for the available configurations it accepts
      * @return A implemented prefetching strategy.
      */
     @SuppressWarnings("DuplicateBranchesInSwitch")
     @NotNull
-    @Contract("_ -> new")
-    static PrefetchingStrategy getStrategy(PrefetchingStrategyType strategyId, Map<PrefetchingStrategyConfigKeys, Object> config) {
+    @Contract("_-> new")
+    static PrefetchingStrategy getStrategy(@NotNull PrefetchingStrategyType strategyId) {
         switch (strategyId) {
             case STRATEGY_MOST_VISITED_SUCCESSOR:
                 return new MostVisitedSuccessorPrefetchingStrategy();
@@ -80,7 +96,9 @@ public interface PrefetchingStrategy {
             case STRATEGY_PPM_WITH_HITS_SCORES:
                 return new PPMWithHITSScoresPrefetchingStrategy(0.6f);
             case STRATEGY_GREEDY_VISIT_FREQUENCY_AND_TIME:
-                return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime(config);
+                return new GreedyPrefetchingStrategyOnVisitFrequencyAndTime();
+            case STRATEGY_TFPR:
+                return new TfprPrefetchingStrategy();
             default:
                 return new GreedyPrefetchingStrategyOnVisitFrequency(0.6f);
         }

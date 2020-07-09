@@ -14,6 +14,7 @@ import java.util.Date;
 @Entity(tableName = "pf_activity_visit_time",
         indices = {
                 @Index("activity_name"),
+                @Index("from_activity"),
                 @Index("id_session"),
         })
 public class ActivityVisitTime {
@@ -23,6 +24,12 @@ public class ActivityVisitTime {
     @NonNull
     @ColumnInfo(name = "activity_name")
     public String activityName;
+
+    /**
+     * The previous activity can be null for the first activity accessed when launching the app
+     */
+    @ColumnInfo(name = "from_activity")
+    public String fromActivity;
 
     @ColumnInfo(name = "id_session")
     public long sessionId;
@@ -38,8 +45,13 @@ public class ActivityVisitTime {
      */
     public long duration;
 
-    public ActivityVisitTime(@NonNull String activityName, long sessionId, @NonNull Date timestamp, long duration) {
+    public ActivityVisitTime(@NonNull String activityName,
+                             String fromActivity,
+                             long sessionId,
+                             @NonNull Date timestamp,
+                             long duration) {
         this.activityName = activityName;
+        this.fromActivity = fromActivity;
         this.sessionId = sessionId;
         this.timestamp = timestamp;
         this.duration = duration;

@@ -6,6 +6,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import java.util.List;
+
 @Dao
 public interface ActivityVisitTimeDao {
     @Insert
@@ -24,7 +26,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM AggregateVisitTimeBySession " +
+            "FROM pf_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivity(String activityName);
 
@@ -54,7 +56,7 @@ public interface ActivityVisitTimeDao {
     @Query("SELECT " +
             "   activityName, " +
             "   SUM(totalDuration) as totalDuration " +
-            "FROM AggregateVisitTimeBySession " +
+            "FROM pf_view_aggregate_visit_time_by_session " +
             "WHERE activityName = :activityName " +
             "AND sessionId > ( " +
             "   SELECT MAX(id) - :lastNSessions " +
@@ -89,7 +91,7 @@ public interface ActivityVisitTimeDao {
             "   SUM(totalDuration) as totalDuration " +
             "FROM (" +
             "   SELECT * " +
-            "   FROM AggregateVisitTimeBySession " +
+            "   FROM pf_view_aggregate_visit_time_by_session " +
             "   WHERE activityName = :activityName " +
             "   GROUP BY sessionId " +
             "   ORDER BY sessionId " +
@@ -97,4 +99,98 @@ public interface ActivityVisitTimeDao {
             ") ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(String activityName, int lastNSessions);
 
+
+    /**
+     * This query takes the Database View {@link SuccessorsAggregateVisitTimeBySession} with
+     * the aggregate time per activity, source activity and session and filters this View
+     * to return only the rows concerning the aggregate time from a specific activity. The
+     * result is aggregated again, returning a list containing only the name of the successors
+     * activities and their total duration.
+     *
+     * @param fromActivity The name of the activity used as reference to obtain the duration of
+     *                     the successors nodes
+     * @return A list containing the total aggregate time spend in the successor activities.
+     */
+    @Query("SELECT " +
+            "	activityName, " +
+            "	SUM(totalDuration) as totalDuration " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
+            "WHERE fromActivity = :fromActivity " +
+            "GROUP BY activityName ")
+    LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTime(String fromActivity);
+
+    /**
+     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(String)}
+     * by further filtering the view by the last N sessions.
+     * <p>
+     * For this query, the last N sessions refers to the last N sessions recorded in the Entity
+     * {@link nl.vu.cs.s2group.nappa.room.data.Session Session}. Therefore, this query can return
+     * an empty list. See {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String, int)}
+     * for which cases this query might return an empty list.
+     * <p>
+     * Overall, this query sacrifice data availability in favor of data freshness.
+     *
+     * @param fromActivity  The name of the activity used as reference to obtain the duration of
+     *                      the successors nodes
+     * @param lastNSessions The number N of sessions to take.
+     * @return A list containing the total aggregate time spend in the successor activities for
+     * the last N sessions.
+     */
+    @Query("SELECT " +
+            "	activityName, " +
+            "	SUM(totalDuration) as totalDuration " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
+            "WHERE " +
+            "	fromActivity = :fromActivity AND" +
+            "   sessionId > ( " +
+            "       SELECT MAX(id) - :lastNSessions " +
+            "       FROM pf_session " +
+            "   ) " +
+            "GROUP BY activityName ")
+    LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(
+            String fromActivity,
+            int lastNSessions);
+
+    /**
+     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(String)}
+     * by further filtering the view by the last N sessions.
+     * <p>
+     * For this query, the last N sessions refers to the last N sessions recorded in the View
+     * {@link SuccessorsAggregateVisitTimeBySession}. Therefore, this query can always return
+     * a non-empty list.
+     * <p>
+     * Overall, this query sacrifice data freshness in favor data availability.
+     *
+     * @param fromActivity  The name of the activity used as reference to obtain the duration of
+     *                      the successors nodes
+     * @param lastNSessions The number N of sessions to take.
+     * @return A list containing the total aggregate time spend in the successor activities for
+     * the last N sessions.
+     */
+    @Query("SELECT " +
+            "	activityName, " +
+            "	SUM(totalDuration) as totalDuration " +
+            "FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "INNER JOIN pf_view_activity_source_destination " +
+            "ON " +
+            "   activityName == destinationActivityName AND " +
+            "   fromActivity = sourceActivityName " +
+            "WHERE " +
+            "	fromActivity = :fromActivity AND " +
+            "   sessionId > ( " +
+            "       SELECT MAX(sessionId) - :lastNSessions " +
+            "       FROM pf_view_successors_aggregate_visit_time_by_session " +
+            "   ) " +
+            "GROUP BY activityName ")
+    LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(
+            String fromActivity,
+            int lastNSessions);
 }

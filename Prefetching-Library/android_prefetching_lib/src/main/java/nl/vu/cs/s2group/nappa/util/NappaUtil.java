@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.PrefetchingLib;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
@@ -44,7 +45,8 @@ public class NappaUtil {
 
     /**
      * Verifies if the URLs requested in the candidate node can be requested with the Extras captured
-     * in the visited node
+     * in the visited node. Is equivalent to {@link #getUrlsFromCandidateNode(ActivityNode, ActivityNode, int)}
+     * with the remaining budget as -1 to obtain all URLs.
      *
      * @param visitedNode   Represents the node which the user is currently visiting
      * @param candidateNode Represents a node with the potential to be visited in the near future
@@ -52,7 +54,27 @@ public class NappaUtil {
      * present in the currently visited node
      */
     @NotNull
-    public static List<String> getUrlsFromCandidateNode(@NotNull ActivityNode visitedNode, @NotNull ActivityNode candidateNode) {
+    public static List<String> getUrlsFromCandidateNode(@NotNull ActivityNode visitedNode,
+                                                        @NotNull ActivityNode candidateNode) {
+        return getUrlsFromCandidateNode(visitedNode, candidateNode, -1);
+    }
+
+    /**
+     * Verifies if the URLs requested in the candidate node can be requested with the Extras captured
+     * in the visited node. If there are more URLs than the remaining budget, then only the first N
+     * URLs that fir in the budget are selected.
+     *
+     * @param visitedNode     Represents the node which the user is currently visiting
+     * @param candidateNode   Represents a node with the potential to be visited in the near future
+     * @param remainingBudget Represents a number limiting the amount of URLs to take. Use -1 to
+     *                        take all URLs.
+     * @return All URLs requested in the candidate node that can be requested with the information
+     * present in the currently visited node and fits the remaining URL budget.
+     */
+    @NotNull
+    public static List<String> getUrlsFromCandidateNode(@NotNull ActivityNode visitedNode,
+                                                        @NotNull ActivityNode candidateNode,
+                                                        int remainingBudget) {
         List<String> candidateUrls = new LinkedList<>();
         long activityId = PrefetchingLib.getActivityIdFromName(visitedNode.activityName);
         Map<String, String> extrasMap = PrefetchingLib.getExtrasMap().get(activityId);
@@ -66,6 +88,11 @@ public class NappaUtil {
                 String urlWithExtras = parameteredUrl.fillParams(extrasMap);
                 candidateUrls.add(urlWithExtras);
             }
+        }
+
+        // Ensures that we are within budget
+        if (remainingBudget != -1 && candidateUrls.size() > remainingBudget) {
+            candidateUrls = candidateUrls.subList(0, remainingBudget);
         }
 
         return candidateUrls;
@@ -119,5 +146,49 @@ public class NappaUtil {
         }
 
         return frequencyMap;
+    }
+
+    /**
+     * Return the total time spent on all successor activities when accessing the
+     * succeeding activity from the {@code sourceNode} activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The total aggregate time.
+     */
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .mapToLong(visitTime -> visitTime.totalDuration)
+                .sum();
+    }
+
+    /**
+     * Return the total time spent on the successor {@code destinationNode} activity
+     * when accessing it from the {@code sourceNode} activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The total aggregate time.
+     */
+    public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode, ActivityNode destinationNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
+                .mapToLong(visitTime -> visitTime.totalDuration)
+                .sum();
+    }
+
+    /**
+     * Maps the successor activities to the duration spent in these activities when
+     * accessed from the source activity.
+     *
+     * @param sourceNode The activity to use as source.
+     * @return The activity name -> duration map.
+     */
+    public static Map<String, Long> getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(@NotNull ActivityNode sourceNode) {
+        return sourceNode.getSuccessorsVisitTimeList()
+                .stream()
+                .collect(Collectors.toMap(
+                        visitTime -> visitTime.activityName,
+                        visitTime -> visitTime.totalDuration));
     }
 }
