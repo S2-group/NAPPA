@@ -34,14 +34,14 @@ public final class FetchSuccessorsVisitTimeHandler {
     }
 
     public static void run(@NotNull ActivityNode activity) {
-        if (activity.isSuccessorVisitTimeInstantiated()) return;
+        if (activity.isAggregateVisitTimeInstantiated()) return;
         if (Looper.getMainLooper().isCurrentThread())
             NappaThreadPool.scheduler.execute(() -> runQuery(activity));
         else runQuery(activity);
     }
 
     private static void runQuery(ActivityNode activity) {
-        LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
+        LiveData<AggregateVisitTimeByActivity> visitTime;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
         int lastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
@@ -51,24 +51,24 @@ public final class FetchSuccessorsVisitTimeHandler {
 
         switch (queryType) {
             case ALL_SESSIONS:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTime(activity.activityName);
+                        .getAggregateVisitTimeByActivity(activity.activityName);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
         }
 
-        new Handler(Looper.getMainLooper()).post(() -> activity.setSuccessorsAggregateVisitTimeLiveData(successorsVisitTimeList));
+        new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(visitTime));
     }
 }
