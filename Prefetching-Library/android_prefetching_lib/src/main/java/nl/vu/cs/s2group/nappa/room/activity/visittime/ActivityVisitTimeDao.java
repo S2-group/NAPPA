@@ -25,7 +25,7 @@ public interface ActivityVisitTimeDao {
      */
     @Query("SELECT " +
             "   activity_name AS activityName, " +
-            "   SUM(totalDuration) as totalDuration " +
+            "   SUM(totalDuration) AS totalDuration " +
             "FROM nappa_view_aggregate_visit_time_by_session " +
             "LEFT JOIN nappa_activity " +
             "   ON nappa_activity.id = nappa_view_aggregate_visit_time_by_session.activityId " +
@@ -57,7 +57,7 @@ public interface ActivityVisitTimeDao {
     @Nullable
     @Query("SELECT " +
             "   activity_name AS activityName, " +
-            "   SUM(totalDuration) as totalDuration " +
+            "   SUM(totalDuration) AS totalDuration " +
             "FROM nappa_view_aggregate_visit_time_by_session " +
             "LEFT JOIN nappa_activity " +
             "   ON nappa_activity.id = nappa_view_aggregate_visit_time_by_session.activityId " +
@@ -93,7 +93,7 @@ public interface ActivityVisitTimeDao {
      */
     @Query("SELECT " +
             "   activity_name AS activityName, " +
-            "   SUM(totalDuration) as totalDuration " +
+            "   SUM(totalDuration) AS totalDuration " +
             "FROM (" +
             "   SELECT * " +
             "   FROM nappa_view_aggregate_visit_time_by_session " +
@@ -114,60 +114,60 @@ public interface ActivityVisitTimeDao {
      * result is aggregated again, returning a list containing only the name of the successors
      * activities and their total duration.
      *
-     * @param fromActivity The name of the activity used as reference to obtain the duration of
-     *                     the successors nodes
+     * @param fromActivityId The ID of the activity used as reference to obtain the duration of
+     *                       the successors nodes
      * @return A list containing the total aggregate time spend in the successor activities.
      */
     @Query("SELECT " +
-            "	activityName, " +
-            "	SUM(totalDuration) as totalDuration " +
+            "	destinationActivityName AS activityName, " +
+            "	SUM(totalDuration) AS totalDuration " +
             "FROM nappa_view_successors_aggregate_visit_time_by_session " +
             "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
-            "   activityName == destinationActivityName AND " +
-            "   fromActivity = sourceActivityName " +
-            "WHERE fromActivity = :fromActivity " +
-            "GROUP BY activityName ")
-    LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTime(String fromActivity);
+            "   activityId = destinationActivityID AND " +
+            "   fromActivityId = sourceActivityID " +
+            "WHERE fromActivityId = :fromActivityId " +
+            "GROUP BY activityId ")
+    LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTime(long fromActivityId);
 
     /**
-     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(String)}
+     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(long)}
      * by further filtering the view by the last N sessions.
      * <p>
      * For this query, the last N sessions refers to the last N sessions recorded in the Entity
      * {@link nl.vu.cs.s2group.nappa.room.data.Session Session}. Therefore, this query can return
-     * an empty list. See {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(String, int)}
+     * an empty list. See {@link #getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(long, int)}
      * for which cases this query might return an empty list.
      * <p>
      * Overall, this query sacrifice data availability in favor of data freshness.
      *
-     * @param fromActivity  The name of the activity used as reference to obtain the duration of
-     *                      the successors nodes
-     * @param lastNSessions The number N of sessions to take.
+     * @param fromActivityId The ID of the activity used as reference to obtain the duration of
+     *                       the successors nodes
+     * @param lastNSessions  The number N of sessions to take.
      * @return A list containing the total aggregate time spend in the successor activities for
      * the last N sessions.
      */
     @Query("SELECT " +
-            "	activityName, " +
+            "	destinationActivityName AS activityName, " +
             "	SUM(totalDuration) as totalDuration " +
             "FROM nappa_view_successors_aggregate_visit_time_by_session " +
             "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
-            "   activityName == destinationActivityName AND " +
-            "   fromActivity = sourceActivityName " +
+            "   activityId = destinationActivityID AND " +
+            "   fromActivityId = sourceActivityID " +
             "WHERE " +
-            "	fromActivity = :fromActivity AND" +
-            "   sessionId > ( " +
-            "       SELECT MAX(id) - :lastNSessions " +
-            "       FROM nappa_session " +
-            "   ) " +
-            "GROUP BY activityName ")
+            "	fromActivityId = :fromActivityId AND " +
+            "	sessionId > ( " +
+            "		SELECT MAX(id) - :lastNSessions " +
+            "		FROM nappa_session " +
+            "	) " +
+            "GROUP BY activityId ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(
-            String fromActivity,
+            long fromActivityId,
             int lastNSessions);
 
     /**
-     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(String)}
+     * This query extends the query defined at {@link #getSuccessorAggregateVisitTime(long)}
      * by further filtering the view by the last N sessions.
      * <p>
      * For this query, the last N sessions refers to the last N sessions recorded in the View
@@ -176,28 +176,28 @@ public interface ActivityVisitTimeDao {
      * <p>
      * Overall, this query sacrifice data freshness in favor data availability.
      *
-     * @param fromActivity  The name of the activity used as reference to obtain the duration of
-     *                      the successors nodes
-     * @param lastNSessions The number N of sessions to take.
+     * @param fromActivityId The ID of the activity used as reference to obtain the duration of
+     *                       the successors nodes
+     * @param lastNSessions  The number N of sessions to take.
      * @return A list containing the total aggregate time spend in the successor activities for
      * the last N sessions.
      */
     @Query("SELECT " +
-            "	activityName, " +
+            "	destinationActivityName AS activityName, " +
             "	SUM(totalDuration) as totalDuration " +
             "FROM nappa_view_successors_aggregate_visit_time_by_session " +
             "INNER JOIN nappa_view_activity_source_destination " +
             "ON " +
-            "   activityName == destinationActivityName AND " +
-            "   fromActivity = sourceActivityName " +
+            "   activityId = destinationActivityID AND " +
+            "   fromActivityId = sourceActivityID " +
             "WHERE " +
-            "	fromActivity = :fromActivity AND " +
-            "   sessionId > ( " +
-            "       SELECT MAX(sessionId) - :lastNSessions " +
-            "       FROM nappa_view_successors_aggregate_visit_time_by_session " +
-            "   ) " +
-            "GROUP BY activityName ")
+            "	fromActivityId = :fromActivityId AND " +
+            "	sessionId > ( " +
+            "		SELECT MAX(sessionId) - :lastNSessions " +
+            "		FROM nappa_view_successors_aggregate_visit_time_by_session " +
+            "	) " +
+            "GROUP BY activityId ")
     LiveData<List<AggregateVisitTimeByActivity>> getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(
-            String fromActivity,
+            long fromActivityId,
             int lastNSessions);
 }
