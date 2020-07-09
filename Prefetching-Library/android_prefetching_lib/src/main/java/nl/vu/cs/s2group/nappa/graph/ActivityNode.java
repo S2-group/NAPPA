@@ -291,7 +291,7 @@ public class ActivityNode {
     @Contract(pure = true)
     private String getNodeScore() {
         String score = "";
-        switch (PrefetchingLib.prefetchingStrategyType) {
+        switch (Nappa.prefetchingStrategyType) {
             case STRATEGY_PAGERANK:
             case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
                 score = String.format(Locale.getDefault(), "(PR = %.4f)", pageRank);
