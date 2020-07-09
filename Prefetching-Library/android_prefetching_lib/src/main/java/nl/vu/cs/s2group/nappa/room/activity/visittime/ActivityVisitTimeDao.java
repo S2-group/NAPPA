@@ -64,7 +64,7 @@ public interface ActivityVisitTimeDao {
             "WHERE " +
             "   activityName = :activityId AND " +
             "   sessionId > ( " +
-            "       SELECT MAX(id) - :lastNSessions " +
+            "       SELECT IFNULL(MAX(id) - :lastNSessions, 0) " +
             "       FROM nappa_session " +
             "   ) ")
     LiveData<AggregateVisitTimeByActivity> getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(long activityId, int lastNSessions);
@@ -158,7 +158,7 @@ public interface ActivityVisitTimeDao {
             "WHERE " +
             "	fromActivityId = :fromActivityId AND " +
             "	sessionId > ( " +
-            "		SELECT MAX(id) - :lastNSessions " +
+            "		SELECT IFNULL(MAX(id) - :lastNSessions, 0) " +
             "		FROM nappa_session " +
             "	) " +
             "GROUP BY activityId ")
@@ -193,7 +193,7 @@ public interface ActivityVisitTimeDao {
             "WHERE " +
             "	fromActivityId = :fromActivityId AND " +
             "	sessionId > ( " +
-            "		SELECT MAX(sessionId) - :lastNSessions " +
+            "		SELECT IFNULL(MAX(sessionId) - :lastNSessions, 0) " +
             "		FROM nappa_view_successors_aggregate_visit_time_by_session " +
             "	) " +
             "GROUP BY activityId ")
