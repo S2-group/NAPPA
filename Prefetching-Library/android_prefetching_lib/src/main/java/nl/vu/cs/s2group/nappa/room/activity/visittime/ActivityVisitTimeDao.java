@@ -73,7 +73,7 @@ public interface ActivityVisitTimeDao {
     /**
      * This query extends the query defined at {@link #getAggregateVisitTimeByActivity(long)}
      * by further filtering the view by the last N sessions. For this query, the last N sessions
-     * refers to the last N sessions that the activity with name {@code activityName} was
+     * refers to the last N sessions that the activity with ID {@code activityId} was
      * accessed and data was registered in the Entity {@link ActivityVisitTime}.
      * <p>
      * For example, if the current session is Session #100, N = 2, and the activity was
