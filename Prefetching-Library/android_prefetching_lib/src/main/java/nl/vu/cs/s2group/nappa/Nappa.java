@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeHandler;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
@@ -44,7 +45,6 @@ import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.RequestData;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
@@ -160,7 +160,7 @@ public class Nappa {
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
-                    addVisitTimePerActivityObserver(byName, actId);
+                    if (strategyIntent.needVisitTime()) FetchVisitTimeHandler.run(byName);
                     if (strategyIntent.needSuccessorsVisitTime())
                         FetchSuccessorsVisitTimeHandler.run(byName);
                 }
@@ -175,44 +175,6 @@ public class Nappa {
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
-    }
-
-    /**
-     * Query the database for the aggregate visit time and add an observer to the result
-     *
-     * @param activity A {@link ActivityNode} object contaning the activity name
-     */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (activity.isAggregateVisitTimeInstantiated()) return;
-        if (!strategyIntent.needVisitTime()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
-
-        poolExecutor.execute(() -> {
-            LiveData<AggregateVisitTimeByActivity> liveData;
-            int lastNSessions = NappaConfigMap.get(
-                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
-                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
-            boolean useSessionEntity = NappaConfigMap.get(
-                    PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
-                    AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
-
-            if (lastNSessions == -1) {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivity(activityId);
-            } else if (useSessionEntity) {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
-            } else {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
-            }
-
-            new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
-        });
     }
 
     /**
@@ -324,8 +286,8 @@ public class Nappa {
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
                 addSessionAggregateObserver(currentNode, activityId);
                 addActivityExtraObserver(currentNode, activityId);
-                addVisitTimePerActivityObserver(currentNode, activityId);
                 addAUrlCandidateObserver(currentNode, activityId);
+                if (strategyIntent.needVisitTime()) FetchVisitTimeHandler.run(currentNode);
                 if (strategyIntent.needSuccessorsVisitTime())
                     FetchSuccessorsVisitTimeHandler.run(currentNode);
             }, 0, TimeUnit.SECONDS);
