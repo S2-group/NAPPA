@@ -273,9 +273,7 @@ public class ActivityNode {
     @NonNull
     @Override
     public String toString() {
-        return getActivitySimpleName() +
-                getNodeScore() +
-                "\n" +
+        return getActivitySimpleName() + " " + getNodeScore() + "\n" +
                 "\tSuccessors:\n" +
                 reduceNodesAndHitsMap(successors) +
                 "\tAncestors:\n" +
