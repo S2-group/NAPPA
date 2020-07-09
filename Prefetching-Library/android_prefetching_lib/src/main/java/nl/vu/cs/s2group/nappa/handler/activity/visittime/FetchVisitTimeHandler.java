@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import nl.vu.cs.s2group.nappa.Nappa;
@@ -29,14 +28,14 @@ public class FetchVisitTimeHandler {
     }
 
     public static void run(@NotNull ActivityNode activity) {
-        if (activity.isSuccessorVisitTimeInstantiated()) return;
+        if (activity.isAggregateVisitTimeInstantiated()) return;
         if (Looper.getMainLooper().isCurrentThread())
             NappaThreadPool.scheduler.execute(() -> runQuery(activity));
         else runQuery(activity);
     }
 
     private static void runQuery(@NotNull ActivityNode activity) {
-        LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
+        LiveData<AggregateVisitTimeByActivity> visitTime;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
         int lastNSessions = NappaConfigMap.get(
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
@@ -50,24 +49,24 @@ public class FetchVisitTimeHandler {
 
         switch (queryType) {
             case ALL_SESSIONS:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTime(activityId);
+                        .getAggregateVisitTimeByActivity(activityId);
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInEntitySession(activityId, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
-                successorsVisitTimeList = NappaDB.getInstance()
+                visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getSuccessorAggregateVisitTimeWithinLastNSessionsInThisEntity(activityId, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
         }
 
-        new Handler(Looper.getMainLooper()).post(() -> activity.setSuccessorsAggregateVisitTimeLiveData(successorsVisitTimeList));
+        new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(visitTime));
     }
 }
