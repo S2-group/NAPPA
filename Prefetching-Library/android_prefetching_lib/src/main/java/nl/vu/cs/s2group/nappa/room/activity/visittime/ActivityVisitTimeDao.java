@@ -62,7 +62,7 @@ public interface ActivityVisitTimeDao {
             "LEFT JOIN nappa_activity " +
             "   ON nappa_activity.id = nappa_view_aggregate_visit_time_by_session.activityId " +
             "WHERE " +
-            "   activityName = :activityId AND " +
+            "   activityId = :activityId AND " +
             "   sessionId > ( " +
             "       SELECT IFNULL(MAX(id) - :lastNSessions, 0) " +
             "       FROM nappa_session " +
