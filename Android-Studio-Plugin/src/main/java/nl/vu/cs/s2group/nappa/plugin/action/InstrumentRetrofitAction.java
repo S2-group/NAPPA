@@ -104,7 +104,7 @@ public class InstrumentRetrofitAction extends AnAction {
 
                                         final PsiElement clientBuilderElement = PsiElementFactory.SERVICE.getInstance(project)
                                                 .createExpressionFromText(
-                                                        "new Retrofit.Builder().client(PrefetchingLib.getOkHttp())", psiClass);
+                                                        "new Retrofit.Builder().client(Nappa.getOkHttp())", psiClass);
 
                                         // Considering the expression: new Retrofit.Builder().anotherExpression()...  Iterate recursively until
                                         //    the expression reaches the new Retrofit.Builder() substring

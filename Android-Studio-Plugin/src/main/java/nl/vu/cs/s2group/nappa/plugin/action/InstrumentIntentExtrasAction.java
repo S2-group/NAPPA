@@ -31,7 +31,7 @@ import java.util.List;
  * The plugin considers the following Activity Transition Scenario:
  * <p>
  * intent.putExtra(EXTRA_MESSAGE, message);
- * prefetchingLib.notifyExtras(intent.getAllExtras)
+ * Nappa.notifyExtras(intent.getAllExtras)
  * startActivity(intent);
  */
 
@@ -45,7 +45,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
 
     /**
      * Will find the location of the startActivity(...) method, and from there it will
-     * prepend a call to prefetchingLib.notifyExtras(intent.getAllExtras).
+     * prepend a call to Nappa.notifyExtras(intent.getAllExtras).
      *
      * @param event {@inheritDoc}
      */
@@ -134,7 +134,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 // not been instrumented yet. Furthermore, the previous statement of a inline block might contain
                 // a instrumented statement referent to another startActivity method.
                 PsiStatement previousStatement = PsiTreeUtil.getPrevSiblingOfType(referenceStatement, PsiStatement.class);
-                if (previousStatement != null && !requiresToEncapsulateInCodeBlock && previousStatement.getText().contains("PrefetchingLib")) {
+                if (previousStatement != null && !requiresToEncapsulateInCodeBlock && previousStatement.getText().contains("Nappa")) {
                     resultMessage.incrementAlreadyInstrumentedCount();
                     return;
                 }
@@ -143,7 +143,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
                 //noinspection ConstantConditions --> To arrive here we looped through Java clasees
                 InstrumentUtil.addLibraryImport(project, psiClass);
 
-                String instrumentedText = "PrefetchingLib.notifyExtras(INTENT.getExtras());";
+                String instrumentedText = "Nappa.notifyExtras(INTENT.getExtras());";
                 if (intentParameter instanceof PsiReferenceExpression)
                     injectExtraProbeForVariableReference(psiClass,
                             referenceStatement,
@@ -246,7 +246,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
      *
      * // Result
      * Intent myIntent = ...
-     * PrefetchingLib.notifyExtras(myIntent.getExtras());
+     * Nappa.notifyExtras(myIntent.getExtras());
      * startActivity(myIntent);
      * }</pre>
      *
@@ -299,7 +299,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
      *
      * // Result
      * Intent intent = new Intent(...);
-     * PrefetchingLib.notifyExtras(intent.getExtras());
+     * Nappa.notifyExtras(intent.getExtras());
      * startActivity(intent)
      * }</pre>
      *
@@ -311,7 +311,7 @@ public class InstrumentIntentExtrasAction extends AnAction {
      *
      * // Result
      * Intent intent = Intent.createChooser(...);
-     * PrefetchingLib.notifyExtras(intent.getExtras());
+     * Nappa.notifyExtras(intent.getExtras());
      * startActivity(intent)
      * }</pre>
      *
@@ -384,12 +384,12 @@ public class InstrumentIntentExtrasAction extends AnAction {
      *
      * // Result
      * someMethod((someParams) -> {
-     *     PrefetchingLib.notifyExtras(intent.getExtras());
+     *     Nappa.notifyExtras(intent.getExtras());
      *     startActivity(intent);
      * });
      * someMethod2((someParams2) -> {
      *     Intent intent1 = createsNewIntent();
-     *     PrefetchingLib.notifyExtras(intent1.getExtras());
+     *     Nappa.notifyExtras(intent1.getExtras());
      *     startActivity(intent1);
      * });
      * }</pre>
@@ -404,11 +404,11 @@ public class InstrumentIntentExtrasAction extends AnAction {
      * // Result
      * if(condition) {
      *     Intent intent1 = new Intent(....);
-     *     PrefetchingLib.notifyExtras(intent1.getExtras());
+     *     Nappa.notifyExtras(intent1.getExtras());
      *     startActivity(intent1);
      * } else {
      *     Intent intent = new Intent(....);
-     *     PrefetchingLib.notifyExtras(intent.getExtras());
+     *     Nappa.notifyExtras(intent.getExtras());
      *     startActivity(intent);
      * }
      * }</pre>
