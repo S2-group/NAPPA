@@ -266,7 +266,7 @@ public class Nappa {
 
             if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
                 liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
-                new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
+                new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));
             } else {
                 liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId);
                 new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));

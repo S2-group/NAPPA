@@ -45,7 +45,6 @@ public class ActivityNode {
     //  * `PPMPrefetchingStrategy#zeroContextNodes`
     //  * `PPMWithHITSScoresPrefetchingStrategy#zeroContextNodes`
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
-    private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> urlCandidateDbLiveData;
@@ -130,13 +129,6 @@ public class ActivityNode {
         if (listSessionAggregateLiveData == null || listSessionAggregateLiveData.getValue() == null)
             return new ArrayList<>();
         return listSessionAggregateLiveData.getValue();
-    }
-
-    public List<SessionDao.SessionAggregate> getSessionAggregateList(int LastN) {
-        if (listLastNSessionAggregateLiveData == null || listLastNSessionAggregateLiveData.getValue() == null)
-            return new ArrayList<>();
-        return listLastNSessionAggregateLiveData.getValue();
-
     }
 
     public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
@@ -225,16 +217,6 @@ public class ActivityNode {
             Log.d(LOG_TAG, "UPDATE SESSION " + "source = " + activityName);
             for (SessionDao.SessionAggregate listElem : list) {
                 Log.d(LOG_TAG, "UPDATE SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
-            }
-        });
-    }
-
-    public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
-        this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
-        this.listLastNSessionAggregateLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "UPDATED LAST N SESSION " + "source = " + activityName);
-            for (SessionDao.SessionAggregate listElem : list) {
-                Log.d(LOG_TAG, "UPDATED  LAST N SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }
