@@ -19,12 +19,12 @@ public class NAPPALifecycleObserver implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onResume() {
         Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onResume");
-        PrefetchingLib.setCurrentActivity(activity);
+        Nappa.setCurrentActivity(activity);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onPause() {
         Log.d(LOG_TAG, activity.getClass().getCanonicalName() + " - onPause");
-        PrefetchingLib.leavingCurrentActivity();
+        Nappa.leavingCurrentActivity();
     }
 }

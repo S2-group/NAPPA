@@ -72,10 +72,10 @@ import okhttp3.internal.cache.CacheStrategy;
 //  `ScheduledThreadPoolExecutor`. However, its usage was overly abused across the
 //  library, making the workflow even for difficult to understand and debug.
 
-public class PrefetchingLib {
-    private static final String LOG_TAG = PrefetchingLib.class.getSimpleName();
+public class Nappa {
+    private static final String LOG_TAG = Nappa.class.getSimpleName();
 
-    private static PrefetchingLib instance;
+    private static Nappa instance;
     private static boolean libGet = false;
     private static File cacheDir;
     private static String currentActivityName;
@@ -108,12 +108,12 @@ public class PrefetchingLib {
         return extrasMap;
     }
 
-    private PrefetchingLib() {
+    private Nappa() {
     }
 
-    private static PrefetchingLib getInstance() {
+    private static Nappa getInstance() {
         if (instance == null)
-            instance = new PrefetchingLib();
+            instance = new Nappa();
         return instance;
     }
 
@@ -129,11 +129,11 @@ public class PrefetchingLib {
 
             Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
 
-            instance = PrefetchingLib.getInstance();
+            instance = Nappa.getInstance();
             PrefetchingDatabase.getInstance(context);
 
             NappaConfigMap.init(config);
-            PrefetchingLib.prefetchingStrategyType = prefetchingStrategyType;
+            Nappa.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
@@ -143,7 +143,7 @@ public class PrefetchingLib {
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
                 Session session = new Session(new Date().getTime());
                 PrefetchingDatabase.getInstance().sessionDao().insertSession(session);
-                PrefetchingLib.session = PrefetchingDatabase.getInstance().sessionDao().getSession(session.date);
+                Nappa.session = PrefetchingDatabase.getInstance().sessionDao().getSession(session.date);
 
                 // This fetches the activities stored in the DB and their ID into the activitymap
                 updateActivityMap(PrefetchingDatabase.getInstance().activityDao().getListActivity());
@@ -338,7 +338,7 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp(OkHttpClient okHttpClient) {
         synchronized (okHttpClient) {
-            PrefetchingLib.okHttpClient = okHttpClient
+            Nappa.okHttpClient = okHttpClient
                     .newBuilder()
                     .addInterceptor(new CustomInterceptor())
                     .cache(new Cache(cacheDir, (10 * 10 * 1024)))
@@ -346,7 +346,7 @@ public class PrefetchingLib {
 
             Log.d(LOG_TAG, "TAG " + "okHttpClient initialized");
         }
-        return PrefetchingLib.okHttpClient;
+        return Nappa.okHttpClient;
     }
 
     /**
@@ -363,16 +363,16 @@ public class PrefetchingLib {
      */
     public static OkHttpClient getOkHttp() {
 
-        synchronized (PrefetchingLib.okHttpClient) {
+        synchronized (Nappa.okHttpClient) {
 
             if (okHttpClient == null) {
-                PrefetchingLib.okHttpClient = okHttpClient.newBuilder()
+                Nappa.okHttpClient = okHttpClient.newBuilder()
                         .addInterceptor(new CustomInterceptor())
                         .cache(new Cache(cacheDir, (10 * 10 * 1024)))
                         .build();
             }
 
-            return PrefetchingLib.okHttpClient;
+            return Nappa.okHttpClient;
         }
 
     }
@@ -478,7 +478,7 @@ public class PrefetchingLib {
      * Method instrumenting the set of all extras stored in a given intent. This method instruments
      * all extras in a single batch call rather than one by one.
      * <p>
-     * NOTE:  This method should take place befpre {@link PrefetchingLib::setCurrentActivity}
+     * NOTE:  This method should take place befpre {@link Nappa ::setCurrentActivity}
      *
      * @param allExtras - The set of all extras that have been stored in an intent X, up to the
      *                  point right before startActivity(X) is called
@@ -695,7 +695,7 @@ public class PrefetchingLib {
             // Focus on Get requests only and not posts to avoid side effects
             if (isGet) {
                 // Perform candidate generation
-                PrefetchingLib.checkUrlWithExtras(request.url().toString());
+                Nappa.checkUrlWithExtras(request.url().toString());
             }
 
             if (request.header("X-PREF") != null) {

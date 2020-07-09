@@ -51,7 +51,7 @@ implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 Import the library:
 
 ```java
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 ``` 
 
 Encapsulate the creation of [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) instances:

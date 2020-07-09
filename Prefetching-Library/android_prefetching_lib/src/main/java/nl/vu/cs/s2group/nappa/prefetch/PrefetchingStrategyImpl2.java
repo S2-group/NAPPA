@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
 import nl.vu.cs.s2group.nappa.room.AggregateUrlDao;
@@ -45,7 +45,7 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                 for (ActivityNode successor : successors.keySet()) {
                     List<AggregateUrlDao.AggregateURL> list = PrefetchingDatabase.getInstance()
                             .urlDao()
-                            .getAggregateForIdActivity(PrefetchingLib.getActivityIdFromName(successor.activityName), 10);
+                            .getAggregateForIdActivity(Nappa.getActivityIdFromName(successor.activityName), 10);
                     for (AggregateUrlDao.AggregateURL aggregateURL : list) {
                         List<AggregateUrlDao.AggregateURL> newlist = new LinkedList<>(list);
 
@@ -72,8 +72,8 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                     }
                     List<String> candidates = new LinkedList<>();
 
-                    Log.d(LOG_TAG, PrefetchingLib.getExtrasMap().toString());
-                    Log.d(LOG_TAG,  PrefetchingLib.getActivityIdFromName(node.activityName).toString());
+                    Log.d(LOG_TAG, Nappa.getExtrasMap().toString());
+                    Log.d(LOG_TAG,  Nappa.getActivityIdFromName(node.activityName).toString());
 
                     for (ParameteredUrl url : parameteredUrls) {
                             List<ParameteredUrl.UrlParameter> parameterList = url.getUrlParameterList();
@@ -82,9 +82,9 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
                                 if (parameter.type == ParameteredUrl.TYPES.STATIC)
                                     sb.append(parameter.urlPiece);
                                 else
-                                    sb.append(PrefetchingLib.getExtrasMap().get(
+                                    sb.append(Nappa.getExtrasMap().get(
                                             //2L
-                                            PrefetchingLib.getActivityIdFromName(node.activityName)
+                                            Nappa.getActivityIdFromName(node.activityName)
                                     ));
                             }
                             candidates.add(sb.toString());

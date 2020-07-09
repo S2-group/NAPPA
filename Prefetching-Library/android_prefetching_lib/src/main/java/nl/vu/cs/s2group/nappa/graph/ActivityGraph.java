@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.room.PrefetchingDatabase;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
@@ -173,7 +173,7 @@ public class ActivityGraph {
     }
 
     public void updateLAR(String activityName) {
-        switch (PrefetchingLib.prefetchingStrategyType) {
+        switch (Nappa.prefetchingStrategyType) {
             case STRATEGY_PAGERANK:
             case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
                 updatePR(activityName);
