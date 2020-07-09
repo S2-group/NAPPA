@@ -18,11 +18,10 @@ import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
- * Defines a handler to fetch in the database a list containing the aggregate
+ * Defines a handler to fetch in the database a the object containing the aggregate
  * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
- * for each successor of the provided node. After fetching the data, this handler will
- * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
- * for the provided node.
+ * for the provided node. After fetching the data, this handler will register the LiveData
+ * object in the provided node.
  */
 public final class FetchSuccessorsVisitTimeHandler {
     private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
