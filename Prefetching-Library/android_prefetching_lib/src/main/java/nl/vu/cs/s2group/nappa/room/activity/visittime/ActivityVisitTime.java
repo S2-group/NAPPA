@@ -15,8 +15,8 @@ import java.util.Date;
  */
 @Entity(tableName = "nappa_activity_visit_time",
         indices = {
-                @Index("activity_name"),
-                @Index("from_activity"),
+                @Index("id_activity"),
+                @Index("id_from_activity"),
                 @Index("id_session"),
         })
 public class ActivityVisitTime {
