@@ -170,7 +170,7 @@ You should see 3 files:
 
 Select all 3, right click and `save as`.
 Open DB Browser for SQLite.
-Click on `Open Database`, go to the directory you saved the files and select `nappa_db.db`.
+Click on `Open Database`, go to the directory you saved the files and select `nappa.db`.
 Click in the `Browser Data` tab.
 You can now verify the data saved by the NAPPA Library. 
 
