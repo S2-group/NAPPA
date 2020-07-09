@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -431,9 +432,18 @@ public class Nappa {
     public static void leavingCurrentActivity() {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
+
+        Long currentActivityId = activityMap.get(currentActivityName);
+        if (currentActivityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + currentActivityName);
+
+        Long previousActivityId = previousActivityName == null ? null : activityMap.get(previousActivityName);
+        if (previousActivityName != null && previousActivityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + previousActivityName);
+
         ActivityVisitTime visitTime = new ActivityVisitTime(
-                currentActivityName,
-                previousActivityName,
+                currentActivityId,
+                previousActivityId,
                 session.id,
                 visitedCurrentActivityDate,
                 duration
