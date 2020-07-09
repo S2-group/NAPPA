@@ -65,7 +65,7 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
                 SuccessorsAggregateVisitTimeBySession.class,
                 ActivitySourceDestination.class,
         },
-        version = 14)
+        version = 1)
 @TypeConverters({DateConverters.class})
 public abstract class NappaDB extends RoomDatabase {
 
