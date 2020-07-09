@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Date;
 
 /**
@@ -27,6 +29,7 @@ public class ActivityVisitTime {
     /**
      * The previous activity can be null for the first activity accessed when launching the app
      */
+    @Nullable
     @ColumnInfo(name = "id_from_activity")
     public Long fromActivityId;
 
@@ -45,7 +48,7 @@ public class ActivityVisitTime {
     public long duration;
 
     public ActivityVisitTime(long activityId,
-                             Long fromActivityId,
+                             @Nullable Long fromActivityId,
                              long sessionId,
                              @NonNull Date timestamp,
                              long duration) {
