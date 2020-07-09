@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Represents the database table that register the time a user spends visiting activities
  */
-@Entity(tableName = "pf_activity_visit_time",
+@Entity(tableName = "nappa_activity_visit_time",
         indices = {
                 @Index("activity_name"),
                 @Index("from_activity"),

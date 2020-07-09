@@ -33,7 +33,6 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 //  While we are at it, consider renaming:
 //  * The class `SessionData` to `ActivityVisitFrequency` or simply `VisitFrequency`;
 //  * The entity classes `MyEntityData` to just `MyEntity`;
-//  * The database schema `pf_*` to `nappa_*`;
 //  Other considerations:
 //  * Enforcing required data by either making entities attributes type primitive or annotating object types with @NonNull;
 //  * Enforcing foreign keys at the database level --> currently only enforced in the application levels. Adding invalid FK is currently allowed;

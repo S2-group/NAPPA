@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.annotation.NonNull;
 
-@Entity(tableName = "pf_session_data", primaryKeys = {"id_session", "id_activity_source", "id_activity_destination"})
+@Entity(tableName = "nappa_session_data", primaryKeys = {"id_session", "id_activity_source", "id_activity_destination"})
 public class SessionData {
 
     @NonNull @ColumnInfo(name = "id_session") public Long idSession;
