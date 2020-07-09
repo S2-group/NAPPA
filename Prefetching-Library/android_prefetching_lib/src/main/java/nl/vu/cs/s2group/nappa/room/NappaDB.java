@@ -31,11 +31,9 @@ import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 //  This organization allows to keep together classes that are related to each other, making
 //  maintenance simpler.
 //  While we are at it, consider renaming:
-//  * The class `PrefetchingDatabase` to `NappaDB`;
 //  * The class `SessionData` to `ActivityVisitFrequency` or simply `VisitFrequency`;
 //  * The entity classes `MyEntityData` to just `MyEntity`;
 //  * The database schema `pf_*` to `nappa_*`;
-//  * The database file `pf_db` to `nappa_db.db` --> Verify if it is possible to add the extension;
 //  Other considerations:
 //  * Enforcing required data by either making entities attributes type primitive or annotating object types with @NonNull;
 //  * Enforcing foreign keys at the database level --> currently only enforced in the application levels. Adding invalid FK is currently allowed;
@@ -81,7 +79,7 @@ public abstract class NappaDB extends RoomDatabase {
         if (instance == null)
             synchronized (NappaDB.class) {
                 instance = Room.databaseBuilder(context.getApplicationContext(),
-                        NappaDB.class, "pf_db")
+                        NappaDB.class, "nappa.db")
                         //TODO remove and provide migrations in production
                         .fallbackToDestructiveMigration()
                         .build();

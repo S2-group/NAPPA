@@ -164,12 +164,11 @@ data > data > [application package name] > databases
 
 You should see 3 files:
 
-* pf_db
-* pf_db-shm
-* pf_db-wal
+* nappa.db
+* nappa.db-shm
+* nappa.db-wal
 
 Select all 3, right click and `save as`.
-Rename `pf_db` to `pf_db.db`
 Open DB Browser for SQLite.
 Click on `Open Database`, go to the directory you saved the files and select `pf_db.db`.
 Click in the `Browser Data` tab.
