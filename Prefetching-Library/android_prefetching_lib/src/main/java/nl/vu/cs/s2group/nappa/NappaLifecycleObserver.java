@@ -7,12 +7,12 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
-public class NAPPALifecycleObserver implements LifecycleObserver {
-    private static final String LOG_TAG = NAPPALifecycleObserver.class.getSimpleName();
+public class NappaLifecycleObserver implements LifecycleObserver {
+    private static final String LOG_TAG = NappaLifecycleObserver.class.getSimpleName();
 
     private Activity activity;
 
-    public NAPPALifecycleObserver(Activity activity) {
+    public NappaLifecycleObserver(Activity activity) {
         this.activity = activity;
     }
 
