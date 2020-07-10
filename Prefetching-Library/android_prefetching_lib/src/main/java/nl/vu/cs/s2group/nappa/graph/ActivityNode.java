@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
@@ -24,6 +25,14 @@ public class ActivityNode {
     private static final String LOG_TAG = ActivityNode.class.getSimpleName();
 
     public String activityName;
+    /**
+     * This property was added in PR #99 with the intent of replacing {@link
+     * #activityName}. Across the Nappa implementation, the activity ID is
+     * frequently needed, but it is usually accessed via the map {@link
+     * Nappa#activityMap}. Currently, this property is only used in the method
+     * {@link #getActivityId()}
+     */
+    private ActivityData activityData;
 
     // TODO Verify possibility of simplifying successor/ancestors structure
     //  Both `successors` and `ancestors` are defined as a map of `ActivityNode --> visited count`
@@ -57,6 +66,10 @@ public class ActivityNode {
         this.activityName = activityName;
         // Register activity to the prefetching LIB
         Nappa.registerActivity(activityName);
+    }
+
+    public void setActivityData(ActivityData activityData) {
+        this.activityData = activityData;
     }
 
     /**
@@ -380,12 +393,15 @@ public class ActivityNode {
     }
 
     /**
-     * Fetches the ID of this activity node on the map stored in the Nappa main class
+     * Fetches the ID of this activity node. If {@link #activityData} exists, takes the
+     * ID defined on this object. Otherwise, fetches the ID from the {@link Nappa#activityMap}.
      *
      * @return The activity ID
      * @throws NoSuchElementException if there is no mapping of this activity
      */
     public long getActivityId() {
+        if (activityData != null) return activityData.id;
+
         Long activityId = Nappa.getActivityIdFromName(activityName);
         if (activityId == null)
             throw new NoSuchElementException("Unknown ID for activity " + activityName);

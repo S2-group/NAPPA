@@ -4,12 +4,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
@@ -27,6 +30,12 @@ public class ActivityGraph {
 
     public ActivityGraph() {
         nodeList = new LinkedList<>();
+    }
+
+    public ActivityNode initNode(@NotNull ActivityData activity) {
+        ActivityNode node = initNode(activity.activityName);
+        node.setActivityData(activity);
+        return node;
     }
 
     /**

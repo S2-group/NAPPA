@@ -42,7 +42,7 @@ public class InitGraphRunnable implements Runnable {
 
         ActivityGraph graph = new ActivityGraph();
         for (ActivityData activity : activities) {
-            ActivityNode node = graph.initNode(activity.activityName);
+            ActivityNode node = graph.initNode(activity);
             FetchActivityLiveDataInfoHandler.run(node, strategy);
         }
 
