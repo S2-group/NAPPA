@@ -18,29 +18,23 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
-import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
- * Defines a handler to fetch in the database a object containing the {@link SessionData}
+ * Defines a runnable to fetch in the database a object containing the {@link SessionData}
  * for the provided node. The data contains the count of Source --> Destination edge
  * visits. After fetching the data, this handler will register the LiveData object
  * for the provide node to ensure consistency with the database.
  */
-public class FetchSessionDataHandler {
-    private static final String LOG_TAG = FetchSessionDataHandler.class.getSimpleName();
+public class FetchSessionDataRunnable implements Runnable {
+    private static final String LOG_TAG = FetchSessionDataRunnable.class.getSimpleName();
+    ActivityNode activity;
 
-    private FetchSessionDataHandler() {
-        throw new IllegalStateException(LOG_TAG + " is a handler class and should not be instantiated!");
+    public FetchSessionDataRunnable(@NotNull ActivityNode activity) {
+        this.activity = activity;
     }
 
-    public static void run(@NotNull ActivityNode activity) {
-        if (!activity.shouldSetSessionAggregateLiveData()) return;
-        if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.submit(() -> runQuery(activity));
-        else runQuery(activity);
-    }
-
-    private static void runQuery(@NotNull ActivityNode activity) {
+    @Override
+    public void run() {
         LiveData<List<SessionDao.SessionAggregate>> sessionDataList;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
 

@@ -14,7 +14,7 @@ public final class NappaThreadPool {
     private static final ScheduledThreadPoolExecutor scheduler;
 
     static {
-        scheduler = new ScheduledThreadPoolExecutor(1);
+        scheduler = new ScheduledThreadPoolExecutor(2);
     }
 
     private NappaThreadPool() {
