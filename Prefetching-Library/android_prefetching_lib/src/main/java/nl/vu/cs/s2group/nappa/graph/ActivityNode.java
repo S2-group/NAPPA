@@ -140,7 +140,9 @@ public class ActivityNode {
 
         this.aggregateVisitTimeLiveData.observeForever((newAggregateVisitTime) -> {
             if (newAggregateVisitTime == null || newAggregateVisitTime.activityName == null) {
-                Log.d(LOG_TAG, activityName + " - Was not accessed in the last N sessions");
+                Log.d(LOG_TAG, "Observer - visit time - " +
+                        getActivitySimpleName() +
+                        " - Was not accessed in the last N sessions");
                 aggregateVisitTime = new AggregateVisitTimeByActivity();
                 aggregateVisitTime.totalDuration = 0;
                 aggregateVisitTime.activityName = activityName;
@@ -150,7 +152,10 @@ public class ActivityNode {
             if (newAggregateVisitTime.equals(aggregateVisitTime)) return;
 
             aggregateVisitTime = newAggregateVisitTime;
-            Log.d(LOG_TAG, newAggregateVisitTime.activityName + " - New aggregate visit time found is " + newAggregateVisitTime.totalDuration + " ms");
+            Log.d(LOG_TAG, "Observer - visit time - " +
+                    getActivitySimpleName() +
+                    " - New aggregate visit time found is " +
+                    newAggregateVisitTime.totalDuration + " ms");
         });
     }
 
@@ -166,7 +171,8 @@ public class ActivityNode {
         this.successorVisitTimeLiveData.observeForever((newSuccessorVisitTime) -> {
             if (newSuccessorVisitTime == null || newSuccessorVisitTime.size() == 0) return;
             successorVisitTimeList = newSuccessorVisitTime;
-            Log.d(LOG_TAG, activityName +
+            Log.d(LOG_TAG, "Observer - successor visit time - " +
+                    getActivitySimpleName() +
                     " - Updating the visit time from the successors list:\n" +
                     successorVisitTimeList.toString());
         });
@@ -186,8 +192,11 @@ public class ActivityNode {
         // the list of URL Candidates in the database
         this.urlCandidateDbLiveData.observeForever(parameterList -> {
             // From the UPDATED set of candidate candidates, build a list containing the parameters for all URLS
-            if (parameterList != null)
-                this.parameteredUrlList = UrlCandidateDao.UrlCandidateToUrlParameter.getParameteredUrlList(parameterList);
+            if (parameterList == null) return;
+            this.parameteredUrlList = UrlCandidateDao.UrlCandidateToUrlParameter.getParameteredUrlList(parameterList);
+            Log.d(LOG_TAG, "Observer - URL candidate " +
+                    getActivitySimpleName() +
+                    parameterList.toString());
         });
     }
 
@@ -202,10 +211,23 @@ public class ActivityNode {
     public void setListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData) {
         this.listSessionAggregateLiveData = listSessionAggregateLiveData;
         this.listSessionAggregateLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "UPDATE SESSION " + "source = " + activityName);
+            if (list == null) return;
+            StringBuilder message = new StringBuilder();
+
+            message.append("Observer - session data - source")
+                    .append(getActivitySimpleName())
+                    .append("\n");
+
             for (SessionDao.SessionAggregate listElem : list) {
-                Log.d(LOG_TAG, "UPDATE SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
+                message.append("destinations:\n")
+                        .append("\t")
+                        .append(listElem.actName)
+                        .append("( count ")
+                        .append(listElem.countSource2Dest)
+                        .append(")\n");
             }
+
+            Log.d(LOG_TAG, message.toString());
         });
     }
 
@@ -218,12 +240,24 @@ public class ActivityNode {
      */
     public void setListActivityExtraLiveData(LiveData<List<ActivityExtraData>> listActivityExtraLiveData) {
         this.listActivityExtraLiveData = listActivityExtraLiveData;
-        //TODO update here
         this.listActivityExtraLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "PREFSTRAT2 " + activityName);
+            if (list == null) return;
+            StringBuilder message = new StringBuilder();
+
+            message.append("Observer - intent extra - ")
+                    .append(getActivitySimpleName())
+                    .append("\n");
+
             for (ActivityExtraData listElem : list) {
-                Log.d(LOG_TAG, "PREFSTRAT2 " + "actid: " + listElem.idActivity + ", key: " + listElem.key);
+                message.append("Extras:\n")
+                        .append("\tactivity ID ")
+                        .append(listElem.idActivity)
+                        .append("( key ")
+                        .append(listElem.key)
+                        .append(")\n");
             }
+
+            Log.d(LOG_TAG, message.toString());
         });
     }
 
