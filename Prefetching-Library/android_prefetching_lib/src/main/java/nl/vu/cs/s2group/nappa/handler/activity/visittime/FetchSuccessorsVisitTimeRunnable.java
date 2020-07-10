@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
@@ -18,7 +16,6 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
-import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
  * Defines a handler to fetch in the database a list containing the aggregate {@link
@@ -26,21 +23,17 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
  * this handler will register the LiveData object for the provide node to ensure consistency
  * with the database.
  */
-public final class FetchSuccessorsVisitTimeHandler {
-    private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();
+public final class FetchSuccessorsVisitTimeRunnable implements Runnable {
+    private static final String LOG_TAG = FetchSuccessorsVisitTimeRunnable.class.getSimpleName();
 
-    private FetchSuccessorsVisitTimeHandler() {
-        throw new IllegalStateException("FetchSuccessorsVisitTimeHandler is a handler class and should not be instantiated!");
+    ActivityNode activity;
+
+    public FetchSuccessorsVisitTimeRunnable(ActivityNode activity) {
+        this.activity = activity;
     }
 
-    public static void run(@NotNull ActivityNode activity) {
-        if (activity.isSuccessorVisitTimeInstantiated()) return;
-        if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.submit(() -> runQuery(activity));
-        else runQuery(activity);
-    }
-
-    private static void runQuery(@NotNull ActivityNode activity) {
+    @Override
+    public void run() {
         LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
         int lastNSessions = NappaConfigMap.get(

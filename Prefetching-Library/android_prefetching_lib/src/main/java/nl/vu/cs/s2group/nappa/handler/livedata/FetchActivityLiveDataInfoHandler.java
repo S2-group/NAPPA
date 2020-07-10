@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.activity.session.FetchSessionDataRunnable;
-import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
-import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeRunnable;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeRunnable;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
@@ -28,8 +28,11 @@ public class FetchActivityLiveDataInfoHandler {
     public static void run(@NotNull ActivityNode activity, @NotNull PrefetchingStrategy strategy) {
         if (activity.shouldSetSessionAggregateLiveData())
             NappaThreadPool.submit(new FetchSessionDataRunnable(activity));
-        if (strategy.needVisitTime()) FetchVisitTimeHandler.run(activity);
-        if (strategy.needSuccessorsVisitTime())
-            FetchSuccessorsVisitTimeHandler.run(activity);
+
+        if (strategy.needVisitTime() && !activity.isAggregateVisitTimeInstantiated())
+            NappaThreadPool.submit(new FetchVisitTimeRunnable(activity));
+
+        if (strategy.needSuccessorsVisitTime() && !activity.isSuccessorVisitTimeInstantiated())
+            NappaThreadPool.submit(new FetchSuccessorsVisitTimeRunnable(activity));
     }
 }

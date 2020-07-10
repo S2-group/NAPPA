@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import org.jetbrains.annotations.NotNull;
-
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
@@ -16,28 +14,23 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
-import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
  * Defines a handler to fetch in the database a object containing the aggregate
  * {@link ActivityVisitTime} for the provided node. After fetching the data,
  * this handler will register the fetched LiveData object in the provided node.
  */
-public class FetchVisitTimeHandler {
-    private static final String LOG_TAG = FetchVisitTimeHandler.class.getSimpleName();
+public class FetchVisitTimeRunnable implements Runnable {
+    private static final String LOG_TAG = FetchVisitTimeRunnable.class.getSimpleName();
 
-    private FetchVisitTimeHandler() {
-        throw new IllegalStateException("FetchVisitTimeHandler is a handler class and should not be instantiated!");
+    ActivityNode activity;
+
+    public FetchVisitTimeRunnable(ActivityNode activity) {
+        this.activity = activity;
     }
 
-    public static void run(@NotNull ActivityNode activity) {
-        if (activity.isAggregateVisitTimeInstantiated()) return;
-        if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.submit(() -> runQuery(activity));
-        else runQuery(activity);
-    }
-
-    private static void runQuery(@NotNull ActivityNode activity) {
+    @Override
+    public void run() {
         LiveData<AggregateVisitTimeByActivity> visitTime;
         SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
         int lastNSessions = NappaConfigMap.get(
