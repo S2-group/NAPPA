@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.handler.activity.FetchActivityLiveDataInfoHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.RegisterNewActivityHandler;
 import nl.vu.cs.s2group.nappa.handler.graph.InitGraphHandler;
 import nl.vu.cs.s2group.nappa.handler.session.RegisterNewSessionHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
@@ -156,11 +157,15 @@ public class Nappa {
      *
      * @param dataList - The list of all activities as stored in the database.
      */
-    private static void updateActivityMap(List<ActivityData> dataList) {
+    private static void updateActivityMap(@NotNull List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
-            activityMap.put(activityData.activityName, activityData.id);
-            Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
+            updateActivityMap(activityData);
         }
+    }
+
+    private static void updateActivityMap(@NotNull ActivityData activity) {
+        activityMap.put(activity.activityName, activity.id);
+        Log.d(LOG_TAG, "Updating activity map " + activity.activityName + ": " + activity.id);
     }
 
     /**
@@ -171,20 +176,15 @@ public class Nappa {
      * Insertion is performed in a threaded fashion to avoid locking up the main thread of
      * the instrumented application.
      *
-     * @param activityName
+     * @param activityName The canonical class name of the activity to register
      */
     public static void registerActivity(String activityName) {
-        if (!activityMap.containsKey(activityName)) {
-            ActivityData activityData = new ActivityData(activityName);
-            poolExecutor.schedule(() -> {
-                NappaDB.getInstance().activityDao().insert(activityData);
-                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
+        if (activityMap.containsKey(activityName)) return;
 
-                // Fetches and register LiveData for this activity data
-                ActivityNode currentNode = activityGraph.getCurrent();
-                FetchActivityLiveDataInfoHandler.run(currentNode, strategyIntent);
-            }, 0, TimeUnit.SECONDS);
-        }
+        RegisterNewActivityHandler.run(activityName,
+                strategyIntent,
+                activityGraph,
+                Nappa::updateActivityMap);
     }
 
     /**
