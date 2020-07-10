@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.handler.livedata.FetchActivityLiveDataInfoHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.FetchActivityLiveDataInfoHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;

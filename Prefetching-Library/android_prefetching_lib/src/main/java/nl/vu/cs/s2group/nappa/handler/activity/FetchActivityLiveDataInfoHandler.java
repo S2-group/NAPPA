@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.handler.livedata;
+package nl.vu.cs.s2group.nappa.handler.activity;
 
 import org.jetbrains.annotations.NotNull;
 
