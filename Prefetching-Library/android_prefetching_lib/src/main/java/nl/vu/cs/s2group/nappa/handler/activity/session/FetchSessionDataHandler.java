@@ -50,23 +50,19 @@ public class FetchSessionDataHandler {
                 PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
                 AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
-        Long activityId = Nappa.getActivityIdFromName(activity.activityName);
-        if (activityId == null)
-            throw new NoSuchElementException("Unknown ID for activity " + activity.activityName);
-
         Log.d(LOG_TAG, "Fetching session data for " + queryType);
 
         switch (queryType) {
             case ALL_SESSIONS:
                 sessionDataList = NappaDB.getInstance()
                         .sessionDao()
-                        .getCountForActivitySource(activityId);
+                        .getCountForActivitySource(activity.getActivityId());
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
                 sessionDataList = NappaDB.getInstance()
                         .sessionDao()
-                        .getCountForActivitySource(activityId, lastNSessions);
+                        .getCountForActivitySource(activity.getActivityId(), lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);

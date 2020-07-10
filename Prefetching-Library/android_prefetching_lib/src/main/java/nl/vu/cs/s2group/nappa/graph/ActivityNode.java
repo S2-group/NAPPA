@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import nl.vu.cs.s2group.nappa.Nappa;
@@ -342,5 +343,13 @@ public class ActivityNode {
             }
         }
         return successors;
+    }
+
+    public long getActivityId() {
+        Long activityId = Nappa.getActivityIdFromName(activityName);
+        if (activityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + activityName);
+
+        return activityId;
     }
 }

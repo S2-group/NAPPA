@@ -49,25 +49,21 @@ public class FetchVisitTimeHandler {
 
         Log.d(LOG_TAG, "Fetching successors visit time for " + queryType);
 
-        Long activityId = Nappa.getActivityIdFromName(activity.activityName);
-        if (activityId == null)
-            throw new NoSuchElementException("Unknown ID for activity " + activity.activityName);
-
         switch (queryType) {
             case ALL_SESSIONS:
                 visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivity(activityId);
+                        .getAggregateVisitTimeByActivity(activity.getActivityId());
                 break;
             case LAST_N_SESSIONS_FROM_ENTITY_SESSION:
                 visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.getActivityId(), lastNSessions);
                 break;
             case LAST_N_SESSIONS_FROM_QUERIED_ENTITY:
                 visitTime = NappaDB.getInstance()
                         .activityVisitTimeDao()
-                        .getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
+                        .getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.getActivityId(), lastNSessions);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown query type " + queryType);
