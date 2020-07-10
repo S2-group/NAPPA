@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
+import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
@@ -38,7 +39,8 @@ public class RegisterNewActivityRunnable implements Runnable {
     public void run() {
         ActivityData activity = new ActivityData(activityName);
         activity.id = NappaDB.getInstance().activityDao().insert(activity);
-        FetchActivityLiveDataInfoHandler.run(graph.getCurrent(), strategy);
+        ActivityNode node = graph.getCurrent();
+        if (node != null) FetchActivityLiveDataInfoHandler.run(node, strategy);
 
         callback.accept(activity);
 
