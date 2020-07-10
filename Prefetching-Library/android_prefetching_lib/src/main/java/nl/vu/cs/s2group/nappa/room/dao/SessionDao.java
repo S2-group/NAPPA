@@ -16,7 +16,7 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 public interface SessionDao {
 
     @Insert
-    public void insertSession(Session session);
+    long insertSession(Session session);
 
     @Insert
     public void insertSessionData(SessionData sessionData);
