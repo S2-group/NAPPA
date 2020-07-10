@@ -6,6 +6,7 @@ import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.handler.activity.session.FetchSessionDataRunnable;
+import nl.vu.cs.s2group.nappa.handler.activity.urlcandidate.FetchUrlCandidateRunnable;
 import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeRunnable;
 import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeRunnable;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
@@ -45,5 +46,9 @@ public class FetchActivityLiveDataInfoHandler {
 
         if (strategy.needSuccessorsVisitTime() && activity.shouldSetSuccessorVisitTime())
             NappaThreadPool.submit(new FetchSuccessorsVisitTimeRunnable(activity, queryType, lastNSessions));
+
+        if (activity.shouldSetUrlCandidateDbLiveDataLiveData()) {
+            NappaThreadPool.submit(new FetchUrlCandidateRunnable(activity));
+        }
     }
 }
