@@ -216,11 +216,11 @@ public class ActivityNode {
 
             message.append("Observer - session data - source")
                     .append(getActivitySimpleName())
-                    .append("\n");
+                    .append("\n")
+                    .append("destinations:\n");
 
             for (SessionDao.SessionAggregate listElem : list) {
-                message.append("destinations:\n")
-                        .append("\t")
+                message.append("\t")
                         .append(listElem.actName)
                         .append("( count ")
                         .append(listElem.countSource2Dest)
@@ -246,11 +246,11 @@ public class ActivityNode {
 
             message.append("Observer - intent extra - ")
                     .append(getActivitySimpleName())
-                    .append("\n");
+                    .append("\n")
+                    .append("Extras:\n");
 
             for (ActivityExtraData listElem : list) {
-                message.append("Extras:\n")
-                        .append("\tactivity ID ")
+                message.append("\tactivity ID ")
                         .append(listElem.idActivity)
                         .append("( key ")
                         .append(listElem.key)
