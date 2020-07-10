@@ -15,16 +15,16 @@ import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
- * Defines a handler to fetch in the database a list containing the aggregate
- * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
- * for each successor of the provided node. After fetching the data, this handler will
- * invoke the method {@link ActivityNode#setSuccessorsAggregateVisitTimeLiveData(LiveData)}
- * for the provided node.
+ * Defines a handler to fetch in the database a list containing the aggregate {@link
+ * ActivityVisitTime} for each successor of the provided node. After fetching the data,
+ * this handler will register the LiveData object for the provide node to ensure consistency
+ * with the database.
  */
 public final class FetchSuccessorsVisitTimeHandler {
     private static final String LOG_TAG = FetchSuccessorsVisitTimeHandler.class.getSimpleName();

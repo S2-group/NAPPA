@@ -13,15 +13,15 @@ import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
  * Defines a handler to fetch in the database a object containing the aggregate
- * {@link nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime ActivityVisitTime}
- * for the provided node. After fetching the data, this handler will register the fetched
- * LiveData object in the provided node.
+ * {@link ActivityVisitTime} for the provided node. After fetching the data,
+ * this handler will register the fetched LiveData object in the provided node.
  */
 public class FetchVisitTimeHandler {
     private static final String LOG_TAG = FetchVisitTimeHandler.class.getSimpleName();
