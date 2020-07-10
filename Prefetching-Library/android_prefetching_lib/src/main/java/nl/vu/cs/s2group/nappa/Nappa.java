@@ -52,6 +52,7 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
+import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -138,8 +139,7 @@ public class Nappa {
             cacheDir = context.getCacheDir();
             activityGraph = new ActivityGraph();
 
-            poolExecutor.schedule(() -> {
-
+            NappaThreadPool.submit(() -> {
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
                 Session session = new Session(new Date().getTime());
                 NappaDB.getInstance().sessionDao().insertSession(session);
@@ -169,7 +169,7 @@ public class Nappa {
 
                 Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
 
-            }, 0, TimeUnit.SECONDS);
+            });
 
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
