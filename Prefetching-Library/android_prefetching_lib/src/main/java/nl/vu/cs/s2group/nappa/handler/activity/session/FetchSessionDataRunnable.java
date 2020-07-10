@@ -6,18 +6,13 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
-import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
-import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
-import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 
 /**
  * Defines a runnable to fetch in the database a object containing the {@link SessionData}
@@ -27,20 +22,20 @@ import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
  */
 public class FetchSessionDataRunnable implements Runnable {
     private static final String LOG_TAG = FetchSessionDataRunnable.class.getSimpleName();
-    ActivityNode activity;
 
-    public FetchSessionDataRunnable(@NotNull ActivityNode activity) {
+    ActivityNode activity;
+    SessionBasedSelectQueryType queryType;
+    int lastNSessions;
+
+    public FetchSessionDataRunnable(ActivityNode activity, SessionBasedSelectQueryType queryType, int lastNSessions) {
         this.activity = activity;
+        this.queryType = queryType;
+        this.lastNSessions = lastNSessions;
     }
 
     @Override
     public void run() {
         LiveData<List<SessionDao.SessionAggregate>> sessionDataList;
-        SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
-
-        int lastNSessions = NappaConfigMap.get(
-                PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
-                AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
 
         Log.d(LOG_TAG, "Fetching session data for " + queryType);
 

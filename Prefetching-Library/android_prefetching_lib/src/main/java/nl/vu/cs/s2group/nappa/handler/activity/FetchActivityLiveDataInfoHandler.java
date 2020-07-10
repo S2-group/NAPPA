@@ -4,13 +4,17 @@ import org.jetbrains.annotations.NotNull;
 
 import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.handler.activity.session.FetchSessionDataRunnable;
 import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeRunnable;
 import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeRunnable;
+import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
+import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 
 /**
@@ -26,13 +30,20 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 public class FetchActivityLiveDataInfoHandler {
 
     public static void run(@NotNull ActivityNode activity, @NotNull PrefetchingStrategy strategy) {
+        // Fetches configuration needed to fetch data in the DB
+        SessionBasedSelectQueryType queryType = NappaConfigMap.getSessionBasedSelectQueryType();
+        int lastNSessions = NappaConfigMap.get(
+                PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
+                AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
+
+        // Start invoking runnable classes responsible to fetch the data in the DB
         if (activity.shouldSetSessionAggregateLiveData())
-            NappaThreadPool.submit(new FetchSessionDataRunnable(activity));
+            NappaThreadPool.submit(new FetchSessionDataRunnable(activity, queryType, lastNSessions));
 
         if (strategy.needVisitTime() && !activity.isAggregateVisitTimeInstantiated())
-            NappaThreadPool.submit(new FetchVisitTimeRunnable(activity));
+            NappaThreadPool.submit(new FetchVisitTimeRunnable(activity, queryType, lastNSessions));
 
         if (strategy.needSuccessorsVisitTime() && !activity.isSuccessorVisitTimeInstantiated())
-            NappaThreadPool.submit(new FetchSuccessorsVisitTimeRunnable(activity));
+            NappaThreadPool.submit(new FetchSuccessorsVisitTimeRunnable(activity, queryType, lastNSessions));
     }
 }
