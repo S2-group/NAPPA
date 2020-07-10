@@ -345,6 +345,12 @@ public class ActivityNode {
         return successors;
     }
 
+    /**
+     * Fetches the ID of this activity node on the map stored in the Nappa main class
+     *
+     * @return The activity ID
+     * @throws NoSuchElementException if there is no mapping of this activity
+     */
     public long getActivityId() {
         Long activityId = Nappa.getActivityIdFromName(activityName);
         if (activityId == null)
