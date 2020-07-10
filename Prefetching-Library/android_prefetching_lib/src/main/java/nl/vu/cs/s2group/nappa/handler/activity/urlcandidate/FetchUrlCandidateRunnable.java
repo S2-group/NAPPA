@@ -12,6 +12,12 @@ import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 
+/**
+ * Defines a runnable to fetch in the database a object containing the {@link
+ * UrlCandidateDao.UrlCandidateToUrlParameter} for the provided node.  After
+ * fetching the data, this handler will register the LiveData object for the
+ * provide node to ensure consistency with the database.
+ */
 public class FetchUrlCandidateRunnable implements Runnable {
     private static final String LOG_TAG = FetchUrlCandidateRunnable.class.getSimpleName();
 
