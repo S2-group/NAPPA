@@ -126,7 +126,7 @@ public class Nappa {
             Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
 
             instance = Nappa.getInstance();
-            NappaDB.getInstance(context);
+            NappaDB.init(context);
 
             NappaConfigMap.init(config);
             Nappa.prefetchingStrategyType = prefetchingStrategyType;
