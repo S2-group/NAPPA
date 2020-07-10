@@ -15,6 +15,11 @@ import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
  */
 public class RegisterNewSessionHandler {
 
+    /**
+     * Execute the handler
+     *
+     * @param callback A callback with the registered session
+     */
     public static void run(Consumer<Session> callback) {
         NappaThreadPool.submit(new RegisterNewSessionRunnable(callback));
     }

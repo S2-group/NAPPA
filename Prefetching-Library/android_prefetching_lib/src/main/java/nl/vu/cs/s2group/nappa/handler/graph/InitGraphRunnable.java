@@ -10,6 +10,15 @@ import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 
+/**
+ * Defines a Runnable to initialize the ENG graph. This runnable fetches all known
+ * activities registered in the database, inserts a {@link ActivityNode} in the
+ * {@link ActivityGraph} for each fetched activity and invokes the handler {@link
+ * FetchActivityLiveDataInfoHandler} to register LiveData objects.
+ * <p>
+ * If successful, the list of fetches activities and the initialized graph are returned
+ * via callbacks.
+ */
 public class InitGraphRunnable implements Runnable {
     PrefetchingStrategy strategy;
     Consumer<List<ActivityData>> callbackOnFetchedActivities;
