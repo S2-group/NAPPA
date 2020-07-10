@@ -13,7 +13,7 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
 /**
- * Defines a handler to fetch in the database a object containing the aggregate
+ * Defines a runnable to fetch in the database a object containing the aggregate
  * {@link ActivityExtraData} for the provided node. After fetching the data,
  * this handler will register the fetched LiveData object in the provided node.
  */

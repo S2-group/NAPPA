@@ -15,7 +15,7 @@ import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 
 /**
- * Defines a handler to fetch in the database a list containing the aggregate {@link
+ * Defines a runnable to fetch in the database a list containing the aggregate {@link
  * ActivityVisitTime} for each successor of the provided node. After fetching the data,
  * this handler will register the LiveData object for the provide node to ensure consistency
  * with the database.
