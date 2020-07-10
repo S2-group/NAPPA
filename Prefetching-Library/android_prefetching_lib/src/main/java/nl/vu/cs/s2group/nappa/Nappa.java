@@ -154,7 +154,6 @@ public class Nappa {
                     ActivityNode byName = activityGraph.getByName(actName);
                     Long actId = activityMap.get(actName);
 
-                    addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
                     FetchActivityLiveDataInfoHandler.run(byName, strategyIntent);
                 }
@@ -169,24 +168,6 @@ public class Nappa {
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
-    }
-
-    /**
-     * Instantiate the static UrlCandidate
-     *
-     * @param activity
-     * @param activityId
-     */
-    private static void addAUrlCandidateObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (!activity.shouldSetUrlCandidateDbLiveDataLiveData()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add URL candidates observer");
-
-        poolExecutor.schedule(() -> {
-            LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> liveData;
-            liveData = NappaDB.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
-            new Handler(Looper.getMainLooper()).post(() -> activity.setUrlCandidateDbLiveData(liveData));
-        }, 0, TimeUnit.SECONDS);
     }
 
     /**
@@ -248,7 +229,6 @@ public class Nappa {
                 if (activityId == null)
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
                 addActivityExtraObserver(currentNode, activityId);
-                addAUrlCandidateObserver(currentNode, activityId);
                 FetchActivityLiveDataInfoHandler.run(currentNode, strategyIntent);
             }, 0, TimeUnit.SECONDS);
         }
