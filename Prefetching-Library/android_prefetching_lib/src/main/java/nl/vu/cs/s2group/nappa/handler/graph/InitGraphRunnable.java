@@ -1,5 +1,7 @@
 package nl.vu.cs.s2group.nappa.handler.graph;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -20,6 +22,7 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
  * via callbacks.
  */
 public class InitGraphRunnable implements Runnable {
+    private static final String LOG_TAG  = InitGraphRunnable.class.getSimpleName();
     PrefetchingStrategy strategy;
     Consumer<List<ActivityData>> callbackOnFetchedActivities;
     Consumer<ActivityGraph> callbackOnInitializedGraph;
@@ -47,5 +50,7 @@ public class InitGraphRunnable implements Runnable {
         }
 
         callbackOnInitializedGraph.accept(graph);
+
+        Log.d(LOG_TAG, "Initialised graph " + graph.toString());
     }
 }
