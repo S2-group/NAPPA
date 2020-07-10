@@ -25,28 +25,6 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 
-// TODO Refactor the Room classes organization
-//  The current structure is messy and falling apart. The Dao/Entity/View model could be
-//  replaced in favor of the domain/feature model as done for the `activityVisitTime` feature.
-//  This organization allows to keep together classes that are related to each other, making
-//  maintenance simpler.
-//  While we are at it, consider renaming:
-//  * The class `SessionData` to `ActivityVisitFrequency` or simply `VisitFrequency`;
-//  * The entity classes `MyEntityData` to just `MyEntity`;
-//  Other considerations:
-//  * Enforcing required data by either making entities attributes type primitive or annotating object types with @NonNull;
-//  * Enforcing foreign keys at the database level --> currently only enforced in the application levels. Adding invalid FK is currently allowed;
-//  * Extracting model class `UrlCandidateToUrlParameter` from `UrlCandidateDao`;
-//  * Extracting model class `SessionAggregate` from `SessionDao`;
-//  * Using DatabaseView to simplify some queries;
-//  * Extracting `LAR` operations from `ActivityTableDao` --> LAR refers to PageRank, HITS and Salsa scores, but I am not sure what the acronym means;
-//  * Resolve warnings listed when building the library;
-//  The model classes extraction is motivated to simplify code reading. It is a lot better to read
-//  `List<SessionAggregate>` than `List<SessionDao.SessionAggregate>` .
-//  There are probably other improvements and considerations to take into account, but this is the
-//  preliminary list after working in the NAPPA library for a few weeks.
-//  If not familiar with the database, I recommend using an app with NAPPA enabled for a while
-//  to create data and then open the database in a SQL tool (e.g., DB Browser for SQLite).
 @Database(
         entities = {
                 RequestData.class,
