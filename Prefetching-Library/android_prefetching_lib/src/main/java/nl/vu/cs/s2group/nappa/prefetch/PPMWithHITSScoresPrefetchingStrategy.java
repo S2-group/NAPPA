@@ -113,7 +113,7 @@ public class PPMWithHITSScoresPrefetchingStrategy implements PrefetchingStrategy
     }
 
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
-        List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
+        List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList();
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
             successorCountMap = zeroContextNodes(Nappa.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){

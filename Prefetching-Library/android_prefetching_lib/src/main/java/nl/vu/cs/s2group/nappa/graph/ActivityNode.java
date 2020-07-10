@@ -31,21 +31,7 @@ public class ActivityNode {
     //  and is used in the strategies. In this case, we can likely simply this map to a list
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
-    // TODO Refactor LiveData management for SessionAggregate
-    //  This class declares 2 LiveData attributes for the SessionAggregate data:
-    //  * `listSessionAggregateLiveData`: All sessions
-    //  * `listLastNSessionAggregateLiveData`: Last N sessions
-    //  In PR S2-group/NAPPA#67 I modified the PrefetchingLib to instantiate only one of them.
-    //  This class should be refactored to keep a single declaration of the LiveData attribute
-    //  and instantiate the LiveData object in the PrefetchingLib either with the all sessions
-    //  query or with the query of the last N sessions.
-    //  Use the `aggregateVisitTimeLiveData` object as reference.
-    //  This change will require updating the following classes:
-    //  * `NappaUtil#getSuccessorsAggregateVisitFrequency`
-    //  * `PPMPrefetchingStrategy#zeroContextNodes`
-    //  * `PPMWithHITSScoresPrefetchingStrategy#zeroContextNodes`
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
-    private LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData;
     public Map<String, ParameteredUrl> parameteredUrlMap = new HashMap<>();
     public List<ParameteredUrl> parameteredUrlList = new LinkedList<>();            // A list of all parametered URLs within the activity
     public LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> urlCandidateDbLiveData;
@@ -130,13 +116,6 @@ public class ActivityNode {
         if (listSessionAggregateLiveData == null || listSessionAggregateLiveData.getValue() == null)
             return new ArrayList<>();
         return listSessionAggregateLiveData.getValue();
-    }
-
-    public List<SessionDao.SessionAggregate> getSessionAggregateList(int LastN) {
-        if (listLastNSessionAggregateLiveData == null || listLastNSessionAggregateLiveData.getValue() == null)
-            return new ArrayList<>();
-        return listLastNSessionAggregateLiveData.getValue();
-
     }
 
     public LiveData<List<ActivityExtraData>> getListActivityExtraLiveData() {
@@ -225,16 +204,6 @@ public class ActivityNode {
             Log.d(LOG_TAG, "UPDATE SESSION " + "source = " + activityName);
             for (SessionDao.SessionAggregate listElem : list) {
                 Log.d(LOG_TAG, "UPDATE SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
-            }
-        });
-    }
-
-    public void setLastNListSessionAggregateLiveData(LiveData<List<SessionDao.SessionAggregate>> listLastNSessionAggregateLiveData) {
-        this.listLastNSessionAggregateLiveData = listLastNSessionAggregateLiveData;
-        this.listLastNSessionAggregateLiveData.observeForever((list) -> {
-            Log.d(LOG_TAG, "UPDATED LAST N SESSION " + "source = " + activityName);
-            for (SessionDao.SessionAggregate listElem : list) {
-                Log.d(LOG_TAG, "UPDATED  LAST N SESSION " + "dest: " + listElem.actName + ", count: " + listElem.countSource2Dest);
             }
         });
     }

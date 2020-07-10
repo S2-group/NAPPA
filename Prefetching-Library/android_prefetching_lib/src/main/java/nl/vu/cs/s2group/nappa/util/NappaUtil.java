@@ -120,7 +120,7 @@ public class NappaUtil {
      */
     public static int getSuccessorsTotalAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
         int total = 0;
-        List<SessionDao.SessionAggregate> frequencyList = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
+        List<SessionDao.SessionAggregate> frequencyList = activityNode.getSessionAggregateList();
 
         for (SessionDao.SessionAggregate sessionAggregate : frequencyList) {
             total += sessionAggregate.countSource2Dest;
@@ -138,7 +138,7 @@ public class NappaUtil {
      */
     @NotNull
     public static Map<String, Integer> mapSuccessorsAggregateVisitFrequency(@NotNull ActivityNode activityNode, int lastNSessions) {
-        List<SessionDao.SessionAggregate> frequencyList = lastNSessions == -1 ? activityNode.getSessionAggregateList() : activityNode.getSessionAggregateList(1);
+        List<SessionDao.SessionAggregate> frequencyList = activityNode.getSessionAggregateList();
         Map<String, Integer> frequencyMap = new HashMap<>(frequencyList.size());
 
         for (SessionDao.SessionAggregate sessionAggregate : frequencyList) {
