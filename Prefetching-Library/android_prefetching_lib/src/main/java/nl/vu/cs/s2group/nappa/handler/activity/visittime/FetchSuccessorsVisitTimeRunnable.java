@@ -37,7 +37,7 @@ public final class FetchSuccessorsVisitTimeRunnable implements Runnable {
     public void run() {
         LiveData<List<AggregateVisitTimeByActivity>> successorsVisitTimeList;
 
-        Log.d(LOG_TAG, "Fetching successors visit time for " + queryType);
+        Log.d(LOG_TAG, activity.getActivitySimpleName() + " Fetching session data for " + queryType);
 
         switch (queryType) {
             case ALL_SESSIONS:

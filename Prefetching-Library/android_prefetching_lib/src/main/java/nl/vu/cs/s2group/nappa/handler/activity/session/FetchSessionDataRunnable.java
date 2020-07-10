@@ -37,7 +37,7 @@ public class FetchSessionDataRunnable implements Runnable {
     public void run() {
         LiveData<List<SessionDao.SessionAggregate>> sessionDataList;
 
-        Log.d(LOG_TAG, "Fetching session data for " + queryType);
+        Log.d(LOG_TAG, activity.getActivitySimpleName() + " Fetching session data for " + queryType);
 
         switch (queryType) {
             case ALL_SESSIONS:
