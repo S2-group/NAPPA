@@ -9,9 +9,7 @@ import androidx.lifecycle.LiveData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
-import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.SessionBasedSelectQueryType;
 import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
