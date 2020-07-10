@@ -154,7 +154,6 @@ public class Nappa {
                     ActivityNode byName = activityGraph.getByName(actName);
                     Long actId = activityMap.get(actName);
 
-                    addActivityExtraObserver(byName, actId);
                     FetchActivityLiveDataInfoHandler.run(byName, strategyIntent);
                 }
 
@@ -168,25 +167,6 @@ public class Nappa {
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
-    }
-
-    /**
-     * Instantiate all extras data for this activity AND set up all the observers to
-     * ensure consistency with the database
-     *
-     * @param activity
-     * @param activityId
-     */
-    private static void addActivityExtraObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (!activity.shouldSetActivityExtraLiveData()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add extras observer");
-
-        poolExecutor.schedule(() -> {
-            LiveData<List<ActivityExtraData>> liveData;
-            liveData = NappaDB.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
-            new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
-        }, 0, TimeUnit.SECONDS);
     }
 
     public static LiveData<List<ActivityData>> getActivityLiveData() {
@@ -228,7 +208,6 @@ public class Nappa {
                 Long activityId = activityMap.get(currentActivityName);
                 if (activityId == null)
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
-                addActivityExtraObserver(currentNode, activityId);
                 FetchActivityLiveDataInfoHandler.run(currentNode, strategyIntent);
             }, 0, TimeUnit.SECONDS);
         }

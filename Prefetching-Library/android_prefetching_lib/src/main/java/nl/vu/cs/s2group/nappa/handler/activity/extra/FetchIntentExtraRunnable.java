@@ -1,6 +1,15 @@
 package nl.vu.cs.s2group.nappa.handler.activity.extra;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 
 /**
@@ -19,6 +28,12 @@ public class FetchIntentExtraRunnable implements Runnable {
 
     @Override
     public void run() {
+        Log.d(LOG_TAG, activity.getActivitySimpleName() + " Fetching intent extras");
 
+        LiveData<List<ActivityExtraData>> liveData = NappaDB.getInstance()
+                .activityExtraDao()
+                .getActivityExtraLiveData(activity.getActivityId());
+
+        new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
     }
 }
