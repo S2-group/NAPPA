@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.activity.FetchActivityLiveDataInfoHandler;
+import nl.vu.cs.s2group.nappa.handler.session.RegisterNewSessionHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
@@ -139,9 +140,7 @@ public class Nappa {
 
             NappaThreadPool.submit(() -> {
                 //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
-                Session session = new Session(new Date().getTime());
-                NappaDB.getInstance().sessionDao().insertSession(session);
-                Nappa.session = NappaDB.getInstance().sessionDao().getSession(session.date);
+                RegisterNewSessionHandler.run((Session session) -> Nappa.session = session);
 
                 // This fetches the activities stored in the DB and their ID into the activitymap
                 updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
