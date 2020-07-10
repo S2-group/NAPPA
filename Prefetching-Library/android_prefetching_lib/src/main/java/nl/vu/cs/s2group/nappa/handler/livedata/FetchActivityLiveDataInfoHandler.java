@@ -1,6 +1,13 @@
 package nl.vu.cs.s2group.nappa.handler.livedata;
 
+import org.jetbrains.annotations.NotNull;
+
 import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.graph.ActivityNode;
+import nl.vu.cs.s2group.nappa.handler.activity.session.FetchSessionDataHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
+import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeHandler;
+import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
@@ -16,4 +23,11 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
  * objects ensures consistency with the database.
  */
 public class FetchActivityLiveDataInfoHandler {
+
+    public static void run(@NotNull ActivityNode activity, @NotNull PrefetchingStrategy strategy) {
+        FetchSessionDataHandler.run(activity);
+        if (strategy.needVisitTime()) FetchVisitTimeHandler.run(activity);
+        if (strategy.needSuccessorsVisitTime())
+            FetchSuccessorsVisitTimeHandler.run(activity);
+    }
 }

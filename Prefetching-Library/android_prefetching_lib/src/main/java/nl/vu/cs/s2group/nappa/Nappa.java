@@ -34,9 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.handler.activity.session.FetchSessionDataHandler;
-import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
-import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchVisitTimeHandler;
+import nl.vu.cs.s2group.nappa.handler.livedata.FetchActivityLiveDataInfoHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
@@ -158,10 +156,7 @@ public class Nappa {
 
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
-                    FetchSessionDataHandler.run(byName);
-                    if (strategyIntent.needVisitTime()) FetchVisitTimeHandler.run(byName);
-                    if (strategyIntent.needSuccessorsVisitTime())
-                        FetchSuccessorsVisitTimeHandler.run(byName);
+                    FetchActivityLiveDataInfoHandler.run(byName, strategyIntent);
                 }
 
 
@@ -252,12 +247,9 @@ public class Nappa {
                 Long activityId = activityMap.get(currentActivityName);
                 if (activityId == null)
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
-                FetchSessionDataHandler.run(currentNode);
                 addActivityExtraObserver(currentNode, activityId);
                 addAUrlCandidateObserver(currentNode, activityId);
-                if (strategyIntent.needVisitTime()) FetchVisitTimeHandler.run(currentNode);
-                if (strategyIntent.needSuccessorsVisitTime())
-                    FetchSuccessorsVisitTimeHandler.run(currentNode);
+                FetchActivityLiveDataInfoHandler.run(currentNode, strategyIntent);
             }, 0, TimeUnit.SECONDS);
         }
     }
