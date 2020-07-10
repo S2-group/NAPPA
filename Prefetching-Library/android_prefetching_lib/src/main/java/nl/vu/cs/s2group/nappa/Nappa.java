@@ -3,8 +3,6 @@ package nl.vu.cs.s2group.nappa;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -13,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +41,6 @@ import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.RequestData;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
-import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
@@ -148,7 +144,7 @@ public class Nappa {
                 // Iterate through the activity table which contains the activity name and its id
                 for (String actName : activityMap.keySet()) {
                     Log.d(LOG_TAG, "Init nodes");
-                    activityGraph.initNodes(actName);
+                    activityGraph.initNode(actName);
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
 

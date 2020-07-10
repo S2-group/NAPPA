@@ -35,7 +35,7 @@ public class ActivityGraph {
      *
      * @param activityName The activity
      */
-    public void initNodes(String activityName) {
+    public ActivityNode initNode(String activityName) {
         Log.d(LOG_TAG, "ACT_GRAPH " + "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
         //link analysis ranking (LAR)
@@ -93,7 +93,7 @@ public class ActivityGraph {
             }
         }
 
-
+        return temp;
     }
 
     /**
