@@ -39,7 +39,7 @@ public class PrefetchingStrategyImpl2 implements PrefetchingStrategy {
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
             List<ActivityExtraData> extraDataList = node.getListActivityExtraLiveData().getValue();
             if (extraDataList != null) {
-                Map<ActivityNode, Integer> successors = node.getSuccessors();
+                Map<ActivityNode, Integer> successors = node.successors;
                 List<ParameteredUrl> parameteredUrls = new LinkedList<>();
 
                 for (ActivityNode successor : successors.keySet()) {

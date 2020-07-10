@@ -84,12 +84,6 @@ public class ActivityNode {
         return activityNamespace[activityNamespace.length - 1];
     }
 
-    // TODO Implementing getter method on public attribute
-    //  Either remove getter or make attributes non-public
-    public Map<ActivityNode, Integer> getSuccessors() {
-        return successors;
-    }
-
     public AggregateVisitTimeByActivity getAggregateVisitTime() {
         return aggregateVisitTime;
     }
