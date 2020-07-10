@@ -1,4 +1,4 @@
-package nl.vu.cs.s2group.nappa.handler.session;
+package nl.vu.cs.s2group.nappa.handler.activity.session;
 
 import android.os.Handler;
 import android.os.Looper;
