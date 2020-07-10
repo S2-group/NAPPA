@@ -152,8 +152,8 @@ public class Nappa {
                     activityGraph.initNodes(actName);
                     // Fetch ActivityNode Object, and its corresponding ID
                     ActivityNode byName = activityGraph.getByName(actName);
-                    Long actId = activityMap.get(actName);
 
+                    // Fetches and register LiveData for this activity data
                     FetchActivityLiveDataInfoHandler.run(byName, strategyIntent);
                 }
 
@@ -203,11 +203,8 @@ public class Nappa {
                 NappaDB.getInstance().activityDao().insert(activityData);
                 updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
 
-                // Add LiveData observers
+                // Fetches and register LiveData for this activity data
                 ActivityNode currentNode = activityGraph.getCurrent();
-                Long activityId = activityMap.get(currentActivityName);
-                if (activityId == null)
-                    throw new IllegalArgumentException("Unknown activity " + currentActivityName);
                 FetchActivityLiveDataInfoHandler.run(currentNode, strategyIntent);
             }, 0, TimeUnit.SECONDS);
         }
