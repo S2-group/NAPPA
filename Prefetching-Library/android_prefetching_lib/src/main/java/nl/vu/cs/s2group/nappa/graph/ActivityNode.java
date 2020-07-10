@@ -85,20 +85,20 @@ public class ActivityNode {
      * Verifies whether the {@link LiveData} object for the aggregate visit time is instantiated
      * or not
      *
-     * @return {@code True} if the object is instantiated or {@code False} otherwise
+     * @return {@code False} if the object is instantiated or {@code True} otherwise
      */
-    public boolean isAggregateVisitTimeInstantiated() {
-        return aggregateVisitTimeLiveData != null;
+    public boolean shouldSetAggregateVisitTime() {
+        return aggregateVisitTimeLiveData == null;
     }
 
     /**
      * Verifies whether the {@link LiveData} object for the successors aggregate visit time
      * is instantiated or not
      *
-     * @return {@code True} if the object is instantiated or {@code False} otherwise
+     * @return {@code False} if the object is instantiated or {@code True} otherwise
      */
-    public boolean isSuccessorVisitTimeInstantiated() {
-        return successorVisitTimeLiveData != null;
+    public boolean shouldSetSuccessorVisitTime() {
+        return successorVisitTimeLiveData == null;
     }
 
     public boolean shouldSetSessionAggregateLiveData() {

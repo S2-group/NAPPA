@@ -40,10 +40,10 @@ public class FetchActivityLiveDataInfoHandler {
         if (activity.shouldSetSessionAggregateLiveData())
             NappaThreadPool.submit(new FetchSessionDataRunnable(activity, queryType, lastNSessions));
 
-        if (strategy.needVisitTime() && !activity.isAggregateVisitTimeInstantiated())
+        if (strategy.needVisitTime() && activity.shouldSetAggregateVisitTime())
             NappaThreadPool.submit(new FetchVisitTimeRunnable(activity, queryType, lastNSessions));
 
-        if (strategy.needSuccessorsVisitTime() && !activity.isSuccessorVisitTimeInstantiated())
+        if (strategy.needSuccessorsVisitTime() && activity.shouldSetSuccessorVisitTime())
             NappaThreadPool.submit(new FetchSuccessorsVisitTimeRunnable(activity, queryType, lastNSessions));
     }
 }
