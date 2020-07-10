@@ -36,7 +36,7 @@ public final class FetchSuccessorsVisitTimeHandler {
     public static void run(@NotNull ActivityNode activity) {
         if (activity.isSuccessorVisitTimeInstantiated()) return;
         if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.scheduler.execute(() -> runQuery(activity));
+            NappaThreadPool.submit(() -> runQuery(activity));
         else runQuery(activity);
     }
 

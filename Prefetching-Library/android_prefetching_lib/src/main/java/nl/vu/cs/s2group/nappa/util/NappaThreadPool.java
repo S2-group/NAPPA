@@ -1,5 +1,10 @@
 package nl.vu.cs.s2group.nappa.util;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
@@ -7,7 +12,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * commands to run outside the main thread or after some delay.
  */
 public final class NappaThreadPool {
-    public static final ScheduledThreadPoolExecutor scheduler;
+    private static final String LOG_TAG = NappaThreadPool.class.getSimpleName();
+    private static final ScheduledThreadPoolExecutor scheduler;
 
     static {
         scheduler = new ScheduledThreadPoolExecutor(1);
@@ -15,6 +21,21 @@ public final class NappaThreadPool {
 
     private NappaThreadPool() {
         throw new IllegalStateException("NappaThreadPool is a utility class and should not be instantiated!");
+    }
+
+    /**
+     * This method ensures that we handle exceptions that occurs in the worker thread
+     *
+     * @param task The task to run in the worker thread
+     */
+    public static void submit(Runnable task) {
+        Future<?> future = scheduler.submit(task);
+        try {
+            future.get();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "WORKER THREAD? Exception caught on worker thread", e);
+            new Handler(Looper.getMainLooper()).post(() -> Log.e(LOG_TAG, "MAIN THREAD Exception caught on worker thread", e));
+        }
     }
 
 }

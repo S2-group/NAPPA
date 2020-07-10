@@ -36,7 +36,7 @@ public class FetchSessionDataHandler {
     public static void run(@NotNull ActivityNode activity) {
         if (!activity.shouldSetSessionAggregateLiveData()) return;
         if (Looper.getMainLooper().isCurrentThread())
-            NappaThreadPool.scheduler.execute(() -> runQuery(activity));
+            NappaThreadPool.submit(() -> runQuery(activity));
         else runQuery(activity);
     }
 
