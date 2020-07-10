@@ -8,7 +8,8 @@ import nl.vu.cs.s2group.nappa.room.data.Session;
 
 /**
  * Defines a Runnable to register a new session into the database. If successful, the
- * registered session is returned via the callback.
+ * registered session is returned via the callback. The session time is obtained when
+ * running this runnable using {@code new Date().getTime()}
  */
 public class RegisterNewSessionRunnable implements Runnable {
     Consumer<Session> callback;
