@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.handler.activity.FetchActivityLiveDataInfoHandler;
+import nl.vu.cs.s2group.nappa.handler.graph.InitGraphHandler;
 import nl.vu.cs.s2group.nappa.handler.session.RegisterNewSessionHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
@@ -47,7 +48,6 @@ import nl.vu.cs.s2group.nappa.room.data.SessionData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
-import nl.vu.cs.s2group.nappa.util.NappaThreadPool;
 import okhttp3.Cache;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -132,32 +132,14 @@ public class Nappa {
             Nappa.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
-            activityGraph = new ActivityGraph();
 
-            NappaThreadPool.submit(() -> {
-                //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
-                RegisterNewSessionHandler.run((Session session) -> Nappa.session = session);
-
-                // This fetches the activities stored in the DB and their ID into the activitymap
-                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
-
-                // Iterate through the activity table which contains the activity name and its id
-                for (String actName : activityMap.keySet()) {
-                    Log.d(LOG_TAG, "Init nodes");
-                    activityGraph.initNode(actName);
-                    // Fetch ActivityNode Object, and its corresponding ID
-                    ActivityNode byName = activityGraph.getByName(actName);
-
-                    // Fetches and register LiveData for this activity data
-                    FetchActivityLiveDataInfoHandler.run(byName, strategyIntent);
-                }
-
-
-                listLiveData = NappaDB.getInstance().activityDao().getListActivityLiveData();
-
-                Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
-
-            });
+            RegisterNewSessionHandler.run((Session session) -> Nappa.session = session);
+            InitGraphHandler.run(strategyIntent,
+                    Nappa::updateActivityMap,
+                    (ActivityGraph graph) -> {
+                        Nappa.activityGraph = graph;
+                        Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
+                    });
 
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
