@@ -1,7 +1,5 @@
 package nl.vu.cs.s2group.nappa.util;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.concurrent.Future;
@@ -24,7 +22,8 @@ public final class NappaThreadPool {
     }
 
     /**
-     * This method ensures that we handle exceptions that occurs in the worker thread
+     * This method ensures that we handle in the main thread the exceptions that occurs in
+     * the worker thread
      *
      * @param task The task to run in the worker thread
      */
@@ -33,8 +32,7 @@ public final class NappaThreadPool {
         try {
             future.get();
         } catch (Exception e) {
-            Log.e(LOG_TAG, "WORKER THREAD? Exception caught on worker thread", e);
-            new Handler(Looper.getMainLooper()).post(() -> Log.e(LOG_TAG, "MAIN THREAD Exception caught on worker thread", e));
+            Log.e(LOG_TAG, "Exception caught on worker thread", e);
         }
     }
 
