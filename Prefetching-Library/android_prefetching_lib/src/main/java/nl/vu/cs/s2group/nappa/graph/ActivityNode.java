@@ -2,12 +2,17 @@ package nl.vu.cs.s2group.nappa.graph;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -276,27 +281,65 @@ public class ActivityNode {
                 && this.activityName.compareTo(((ActivityNode) obj).activityName) == 0;
     }
 
-    // TODO Method toString contains lot of noise
-    //  It would simplify the visualization if the printed string was simpler and compact.
-    //  LAR scores are required on specific strategies. There is no need to print them on all
-    //  strategies
+    @NonNull
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("--------------------------\nNode: " + activityName + "\nPageRank :" + pageRank + "\nHITS-Authority :" + authority + "\nHITS-Hub :" + hub + "\nSALSA-Authority :" + authorityS + "\nSALSA-Hub :" + hubS);
+        return getActivitySimpleName() + " " + getNodeScore() + "\n" +
+                "\tSuccessors:\n" +
+                reduceNodesAndHitsMap(successors) +
+                "\tAncestors:\n" +
+                reduceNodesAndHitsMap(ancestors) +
+                "\n";
+    }
 
-        builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
-        builder.append("Successors:\n");
-        for (ActivityNode successor : successors.keySet()) {
-            builder.append("\t" + successor.activityName + " - hit: " + successors.get(successor)).append("\n");
-        }
-        builder.append("\no~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~o~\n");
-        builder.append("Ancestors:\n");
-        for (ActivityNode ancestor : ancestors.keySet()) {
-            builder.append("\t" + ancestor.activityName + " - hit: " + ancestors.get(ancestor)).append("\n");
+    /**
+     * Get the score relevant for the current strategy.
+     *
+     * @return A string with the score or an empty string if the selected strategy score is
+     * not stored in this class
+     */
+    @NotNull
+    @Contract(pure = true)
+    private String getNodeScore() {
+        String score = "";
+        switch (Nappa.prefetchingStrategyType) {
+            case STRATEGY_PAGERANK:
+            case STRATEGY_GREEDY_WITH_PAGERANK_SCORES:
+                score = String.format(Locale.getDefault(), "(PR = %.4f)", pageRank);
+                break;
+            case STRATEGY_HITS:
+            case STRATEGY_PPM_WITH_HITS_SCORES:
+                score = String.format(Locale.getDefault(), "(A = %.4f; H = %.4f)", authority, hub);
+                break;
+            case STRATEGY_SALSA:
+                score = String.format(Locale.getDefault(), "(A = %.4f; H = %.4f)", authorityS, hubS);
+                break;
         }
 
-        builder.append("\n\n--------------------------\n");
-        return builder.toString();
+        return score;
+    }
+
+    /**
+     * Reduce the {@link #successors} or {@link #ancestors} map to a {@link StringBuilder}
+     * in the format "nodeName (# hits)".
+     *
+     * @param nodes The map of node -> hit to reduce.
+     * @return A formatted string with rows of "nodeName (hits)".
+     */
+    @NotNull
+    private String reduceNodesAndHitsMap(@NotNull Map<ActivityNode, Integer> nodes) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Map.Entry<ActivityNode, Integer> successor : nodes.entrySet()) {
+            builder.append("\t\t")
+                    .append(successor.getKey().getActivitySimpleName())
+                    .append(" (")
+                    .append(successor.getValue())
+                    .append(" hits)")
+                    .append("\n");
+        }
+
+        return builder.length() == 0 ? "\n" : builder.toString();
     }
 
     /**
