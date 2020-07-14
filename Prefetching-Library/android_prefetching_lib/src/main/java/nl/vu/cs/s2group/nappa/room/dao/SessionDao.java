@@ -53,7 +53,11 @@ public interface SessionDao {
             "LEFT JOIN nappa_activity as pfa ON pfa.id = id_activity_destination " +
             "WHERE id_activity_source = :idSource " +
             "ORDER BY id_session DESC) as X " +
-            "WHERE X.id_session >= ((SELECT MAX(id_session) FROM nappa_session_data) - :lastN) " +
+            "WHERE " +
+            "   X.id_session > (" +
+            "       SELECT IFNULL(MAX(id_session) - :lastN, 0) " +
+            "       FROM nappa_session_data" +
+            "   ) " +
             "GROUP BY id_activity_destination ")
     public LiveData<List<SessionAggregate>> getCountForActivitySource(Long idSource, int lastN);
 

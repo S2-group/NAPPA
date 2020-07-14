@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -159,7 +160,7 @@ public class Nappa {
                     addAUrlCandidateObserver(byName, actId);
                     addActivityExtraObserver(byName, actId);
                     addSessionAggregateObserver(byName, actId);
-                    addVisitTimePerActivityObserver(byName);
+                    addVisitTimePerActivityObserver(byName, actId);
                     if (strategyIntent.needSuccessorsVisitTime())
                         FetchSuccessorsVisitTimeHandler.run(byName);
                 }
@@ -181,7 +182,7 @@ public class Nappa {
      *
      * @param activity A {@link ActivityNode} object contaning the activity name
      */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity) {
+    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId) {
         if (activity.isAggregateVisitTimeInstantiated()) return;
         if (!strategyIntent.needVisitTime()) return;
 
@@ -197,11 +198,17 @@ public class Nappa {
                     AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
 
             if (lastNSessions == -1) {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivity(activity.activityName);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivity(activityId);
             } else if (useSessionEntity) {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
             } else {
-                liveData = NappaDB.getInstance().activityVisitTimeDao().getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activity.activityName, lastNSessions);
+                liveData = NappaDB.getInstance().
+                        activityVisitTimeDao().
+                        getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
             }
 
             new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
@@ -317,7 +324,7 @@ public class Nappa {
                     throw new IllegalArgumentException("Unknown activity " + currentActivityName);
                 addSessionAggregateObserver(currentNode, activityId);
                 addActivityExtraObserver(currentNode, activityId);
-                addVisitTimePerActivityObserver(currentNode);
+                addVisitTimePerActivityObserver(currentNode, activityId);
                 addAUrlCandidateObserver(currentNode, activityId);
                 if (strategyIntent.needSuccessorsVisitTime())
                     FetchSuccessorsVisitTimeHandler.run(currentNode);
@@ -425,9 +432,18 @@ public class Nappa {
     public static void leavingCurrentActivity() {
         long duration = new Date().getTime() - visitedCurrentActivityDate.getTime();
         Log.d(LOG_TAG, "Stayed on " + currentActivityName + " for " + duration + " ms");
+
+        Long currentActivityId = activityMap.get(currentActivityName);
+        if (currentActivityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + currentActivityName);
+
+        Long previousActivityId = previousActivityName == null ? null : activityMap.get(previousActivityName);
+        if (previousActivityName != null && previousActivityId == null)
+            throw new NoSuchElementException("Unknown ID for activity " + previousActivityName);
+
         ActivityVisitTime visitTime = new ActivityVisitTime(
-                currentActivityName,
-                previousActivityName,
+                currentActivityId,
+                previousActivityId,
                 session.id,
                 visitedCurrentActivityDate,
                 duration
