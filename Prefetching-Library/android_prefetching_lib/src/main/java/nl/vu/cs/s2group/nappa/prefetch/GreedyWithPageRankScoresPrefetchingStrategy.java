@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
@@ -43,7 +43,7 @@ public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchingS
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
 
-        Map<String, Long> activityMap = PrefetchingLib.activityMap;
+        Map<String, Long> activityMap = Nappa.activityMap;
         for (String key : activityMap.keySet()){
             reversedHashMap.put(activityMap.get(key), key);
         }
@@ -103,8 +103,8 @@ public class GreedyWithPageRankScoresPrefetchingStrategy implements PrefetchingS
         // For each destination calculate the probability of Access
         for (Long succ : successorCountMap.keySet()) {
             // Individual successor divided by total accesses
-            float prob = initialProbability * ((float) successorCountMap.get(succ)/total * PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
-            ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
+            float prob = initialProbability * ((float) successorCountMap.get(succ)/total * Nappa.getActivityGraph().getByName(reversedHashMap.get(succ)).pageRank);
+            ActivityNode node1 = Nappa.getActivityGraph().getByName(reversedHashMap.get(succ));
 
                 // If not yet added, add this current node to the probable nodes and calculate the
                 //     next probability using this nodes probability as an initial probability.

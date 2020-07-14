@@ -5,19 +5,19 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 
 public class GraphActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_graph);
 
         TextView textView = findViewById(R.id.text_graph);
 
-        textView.setText(PrefetchingLib.getActivityGraph().toString());
+        textView.setText(Nappa.getActivityGraph().toString());
     }
 }

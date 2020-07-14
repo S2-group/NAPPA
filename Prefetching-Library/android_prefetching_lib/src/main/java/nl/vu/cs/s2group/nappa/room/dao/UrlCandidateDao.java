@@ -31,8 +31,8 @@ public interface UrlCandidateDao {
     void updateUrlCandidate(UrlCandidate urlCandidate);
 
     @Query("SELECT puc.id, count, url_order as urlOrder, type, url_piece as urlPiece " +
-            "from pf_url_candidate as puc " +
-            "LEFT JOIN pf_url_candidate_part as pucp ON puc.id = pucp.id_url_candidate " +
+            "from nappa_url_candidate as puc " +
+            "LEFT JOIN nappa_url_candidate_part as pucp ON puc.id = pucp.id_url_candidate " +
             "WHERE id_activity = :idAct")
     List<UrlCandidateToUrlParameter> getCandidatePartsListForActivity(Long idAct);
 
@@ -45,8 +45,8 @@ public interface UrlCandidateDao {
      *         then return a list of all candidate parts P for all urlCandidates C
      */
     @Query("SELECT puc.id, id_activity as idActivity, count, url_order as urlOrder, type, url_piece as urlPiece " +
-            "from pf_url_candidate as puc " +
-            "LEFT JOIN pf_url_candidate_part as pucp ON puc.id = pucp.id_url_candidate " +
+            "from nappa_url_candidate as puc " +
+            "LEFT JOIN nappa_url_candidate_part as pucp ON puc.id = pucp.id_url_candidate " +
             "WHERE id_activity = :idAct")
     LiveData<List<UrlCandidateToUrlParameter>> getCandidatePartsListLiveDataForActivity(Long idAct);
 

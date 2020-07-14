@@ -12,16 +12,16 @@ public interface GraphEdgeDao {
     /**
      * Get all the edges corresponding to a given activity.
      *
-     * Essentially get all Destination's ID (pf_session data) AND its activity Name (pf_activity),
+     * Essentially get all Destination's ID (nappa_session data) AND its activity Name (nappa_activity),
      * all of which corresponds to a source (String actName)
      *
      * @param actName
      * @return
      */
     @Query("SELECT DISTINCT id_activity_destination as idActDest, activity_name as actName " +
-            "FROM pf_session_data as psd " +
-            "LEFT JOIN pf_activity as pa ON pa.id = psd.id_activity_destination " +
-            "WHERE id_activity_source = (SELECT id FROM pf_activity WHERE activity_name = :actName) ")
+            "FROM nappa_session_data as psd " +
+            "LEFT JOIN nappa_activity as pa ON pa.id = psd.id_activity_destination " +
+            "WHERE id_activity_source = (SELECT id FROM nappa_activity WHERE activity_name = :actName) ")
     List<GraphEdge> getEdgesForActivity(String actName);
 
 

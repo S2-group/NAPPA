@@ -68,7 +68,7 @@ public class InstrumentOkHttpAction extends AnAction {
         rootPsiElement.accept(new JavaRecursiveElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
-                if (element.getText().contains("PrefetchingLib.getOkHttp(")) {
+                if (element.getText().contains("Nappa.getOkHttp(")) {
                     resultMessage.incrementPossibleInstrumentationCount().incrementAlreadyInstrumentedCount();
                     return;
                 }
@@ -188,7 +188,7 @@ public class InstrumentOkHttpAction extends AnAction {
 
         if (expression.length != 2) return null;
 
-        expression[1] = " PrefetchingLib.getOkHttp(" + expression[1] + ")";
+        expression[1] = " Nappa.getOkHttp(" + expression[1] + ")";
         expression[1] = expression[1].replace(";)", ")");
         expression[1] = expression[1] + (element.getText().contains(";") ? ";" : "");
 

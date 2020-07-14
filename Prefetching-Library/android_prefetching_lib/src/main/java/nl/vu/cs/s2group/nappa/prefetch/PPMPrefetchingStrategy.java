@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
@@ -51,7 +51,7 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
     @Override
     public List<String> getTopNUrlToPrefetchForNode(ActivityNode node, Integer maxNumber) {
 
-        Map<String, Long> activityMap = PrefetchingLib.activityMap;
+        Map<String, Long> activityMap = Nappa.activityMap;
         for (String key : activityMap.keySet()){
             reversedHashMap.put(activityMap.get(key), key);
         }
@@ -107,7 +107,7 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
         for (Long succ : successorCountMap.keySet()) {
             float prob = 0;
             if(total>0) prob= (float)successorCountMap.get(succ)/total; // * succ.pageRank or others
-            ActivityNode node1 = PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ));
+            ActivityNode node1 = Nappa.getActivityGraph().getByName(reversedHashMap.get(succ));
             node1.prob=prob;
             probableNodes.add(node1);
             Log.d(LOG_TAG, "Computed probability: " + prob + " for " + node1.activityName);
@@ -118,7 +118,7 @@ public class PPMPrefetchingStrategy implements PrefetchingStrategy {
     private HashMap<Long, Integer> zeroContextNodes(ActivityNode node, HashMap<Long, Integer> successorCountMap){
         List<SessionDao.SessionAggregate> sessionAggregate = node.getSessionAggregateList(lastN);
         for (SessionDao.SessionAggregate succ : sessionAggregate) {
-            successorCountMap = zeroContextNodes(PrefetchingLib.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
+            successorCountMap = zeroContextNodes(Nappa.getActivityGraph().getByName(reversedHashMap.get(succ.idActDest)),successorCountMap);
             if(successorCountMap.containsKey(succ.idActDest)){
                 successorCountMap.put(succ.idActDest, succ.countSource2Dest.intValue()+successorCountMap.get(succ.idActDest));
             }

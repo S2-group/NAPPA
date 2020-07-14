@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey;
  * been defined as an EXTRA through intent transitions.  Therefore the {@code UrlCandidateParts.urlPiece} will
  * reference the key of an {@link ActivityExtraData} object
  */
-@Entity(tableName = "pf_url_candidate_part")
+@Entity(tableName = "nappa_url_candidate_part")
 public class UrlCandidateParts {
 
     @PrimaryKey(autoGenerate = true) public Long id;

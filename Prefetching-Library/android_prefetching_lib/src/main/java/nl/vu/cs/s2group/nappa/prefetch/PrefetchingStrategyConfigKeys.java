@@ -4,10 +4,12 @@ import android.content.Context;
 
 import java.util.Map;
 
+import nl.vu.cs.s2group.nappa.Nappa;
+
 /**
  * This enumerate contains all available configurations that can be passed as parameter to
  * the NAPPA initializer method at
- * {@link nl.vu.cs.s2group.nappa.PrefetchingLib#init(Context, PrefetchingStrategyType, Map)}.
+ * {@link Nappa#init(Context, PrefetchingStrategyType, Map)}.
  * There are global configurations shared among strategies and configurations specific to one
  * or more strategies. The shared configurations can ve verified at {@link AbstractPrefetchingStrategy}
  * and the specific configuration sin the strategy implementation class

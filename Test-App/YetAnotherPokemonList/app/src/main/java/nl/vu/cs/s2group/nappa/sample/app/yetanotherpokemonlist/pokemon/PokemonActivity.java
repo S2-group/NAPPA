@@ -15,8 +15,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.squareup.picasso.Picasso;
 
-import nl.vu.cs.s2group.nappa.NAPPALifecycleObserver;
-import nl.vu.cs.s2group.nappa.PrefetchingLib;
+import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.NappaLifecycleObserver;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.R;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.pokemon.ability.AbilityActivity;
 import nl.vu.cs.s2group.nappa.sample.app.yetanotherpokemonlist.util.Config;
@@ -29,7 +29,7 @@ public class PokemonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(new NAPPALifecycleObserver(this));
+        getLifecycle().addObserver(new NappaLifecycleObserver(this));
         setContentView(R.layout.activity_pokemon);
         toggleProgressBarVisibility(true);
         if (getIntent().getStringExtra("url") != null)
@@ -49,7 +49,7 @@ public class PokemonActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Clicked on " + url);
             Intent intent = new Intent(this, AbilityActivity.class)
                     .putExtra("url", url);
-            PrefetchingLib.notifyExtras(intent.getExtras());
+            Nappa.notifyExtras(intent.getExtras());
             startActivity(intent);
         });
         ViewUtil.addNamedAPIResourceListToUI(this, R.id.ll_pokemon_types, pokemon.types, "getType");
