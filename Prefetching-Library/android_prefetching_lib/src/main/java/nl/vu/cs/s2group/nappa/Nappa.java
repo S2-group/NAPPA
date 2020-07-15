@@ -3,8 +3,6 @@ package nl.vu.cs.s2group.nappa;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.LruCache;
@@ -34,8 +32,9 @@ import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
-import nl.vu.cs.s2group.nappa.handler.activity.visittime.FetchSuccessorsVisitTimeHandler;
-import nl.vu.cs.s2group.nappa.prefetch.AbstractPrefetchingStrategy;
+import nl.vu.cs.s2group.nappa.handler.activity.RegisterNewActivityHandler;
+import nl.vu.cs.s2group.nappa.handler.graph.InitGraphHandler;
+import nl.vu.cs.s2group.nappa.handler.session.RegisterNewSessionHandler;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyConfigKeys;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategyType;
@@ -44,9 +43,6 @@ import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.RequestData;
 import nl.vu.cs.s2group.nappa.room.activity.visittime.ActivityVisitTime;
-import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
-import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
-import nl.vu.cs.s2group.nappa.room.dao.UrlCandidateDao;
 import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.room.data.SessionData;
@@ -131,156 +127,24 @@ public class Nappa {
             Log.d(LOG_TAG, "Selected prefetching strategy " + prefetchingStrategyType.name());
 
             instance = Nappa.getInstance();
-            NappaDB.getInstance(context);
+            NappaDB.init(context);
 
             NappaConfigMap.init(config);
             Nappa.prefetchingStrategyType = prefetchingStrategyType;
             strategyIntent = PrefetchingStrategy.getStrategy(prefetchingStrategyType);
             cacheDir = context.getCacheDir();
-            activityGraph = new ActivityGraph();
 
-            poolExecutor.schedule(() -> {
-
-                //INIT A NEW SESSION EACH TIME THE LIB IS INITIALIZED
-                Session session = new Session(new Date().getTime());
-                NappaDB.getInstance().sessionDao().insertSession(session);
-                Nappa.session = NappaDB.getInstance().sessionDao().getSession(session.date);
-
-                // This fetches the activities stored in the DB and their ID into the activitymap
-                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
-
-                // Iterate through the activity table which contains the activity name and its id
-                for (String actName : activityMap.keySet()) {
-                    Log.d(LOG_TAG, "Init nodes");
-                    activityGraph.initNodes(actName);
-                    // Fetch ActivityNode Object, and its corresponding ID
-                    ActivityNode byName = activityGraph.getByName(actName);
-                    Long actId = activityMap.get(actName);
-
-                    addAUrlCandidateObserver(byName, actId);
-                    addActivityExtraObserver(byName, actId);
-                    addSessionAggregateObserver(byName, actId);
-                    addVisitTimePerActivityObserver(byName, actId);
-                    if (strategyIntent.needSuccessorsVisitTime())
-                        FetchSuccessorsVisitTimeHandler.run(byName);
-                }
-
-
-                listLiveData = NappaDB.getInstance().activityDao().getListActivityLiveData();
-
-                Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
-
-            }, 0, TimeUnit.SECONDS);
+            RegisterNewSessionHandler.run((Session session) -> Nappa.session = session);
+            InitGraphHandler.run(strategyIntent,
+                    Nappa::updateActivityMap,
+                    (ActivityGraph graph) -> {
+                        Nappa.activityGraph = graph;
+                        Log.d(LOG_TAG, "Extended Startup-time: " + (new Date().getTime() - start) + " ms");
+                    });
 
             Log.d(LOG_TAG, "Startup-time: " + (new Date().getTime() - start) + " ms");
         }
 
-    }
-
-    /**
-     * Query the database for the aggregate visit time and add an observer to the result
-     *
-     * @param activity A {@link ActivityNode} object contaning the activity name
-     */
-    private static void addVisitTimePerActivityObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (activity.isAggregateVisitTimeInstantiated()) return;
-        if (!strategyIntent.needVisitTime()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add aggregate visit time observer");
-
-        poolExecutor.execute(() -> {
-            LiveData<AggregateVisitTimeByActivity> liveData;
-            int lastNSessions = NappaConfigMap.get(
-                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
-                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
-            boolean useSessionEntity = NappaConfigMap.get(
-                    PrefetchingStrategyConfigKeys.USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS,
-                    AbstractPrefetchingStrategy.DEFAULT_USE_ALL_SESSIONS_AS_SOURCE_FOR_LAST_N_SESSIONS);
-
-            if (lastNSessions == -1) {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivity(activityId);
-            } else if (useSessionEntity) {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivityWithinLastNSessionsInEntitySession(activityId, lastNSessions);
-            } else {
-                liveData = NappaDB.getInstance().
-                        activityVisitTimeDao().
-                        getAggregateVisitTimeByActivityWithinLastNSessionsInThisEntity(activityId, lastNSessions);
-            }
-
-            new Handler(Looper.getMainLooper()).post(() -> activity.setAggregateVisitTimeLiveData(liveData));
-        });
-    }
-
-    /**
-     * Instantiate the static UrlCandidate
-     *
-     * @param activity
-     * @param activityId
-     */
-    private static void addAUrlCandidateObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (!activity.shouldSetUrlCandidateDbLiveDataLiveData()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add URL candidates observer");
-
-        poolExecutor.schedule(() -> {
-            LiveData<List<UrlCandidateDao.UrlCandidateToUrlParameter>> liveData;
-            liveData = NappaDB.getInstance().urlCandidateDao().getCandidatePartsListLiveDataForActivity(activityId);
-            new Handler(Looper.getMainLooper()).post(() -> activity.setUrlCandidateDbLiveData(liveData));
-        }, 0, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Instantiate all extras data for this activity AND set up all the observers to
-     * ensure consistency with the database
-     *
-     * @param activity
-     * @param activityId
-     */
-    private static void addActivityExtraObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (!activity.shouldSetActivityExtraLiveData()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add extras observer");
-
-        poolExecutor.schedule(() -> {
-            LiveData<List<ActivityExtraData>> liveData;
-            liveData = NappaDB.getInstance().activityExtraDao().getActivityExtraLiveData(activityId);
-            new Handler(Looper.getMainLooper()).post(() -> activity.setListActivityExtraLiveData(liveData));
-        }, 0, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Instantiate the static aggregated data for the count of Source --> Destination
-     * edge visits.  Set up the observers to ensure consistency with the database
-     *
-     * @param activity
-     * @param activityId
-     */
-    private static void addSessionAggregateObserver(@NotNull ActivityNode activity, Long activityId) {
-        if (!activity.shouldSetSessionAggregateLiveData()) return;
-
-        Log.d(LOG_TAG, activity.activityName + " - Add session aggregate  observer");
-
-        poolExecutor.schedule(() -> {
-            LiveData<List<SessionDao.SessionAggregate>> liveData;
-
-            int lastNSessions = NappaConfigMap.get(
-                    PrefetchingStrategyConfigKeys.LAST_N_SESSIONS,
-                    AbstractPrefetchingStrategy.DEFAULT_LAST_N_SESSIONS);
-
-            if (prefetchingStrategyType == PrefetchingStrategyType.STRATEGY_PPM || lastNSessions != -1) {
-                liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId, lastNSessions);
-                new Handler(Looper.getMainLooper()).post(() -> activity.setLastNListSessionAggregateLiveData(liveData));
-            } else {
-                liveData = NappaDB.getInstance().sessionDao().getCountForActivitySource(activityId);
-                new Handler(Looper.getMainLooper()).post(() -> activity.setListSessionAggregateLiveData(liveData));
-            }
-
-
-        }, 0, TimeUnit.SECONDS);
     }
 
     public static LiveData<List<ActivityData>> getActivityLiveData() {
@@ -293,11 +157,15 @@ public class Nappa {
      *
      * @param dataList - The list of all activities as stored in the database.
      */
-    private static void updateActivityMap(List<ActivityData> dataList) {
+    private static void updateActivityMap(@NotNull List<ActivityData> dataList) {
         for (ActivityData activityData : dataList) {
-            activityMap.put(activityData.activityName, activityData.id);
-            Log.d(LOG_TAG, "pref-lib::updActMap " + activityData.activityName + ": " + activityData.id);
+            updateActivityMap(activityData);
         }
+    }
+
+    private static void updateActivityMap(@NotNull ActivityData activity) {
+        activityMap.put(activity.activityName, activity.id);
+        Log.d(LOG_TAG, "Updating activity map " + activity.activityName + ": " + activity.id);
     }
 
     /**
@@ -308,28 +176,15 @@ public class Nappa {
      * Insertion is performed in a threaded fashion to avoid locking up the main thread of
      * the instrumented application.
      *
-     * @param activityName
+     * @param activityName The canonical class name of the activity to register
      */
     public static void registerActivity(String activityName) {
-        if (!activityMap.containsKey(activityName)) {
-            ActivityData activityData = new ActivityData(activityName);
-            poolExecutor.schedule(() -> {
-                NappaDB.getInstance().activityDao().insert(activityData);
-                updateActivityMap(NappaDB.getInstance().activityDao().getListActivity());
+        if (activityMap.containsKey(activityName)) return;
 
-                // Add LiveData observers
-                ActivityNode currentNode = activityGraph.getCurrent();
-                Long activityId = activityMap.get(currentActivityName);
-                if (activityId == null)
-                    throw new IllegalArgumentException("Unknown activity " + currentActivityName);
-                addSessionAggregateObserver(currentNode, activityId);
-                addActivityExtraObserver(currentNode, activityId);
-                addVisitTimePerActivityObserver(currentNode, activityId);
-                addAUrlCandidateObserver(currentNode, activityId);
-                if (strategyIntent.needSuccessorsVisitTime())
-                    FetchSuccessorsVisitTimeHandler.run(currentNode);
-            }, 0, TimeUnit.SECONDS);
-        }
+        RegisterNewActivityHandler.run(activityName,
+                strategyIntent,
+                activityGraph,
+                Nappa::updateActivityMap);
     }
 
     /**

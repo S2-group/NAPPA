@@ -14,7 +14,7 @@ import nl.vu.cs.s2group.nappa.room.data.LARData;
 public interface ActivityTableDao {
 
     @Insert
-    void insert(ActivityData activityData);
+    long insert(ActivityData activityData);
 
     @Query("SELECT id, activity_name FROM nappa_activity")
     List<ActivityData> getListActivity();

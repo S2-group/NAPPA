@@ -4,12 +4,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import nl.vu.cs.s2group.nappa.Nappa;
+import nl.vu.cs.s2group.nappa.room.ActivityData;
 import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
@@ -29,13 +32,19 @@ public class ActivityGraph {
         nodeList = new LinkedList<>();
     }
 
+    public ActivityNode initNode(@NotNull ActivityData activity) {
+        ActivityNode node = initNode(activity.activityName);
+        node.setActivityData(activity);
+        return node;
+    }
+
     /**
      * For a given Activity, Create an ActivityNode object,  and add it to the Node list. For this node, create
      * all of its successor objects in the Room database AND also statically in the ActivityNode object.
      *
      * @param activityName The activity
      */
-    public void initNodes(String activityName) {
+    public ActivityNode initNode(String activityName) {
         Log.d(LOG_TAG, "ACT_GRAPH " + "initNodes() fired for node: " + activityName);
         ActivityNode temp = new ActivityNode(activityName);
         //link analysis ranking (LAR)
@@ -93,7 +102,7 @@ public class ActivityGraph {
             }
         }
 
-
+        return temp;
     }
 
     /**

@@ -22,4 +22,12 @@ public class ActivityData {
     public ActivityData(@NonNull String activityName) {
         this.activityName = activityName;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ActivityData{" +
+                activityName + " (#" + id + ")" +
+                '}';
+    }
 }

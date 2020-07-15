@@ -13,13 +13,6 @@ import nl.vu.cs.s2group.nappa.room.data.ActivityExtraData;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidate;
 import nl.vu.cs.s2group.nappa.room.data.UrlCandidateParts;
 
-// TODO Consider moving class to room package
-//  This class is returned as a model in select operations in the DAO class UrlCandidateDao.
-//  As such, it makes more sense to define it as a model class.
-//  This class could be:
-//  1. Moved as it is to the room package
-//  2. Refactored to split model and business logic
-//  3. Used as a DatabaseView
 /**
  * Represents an individual URL composed of both static components and parameter components.  The
  * components are stored as a linked list of {@linkplain UrlParameter} objects.  This is the static
