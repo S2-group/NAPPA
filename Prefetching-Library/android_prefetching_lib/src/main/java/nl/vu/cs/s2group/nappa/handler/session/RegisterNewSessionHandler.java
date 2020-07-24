@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.handler.session;
 
-import java.util.function.Consumer;
+import java9.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.room.data.Session;
 import nl.vu.cs.s2group.nappa.util.NappaThreadPool;

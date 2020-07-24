@@ -31,6 +31,9 @@ dependencies {
 
     implementation "org.bitbucket.cowwoc:diff-match-patch:$diffMatchPatch"
 
+    // Adds support to SDK level 24+ API such as Consumer and Stream
+    implementation "net.sourceforge.streamsupport:android-retrostreams:1.7.2"
+
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "androidx.room:room-runtime:$roomRuntimeVersion"
     annotationProcessor "androidx.room:room-compiler:$roomRuntimeVersion"

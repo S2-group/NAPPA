@@ -32,6 +32,9 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     implementation "androidx.cardview:cardview:$cardviewVersion"
 
+    // Adds support to SDK level 24+ API such as Consumer and Stream
+    implementation "net.sourceforge.streamsupport:android-retrostreams:1.7.2"
+
     // OpenAndroid.Manifest inside  aar file to check the version
     // It doesn't seems possible to define version using this import method
     implementation name: 'nappa-prefetching-library', ext: 'aar'
