@@ -32,7 +32,7 @@ project.ext {
     // Android SDK versions
     compileSdkVersion = 29
     targetSdkVersion = 29
-    minSdkVersion = 24
+    minSdkVersion = 23
 
     // Dependencies
     okhttpVersion = "3.14.8"

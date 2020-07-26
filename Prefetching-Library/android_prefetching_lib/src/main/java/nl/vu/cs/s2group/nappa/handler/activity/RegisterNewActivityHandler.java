@@ -1,6 +1,6 @@
 package nl.vu.cs.s2group.nappa.handler.activity;
 
-import java.util.function.Consumer;
+import java9.util.function.Consumer;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;

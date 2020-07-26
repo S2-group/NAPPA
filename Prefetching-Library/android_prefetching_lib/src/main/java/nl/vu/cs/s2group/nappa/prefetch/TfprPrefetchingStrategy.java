@@ -8,13 +8,11 @@ import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaUtil;
@@ -129,15 +127,23 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
      */
     @NotNull
     private List<ActivityNode> getSuccessorListSortByTfprScore(@NotNull TfprGraph graph, @NotNull ActivityNode currentNode) {
+        // sort nodes from the highest TFPR score to the lowest
         //noinspection ConstantConditions We do not add null values to the map
-        List<TfprNode> sortedNodes = graph.graph.get(currentNode.activityName).successors;
-        sortedNodes.sort(Comparator.comparing(node -> -node.tfprScore));
+        List<TfprNode> sortedSuccessors = graph.graph.get(currentNode.activityName).successors;
+        Collections.sort(sortedSuccessors, (node1, node2) -> (int) (node2.tfprScore - node1.tfprScore));
 
-        return Arrays.asList(sortedNodes
-                .stream()
-                .filter(node -> node.tfprScore >= scoreLowerThreshold)
-                .map(successor -> successor.node)
-                .toArray(ActivityNode[]::new));
+        // filter out all nodes with low TFPR score
+        List<ActivityNode> sortedSuccessorsAboveThreshold = new ArrayList<>();
+        for (TfprNode successor : sortedSuccessors) {
+            if (successor.tfprScore >= scoreLowerThreshold) {
+                sortedSuccessorsAboveThreshold.add(successor.node);
+            } else {
+                // Since the list is sorted, all subsequent nodes will have insufficient TFPR score
+                break;
+            }
+        }
+
+        return sortedSuccessorsAboveThreshold;
     }
 
     /**
@@ -275,11 +281,14 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         @NonNull
         @Override
         public String toString() {
+            StringBuilder graphAsStr = new StringBuilder();
+
+            for (TfprNode node : graph.values()) {
+                graphAsStr.append(node.toString()).append('\n');
+            }
+
             return "TfprGraph{\n" +
-                    graph.values()
-                            .stream()
-                            .map(TfprNode::toString)
-                            .collect(Collectors.joining("\n")) +
+                    graphAsStr.toString() +
                     '}';
         }
     }

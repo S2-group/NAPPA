@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import nl.vu.cs.s2group.nappa.Nappa;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetchurl.ParameteredUrl;
+import nl.vu.cs.s2group.nappa.room.activity.visittime.AggregateVisitTimeByActivity;
 import nl.vu.cs.s2group.nappa.room.dao.SessionDao;
 
 /**
@@ -156,10 +156,14 @@ public class NappaUtil {
      * @return The total aggregate time.
      */
     public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode) {
-        return sourceNode.getSuccessorsVisitTimeList()
-                .stream()
-                .mapToLong(visitTime -> visitTime.totalDuration)
-                .sum();
+        long totalDuration = 0;
+
+        List<AggregateVisitTimeByActivity> list = sourceNode.getSuccessorsVisitTimeList();
+        for (AggregateVisitTimeByActivity visitTime : list) {
+            totalDuration += visitTime.totalDuration;
+        }
+
+        return totalDuration;
     }
 
     /**
@@ -170,11 +174,16 @@ public class NappaUtil {
      * @return The total aggregate time.
      */
     public static long getSuccessorsAggregateVisitTimeOriginatedFromNode(@NotNull ActivityNode sourceNode, ActivityNode destinationNode) {
-        return sourceNode.getSuccessorsVisitTimeList()
-                .stream()
-                .filter(visitTime -> visitTime.activityName.equals(destinationNode.activityName))
-                .mapToLong(visitTime -> visitTime.totalDuration)
-                .sum();
+        long totalDuration = 0;
+
+        List<AggregateVisitTimeByActivity> list = sourceNode.getSuccessorsVisitTimeList();
+        for (AggregateVisitTimeByActivity visitTime : list) {
+            if (visitTime.activityName.equals(destinationNode.activityName)) {
+                totalDuration += visitTime.totalDuration;
+            }
+        }
+
+        return totalDuration;
     }
 
     /**
@@ -184,11 +193,15 @@ public class NappaUtil {
      * @param sourceNode The activity to use as source.
      * @return The activity name -> duration map.
      */
+    @NotNull
     public static Map<String, Long> getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(@NotNull ActivityNode sourceNode) {
-        return sourceNode.getSuccessorsVisitTimeList()
-                .stream()
-                .collect(Collectors.toMap(
-                        visitTime -> visitTime.activityName,
-                        visitTime -> visitTime.totalDuration));
+        Map<String, Long> map = new HashMap<>();
+
+        List<AggregateVisitTimeByActivity> list = sourceNode.getSuccessorsVisitTimeList();
+        for (AggregateVisitTimeByActivity visitTime : list) {
+            map.put(visitTime.activityName, visitTime.totalDuration);
+        }
+
+        return map;
     }
 }
