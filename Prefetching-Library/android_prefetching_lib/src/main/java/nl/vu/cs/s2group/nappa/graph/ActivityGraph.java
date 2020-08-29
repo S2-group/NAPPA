@@ -174,11 +174,8 @@ public class ActivityGraph {
      * @return {@linkplain ActivityNode} Corresponding to the activity name requested
      */
     public ActivityNode getByName(String activityName) {
-        ActivityNode node = new ActivityNode(activityName);
-        if (nodeList.contains(node)) {
-            return nodeList.get(nodeList.indexOf(node));
-        }
-        throw new RuntimeException("Unable to find node: " + activityName);
+        int nodeIdx = nodeList.indexOf(new ActivityNode(activityName));
+        return  nodeIdx == -1 ? null : nodeList.get(nodeIdx);
     }
 
     public void updateLAR(String activityName) {

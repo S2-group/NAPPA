@@ -248,6 +248,7 @@ public class Nappa {
         boolean shouldPrefetch;
         previousActivityName = currentActivityName;
         currentActivityName = activity.getClass().getCanonicalName();
+        registerActivity(currentActivityName);
         //SHOULD PREFETCH IFF THE USER IS MOVING FORWARD
         shouldPrefetch = activityGraph.updateNodes(currentActivityName);
 
