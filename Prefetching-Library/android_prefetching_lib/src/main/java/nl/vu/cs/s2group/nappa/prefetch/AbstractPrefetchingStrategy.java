@@ -4,8 +4,6 @@ import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.util.NappaConfigMap;
 
@@ -98,11 +96,16 @@ public abstract class AbstractPrefetchingStrategy implements PrefetchingStrategy
      *
      * @param activity  The current activity received in {@link #getTopNUrlToPrefetchForNode(ActivityNode, Integer)}
      * @param startTime A timestamp on when the calculations stared.
+     * @param key       An identification of this run. If none, set to -1.
      */
+    protected void logStrategyExecutionDuration(@NotNull ActivityNode activity, long startTime, int key) {
+        Log.d(this.getClass().getSimpleName(), String.format("%sPrefetching strategy executed for node '%s' in %d ms",
+                key != -1 ? String.format("(#%d) ", key) : "",
+                activity.activityName,
+                System.currentTimeMillis() - startTime));
+    }
+
     protected void logStrategyExecutionDuration(@NotNull ActivityNode activity, long startTime) {
-        Log.d(this.getClass().getSimpleName(), "Prefetching strategy calculations for " +
-                activity.getSuccessorsVisitTimeList() +
-                " was finished in " +
-                (new Date().getTime() - startTime) + " ms");
+        logStrategyExecutionDuration(activity, startTime, -1);
     }
 }
