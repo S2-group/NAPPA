@@ -39,11 +39,6 @@ public class ActivityNode {
      */
     private ActivityData activityData;
 
-    // TODO Verify possibility of simplifying successor/ancestors structure
-    //  Both `successors` and `ancestors` are defined as a map of `ActivityNode --> visited count`
-    //  for the current session. However, the value of the map doesn't seems to be used, as the
-    //  LiveData object `listSessionAggregateLiveData` provides the aggregate from the past sessions
-    //  and is used in the strategies. In this case, we can likely simply this map to a list
     public Map<ActivityNode, Integer> successors = new ConcurrentHashMap<>();
     public Map<ActivityNode, Integer> ancestors = new ConcurrentHashMap<>();
     private LiveData<List<SessionDao.SessionAggregate>> listSessionAggregateLiveData;
