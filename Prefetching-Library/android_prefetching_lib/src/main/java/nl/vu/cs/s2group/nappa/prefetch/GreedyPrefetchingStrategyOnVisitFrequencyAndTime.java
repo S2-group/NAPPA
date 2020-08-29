@@ -74,7 +74,7 @@ public class GreedyPrefetchingStrategyOnVisitFrequencyAndTime extends AbstractPr
 
         executionNumber++;
         int key = executionNumber;
-        Log.w(LOG_TAG, String.format("(#%d) Starting execution %d for node '%s'.", key, key, node.activityName));
+        Log.d(LOG_TAG, String.format("(#%d) Starting execution %d for node '%s'.", key, key, node.activityName));
 
         visitedNodes.put(key, new ArrayList<>());
         selectedUrls.put(key, new ArrayList<>());
