@@ -78,6 +78,11 @@ public interface UrlCandidateDao {
             // For each parameter in the parameter list,  build a parameteredUrl object and store it
             //  in the hashmap
             for (UrlCandidateToUrlParameter parameter : parameterList) {
+                /*
+                 * This verification is a quick fix for avoiding throwing an exception here. This
+                 * needs investigation on why there was a null value here.
+                 */
+                if (parameter.urlPiece == null) continue;
 
                 ParameteredUrl parameteredUrl = parameteredUrlHashMap.get(parameter.id);
                 if (parameteredUrl == null) {

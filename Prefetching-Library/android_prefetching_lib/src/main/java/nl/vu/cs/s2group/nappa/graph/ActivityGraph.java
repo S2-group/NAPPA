@@ -17,10 +17,6 @@ import nl.vu.cs.s2group.nappa.room.NappaDB;
 import nl.vu.cs.s2group.nappa.room.dao.GraphEdgeDao;
 import nl.vu.cs.s2group.nappa.room.data.LARData;
 
-// TODO Extract LAR operations from class ActivityGraph
-//  LAR operations are about updating scores used by certain strategies. They are not about
-//  managing the graph per si and they add noise into this class.
-
 public class ActivityGraph {
     private static final String LOG_TAG = ActivityGraph.class.getSimpleName();
 
@@ -174,11 +170,8 @@ public class ActivityGraph {
      * @return {@linkplain ActivityNode} Corresponding to the activity name requested
      */
     public ActivityNode getByName(String activityName) {
-        ActivityNode node = new ActivityNode(activityName);
-        if (nodeList.contains(node)) {
-            return nodeList.get(nodeList.indexOf(node));
-        }
-        throw new RuntimeException("Unable to find node: " + activityName);
+        int nodeIdx = nodeList.indexOf(new ActivityNode(activityName));
+        return  nodeIdx == -1 ? null : nodeList.get(nodeIdx);
     }
 
     public void updateLAR(String activityName) {

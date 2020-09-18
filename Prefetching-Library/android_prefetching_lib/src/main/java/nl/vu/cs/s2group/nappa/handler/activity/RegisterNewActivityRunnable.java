@@ -2,12 +2,11 @@ package nl.vu.cs.s2group.nappa.handler.activity;
 
 import android.util.Log;
 
-import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java9.util.function.Consumer;
 
+import java9.util.function.Consumer;
 import nl.vu.cs.s2group.nappa.graph.ActivityGraph;
 import nl.vu.cs.s2group.nappa.graph.ActivityNode;
 import nl.vu.cs.s2group.nappa.prefetch.PrefetchingStrategy;
@@ -42,41 +41,34 @@ public class RegisterNewActivityRunnable implements Runnable {
 
     @Override
     public void run() {
-        long start = new Date().getTime();
+
         ActivityData activity = new ActivityData(activityName);
         activity.id = NappaDB.getInstance().activityDao().insert(activity);
-        ActivityNode node = graph.getCurrent();
-
-        /*
-         * When using the app for the first time, the first activity accessed will trigger
-         * this runnable to register it. However, due to the implementation design, the
-         * current node is set in the graph only after registering the activity. Due to
-         * time constraints, this is a quick fix to schedule the LiveData fetching to a
-         * later time when the method `graph.getCurrent()` return a non-null object.
-         * Since this is a quick fix, we don;t make use of NappaThreadPool class to
-         * ensure that this scheduler will be isolated and encourage to refactor this in
-         * the future.
-         */
-        if (node != null) FetchActivityLiveDataInfoHandler.run(node, strategy);
-        else {
-            liveDataFetcherScheduler = new ScheduledThreadPoolExecutor(1)
-                    .scheduleAtFixedRate(
-                            () -> {
-                                if (graph.getCurrent() != null) {
-                                    FetchActivityLiveDataInfoHandler.run(graph.getCurrent(), strategy);
-                                    liveDataFetcherScheduler.cancel(false);
-                                    Log.d(LOG_TAG, "Current node is now available after " +
-                                            (new Date().getTime() - start) +
-                                            " ms\n" +
-                                            graph.getCurrent());
-                                }
-                            },
-                            0,
-                            200,
-                            TimeUnit.MILLISECONDS);
-        }
         callback.accept(activity);
 
-        Log.d(LOG_TAG, "Activity registered " + activity.activityName + " (#" + activity.id + ")");
+        Log.d(LOG_TAG, String.format("Activity registered %s (#%d)", activity.activityName, activity.id));
+
+        /*
+         * Due to how the graph flow is designed, when registering the activity its node will often
+         * not be available when executing this line. Therefore, we schedule to trigger the handler
+         * to fetch and assign the node LiveData at a later point in time.
+         */
+
+        long start = System.currentTimeMillis();
+        liveDataFetcherScheduler = new ScheduledThreadPoolExecutor(1).scheduleAtFixedRate(() -> {
+                    ActivityNode node = graph.getByName(activityName);
+
+                    // The have not been registered in the graph yet
+                    if (node == null) return;
+
+                    liveDataFetcherScheduler.cancel(false);
+                    FetchActivityLiveDataInfoHandler.run(node, strategy);
+                    Log.d(LOG_TAG, String.format("LiveData for node %s was triggered after %d ms", node.getActivitySimpleName(), (System.currentTimeMillis() - start)));
+
+                },
+                50,
+                100,
+                TimeUnit.MILLISECONDS);
+
     }
 }
