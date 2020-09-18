@@ -361,9 +361,7 @@ public class Nappa {
                     // Put on this extras tracker for this activity the new key-value pair. If
                     //    No value has been associated with this extra, NULL will be stored
                     Object value = allExtras.get(key);
-                    if (value == null)
-                        throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
-                    extras.put(key, value.toString());
+                    if (value != null) extras.put(key, value.toString());
                 }
 
                 // Update the global extras map after all extras have been stored
@@ -373,7 +371,7 @@ public class Nappa {
                 poolExecutor.schedule(() -> {
                     List<String> toBePrefetched = strategyIntent.getTopNUrlToPrefetchForNode(activityGraph.getCurrent(), 2);
                     for (String url : toBePrefetched) {
-                        Log.d(LOG_TAG, "PREFSTRAT2 " + "URL: " + url);
+                        Log.d(LOG_TAG, String.format("Extras monitor: Prefetching: %s", url));
                     }
                     // Trigger Prefetching
                     if (prefetchEnabled) {
@@ -388,19 +386,18 @@ public class Nappa {
                     for (String key : allExtras.keySet()) {
                         // Create an Database Object and store it
                         Object value = allExtras.get(key);
-                        if (value == null)
-                            throw new IllegalArgumentException("Unable to find Intent Extra with key " + key);
+                        if (value == null) continue;
                         ActivityExtraData activityExtraData =
                                 new ActivityExtraData(session.id, idAct, key, value.toString());
-                        Log.d(LOG_TAG, "PREFSTRAT2 " + "ADDING NEW ACTEXTRADATA");
+                        Log.d(LOG_TAG, String.format("Extras Monitor: Registering extra <%s, %s> for activity %s",
+                                key,
+                                value.toString(),
+                                currentActivityName));
                         NappaDB.getInstance().activityExtraDao().insertActivityExtra(activityExtraData);
                     }
                 }, 0, TimeUnit.SECONDS);
-
             }
-
         }
-
     }
 
     /**
