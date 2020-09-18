@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +37,8 @@ import nl.vu.cs.s2group.nappa.util.NappaUtil;
 public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     private static final String LOG_TAG = TfprPrefetchingStrategy.class.getSimpleName();
 
+    private int executionNumber = 0;
+
     public TfprPrefetchingStrategy() {
         super();
 
@@ -45,7 +47,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
           The TFPR score was higher for pages with longer time (e.g. 30+ seconds) and
           lower for pages with short time (e.g., 5- seconds).
           Low TFPR scores were always below 10%, often below 5%.
-          High TFPR scores were always between 40% to 50~55%.
+          High TFPR scores were always between 30% to 55%.
           While testing, there was only 2 occasions where a page obtained a TFPR score equal
           or higher than 60%, which is the default lower threshold for the weight score:
 
@@ -58,7 +60,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
           The value is only overridden if it was not already overridden using the user-defined
           configurations.
          */
-        if (scoreLowerThreshold == DEFAULT_SCORE_LOWER_THRESHOLD) scoreLowerThreshold = 0.4f;
+        if (scoreLowerThreshold == DEFAULT_SCORE_LOWER_THRESHOLD) scoreLowerThreshold = 0.3f;
     }
 
     @Override
@@ -74,7 +76,16 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
     @NonNull
     @Override
     public List<String> getTopNUrlToPrefetchForNode(@NotNull ActivityNode node, Integer maxNumber) {
-        long startTime = new Date().getTime();
+        long startTime = System.currentTimeMillis();
+
+        executionNumber++;
+        int key = executionNumber;
+        Log.d(LOG_TAG, String.format("(#%d) Starting execution %d for node '%s'.", key, key, node.activityName));
+
+        if (node.successors.isEmpty()) {
+            logStrategyExecutionDuration(node, startTime, key);
+            return new ArrayList<>();
+        }
 
         // Prepare the graph
         TfprGraph graph = makeSubgraph(node);
@@ -82,7 +93,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
 
         // Verifies if we have any data in our subgraph.
         if (graph.aggregateVisitTime == 0) {
-            logStrategyExecutionDuration(node, startTime);
+            logStrategyExecutionDuration(node, startTime, key);
             return new ArrayList<>();
         }
 
@@ -93,15 +104,15 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         List<ActivityNode> selectedNodes = getSuccessorListSortByTfprScore(graph, node);
 
         // Select all URLs that fits the budget
-        List<String> selectedUrls = getUrls(node, selectedNodes);
+        List<String> selectedUrls = getUrls(node, selectedNodes, key);
 
-        logStrategyExecutionDuration(node, startTime);
+        logStrategyExecutionDuration(node, startTime, key);
 
         return selectedUrls;
     }
 
     @NotNull
-    private List<String> getUrls(ActivityNode currentNode, @NotNull List<ActivityNode> nodes) {
+    private List<String> getUrls(ActivityNode currentNode, @NotNull List<ActivityNode> nodes, int key) {
         List<String> urls = new ArrayList<>();
 
         for (ActivityNode node : nodes) {
@@ -109,8 +120,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
             List<String> nodUrls = NappaUtil.getUrlsFromCandidateNode(currentNode, node, remainingUrlBudget);
             urls.addAll(nodUrls);
 
-            Log.d(LOG_TAG, "Selected node " + node.getActivitySimpleName() +
-                    " containing the URLS " + nodUrls);
+            Log.d(LOG_TAG, String.format("(#%s) The URLs from node '%s' are: %s", key, node.activityName, nodUrls));
             if (urls.size() >= maxNumberOfUrlToPrefetch) break;
         }
 
@@ -130,7 +140,7 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
         // sort nodes from the highest TFPR score to the lowest
         //noinspection ConstantConditions We do not add null values to the map
         List<TfprNode> sortedSuccessors = graph.graph.get(currentNode.activityName).successors;
-        Collections.sort(sortedSuccessors, (node1, node2) -> (int) (node2.tfprScore - node1.tfprScore));
+        Collections.sort(sortedSuccessors, new TfprComparator());
 
         // filter out all nodes with low TFPR score
         List<ActivityNode> sortedSuccessorsAboveThreshold = new ArrayList<>();
@@ -260,6 +270,13 @@ public class TfprPrefetchingStrategy extends AbstractPrefetchingStrategy {
             tfprNode.aggregateVisitTimeFromSuccessors = NappaUtil.getSuccessorsAggregateVisitTimeOriginatedFromNodeMap(tfprNode.node);
         }
 
+    }
+
+    private static class TfprComparator implements Comparator<TfprNode> {
+        @Override
+        public int compare(@NotNull TfprNode o1, @NotNull TfprNode o2) {
+            return Float.compare(o2.tfprScore, o1.tfprScore);
+        }
     }
 
     private static class TfprGraph {
