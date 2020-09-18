@@ -53,19 +53,12 @@ public class ActivityNode {
     List<AggregateVisitTimeByActivity> successorVisitTimeList;
 
     /**
-     * Initializes the current activity node by creating an object of the activity, and also
-     * by initializing the current activity in the the Prefetchinglib's static hashmap of activities
-     * and the Room database.
-     * <p>
-     * NOTE: Persistence inthe prefetching lib is only performed if the database does not already
-     * contain the activityName
+     * Initializes the current activity node by creating an object of the activity.
      *
      * @param activityName
      */
     public ActivityNode(String activityName) {
         this.activityName = activityName;
-        // Register activity to the prefetching LIB
-        Nappa.registerActivity(activityName);
     }
 
     public void setActivityData(ActivityData activityData) {
