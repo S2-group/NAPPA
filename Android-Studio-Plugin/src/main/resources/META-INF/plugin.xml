@@ -19,7 +19,8 @@
         <!-- Add your extensions here -->
         <moduleBuilder/>
     </extensions>
-
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
     <actions>
         <group id="nappa"
                text="NAPPA"
